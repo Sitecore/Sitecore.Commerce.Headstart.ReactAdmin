@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react"
 
 import {Box} from "@chakra-ui/react"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
+import ProtectedContent from "components/auth/ProtectedContent"
 import {ProductFacet, User} from "ordercloud-javascript-sdk"
-import {appPermissions} from "lib/constants/app-permissions.config"
-import {productfacetsService} from "lib/api/productfacets"
-import {CreateUpdateForm} from "lib/components/productfacets"
+import {appPermissions} from "constants/app-permissions.config"
+import {productfacetsService} from "api/productfacets"
+import {CreateUpdateForm} from "components/productfacets"
 import router, {useRouter} from "next/router"
 import {useToast} from "@chakra-ui/react"
 

@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "lib/components/categories/CreateUpdateForm"
+import {CreateUpdateForm} from "components/categories/CreateUpdateForm"
 import {Box} from "@chakra-ui/react"
 import {Category} from "ordercloud-javascript-sdk"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import {appPermissions} from "lib/constants/app-permissions.config"
-import {categoriesService} from "lib/api"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
+import {categoriesService} from "api"
 import {useRouter} from "next/router"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */

@@ -1,7 +1,7 @@
 import {Box, Flex} from "@chakra-ui/react"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import ProductSearch from "lib/components/products/ProductSearch"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import ProtectedContent from "components/auth/ProtectedContent"
+import ProductSearch from "components/products/ProductSearch"
+import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "next/router"
 import React, {useEffect, useState} from "react"
 

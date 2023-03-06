@@ -4,7 +4,7 @@ import type {DocumentContext} from "next/document"
 import Document, {Html, Head, Main, NextScript} from "next/document"
 import Script from "next/script"
 
-import sitecorecommerceTheme from "lib/styles/theme/sitecorecommerce/"
+import sitecorecommerceTheme from "styles/theme/sitecorecommerce/"
 
 const APP_NAME = "nextarter-chakra"
 

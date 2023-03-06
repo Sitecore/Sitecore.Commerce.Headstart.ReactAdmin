@@ -12,13 +12,13 @@ import {
   Text
 } from "@chakra-ui/react"
 
-import Card from "lib/components/card/Card"
+import Card from "components/card/Card"
 import {Form} from "formik"
 import {HiOutlineMinusSm} from "react-icons/hi"
 import {NextSeo} from "next-seo"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
+import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import {appPermissions} from "constants/app-permissions.config"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

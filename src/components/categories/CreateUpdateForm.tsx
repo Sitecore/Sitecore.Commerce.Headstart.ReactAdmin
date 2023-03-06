@@ -1,7 +1,7 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, HStack, Stack} from "@chakra-ui/react"
 import {Category} from "ordercloud-javascript-sdk"
-import {InputControl, SwitchControl, TextareaControl} from "types/formik-chakra-ui"
+import {InputControl, SwitchControl, TextareaControl} from "components/formik-chakra-ui"
 import {Formik} from "formik"
 import {categoriesService} from "api"
 import {useRouter} from "next/router"

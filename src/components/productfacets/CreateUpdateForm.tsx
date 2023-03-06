@@ -1,6 +1,6 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, FormLabel, HStack, Icon, Stack, Text} from "@chakra-ui/react"
-import {InputControl} from "types/formik-chakra-ui"
+import {InputControl} from "components/formik-chakra-ui"
 import {ProductFacet} from "ordercloud-javascript-sdk"
 import Card from "../card/Card"
 import {Field, Formik} from "formik"

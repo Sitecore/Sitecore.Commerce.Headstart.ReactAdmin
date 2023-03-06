@@ -1,6 +1,6 @@
 import {Flex, useColorMode} from "@chakra-ui/react"
 import {NextSeo} from "next-seo"
-import Login from "../lib/components/account/Login"
+import Login from "../components/account/Login"
 import {useRouter} from "next/router"
 
 const Home = () => {

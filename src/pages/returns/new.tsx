@@ -12,9 +12,9 @@ import {
   Text
 } from "@chakra-ui/react"
 import {Form} from "formik"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import Card from "lib/components/card/Card"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import ProtectedContent from "components/auth/ProtectedContent"
+import Card from "components/card/Card"
+import {appPermissions} from "constants/app-permissions.config"
 import {NextSeo} from "next-seo"
 
 import React from "react"

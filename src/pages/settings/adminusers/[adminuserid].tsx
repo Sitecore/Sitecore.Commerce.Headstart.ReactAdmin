@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "lib/components/adminusers"
+import {CreateUpdateForm} from "components/adminusers"
 import {Box} from "@chakra-ui/react"
 import {AdminUserGroups, AdminUsers, User} from "ordercloud-javascript-sdk"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "next/router"
 
 export async function getServerSideProps() {

@@ -20,17 +20,17 @@ import {
   VStack
 } from "@chakra-ui/react"
 import {useCallback, useEffect, useMemo, useRef, useState} from "react"
-import Card from "lib/components/card/Card"
+import Card from "components/card/Card"
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import {Link} from "../../lib/components/navigation/Link"
+import {Link} from "../../components/navigation/Link"
 import {NextSeo} from "next-seo"
 import {ListPage, Order, Orders} from "ordercloud-javascript-sdk"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import {appPermissions} from "lib/constants/app-permissions.config"
-import {dateHelper} from "lib/utils/date.utils"
-import {priceHelper} from "lib/utils/price.utils"
-import {DataTable} from "lib/components/data-table/DataTable"
-import {OrderCloudTableColumn, OrderCloudTableFilters} from "lib/components/ordercloud-table"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
+import {dateHelper} from "utils/date.utils"
+import {priceHelper} from "utils/price.utils"
+import {DataTable} from "components/data-table/DataTable"
+import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

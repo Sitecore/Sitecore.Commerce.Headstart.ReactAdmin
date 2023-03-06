@@ -12,17 +12,17 @@ import {
   Text
 } from "@chakra-ui/react"
 import {useCallback, useEffect, useMemo, useRef, useState} from "react"
-import Card from "lib/components/card/Card"
+import Card from "components/card/Card"
 import {NextSeo} from "next-seo"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "next/router"
-import {useSuccessToast} from "lib/hooks/useToast"
+import {useSuccessToast} from "hooks/useToast"
 import {AdminAddresses, Address, ListPage} from "ordercloud-javascript-sdk"
-import {addressHelper} from "lib/utils/address.utils"
-import {DataTable} from "lib/components/data-table/DataTable"
-import {OrderCloudTableFilters} from "lib/components/ordercloud-table"
-import {Link} from "lib/components/navigation/Link"
+import {addressHelper} from "utils/address.utils"
+import {DataTable} from "components/data-table/DataTable"
+import {OrderCloudTableFilters} from "components/ordercloud-table"
+import {Link} from "components/navigation/Link"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

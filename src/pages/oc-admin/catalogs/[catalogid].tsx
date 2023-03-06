@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "lib/components/usergroups/CreateUpdateForm"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
+import {CreateUpdateForm} from "components/usergroups/CreateUpdateForm"
+import ProtectedContent from "components/auth/ProtectedContent"
 import {UserGroup} from "ordercloud-javascript-sdk"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "next/router"
-import {userGroupsService} from "lib/api"
+import {userGroupsService} from "api"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

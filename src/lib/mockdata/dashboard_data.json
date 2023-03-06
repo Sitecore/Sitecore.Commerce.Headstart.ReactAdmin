@@ -1,0 +1,38 @@
+{
+  "salesoverview": {
+    "title": "Sales Overview",
+    "subtitle": "Year to Date Sales",
+    "percentchange": 5,
+    "percentchangeindicator": "+",
+    "series": {
+      "currentyear": {
+        "title": "Current years sales",
+        "data": [130, 140, 415, 510, 149, 160, 170, 391, 130, 410, 451, 501]
+      },
+      "previousyear": {
+        "title": "Previous years sales",
+        "data": [30, 40, 115, 310, 249, 60, 70, 191, 110, 210, 151, 101]
+      }
+    }
+  },
+  "todaysmoney": {
+    "title": "Todays Money",
+    "totalamount": 2500,
+    "previoustotalamount": 1100
+  },
+  "totalsales": {
+    "title": "Total Sales",
+    "totalamount": 5500,
+    "previoustotalamount": 1400
+  },
+  "newusers": {
+    "title": "New Users",
+    "totalamount": 231,
+    "previoustotalamount": 170
+  },
+  "totalusers": {
+    "title": "Total Users",
+    "totalamount": 25000,
+    "previoustotalamount": 12000
+  }
+}

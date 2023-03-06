@@ -1,0 +1,17 @@
+{
+  "back-to-seller-app": {
+    "title": "Back to Seller App ↗",
+    "type": "page",
+    "href": "/dashboard",
+    "newWindow": false
+  },
+  "---": {
+    "type": "separator"
+  },
+  "index": "Quick start",
+  "manage-permissions": {
+    "title":"Manage Permissions",
+    "type": "page",
+    "newWindow": false
+  }
+}

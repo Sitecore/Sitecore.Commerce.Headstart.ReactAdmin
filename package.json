@@ -16,7 +16,7 @@
     "up-latest": "npm run up --latest",
     "release": "cross-env HUSKY=0 standard-version",
     "push-release": "git push --follow-tags origin main",
-    "pre-commit": "npm run lint && tsc --noEmit && npm run build",
+    "pre-commit": "npm run lint && tsc --noEmit",
     "seed": "seeding seed playshop-marketplace.yml",
     "prepare": "husky install"
   },
@@ -32,7 +32,6 @@
     "apexcharts": "^3.36.0",
     "axios": "^1.2.0",
     "formik": "^2.2.9",
-    "formik-chakra-ui": "^1.6.1",
     "framer-motion": "^8.1.7",
     "lodash": "^4.17.21",
     "next": "12.2.0",

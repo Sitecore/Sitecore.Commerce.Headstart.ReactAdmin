@@ -23,7 +23,7 @@ import {
   UnorderedList
 } from "@chakra-ui/react"
 import {DeleteIcon} from "@chakra-ui/icons"
-import {InputControl, RadioGroupControl, SwitchControl, TextareaControl} from "formik-chakra-ui"
+import {InputControl, RadioGroupControl, SwitchControl, TextareaControl} from "types/formik-chakra-ui"
 import {Formik, useField, useFormikContext} from "formik"
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react"
 import {useEffect, useState} from "react"

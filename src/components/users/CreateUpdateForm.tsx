@@ -1,7 +1,7 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, Heading, List, ListIcon, ListItem, Stack} from "@chakra-ui/react"
 import {ErrorMessage, Field, Formik} from "formik"
-import {InputControl, SwitchControl} from "formik-chakra-ui"
+import {InputControl, SwitchControl} from "types/formik-chakra-ui"
 import Card from "../card/Card"
 import {MdCheckCircle} from "react-icons/md"
 import {User} from "ordercloud-javascript-sdk"

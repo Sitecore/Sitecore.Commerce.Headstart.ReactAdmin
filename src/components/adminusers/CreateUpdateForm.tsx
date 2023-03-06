@@ -14,7 +14,7 @@ import {
   Tr
 } from "@chakra-ui/react"
 import {Formik} from "formik"
-import {InputControl, SwitchControl} from "formik-chakra-ui"
+import {InputControl, SwitchControl} from "types/formik-chakra-ui"
 import Card from "../card/Card"
 import {AdminUserGroups, AdminUsers, User} from "ordercloud-javascript-sdk"
 import {useRouter} from "next/router"

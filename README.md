@@ -66,8 +66,8 @@ NEXT_PUBLIC_OC_USELIVEANALYTICSDATA='false'
 
 3. Run Next.js in development mode
 ```bash
-yarn install
-yarn dev
+npm install --legacy-peer-deps
+npm run dev
 ```
 
 Your app should be up and running on [http://localhost:3000](http://localhost:3000)! 

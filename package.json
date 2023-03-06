@@ -9,19 +9,16 @@
     "postbuild": "next-sitemap --config next-sitemap.config.js",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "eslint src --fix && yarn format",
+    "lint:fix": "eslint src --fix && npm run format",
     "type-check": "tsc --noEmit",
     "format": "prettier --write src",
-    "up": "yarn upgrade-interactive",
-    "up-latest": "yarn up --latest",
+    "up": "upgrade-interactive",
+    "up-latest": "npm run up --latest",
     "release": "cross-env HUSKY=0 standard-version",
     "push-release": "git push --follow-tags origin main",
-    "pre-commit": "yarn lint && yarn tsc --noEmit && yarn build",
-    "seed": "seeding seed playshop-marketplace.yml"
-  },
-  "engines": {
-    "npm": "Please use yarn",
-    "yarn": ">=1.0.0"
+    "pre-commit": "npm run lint && tsc --noEmit && npm run build",
+    "seed": "seeding seed playshop-marketplace.yml",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.4",

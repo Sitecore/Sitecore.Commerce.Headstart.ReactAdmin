@@ -1,12 +1,6 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
-import {
-  InputControl,
-  NumberInputControl,
-  PercentComplete,
-  SelectControl,
-  SwitchControl
-} from "components/formik-chakra-ui"
+import {InputControl, NumberInputControl, PercentComplete, SelectControl, SwitchControl} from "components/formik"
 import {Buyer, Catalog} from "ordercloud-javascript-sdk"
 import Card from "../card/Card"
 import {Formik} from "formik"

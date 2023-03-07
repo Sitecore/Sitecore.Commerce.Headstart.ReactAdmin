@@ -1,5 +1,4 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
-import {supplierUserGroupsService, supplierUsersService, suppliersService} from "api"
 import {useCallback, useEffect, useMemo, useState} from "react"
 import Card from "components/card/Card"
 import {IoMdClose} from "react-icons/io"
@@ -13,7 +12,10 @@ import router from "next/router"
 import {DataTable} from "components/data-table/DataTable"
 import {useSuccessToast} from "hooks/useToast"
 import {OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Supplier} from "ordercloud-javascript-sdk"
+import {ListPage, Supplier, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
+import {ISupplier} from "types/ordercloud/ISupplier"
+import {ISupplierUser} from "types/ordercloud/ISupplierUser"
+import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -39,14 +41,15 @@ const SuppliersList = () => {
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
     let _supplierListMeta = {}
-    const suppliersList = await suppliersService.list(filters)
-
+    const suppliersList = await Suppliers.List<ISupplier>(filters)
     const requests = suppliersList.Items.map(async (supplier) => {
+      const [usersList, userGroupsList] = await Promise.all([
+        SupplierUsers.List<ISupplierUser>(supplier.ID),
+        SupplierUserGroups.List<ISupplierUserGroup>(supplier.ID)
+      ])
       _supplierListMeta[supplier.ID] = {}
-      _supplierListMeta[supplier.ID]["userGroupsCount"] = await supplierUserGroupsService.getSuppliersUserGroupsCount(
-        supplier.ID
-      )
-      _supplierListMeta[supplier.ID]["usersCount"] = await supplierUsersService.getSuppliersUsersCount(supplier.ID)
+      _supplierListMeta[supplier.ID]["usersCount"] = usersList.Meta.TotalCount
+      _supplierListMeta[supplier.ID]["userGroupsCount"] = userGroupsList.Meta.TotalCount
     })
     await Promise.all(requests)
     setSuppliersMeta(_supplierListMeta)
@@ -59,7 +62,7 @@ const SuppliersList = () => {
 
   const deleteSupplier = useCallback(
     async (supplierId: string) => {
-      await suppliersService.delete(supplierId)
+      await Suppliers.Delete(supplierId)
       await fetchData({})
       successToast({
         description: "Supplier deleted successfully."

@@ -60,6 +60,7 @@ import Card from "components/card/Card"
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {useSuccessToast} from "hooks/useToast"
 import {Link} from "components/navigation/Link"
+import {IProduct} from "types/ordercloud/IProduct"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -150,7 +151,7 @@ const ProductDetails = () => {
       ID: formValues.id,
       Active: formValues.isActive
     }
-    await Products.Create(newProduct)
+    await Products.Create<IProduct>(newProduct)
 
     setFormValues((v) => ({
       ...v,

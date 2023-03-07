@@ -21,6 +21,8 @@ import OcOrderReturnItemList from "components/returns/OcOrderReturnItem"
 import {useRouter} from "next/router"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
+import {IPayment} from "types/ordercloud/IPayment"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -48,7 +50,7 @@ const OrderReturnDetailPage: FunctionComponent = () => {
       if (!orderReturnId) {
         return
       }
-      const ocOrderReturn = await OrderReturns.Get(orderReturnId)
+      const ocOrderReturn = await OrderReturns.Get<IOrderReturn>(orderReturnId)
       setOrderReturn(ocOrderReturn)
       setItemsToReturn(ocOrderReturn.ItemsToReturn)
     }
@@ -77,8 +79,8 @@ const OrderReturnDetailPage: FunctionComponent = () => {
       Accepted: true,
       OrderReturnID: orderReturn.ID
     }
-    await Payments.Create("All", orderReturn.OrderID, orderReturnPaymentRequest)
-    const updatedOrderReturn = await OrderReturns.Get(orderReturn.ID)
+    await Payments.Create<IPayment>("All", orderReturn.OrderID, orderReturnPaymentRequest)
+    const updatedOrderReturn = await OrderReturns.Get<IOrderReturn>(orderReturn.ID)
     setOrderReturn(updatedOrderReturn)
   }
 

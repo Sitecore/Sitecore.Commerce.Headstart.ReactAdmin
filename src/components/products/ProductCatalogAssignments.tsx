@@ -27,24 +27,14 @@ import {
   useColorModeValue,
   useDisclosure
 } from "@chakra-ui/react"
-import {
-  Catalog,
-  CatalogAssignment,
-  Catalogs,
-  ListPage,
-  Product,
-  ProductCatalogAssignment,
-  Products,
-  RequiredDeep
-} from "ordercloud-javascript-sdk"
+import {Catalog, Catalogs, ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {ComposedProduct, GetComposedProduct} from "../../services/ordercloud.service"
-import {FiEdit, FiPlus, FiTrash2} from "react-icons/fi"
 import {useEffect, useState} from "react"
-
 import BrandedSpinner from "../branding/BrandedSpinner"
 import BrandedTable from "../branding/BrandedTable"
 import ProductCategoryAssignments from "./ProductCategoryAssignments"
 import React from "react"
+import {ICatalog} from "types/ordercloud/ICatalog"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
@@ -77,7 +67,7 @@ export default function ProductCatalogAssignments({composedProduct, setComposedP
 
         await Promise.all(
           assignments.Items.map(async (index) => {
-            var catalog = await Catalogs.Get(index.CatalogID)
+            var catalog = await Catalogs.Get<ICatalog>(index.CatalogID)
             catalogs.push(catalog)
           })
         )
@@ -95,7 +85,7 @@ export default function ProductCatalogAssignments({composedProduct, setComposedP
     if (newValue == "") {
       setChosenCatalog(null)
     } else {
-      var catalog = await Catalogs.Get(newValue)
+      var catalog = await Catalogs.Get<ICatalog>(newValue)
       setChosenCatalog(catalog)
     }
   }
@@ -141,7 +131,7 @@ export default function ProductCatalogAssignments({composedProduct, setComposedP
     e.preventDefault()
     setIsCatalogChosen(false)
     setNewCatalog(e.target.value)
-    Catalogs.List({
+    Catalogs.List<ICatalog>({
       searchOn: ["Name", "ID"],
       search: e.target.value
     }).then((innerAvailableCatalogs) => {

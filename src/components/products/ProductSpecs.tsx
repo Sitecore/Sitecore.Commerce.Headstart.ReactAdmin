@@ -27,11 +27,11 @@ import {
 import {CheckIcon, CloseIcon} from "@chakra-ui/icons"
 import {ComposedProduct, GetComposedProduct} from "../../services/ordercloud.service"
 import {Products, Spec, SpecProductAssignment, Specs} from "ordercloud-javascript-sdk"
-import BrandedBox from "../branding/BrandedBox"
 import BrandedTable from "../branding/BrandedTable"
 import React from "react"
 import {useState} from "react"
 import BrandedSpinner from "../branding/BrandedSpinner"
+import {ISpec} from "types/ordercloud/ISpec"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
@@ -82,7 +82,7 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
     }
 
     await Specs.SaveProductAssignment(specProductAssignment)
-    var targetSpec = await Specs.Get(newSpecifaction)
+    var targetSpec = await Specs.Get<ISpec>(newSpecifaction)
     if (targetSpec.DefinesVariant && regenerateVariants) {
       // TODO: ASK in Dialog if Variants shall be regenerated and how?
       // In case a variant spec has been deleted, all the variants have to be regenerated
@@ -111,7 +111,7 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
     e.preventDefault()
     setIsSpecChosen(false)
     setNewSpecification(e.target.value)
-    const availableSpecs = Specs.List({
+    const availableSpecs = Specs.List<ISpec>({
       searchOn: ["Name", "ID"],
       search: e.target.value
     }).then((innerSpecs) => {

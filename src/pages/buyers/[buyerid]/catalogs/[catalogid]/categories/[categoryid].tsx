@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "components/categories/CreateUpdateForm"
 import {Box} from "@chakra-ui/react"
-import {Category} from "ordercloud-javascript-sdk"
+import {Categories, Category} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {categoriesService} from "api"
 import {useRouter} from "next/router"
+import {ICategory} from "types/ordercloud/ICategoryXp"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -29,7 +29,7 @@ const CategoryListItem = (props) => {
   useEffect(() => {
     const categoryid = props.selectedNode?.id || router.query.categoryid
     if (categoryid)
-      categoriesService.getById(router.query.catalogid, categoryid).then((category) => {
+      Categories.Get<ICategory>(router.query.catalogid as string, categoryid).then((category) => {
         setCategory(category)
       })
   }, [props.selectedNode, router.query.catalogid, router.query.categoryid])

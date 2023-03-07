@@ -33,6 +33,7 @@ import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -59,7 +60,7 @@ const ReturnsPage = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const returnsList = await OrderReturns.List(filters)
+    const returnsList = await OrderReturns.List<IOrderReturn>(filters)
     setTableData(returnsList)
   }, [])
 

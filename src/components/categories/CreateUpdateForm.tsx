@@ -1,11 +1,11 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, HStack, Stack} from "@chakra-ui/react"
-import {Category} from "ordercloud-javascript-sdk"
+import {Categories, Category} from "ordercloud-javascript-sdk"
 import {InputControl, SwitchControl, TextareaControl} from "components/formik"
 import {Formik} from "formik"
-import {categoriesService} from "api"
 import {useRouter} from "next/router"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {ICategory} from "types/ordercloud/ICategoryXp"
 
 export {CreateUpdateForm}
 
@@ -26,13 +26,12 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
 
   async function createCategory(fields: Category) {
     fields.ParentID = parentId
-    const createdCatalog = await categoriesService.create(router.query.catalogid, fields)
-    await categoriesService.saveAssignment(
-      router.query.catalogid,
-      createdCatalog.ID,
-      router.query.buyerid,
-      router.query.usergroupid
-    )
+    const createdCategory = await Categories.Create<ICategory>(router.query.catalogid as string, fields)
+    await Categories.SaveAssignment(router.query.catalogid as string, {
+      CategoryID: createdCategory.ID,
+      BuyerID: router.query.buyerid as string,
+      UserGroupID: router.query.usergroupid as string
+    })
     successToast({
       description: "Category created successfully."
     })
@@ -40,13 +39,12 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
   }
 
   async function updateCategory(fields: Category) {
-    const updatedCatalog = await categoriesService.update(router.query.catalogid, fields)
-    await categoriesService.saveAssignment(
-      router.query.catalogid,
-      updatedCatalog.ID,
-      router.query.buyerid,
-      router.query.usergroupid
-    )
+    const updatedCategory = await Categories.Save<ICategory>(router.query.catalogid as string, fields.ID, fields)
+    await Categories.SaveAssignment(router.query.catalogid as string, {
+      CategoryID: updatedCategory.ID,
+      BuyerID: router.query.buyerid as string,
+      UserGroupID: router.query.usergroupid as string
+    })
     successToast({
       description: "Category updated successfully."
     })
@@ -55,7 +53,7 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
 
   async function deleteCategory(categoryid) {
     try {
-      await categoriesService.delete(router.query.catalogid, categoryid)
+      await Categories.Delete(router.query.catalogid as string, categoryid)
       successToast({
         description: "Category deleted successfully."
       })

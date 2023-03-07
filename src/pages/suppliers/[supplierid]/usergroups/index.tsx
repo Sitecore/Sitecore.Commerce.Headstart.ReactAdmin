@@ -3,12 +3,12 @@ import {useCallback, useEffect, useMemo, useState} from "react"
 import Card from "components/card/Card"
 import {Link} from "components/navigation/Link"
 import React from "react"
-import {supplierUserGroupsService} from "api"
 import {useRouter} from "next/router"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableFilters, OrderCloudTableColumn} from "components/ordercloud-table"
-import {ListPage, UserGroup} from "ordercloud-javascript-sdk"
+import {ListPage, SupplierUserGroups, UserGroup} from "ordercloud-javascript-sdk"
 import {useSuccessToast} from "hooks/useToast"
+import {ISupplier} from "types/ordercloud/ISupplier"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -35,7 +35,7 @@ const UserGroupsList = () => {
   const fetchData = useCallback(
     async (filters: OrderCloudTableFilters) => {
       setFilters(filters)
-      const userGroupsList = await supplierUserGroupsService.list(router.query.supplierid, filters)
+      const userGroupsList = await SupplierUserGroups.List<ISupplier>(router.query.supplierid as string, filters)
       setTableData(userGroupsList)
     },
     [router.query.supplierid]
@@ -47,7 +47,7 @@ const UserGroupsList = () => {
 
   const deleteUserGroup = useCallback(
     async (userGroupid: string) => {
-      await supplierUserGroupsService.delete(router.query.supplierid, userGroupid)
+      await SupplierUserGroups.Delete(router.query.supplierid as string, userGroupid)
       await fetchData({})
       successToast({
         description: "Supplier deleted successfully."

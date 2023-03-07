@@ -1,8 +1,8 @@
 import {Text, Tbody, Td, Tr, Box, Grid, GridItem, Checkbox} from "@chakra-ui/react"
 import {useEffect, useState} from "react"
 import {Product} from "ordercloud-javascript-sdk"
-import {ProductXPs} from "types/ProductXPs"
 import ProductCard from "./ProductCard"
+import {IProduct} from "types/ordercloud/IProduct"
 
 interface ProductGridProps {
   products: Product[]
@@ -11,7 +11,7 @@ interface ProductGridProps {
   onToggleSelectAllProducts: () => void
 }
 const ProductGrid = (props: ProductGridProps) => {
-  const [componentProducts, setComponentProducts] = useState<Product<ProductXPs>[]>(props.products)
+  const [componentProducts, setComponentProducts] = useState<IProduct[]>(props.products)
 
   useEffect(() => {
     setComponentProducts(props.products)

@@ -1,15 +1,15 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, FormLabel, HStack, Icon, Stack, Text} from "@chakra-ui/react"
 import {InputControl} from "components/formik"
-import {ProductFacet} from "ordercloud-javascript-sdk"
+import {ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
 import Card from "../card/Card"
 import {Field, Formik} from "formik"
 import {useRouter} from "next/router"
-import {productfacetsService} from "api/productfacets"
 import {useEffect, useState, KeyboardEvent} from "react"
 import {HiOutlineX} from "react-icons/hi"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {xpHelper} from "utils"
+import {IProductFacet} from "types/ordercloud/IProductFacet"
 
 export {CreateUpdateForm}
 
@@ -59,7 +59,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
   }
 
   async function createProductFacet(fields: ProductFacet) {
-    await productfacetsService.create(fields)
+    await ProductFacets.Create<IProductFacet>(fields)
     successToast({
       description: "Product Facet created successfully."
     })
@@ -67,7 +67,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
   }
 
   async function updateProductFacet(fields: ProductFacet) {
-    await productfacetsService.update(fields)
+    await ProductFacets.Save<IProductFacet>(fields.ID, fields)
     successToast({
       description: "Product Facet updated successfully."
     })
@@ -76,7 +76,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
 
   async function deleteProductFacets() {
     try {
-      await productfacetsService.delete(router.query.id)
+      await ProductFacets.Delete(router.query.id as string)
       router.push(".")
       successToast({
         description: "Product Facet deleted successfully."

@@ -7,6 +7,7 @@ import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
 import {useRouter} from "next/router"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {pick} from "lodash"
+import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 
 export {CreateUpdateForm}
 interface CreateUpdateFormProps {
@@ -36,7 +37,7 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
   )
 
   async function createAddress(fields: Address) {
-    await AdminAddresses.Create(fields)
+    await AdminAddresses.Create<IAdminAddress>(fields)
     successToast({
       description: "Address created successfully."
     })
@@ -45,7 +46,7 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
 
   async function updateAddress(fields: Address) {
     const formFields = Object.keys(formShape)
-    await AdminAddresses.Patch(fields.ID, pick(fields, formFields))
+    await AdminAddresses.Patch<IAdminAddress>(fields.ID, pick(fields, formFields))
     successToast({
       description: "Address updated successfully"
     })

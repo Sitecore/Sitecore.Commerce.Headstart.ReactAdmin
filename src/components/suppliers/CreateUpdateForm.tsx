@@ -3,10 +3,10 @@ import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
 import {InputControl, PercentComplete, SwitchControl} from "components/formik"
 import Card from "../card/Card"
 import {Formik} from "formik"
-import {Supplier} from "ordercloud-javascript-sdk"
-import {suppliersService} from "../../api"
+import {Supplier, Suppliers} from "ordercloud-javascript-sdk"
 import {useRouter} from "next/router"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {ISupplier} from "types/ordercloud/ISupplier"
 
 export {CreateUpdateForm}
 
@@ -29,7 +29,7 @@ function CreateUpdateForm({supplier}: CreateUpdateFormProps) {
   )
 
   async function createSupplier(fields: Supplier) {
-    await suppliersService.create(fields)
+    await Suppliers.Create<ISupplier>(fields)
     successToast({
       description: "Supplier created successfully."
     })
@@ -37,7 +37,7 @@ function CreateUpdateForm({supplier}: CreateUpdateFormProps) {
   }
 
   async function updateSupplier(fields: Supplier) {
-    await suppliersService.update(fields)
+    await Suppliers.Save<ISupplier>(fields.ID, fields)
     successToast({
       description: "Supplier updated successfully."
     })

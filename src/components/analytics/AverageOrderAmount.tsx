@@ -2,7 +2,7 @@ import {Flex, Text, Box, useColorModeValue} from "@chakra-ui/react"
 import React, {useEffect, useState} from "react"
 import LineChart from "../charts/LineChart"
 import Card from "../card/Card"
-import {dashboardService} from "api"
+import {dashboardService} from "services/dashboard.service"
 
 export default function AverageOrderAmount() {
   const boxBgColor = useColorModeValue("boxBgColor.100", "boxBgColor.600")

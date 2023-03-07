@@ -17,12 +17,12 @@ import {Link} from "../../../components/navigation/Link"
 import {NextSeo} from "next-seo"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {productfacetsService} from "api/productfacets"
 import {useRouter} from "next/router"
 import {useErrorToast, useSuccessToast} from "hooks/useToast"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableFilters, OrderCloudTableColumn} from "components/ordercloud-table"
-import {ListPage, Catalog, ProductFacet} from "ordercloud-javascript-sdk"
+import {ListPage, Catalog, ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
+import {IProductFacet} from "types/ordercloud/IProductFacet"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -52,7 +52,7 @@ const ProductFacetsPage = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const productfacetsList = await productfacetsService.getAll(filters)
+    const productfacetsList = await ProductFacets.List<IProductFacet>(filters)
     setTableData(productfacetsList)
   }, [])
 
@@ -62,7 +62,7 @@ const ProductFacetsPage = () => {
 
   const deleteProductFacet = useCallback(
     async (productfacetid: string) => {
-      await productfacetsService.delete(productfacetid)
+      await ProductFacets.Delete(productfacetid)
       await fetchData({})
       successToast({
         description: "Product Facet deleted successfully."

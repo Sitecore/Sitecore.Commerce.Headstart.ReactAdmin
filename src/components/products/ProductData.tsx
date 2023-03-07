@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
   Collapse,
   Container,
   Flex,
@@ -14,13 +13,10 @@ import {
   Switch
 } from "@chakra-ui/react"
 import {ChangeEvent, useEffect, useState} from "react"
-import {CheckIcon, CloseIcon} from "@chakra-ui/icons"
 import {ComposedProduct, GetComposedProduct} from "../../services/ordercloud.service"
-import {FiCheck, FiEdit, FiX} from "react-icons/fi"
 import {Product, Products} from "ordercloud-javascript-sdk"
-
-import BrandedBox from "../branding/BrandedBox"
 import BrandedSpinner from "../branding/BrandedSpinner"
+import {IProduct} from "types/ordercloud/IProduct"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
@@ -137,7 +133,7 @@ export default function ProductData({composedProduct, setComposedProduct}: Produ
       Returnable: formValues.returnable,
       ShipFromAddressID: formValues.shipFromAddress
     }
-    await Products.Patch(composedProduct?.Product?.ID, patchedProduct)
+    await Products.Patch<IProduct>(composedProduct?.Product?.ID, patchedProduct)
 
     // Hack to ensure Data are loaded before showing -> AWAIT is not enough
     setTimeout(async () => {

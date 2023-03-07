@@ -24,12 +24,12 @@ import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
 import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
-import {promotionsService} from "api"
 import router from "next/router"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
+import {useSuccessToast} from "hooks/useToast"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Promotion} from "ordercloud-javascript-sdk"
+import {ListPage, Promotion, Promotions} from "ordercloud-javascript-sdk"
+import {IPromotion} from "types/ordercloud/IPromotion"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -54,7 +54,7 @@ const PromotionsList = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const promotionsList = await promotionsService.list(filters)
+    const promotionsList = await Promotions.List<IPromotion>(filters)
     setTableData(promotionsList)
   }, [])
 
@@ -64,7 +64,7 @@ const PromotionsList = () => {
 
   const deletePromotion = useCallback(
     async (promotionId: string) => {
-      await promotionsService.delete(promotionId)
+      await Promotions.Delete(promotionId)
       fetchData({})
       successToast({
         description: "Promotion deleted successfully."

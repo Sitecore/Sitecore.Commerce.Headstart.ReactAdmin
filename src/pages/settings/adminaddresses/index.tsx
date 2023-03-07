@@ -23,6 +23,7 @@ import {addressHelper} from "utils/address.utils"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableFilters} from "components/ordercloud-table"
 import {Link} from "components/navigation/Link"
+import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -50,7 +51,7 @@ const AdminAddressesPage = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const adminAddresses = await AdminAddresses.List(filters)
+    const adminAddresses = await AdminAddresses.List<IAdminAddress>(filters)
     setTableData(adminAddresses)
   }, [])
 

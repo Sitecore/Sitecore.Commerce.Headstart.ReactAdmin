@@ -5,6 +5,7 @@ import {AdminUserGroups, AdminUsers, User} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "next/router"
+import {IAdminUser} from "types/ordercloud/IAdminUser"
 
 export async function getServerSideProps() {
   return {
@@ -27,7 +28,7 @@ const AdminUserListItem = () => {
   const [permissions, setPermissions] = useState([])
   useEffect(() => {
     const getAdminUser = async () => {
-      const user = await AdminUsers.Get(router.query.adminuserid as string)
+      const user = await AdminUsers.Get<IAdminUser>(router.query.adminuserid as string)
       const userGroupAssignments = await AdminUserGroups.ListUserAssignments({userID: user.ID})
       setPermissions(userGroupAssignments.Items.map((p) => p.UserGroupID))
       setAdminUser(user)

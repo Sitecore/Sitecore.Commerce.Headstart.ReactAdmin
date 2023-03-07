@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "../../components/promotions/CreateUpdateForm"
 import {Box} from "@chakra-ui/react"
-import {Promotion} from "ordercloud-javascript-sdk"
+import {Promotion, Promotions} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {promotionsService} from "../../api"
 import {useRouter} from "next/router"
+import {IPromotion} from "types/ordercloud/IPromotion"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -27,8 +27,12 @@ const PromotionItem = (props) => {
   const router = useRouter()
   const [promotion, setPromotion] = useState({} as Promotion)
   useEffect(() => {
+    const getPromotion = async () => {
+      const promo = await Promotions.Get<IPromotion>(router.query.promotionid as string)
+      setPromotion(promo)
+    }
     if (router.query.promotionid) {
-      promotionsService.getById(router.query.promotionid).then((promotion) => setPromotion(promotion))
+      getPromotion()
     }
   }, [router.query.promotionid])
   console.log(promotion)

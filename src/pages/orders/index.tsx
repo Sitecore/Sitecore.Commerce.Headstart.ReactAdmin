@@ -31,6 +31,7 @@ import {dateHelper} from "utils/date.utils"
 import {priceHelper} from "utils/price.utils"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
+import {IOrder} from "types/ordercloud/IOrder"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -56,7 +57,7 @@ const OrdersPage = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const ordersList = await Orders.List("All", filters)
+    const ordersList = await Orders.List<IOrder>("All", filters)
     setTableData(ordersList)
   }, [])
 

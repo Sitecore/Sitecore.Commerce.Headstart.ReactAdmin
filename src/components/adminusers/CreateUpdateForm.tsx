@@ -23,6 +23,7 @@ import {useState} from "react"
 import {textHelper} from "utils"
 import {appPermissions} from "constants/app-permissions.config"
 import {isEqual, sortBy, difference, pick} from "lodash"
+import {IAdminUser} from "types/ordercloud/IAdminUser"
 
 interface PermissionTableProps {
   assignedPermissions?: string[]
@@ -99,7 +100,7 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
   )
 
   async function createUser(fields: User) {
-    const createdUser = await AdminUsers.Create(fields)
+    const createdUser = await AdminUsers.Create<IAdminUser>(fields)
     const permissionsToAdd = permissions.map((permission) =>
       AdminUserGroups.SaveUserAssignment({UserGroupID: permission, UserID: createdUser.ID})
     )
@@ -112,7 +113,7 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
 
   async function updateUser(fields: User) {
     const formFields = Object.keys(formShape)
-    const updatedUser = await AdminUsers.Patch(fields.ID, pick(fields, formFields))
+    const updatedUser = await AdminUsers.Patch<IAdminUser>(fields.ID, pick(fields, formFields))
     const permissionsChanged = !isEqual(sortBy(assignedPermissions), sortBy(permissions))
     let successMessage = "User updated successfully."
     if (permissionsChanged) {

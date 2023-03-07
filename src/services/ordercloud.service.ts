@@ -8,15 +8,17 @@ import {
   Orders,
   Payment,
   Payments,
-  Product,
   Products,
   RequiredDeep,
   SearchType,
   Spec,
   Variant
 } from "ordercloud-javascript-sdk"
-import {ProductXPs} from "types/ProductXPs"
 import ocConfig from "constants/ordercloud-config"
+import {IProduct} from "types/ordercloud/IProduct"
+import {IPayment} from "types/ordercloud/IPayment"
+import {ILineItem} from "types/ordercloud/ILineItem"
+import {IOrder} from "types/ordercloud/IOrder"
 
 export interface ProductListOptions {
   catalogID?: string
@@ -40,14 +42,14 @@ export function SetConfiguration() {
 }
 
 export interface ComposedProduct {
-  Product: RequiredDeep<Product<ProductXPs>>
+  Product: RequiredDeep<IProduct>
   Specs: RequiredDeep<Spec<any, any>>[]
   Variants: RequiredDeep<Variant<any>>[]
 }
 
 export async function GetComposedProduct(productId: string): Promise<ComposedProduct> {
   if (productId) {
-    var product = await Products.Get(productId).catch()
+    var product = await Products.Get<IProduct>(productId).catch()
     var specs = await Products.ListSpecs(productId).catch()
     var variants = await Products.ListVariants(productId).catch()
     var composedProduct: ComposedProduct = {
@@ -83,7 +85,7 @@ export async function GetCurrentOrder() {
       worksheet.ShipEstimateResponse.ShipEstimates.length &&
       worksheet.ShipEstimateResponse.ShipEstimates.filter((se) => !se.SelectedShipMethodID).length === 0
     ) {
-      const response = await Payments.List("Outgoing", worksheet.Order.ID, {
+      const response = await Payments.List<IPayment>("Outgoing", worksheet.Order.ID, {
         pageSize: 100
       })
       composedOrder.Payment = response.Items
@@ -104,7 +106,7 @@ export async function RemoveLineItem(lineItemId) {
 export async function UpdateLineItem(lineItem) {
   var currentOrder = await GetCurrentOrder()
   var orderId = currentOrder?.Order?.Order?.ID
-  await LineItems.Save("Outgoing", orderId, lineItem?.ID, lineItem)
+  await LineItems.Save<ILineItem>("Outgoing", orderId, lineItem?.ID, lineItem)
   return IntegrationEvents.GetWorksheet("Outgoing", orderId)
 }
 
@@ -114,11 +116,11 @@ export async function CreateLineItem(lineItemId) {
 
   // initialize the order if it doesn't exist already
   if (!orderId) {
-    const orderResponse = await Orders.Create("Outgoing", {})
+    const orderResponse = await Orders.Create<IOrder>("Outgoing", {})
     orderId = orderResponse.ID
   }
 
   // create the new line item
-  await LineItems.Create("Outgoing", orderId, lineItemId)
+  await LineItems.Create<ILineItem>("Outgoing", orderId, lineItemId)
   return IntegrationEvents.GetWorksheet("Outgoing", orderId)
 }

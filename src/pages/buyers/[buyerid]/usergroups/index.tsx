@@ -4,11 +4,11 @@ import Card from "components/card/Card"
 import {Link} from "components/navigation/Link"
 import React from "react"
 import {useRouter} from "next/router"
-import {userGroupsService} from "api"
 import {useErrorToast, useSuccessToast} from "hooks/useToast"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, UserGroup} from "ordercloud-javascript-sdk"
+import {ListPage, UserGroup, UserGroups} from "ordercloud-javascript-sdk"
+import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -37,7 +37,7 @@ const UserGroupsList = () => {
   const fetchData = useCallback(
     async (filters: OrderCloudTableFilters) => {
       setFilters(filters)
-      const userGroupsList = await userGroupsService.list(router.query.buyerid, filters)
+      const userGroupsList = await UserGroups.List<IBuyerUserGroup>(router.query.buyerid as string, filters)
       setTableData(userGroupsList)
     },
     [router.query.buyerid]
@@ -49,7 +49,7 @@ const UserGroupsList = () => {
 
   const deleteUserGroup = useCallback(
     async (userGroupId: string) => {
-      await userGroupsService.delete(router.query.buyerid, userGroupId)
+      await UserGroups.Delete(router.query.buyerid as string, userGroupId)
       fetchData({})
       successToast({
         description: "Buyer deleted successfully."

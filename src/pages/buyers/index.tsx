@@ -1,5 +1,4 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
-import {buyersService, catalogsService, userGroupsService, usersService} from "api"
 import {useCallback, useEffect, useMemo, useState} from "react"
 import Card from "components/card/Card"
 import {IoMdClose} from "react-icons/io"
@@ -13,7 +12,10 @@ import router from "next/router"
 import {useSuccessToast} from "hooks/useToast"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Buyer} from "ordercloud-javascript-sdk"
+import {ListPage, Buyer, Buyers, Catalogs, UserGroups, Users} from "ordercloud-javascript-sdk"
+import {IBuyer} from "types/ordercloud/IBuyer"
+import {IBuyerUser} from "types/ordercloud/IBuyerUser"
+import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -39,13 +41,17 @@ const BuyersList = () => {
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
     let _buyerListMeta = {}
-    const buyersList = await buyersService.list(filters)
-
+    const buyersList = await Buyers.List<IBuyer>()
     const requests = buyersList.Items.map(async (buyer) => {
+      const [userGroupsList, usersList, catalogsList] = await Promise.all([
+        UserGroups.List<IBuyerUserGroup>(buyer.ID),
+        Users.List<IBuyerUser>(buyer.ID),
+        Catalogs.ListAssignments({buyerID: buyer.ID})
+      ])
       _buyerListMeta[buyer.ID] = {}
-      _buyerListMeta[buyer.ID]["userGroupsCount"] = await userGroupsService.getUserGroupsCountByBuyerID(buyer.ID)
-      _buyerListMeta[buyer.ID]["usersCount"] = await usersService.getUsersCountByBuyerID(buyer.ID)
-      _buyerListMeta[buyer.ID]["catalogsCount"] = await catalogsService.getCatalogsCountByBuyerID(buyer.ID)
+      _buyerListMeta[buyer.ID]["userGroupsCount"] = userGroupsList.Meta.TotalCount
+      _buyerListMeta[buyer.ID]["usersCount"] = usersList.Meta.TotalCount
+      _buyerListMeta[buyer.ID]["catalogsCount"] = catalogsList.Meta.TotalCount
     })
     await Promise.all(requests)
     setBuyersMeta(_buyerListMeta)
@@ -58,7 +64,7 @@ const BuyersList = () => {
 
   const deleteBuyer = useCallback(
     async (userId: string) => {
-      await buyersService.delete(userId)
+      await Buyers.Delete(userId)
       fetchData({})
       successToast({
         description: "Buyer deleted successfully."

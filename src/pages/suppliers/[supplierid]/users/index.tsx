@@ -5,12 +5,12 @@ import {IoMdClose} from "react-icons/io"
 import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
 import React from "react"
-import {supplierUsersService} from "api"
 import {useRouter} from "next/router"
 import {DataTable} from "components/data-table/DataTable"
 import {OrderCloudTableFilters, OrderCloudTableColumn} from "components/ordercloud-table"
-import {ListPage, User} from "ordercloud-javascript-sdk"
+import {ListPage, SupplierUsers, User} from "ordercloud-javascript-sdk"
 import {useSuccessToast} from "hooks/useToast"
+import {ISupplierUser} from "types/ordercloud/ISupplierUser"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -37,7 +37,7 @@ const UsersList = () => {
   const fetchData = useCallback(
     async (filters: OrderCloudTableFilters) => {
       setFilters(filters)
-      const usersList = await supplierUsersService.list(router.query.supplierid, filters)
+      const usersList = await SupplierUsers.List<ISupplierUser>(router.query.supplierid as string, filters)
       setTableData(usersList)
     },
     [router.query.supplierid]
@@ -49,7 +49,7 @@ const UsersList = () => {
 
   const deleteSupplier = useCallback(
     async (userId: string) => {
-      await supplierUsersService.delete(router.query.supplierid, userId)
+      await SupplierUsers.Delete(router.query.supplierid as string, userId)
       await fetchData({})
       successToast({
         description: "User deleted successfully"

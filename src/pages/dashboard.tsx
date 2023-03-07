@@ -14,7 +14,6 @@ import {
   useColorModeValue
 } from "@chakra-ui/react"
 import {HiOutlineCurrencyDollar, HiOutlineFolderOpen, HiOutlineUserAdd, HiOutlineUserCircle} from "react-icons/hi"
-import {dashboardService, ordersService, productsService, promotionsService} from "api"
 import {useEffect, useState} from "react"
 import AverageOrderAmount from "components/analytics/AverageOrderAmount"
 import BrandedSpinner from "components/branding/BrandedSpinner"
@@ -28,6 +27,11 @@ import {appPermissions} from "constants/app-permissions.config"
 import {priceHelper} from "utils/price.utils"
 import useHasAccess from "hooks/useHasAccess"
 import {Link} from "components/navigation/Link"
+import {Orders, Products, Promotions} from "ordercloud-javascript-sdk"
+import {IOrder} from "types/ordercloud/IOrder"
+import {IProduct} from "types/ordercloud/IProduct"
+import {IPromotion} from "types/ordercloud/IPromotion"
+import {dashboardService} from "services/dashboard.service"
 
 const Dashboard = () => {
   const {colorMode, toggleColorMode} = useColorMode()
@@ -68,10 +72,10 @@ const Dashboard = () => {
 
   async function initDashboardData() {
     let _dashboardListMeta = {}
-    const ordersList = await ordersService.list()
-    const productsList = await productsService.list()
-    const promotionsList = await promotionsService.list()
-    const usersList = await promotionsService.list()
+    const ordersList = await Orders.List<IOrder>("All")
+    const productsList = await Products.List<IProduct>()
+    const promotionsList = await Promotions.List<IPromotion>()
+    const usersList = await Promotions.List<IPromotion>()
     //Todays Sales
     const todaysSales = await dashboardService.getTodaysMoney()
     settotalTodaysSales(todaysSales)

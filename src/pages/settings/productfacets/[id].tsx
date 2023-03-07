@@ -1,13 +1,11 @@
 import {useEffect, useState} from "react"
-
 import {Box} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {ProductFacet, User} from "ordercloud-javascript-sdk"
+import {ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
-import {productfacetsService} from "api/productfacets"
 import {CreateUpdateForm} from "components/productfacets"
-import router, {useRouter} from "next/router"
-import {useToast} from "@chakra-ui/react"
+import {useRouter} from "next/router"
+import {IProductFacet} from "types/ordercloud/IProductFacet"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -30,7 +28,7 @@ const ProductFacetsListItem = () => {
   const [productfacet, setProductFacet] = useState({} as ProductFacet)
   useEffect(() => {
     if (router.query.id) {
-      productfacetsService.getById(router.query.id).then((productfacet) => setProductFacet(productfacet))
+      ProductFacets.Get<IProductFacet>(router.query.id as string).then((productfacet) => setProductFacet(productfacet))
     }
   }, [productfacet?.ID, router.query.id])
 

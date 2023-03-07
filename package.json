@@ -28,7 +28,6 @@
     "@minoru/react-dnd-treeview": "^3.4.1",
     "@react-querybuilder/chakra": "^5.4.0",
     "@react-querybuilder/dnd": "^5.4.0",
-    "@reduxjs/toolkit": "^1.8.3",
     "apexcharts": "^3.36.0",
     "axios": "^1.2.0",
     "formik": "^2.2.9",

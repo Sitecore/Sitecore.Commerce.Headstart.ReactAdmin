@@ -3,7 +3,7 @@ import {Box, Button, ButtonGroup, Card, Flex, Stack} from "@chakra-ui/react"
 import {InputControl, TextareaControl} from "components/formik"
 import {Formik} from "formik"
 import {UserGroup} from "ordercloud-javascript-sdk"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 
 export {CreateUpdateForm}

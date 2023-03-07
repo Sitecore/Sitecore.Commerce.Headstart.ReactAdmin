@@ -4,7 +4,7 @@ import {Box} from "@chakra-ui/react"
 import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 
 export async function getServerSideProps() {

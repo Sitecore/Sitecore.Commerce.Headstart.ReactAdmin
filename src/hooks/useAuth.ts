@@ -1,6 +1,6 @@
 import ocConfig from "constants/ordercloud-config"
 import {AuthContext} from "context/auth-context"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {Auth, Me} from "ordercloud-javascript-sdk"
 import {useContext} from "react"
 import {IMeUser} from "types/ordercloud/IMeUser"

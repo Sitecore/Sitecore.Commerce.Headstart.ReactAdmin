@@ -3,7 +3,7 @@ import {useCallback, useMemo} from "react"
 import {Filters} from "ordercloud-javascript-sdk"
 import {ParsedUrlQuery} from "querystring"
 import {ProductListOptions} from "../services/ordercloud.service"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 
 export interface NextQueryMap {
   [key: string]: string

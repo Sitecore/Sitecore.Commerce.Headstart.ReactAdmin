@@ -3,7 +3,7 @@ import {CreateUpdateForm} from "components/usergroups/CreateUpdateForm"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {UserGroup, UserGroups} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */

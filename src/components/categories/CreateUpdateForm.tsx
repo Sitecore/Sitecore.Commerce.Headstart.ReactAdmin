@@ -3,7 +3,7 @@ import {Box, Button, ButtonGroup, Flex, HStack, Stack} from "@chakra-ui/react"
 import {Categories, Category} from "ordercloud-javascript-sdk"
 import {InputControl, SwitchControl, TextareaControl} from "components/formik"
 import {Formik} from "formik"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {ICategory} from "types/ordercloud/ICategoryXp"
 

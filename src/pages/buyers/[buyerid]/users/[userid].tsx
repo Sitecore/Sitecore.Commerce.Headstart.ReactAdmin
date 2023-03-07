@@ -4,7 +4,7 @@ import {Box} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {User, Users} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */

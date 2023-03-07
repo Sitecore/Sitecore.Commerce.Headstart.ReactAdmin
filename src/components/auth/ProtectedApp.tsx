@@ -1,5 +1,5 @@
 import {useAuth} from "hooks/useAuth"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 
 /**
  * This higher order component is used to ensure

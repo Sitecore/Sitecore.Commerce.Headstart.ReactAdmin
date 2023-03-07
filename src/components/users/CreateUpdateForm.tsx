@@ -5,7 +5,7 @@ import {InputControl, SwitchControl} from "components/formik"
 import Card from "../card/Card"
 import {MdCheckCircle} from "react-icons/md"
 import {User} from "ordercloud-javascript-sdk"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useState} from "react"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 

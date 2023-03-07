@@ -62,16 +62,16 @@ export const styles = {
       ".css-1jj9yua": {height: "38px"},
       ".breadcrumb": {
         ol: {
-          "list-style": "none",
+          listStyle: "none",
           li: {
-            "list-style": "none",
+            listStyle: "none",
             position: "relative",
             display: "inline-flex",
             height: "100%",
-            "text-transform": "capitalize",
+            textTransform: "capitalize",
             color: "gray.400",
-            "letter-spacing": "1px",
-            "font-size": "12px",
+            letterSpacing: "1px",
+            fontSize: "12px",
             ml: "2px",
             mt: "5px",
             mr: "5px",
@@ -85,13 +85,6 @@ export const styles = {
             },
             _last: {
               color: "#252525",
-              //"justify-content": "center",
-              //"align-items": "center",
-              //"box-shadow": "0 2px 5px rgba(0,0,0,0.26)",
-              //border: "1px",
-              //borderColor: "gray.300",
-              //padding: "0 40px",
-              //borderRadius: "md",
               _after: {
                 content: '""',
                 pl: "0px",
@@ -129,22 +122,17 @@ export const styles = {
               borderTop: "1px",
               borderColor: "gray.200"
             },
-            svg: {
-              //display: "none"
-            },
             ul: {
               marginTop: "0px",
               li: {
                 _last: {
                   borderBottom: "0px"
-                  // borderColor: "gray.200"
                 },
                 ul: {
                   marginTop: "0px",
                   li: {
                     _last: {
                       borderBottom: "0px"
-                      // borderColor: "gray.200"
                     }
                   }
                 }

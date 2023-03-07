@@ -2,7 +2,7 @@ import {CreateUpdateForm} from "../../../../components/usergroups"
 import {Box} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {userGroupsService} from "api"
+import {UserGroups} from "ordercloud-javascript-sdk"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -24,7 +24,7 @@ const ProtectedCreateUpdateForm = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
       <Box padding="GlobalPadding">
-        <CreateUpdateForm ocService={userGroupsService} />
+        <CreateUpdateForm ocService={UserGroups} />
       </Box>
     </ProtectedContent>
   )

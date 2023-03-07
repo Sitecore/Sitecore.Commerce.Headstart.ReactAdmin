@@ -13,15 +13,15 @@ import {
   ModalOverlay,
   useDisclosure
 } from "@chakra-ui/react"
-import {useEffect, useState} from "react"
+import {useCallback, useEffect, useState} from "react"
 import Card from "components/card/Card"
 import React from "react"
 import TreeView from "components/dndtreeview/TreeView"
-import {categoriesService} from "api"
 import {ocNodeModel} from "@minoru/react-dnd-treeview"
 import {useRouter} from "next/router"
 import {CreateUpdateForm} from "components/categories"
-import {Category} from "ordercloud-javascript-sdk"
+import {Categories, Category} from "ordercloud-javascript-sdk"
+import {ICategory} from "types/ordercloud/ICategoryXp"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -45,21 +45,25 @@ const CategoriesList = (props) => {
   const router = useRouter()
   const {isOpen: isCategoryCreateOpen, onOpen: onOpenCategoryCreate, onClose: onCloseCategoryCreate} = useDisclosure()
   const [parentIdToCreate, setParentIdToCreate] = useState(null)
-  useEffect(() => {
-    initCategoriesData(router.query.catalogid)
-  }, [router.query.catalogid])
 
-  async function initCategoriesData(catalogid) {
-    const categoriesList = await categoriesService.list(catalogid)
-    if (selectedNode) {
-      const selectedCategoryId = selectedNode.data.ID
-      const selectedCategoryExists = categoriesList.Items.find((category) => category.ID === selectedCategoryId)
-      if (!selectedCategoryExists) {
-        setSelectedNode(null)
+  const initCategoriesData = useCallback(
+    async (catalogid: string) => {
+      const categoriesList = await Categories.List<ICategory>(catalogid)
+      if (selectedNode) {
+        const selectedCategoryId = selectedNode.data.ID
+        const selectedCategoryExists = categoriesList.Items.find((category) => category.ID === selectedCategoryId)
+        if (!selectedCategoryExists) {
+          setSelectedNode(null)
+        }
       }
-    }
-    setCategoriesTreeView(await buildTreeView(categoriesList.Items))
-  }
+      setCategoriesTreeView(await buildTreeView(categoriesList.Items))
+    },
+    [selectedNode]
+  )
+
+  useEffect(() => {
+    initCategoriesData(router.query.catalogid as string)
+  }, [router.query.catalogid, initCategoriesData])
 
   async function buildTreeView(treeData: any[]) {
     const treeViewData = treeData.map((item) => {
@@ -92,7 +96,7 @@ const CategoriesList = (props) => {
 
   const onCategoryCreateSuccess = async (category: Category) => {
     onCloseCategoryCreate()
-    await initCategoriesData(router.query.catalogid)
+    await initCategoriesData(router.query.catalogid as string)
   }
 
   return (

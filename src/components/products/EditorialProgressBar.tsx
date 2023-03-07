@@ -1,13 +1,12 @@
 import {Box, Progress, Heading, Tooltip, useColorModeValue} from "@chakra-ui/react"
-import {ProductXPs} from "types/ProductXPs"
-import {Product, RequiredDeep} from "ordercloud-javascript-sdk"
 import {useState, useEffect} from "react"
+import {IProduct} from "types/ordercloud/IProduct"
 
 type ProductDataProps = {
-  product: RequiredDeep<Product<ProductXPs>>
+  product: IProduct
 }
 
-export function CalculateEditorialProcess(product: Product<ProductXPs>): number {
+export function CalculateEditorialProcess(product: IProduct): number {
   var totalNumberOfFieldsToEdit = 4
   var currentNumberOfEditedFields = 0
 

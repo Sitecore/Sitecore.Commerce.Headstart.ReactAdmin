@@ -25,6 +25,7 @@ import {MdCheck} from "react-icons/md"
 import {OrderCloudTable} from "components/ordercloud-table/OrderCloudTable"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table/models"
 import {Link} from "components/navigation/Link"
+import {IAdminUser} from "types/ordercloud/IAdminUser"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -52,7 +53,7 @@ const AdminUsersPage = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const adminUsersList = await AdminUsers.List(filters)
+    const adminUsersList = await AdminUsers.List<IAdminUser>(filters)
     setTableData(adminUsersList)
   }, [])
 

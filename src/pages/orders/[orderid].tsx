@@ -37,6 +37,7 @@ import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useSuccessToast} from "hooks/useToast"
 import {Link} from "components/navigation/Link"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -93,7 +94,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
       }
       const [worksheet, returns] = await Promise.all([
         IntegrationEvents.GetWorksheet("All", orderId),
-        OrderReturns.List({filters: {OrderID: orderId}})
+        OrderReturns.List<IOrderReturn>({filters: {OrderID: orderId}})
       ])
       setOrderWorksheet(worksheet)
       setOrderReturns(returns.Items)
@@ -124,7 +125,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
     const createReturn = async () => {
       try {
         setLoading(true)
-        const submittedReturn = await OrderReturns.Create(orderReturn)
+        const submittedReturn = await OrderReturns.Create<IOrderReturn>(orderReturn)
         await OrderReturns.Submit(submittedReturn.ID)
         setOrderReturn({} as OrderReturn)
         setLoading(false)

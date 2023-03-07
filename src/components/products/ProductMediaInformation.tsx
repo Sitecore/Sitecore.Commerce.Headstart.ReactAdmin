@@ -13,12 +13,10 @@ import {
   VStack
 } from "@chakra-ui/react"
 import {ComposedProduct, GetComposedProduct} from "../../services/ordercloud.service"
-import {ProductXPs, XpImage} from "types/ProductXPs"
 import {Product, Products} from "ordercloud-javascript-sdk"
 import {ChangeEvent, useState} from "react"
-import {FiCheck, FiX, FiEdit, FiPlus, FiMinus} from "react-icons/fi"
-import BrandedBox from "../branding/BrandedBox"
 import BrandedSpinner from "../branding/BrandedSpinner"
+import {IProduct, XpImage} from "types/ordercloud/IProduct"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
@@ -120,15 +118,14 @@ export default function ProductMediaInformation({composedProduct, setComposedPro
       images.push(xpImage)
     }
 
-    const newProduct: Product<ProductXPs> = {
+    const newProduct: IProduct = {
       Name: composedProduct?.Product?.Name,
       xp: {
-        Name: "Test",
         Images: images
       }
     }
 
-    await Products.Patch(composedProduct?.Product?.ID, newProduct)
+    await Products.Patch<IProduct>(composedProduct?.Product?.ID, newProduct)
 
     // Hack to ensure Data are loaded before showing -> AWAIT is not enough
     setTimeout(async () => {

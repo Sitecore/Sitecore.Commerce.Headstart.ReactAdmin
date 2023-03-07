@@ -14,19 +14,12 @@ import {
   Text,
   VStack
 } from "@chakra-ui/react"
-import {
-  catalogsService,
-  supplierUserGroupsService,
-  supplierUsersService,
-  suppliersService,
-  userGroupsService,
-  usersService
-} from "api"
 import {useEffect, useState} from "react"
-
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import {Supplier} from "ordercloud-javascript-sdk"
+import {Supplier, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
 import {useRouter} from "next/router"
+import {ISupplierUser} from "types/ordercloud/ISupplierUser"
+import {ISupplier} from "types/ordercloud/ISupplier"
 
 export default function SupplierContextSwitch({...props}) {
   const [currentSupplier, setCurrentSupplier] = useState({} as Supplier)
@@ -35,27 +28,29 @@ export default function SupplierContextSwitch({...props}) {
   const router = useRouter()
   const supplierid = router.query.supplierid.toString()
 
-  // Bug to be fixed - first load does not display the currentSupplier infos.
-  // Adding suppliers to dependencies trigger an infinite loop on the useEffect.
-  // Have to talk to crhistian to check if in this case the useEffect is the right way to do it because we don't want to hit the server on every change.
   useEffect(() => {
-    initSuppliersData(supplierid)
+    initSuppliersData()
+  }, [])
+
+  useEffect(() => {
     if (suppliers.length > 0 && supplierid) {
       const _currentSupplier = suppliers.find((supplier) => supplier.ID === supplierid)
       setCurrentSupplier(_currentSupplier)
     }
-  }, [supplierid])
+  }, [supplierid, suppliers])
 
-  async function initSuppliersData(supplierid) {
+  async function initSuppliersData() {
     let _supplierListMeta = {}
-    const suppliersList = await suppliersService.list()
+    const suppliersList = await Suppliers.List<ISupplier>()
     setSuppliers(suppliersList.Items)
     const requests = suppliersList.Items.map(async (supplier) => {
+      const [userGroupsList, usersList] = await Promise.all([
+        SupplierUserGroups.ListUserAssignments(supplier.ID),
+        SupplierUsers.List<ISupplierUser>(supplier.ID)
+      ])
       _supplierListMeta[supplier.ID] = {}
-      _supplierListMeta[supplier.ID]["userGroupsCount"] = await supplierUserGroupsService.getSuppliersUserGroupsCount(
-        supplier.ID
-      )
-      _supplierListMeta[supplier.ID]["usersCount"] = await supplierUsersService.getSuppliersUsersCount(supplier.ID)
+      _supplierListMeta[supplier.ID]["userGroupsCount"] = userGroupsList.Meta.TotalCount
+      _supplierListMeta[supplier.ID]["usersCount"] = usersList.Meta.TotalCount
     })
     await Promise.all(requests)
     setSuppliersMeta(_supplierListMeta)

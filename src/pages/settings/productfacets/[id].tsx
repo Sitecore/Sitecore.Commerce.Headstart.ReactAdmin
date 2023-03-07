@@ -4,7 +4,7 @@ import ProtectedContent from "components/auth/ProtectedContent"
 import {ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
 import {CreateUpdateForm} from "components/productfacets"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */

@@ -8,7 +8,7 @@ import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
 import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
-import router from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {DataTable} from "components/data-table/DataTable"
 import {useSuccessToast} from "hooks/useToast"
 import {OrderCloudTableFilters} from "components/ordercloud-table"
@@ -33,6 +33,7 @@ export async function getStaticProps() {
 }
 
 const SuppliersList = () => {
+  let router = useRouter()
   const [suppliersMeta, setSuppliersMeta] = useState({})
   const successToast = useSuccessToast()
   const [tableData, setTableData] = useState(null as ListPage<Supplier>)
@@ -137,6 +138,7 @@ const SuppliersList = () => {
 }
 
 const ProtectedSuppliersList = () => {
+  let router = useRouter()
   return (
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
       <Box padding="GlobalPadding">

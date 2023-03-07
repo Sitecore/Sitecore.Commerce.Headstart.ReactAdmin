@@ -17,7 +17,7 @@ import {
 import {useEffect, useState} from "react"
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {Supplier, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {ISupplierUser} from "types/ordercloud/ISupplierUser"
 import {ISupplier} from "types/ordercloud/ISupplier"
 

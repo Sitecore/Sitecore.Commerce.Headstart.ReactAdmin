@@ -4,7 +4,7 @@ import {InputControl, NumberInputControl, PercentComplete, SelectControl, Switch
 import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import Card from "../card/Card"
 import {Formik} from "formik"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {useEffect, useState} from "react"
 import {ICatalog} from "types/ordercloud/ICatalog"

@@ -17,7 +17,7 @@ import {
 import {useEffect, useState} from "react"
 import {Buyer, Buyers, Catalogs, UserGroups, Users} from "ordercloud-javascript-sdk"
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {IBuyer} from "types/ordercloud/IBuyer"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"

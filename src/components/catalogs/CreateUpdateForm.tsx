@@ -4,7 +4,7 @@ import {InputControl, SwitchControl, TextareaControl} from "components/formik"
 import Card from "../card/Card"
 import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {Formik} from "formik"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {ICatalog} from "types/ordercloud/ICatalog"
 

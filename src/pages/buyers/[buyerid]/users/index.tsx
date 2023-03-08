@@ -1,7 +1,6 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
-import {ListPage, User} from "ordercloud-javascript-sdk"
+import {ListPage, User, Users} from "ordercloud-javascript-sdk"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
-import {UserssService, user} from "api"
 import {useCallback, useEffect, useMemo, useState} from "react"
 
 import Card from "components/card/Card"

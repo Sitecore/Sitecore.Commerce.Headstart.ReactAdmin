@@ -1,27 +1,11 @@
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Badge,
-  Box,
-  Button,
-  ButtonGroup,
-  HStack,
-  Icon,
-  Spinner,
-  Stack,
-  Text
-} from "@chakra-ui/react"
-import {ListPage, Promotion} from "ordercloud-javascript-sdk"
+import {Badge, Box, Button, ButtonGroup, HStack, Icon, Spinner, Stack, Text} from "@chakra-ui/react"
+import {ListPage, Promotion, Promotions} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useMemo, useRef, useState} from "react"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
 
 import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {IPromotion} from "types/ordercloud/IPromotion"
 import {IoMdClose} from "react-icons/io"
 import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
@@ -32,10 +16,6 @@ import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
 import router from "next/router"
 import {useSuccessToast} from "hooks/useToast"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Promotion, Promotions} from "ordercloud-javascript-sdk"
-import {IPromotion} from "types/ordercloud/IPromotion"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -57,7 +37,6 @@ const PromotionsList = () => {
   const successToast = useSuccessToast()
   const [tableData, setTableData] = useState(null as ListPage<Promotion>)
   const [filters, setFilters] = useState({} as OrderCloudTableFilters)
-
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
     const promotionsList = await Promotions.List<IPromotion>(filters)

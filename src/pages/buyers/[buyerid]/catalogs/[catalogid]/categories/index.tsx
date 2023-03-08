@@ -13,19 +13,17 @@ import {
   ModalOverlay,
   useDisclosure
 } from "@chakra-ui/react"
+import {Categories, Category} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useState} from "react"
 
 import Card from "components/card/Card"
-import {Category} from "ordercloud-javascript-sdk"
 import {CreateUpdateForm} from "components/categories"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {ICategory} from "types/ordercloud/ICategoryXp"
 import React from "react"
 import TreeView from "components/dndtreeview/TreeView"
 import {ocNodeModel} from "@minoru/react-dnd-treeview"
 import {useRouter} from "hooks/useRouter"
-import {CreateUpdateForm} from "components/categories"
-import {Categories, Category} from "ordercloud-javascript-sdk"
-import {ICategory} from "types/ordercloud/ICategoryXp"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

@@ -19,15 +19,14 @@ import {dateHelper, priceHelper} from "utils"
 import Card from "components/card/Card"
 import ExportToCsv from "components/demo/ExportToCsv"
 import ExportToPdf from "components/demo/ExportToPdf"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
+import {IPayment} from "types/ordercloud/IPayment"
 import {NextSeo} from "next-seo"
 import OcOrderReturnItemList from "components/returns/OcOrderReturnItem"
-import {useRouter} from "hooks/useRouter"
 import PrintShippingLabel from "components/demo/PrintShippingLabel"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {useRouter} from "next/router"
-import {IOrderReturn} from "types/ordercloud/IOrderReturn"
-import {IPayment} from "types/ordercloud/IPayment"
+import {useRouter} from "hooks/useRouter"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

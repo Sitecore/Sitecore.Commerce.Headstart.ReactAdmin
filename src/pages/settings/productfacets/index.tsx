@@ -1,24 +1,18 @@
 import {Button, ButtonGroup, Container, HStack, Text} from "@chakra-ui/react"
-import {Catalog, ListPage, ProductFacet} from "ordercloud-javascript-sdk"
+import {Catalog, ListPage, ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useRef, useState} from "react"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
 
 import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {Link} from "../../../components/navigation/Link"
 import {NextSeo} from "next-seo"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableFilters, OrderCloudTableColumn} from "components/ordercloud-table"
-import {ListPage, Catalog, ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
-import {IProductFacet} from "types/ordercloud/IProductFacet"
-import {productfacetsService} from "api/productfacets"
-import {useRouter} from "next/router"
+import {useSuccessToast} from "hooks/useToast"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

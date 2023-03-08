@@ -1,11 +1,14 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
-import {Buyer, ListPage} from "ordercloud-javascript-sdk"
+import {Buyer, Buyers, Catalogs, ListPage, UserGroups, Users} from "ordercloud-javascript-sdk"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useState} from "react"
 
 import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {IBuyer} from "types/ordercloud/IBuyer"
+import {IBuyerUser} from "types/ordercloud/IBuyerUser"
+import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 import {IoMdClose} from "react-icons/io"
 import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
@@ -15,12 +18,6 @@ import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
 import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Buyer, Buyers, Catalogs, UserGroups, Users} from "ordercloud-javascript-sdk"
-import {IBuyer} from "types/ordercloud/IBuyer"
-import {IBuyerUser} from "types/ordercloud/IBuyerUser"
-import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {

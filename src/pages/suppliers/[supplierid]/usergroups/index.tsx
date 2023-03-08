@@ -1,21 +1,16 @@
 import {Box, Button, ButtonGroup, HStack} from "@chakra-ui/react"
-import {ListPage, UserGroup} from "ordercloud-javascript-sdk"
+import {ListPage, SupplierUserGroups, UserGroup} from "ordercloud-javascript-sdk"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useState} from "react"
 
 import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {ISupplier} from "types/ordercloud/ISupplier"
 import {Link} from "components/navigation/Link"
 import React from "react"
 import {useRouter} from "hooks/useRouter"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableFilters, OrderCloudTableColumn} from "components/ordercloud-table"
-import {ListPage, SupplierUserGroups, UserGroup} from "ordercloud-javascript-sdk"
-import {supplierUserGroupsService} from "api"
-import {useRouter} from "next/router"
 import {useSuccessToast} from "hooks/useToast"
-import {ISupplier} from "types/ordercloud/ISupplier"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

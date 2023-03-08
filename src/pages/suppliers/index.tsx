@@ -1,10 +1,13 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
-import {ListPage, Supplier} from "ordercloud-javascript-sdk"
+import {ListPage, Supplier, SupplierUserGroups, SupplierUsers, Suppliers} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useMemo, useState} from "react"
 
 import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {ISupplier} from "types/ordercloud/ISupplier"
+import {ISupplierUser} from "types/ordercloud/ISupplierUser"
+import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
 import {IoMdClose} from "react-icons/io"
 import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
@@ -15,11 +18,6 @@ import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
 import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
-import {OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Supplier, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
-import {ISupplier} from "types/ordercloud/ISupplier"
-import {ISupplierUser} from "types/ordercloud/ISupplierUser"
-import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {

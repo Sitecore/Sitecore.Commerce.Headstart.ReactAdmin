@@ -2,7 +2,7 @@ import {useRouter as useNextRouter} from "next/router"
 import {useCallback, useMemo} from "react"
 
 export function useRouter() {
-  const {back, push, pathname, query, isReady} = useNextRouter()
+  const {back, push, pathname, query, isReady, asPath} = useNextRouter()
 
   const result = useMemo(() => {
     return {
@@ -10,9 +10,10 @@ export function useRouter() {
       push,
       pathname,
       query,
-      isReady
+      isReady,
+      asPath
     }
-  }, [back, push, pathname, query, isReady])
+  }, [back, push, pathname, query, isReady, asPath])
 
   return result
 }

@@ -1,7 +1,6 @@
 import {Box, Heading, VStack} from "@chakra-ui/react"
-
-import Breadcrumbs from "nextjs-breadcrumbs"
 import BuyerContextSwitch from "components/buyers/BuyerContextSwitch"
+import {Breadcrumbs} from "../navigation/Breadcrumbs"
 
 const ContentHeader = (props) => {
   return (
@@ -16,7 +15,7 @@ const ContentHeader = (props) => {
           maxW="full"
           display="inline-block"
         >
-          <Breadcrumbs containerClassName="breadcrumb" />
+          <Breadcrumbs />
         </Box>
       )}
 

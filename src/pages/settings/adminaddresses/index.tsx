@@ -1,3 +1,4 @@
+import {Address, AdminAddresses, ListPage} from "ordercloud-javascript-sdk"
 import {
   AlertDialog,
   AlertDialogBody,
@@ -12,17 +13,18 @@ import {
   Text
 } from "@chakra-ui/react"
 import {useCallback, useEffect, useMemo, useRef, useState} from "react"
+
 import Card from "components/card/Card"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {Link} from "components/navigation/Link"
 import {NextSeo} from "next-seo"
+import {OrderCloudTableFilters} from "components/ordercloud-table"
 import ProtectedContent from "components/auth/ProtectedContent"
+import {addressHelper} from "utils/address.utils"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "next/router"
 import {useSuccessToast} from "hooks/useToast"
-import {AdminAddresses, Address, ListPage} from "ordercloud-javascript-sdk"
-import {addressHelper} from "utils/address.utils"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableFilters} from "components/ordercloud-table"
-import {Link} from "components/navigation/Link"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -42,9 +44,6 @@ export async function getServerSideProps() {
 const AdminAddressesPage = () => {
   const router = useRouter()
   const successToast = useSuccessToast()
-  const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
-  const requestExportCSV = () => {}
-  const cancelRef = useRef()
   const [tableData, setTableData] = useState(null as ListPage<Address>)
   const [filters, setFilters] = useState({} as OrderCloudTableFilters)
 
@@ -113,42 +112,12 @@ const AdminAddressesPage = () => {
           <Button variant="primaryButton">New Admin Address</Button>
         </Link>
         <HStack>
-          <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-            Export CSV
-          </Button>
+          <ExportToCsv />
         </HStack>
       </HStack>
       <Card variant="primaryCard">
         <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData}></DataTable>
       </Card>
-      <AlertDialog
-        isOpen={isExportCSVDialogOpen}
-        onClose={() => setExportCSVDialogOpen(false)}
-        leastDestructiveRef={cancelRef}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Export Selected Admin Address to CSV
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              <Text display="inline">
-                Export the selected admin addresses to a CSV, once the export button is clicked behind the scenes a job
-                will be kicked off to create the csv and then will automatically download to your downloads folder in
-                the browser.
-              </Text>
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <HStack justifyContent="space-between" w="100%">
-                <Button ref={cancelRef} onClick={() => setExportCSVDialogOpen(false)} variant="secondaryButton">
-                  Cancel
-                </Button>
-                <Button onClick={requestExportCSV}>Export Admin Addresses</Button>
-              </HStack>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
     </Container>
   )
 }

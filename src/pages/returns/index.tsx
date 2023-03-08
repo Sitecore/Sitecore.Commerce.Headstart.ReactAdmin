@@ -1,10 +1,4 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Button,
   Checkbox,
   CheckboxGroup,
@@ -22,17 +16,19 @@ import {
   VStack
 } from "@chakra-ui/react"
 import {ListPage, OrderReturn, OrderReturns} from "ordercloud-javascript-sdk"
+import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import React, {useCallback, useMemo, useRef} from "react"
 import {useEffect, useState} from "react"
+
 import Card from "components/card/Card"
 import {ChevronDownIcon} from "@chakra-ui/icons"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
 import {NextSeo} from "next-seo"
-import {dateHelper} from "utils/date.utils"
-import {priceHelper} from "utils/price.utils"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
+import {dateHelper} from "utils/date.utils"
+import {priceHelper} from "utils/price.utils"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -50,10 +46,6 @@ export async function getServerSideProps() {
 }
 
 const ReturnsPage = () => {
-  const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
-  const requestExportCSV = () => {}
-  const [loading, setLoading] = useState(false)
-  const cancelRef = useRef()
   const [tableData, setTableData] = useState(null as ListPage<OrderReturn>)
   const [filters, setFilters] = useState({} as OrderCloudTableFilters)
 
@@ -147,49 +139,12 @@ const ReturnsPage = () => {
               </MenuItem>
             </MenuList>
           </Menu>
-          <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-            Export CSV
-          </Button>
+          <ExportToCsv />
         </HStack>
       </HStack>
       <Card variant="primaryCard">
         <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData} />
       </Card>
-      <AlertDialog
-        isOpen={isExportCSVDialogOpen}
-        onClose={() => setExportCSVDialogOpen(false)}
-        leastDestructiveRef={cancelRef}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Export Selected Returns to CSV
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              <Text display="inline">
-                Export the select returns to a CSV, once the export button is clicked behind the scenes a job will be
-                kicked off to create the csv and then will automatically download to your downloads folder in the
-                browser.
-              </Text>
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <HStack justifyContent="space-between" w="100%">
-                <Button
-                  ref={cancelRef}
-                  onClick={() => setExportCSVDialogOpen(false)}
-                  disabled={loading}
-                  variant="secondaryButton"
-                >
-                  Cancel
-                </Button>
-                <Button onClick={requestExportCSV} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Export Returns"}
-                </Button>
-              </HStack>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
     </Container>
   )
 }

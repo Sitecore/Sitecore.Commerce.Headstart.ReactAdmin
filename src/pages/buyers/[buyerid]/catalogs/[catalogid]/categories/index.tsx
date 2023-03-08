@@ -14,14 +14,16 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 import {useEffect, useState} from "react"
+
 import Card from "components/card/Card"
+import {Category} from "ordercloud-javascript-sdk"
+import {CreateUpdateForm} from "components/categories"
+import ExportToCsv from "components/demo/ExportToCsv"
 import React from "react"
 import TreeView from "components/dndtreeview/TreeView"
 import {categoriesService} from "api"
 import {ocNodeModel} from "@minoru/react-dnd-treeview"
 import {useRouter} from "next/router"
-import {CreateUpdateForm} from "components/categories"
-import {Category} from "ordercloud-javascript-sdk"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -100,7 +102,7 @@ const CategoriesList = (props) => {
       <Box padding="20px">
         <HStack justifyContent="end" w="100%" mb={5}>
           <HStack>
-            <Button variant="secondaryButton">Export CSV</Button>
+            <ExportToCsv />
           </HStack>
         </HStack>
         <Card variant="primaryCard">

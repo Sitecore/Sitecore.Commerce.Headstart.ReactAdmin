@@ -1,15 +1,17 @@
 import {AddIcon, DeleteIcon, EditIcon} from "@chakra-ui/icons"
 import {Button, ButtonGroup, HStack} from "@chakra-ui/react"
+import {Catalog, ListPage} from "ordercloud-javascript-sdk"
+import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useState} from "react"
+
 import Card from "components/card/Card"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
 import {Link} from "components/navigation/Link"
 import React from "react"
 import {catalogsService} from "api"
 import {useRouter} from "next/router"
 import {useSuccessToast} from "hooks/useToast"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Catalog} from "ordercloud-javascript-sdk"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -100,7 +102,7 @@ const CatalogsList = () => {
           Create catalog
         </Button>
         <HStack>
-          <Button variant="secondaryButton">Export CSV</Button>
+          <ExportToCsv />
         </HStack>
       </HStack>
       <Card variant="primaryCard">

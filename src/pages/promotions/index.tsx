@@ -2,6 +2,7 @@ import {
   AlertDialog,
   AlertDialogBody,
   AlertDialogContent,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
   Badge,
@@ -10,26 +11,27 @@ import {
   ButtonGroup,
   HStack,
   Icon,
+  Spinner,
   Stack,
-  Text,
-  AlertDialogFooter,
-  Spinner
+  Text
 } from "@chakra-ui/react"
+import {ListPage, Promotion} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useMemo, useRef, useState} from "react"
+import {useErrorToast, useSuccessToast} from "hooks/useToast"
+
 import Card from "components/card/Card"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
 import {IoMdClose} from "react-icons/io"
 import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
+import {OrderCloudTableFilters} from "components/ordercloud-table"
 import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
 import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
 import {promotionsService} from "api"
 import router from "next/router"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Promotion} from "ordercloud-javascript-sdk"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -188,50 +190,12 @@ const ProtectedPromotionsList = () => {
           </Button>
 
           <HStack>
-            <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-              Export CSV
-            </Button>
+            <ExportToCsv />
           </HStack>
         </HStack>
         <Card variant="primaryCard">
           <PromotionsList />
         </Card>
-
-        <AlertDialog
-          isOpen={isExportCSVDialogOpen}
-          onClose={() => setExportCSVDialogOpen(false)}
-          leastDestructiveRef={cancelRef}
-        >
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Export Selected Promotions to CSV
-              </AlertDialogHeader>
-              <AlertDialogBody>
-                <Text display="inline">
-                  Export the selected promotions to a CSV, once the export button is clicked behind the scenes a job
-                  will be kicked off to create the csv and then will automatically download to your downloads folder in
-                  the browser.
-                </Text>
-              </AlertDialogBody>
-              <AlertDialogFooter>
-                <HStack justifyContent="space-between" w="100%">
-                  <Button
-                    ref={cancelRef}
-                    onClick={() => setExportCSVDialogOpen(false)}
-                    disabled={loading}
-                    variant="secondaryButton"
-                  >
-                    Cancel
-                  </Button>
-                  <Button onClick={requestExportCSV} disabled={loading}>
-                    {loading ? <Spinner color="brand.500" /> : "Export Promotions"}
-                  </Button>
-                </HStack>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
       </Box>
     </ProtectedContent>
   )

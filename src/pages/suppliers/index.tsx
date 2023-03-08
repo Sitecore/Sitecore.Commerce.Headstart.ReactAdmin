@@ -1,19 +1,21 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
+import {ListPage, Supplier} from "ordercloud-javascript-sdk"
 import {supplierUserGroupsService, supplierUsersService, suppliersService} from "api"
 import {useCallback, useEffect, useMemo, useState} from "react"
+
 import Card from "components/card/Card"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
 import {IoMdClose} from "react-icons/io"
 import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
+import {OrderCloudTableFilters} from "components/ordercloud-table"
 import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
 import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
 import router from "next/router"
-import {DataTable} from "components/data-table/DataTable"
 import {useSuccessToast} from "hooks/useToast"
-import {OrderCloudTableFilters} from "components/ordercloud-table"
-import {ListPage, Supplier} from "ordercloud-javascript-sdk"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -142,7 +144,7 @@ const ProtectedSuppliersList = () => {
             Create supplier
           </Button>
           <HStack>
-            <Button variant="secondaryButton">Export CSV</Button>
+            <ExportToCsv />
           </HStack>
         </HStack>
         <Card variant="primaryCard">

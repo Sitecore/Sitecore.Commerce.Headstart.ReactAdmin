@@ -35,6 +35,9 @@ import {
 import React from "react"
 import {useEffect, useState} from "react"
 import {FiPlus, FiTrash2} from "react-icons/fi"
+import {ICatalog} from "types/ordercloud/ICatalog"
+import {ICategory} from "types/ordercloud/ICategoryXp"
+import {IProduct} from "types/ordercloud/IProduct"
 import BrandedBox from "../branding/BrandedBox"
 import BrandedSpinner from "../branding/BrandedSpinner"
 import BrandedTable from "../branding/BrandedTable"
@@ -69,7 +72,7 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
 
         await Promise.all(
           categoryAssignments.Items.map(async (item) => {
-            const category = await Categories.Get(catalog?.ID, item.CategoryID)
+            const category = await Categories.Get<ICategory>(catalog?.ID, item.CategoryID)
             categories.push(category)
           })
         )
@@ -87,7 +90,7 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
     setIsLoading(true)
     const categoryId = e.currentTarget.dataset.id
     await Categories.DeleteProductAssignment(catalog.ID, categoryId, componentProduct.ID)
-    var product = await Products.Get(componentProduct.ID)
+    var product = await Products.Get<IProduct>(componentProduct.ID)
     setComponentProduct(product)
     setNewCategory("")
     setIsLoading(false)
@@ -103,7 +106,7 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
 
     await Categories.SaveProductAssignment(catalog.ID, categoryAssignment)
 
-    var product = await Products.Get(componentProduct.ID)
+    var product = await Products.Get<IProduct>(componentProduct.ID)
     setComponentProduct(product)
     setIsLinking(false)
     setNewCategory("")
@@ -122,7 +125,7 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
     e.preventDefault()
     setIsCategoryChosen(false)
     setNewCategory(e.target.value)
-    Categories.List(catalog.ID, {
+    Categories.List<ICatalog>(catalog.ID, {
       searchOn: ["Name", "ID"],
       search: e.target.value
     }).then((innerAvailableCategories) => {

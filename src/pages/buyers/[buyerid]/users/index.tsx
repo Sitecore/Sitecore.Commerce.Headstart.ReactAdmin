@@ -1,18 +1,19 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
 import {ListPage, User} from "ordercloud-javascript-sdk"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
+import {UserssService, user} from "api"
 import {useCallback, useEffect, useMemo, useState} from "react"
 
 import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 import {IoMdClose} from "react-icons/io"
 import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
 import React from "react"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
-import {usersService} from "api"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -39,7 +40,7 @@ const UsersList = () => {
   const fetchData = useCallback(
     async (filters: OrderCloudTableFilters) => {
       setFilters(filters)
-      const usersList = await usersService.list(router.query.buyerid, filters)
+      const usersList = await Users.List<IBuyerUser>(router.query.buyerid as string, filters)
       setTableData(usersList)
     },
     [router.query.buyerid]
@@ -51,7 +52,7 @@ const UsersList = () => {
 
   const deleteBuyer = useCallback(
     async (userId: string) => {
-      await usersService.delete(router.query.buyerid, userId)
+      await Users.Delete(router.query.buyerid as string, userId)
       fetchData({})
       successToast({
         description: "Buyer deleted successfully."

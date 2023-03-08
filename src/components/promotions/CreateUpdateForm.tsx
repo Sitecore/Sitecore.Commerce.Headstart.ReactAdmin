@@ -30,10 +30,10 @@ import {useEffect, useState} from "react"
 import Card from "../card/Card"
 import DatePicker from "../datepicker/DatePicker"
 import {ExpressionBuilder} from "./ExpressionBuilder"
-import {Promotion} from "ordercloud-javascript-sdk"
-import {promotionsService} from "api"
-import {useRouter} from "next/router"
+import {Promotion, Promotions} from "ordercloud-javascript-sdk"
+import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {IPromotion} from "types/ordercloud/IPromotion"
 
 export {CreateUpdateForm}
 
@@ -47,11 +47,33 @@ const EligibleExpressionField = (props) => {
 
   useEffect(() => {
     const eligibleExpression = async () => {
-      const elExpression = await promotionsService.buildEligibleExpression(values)
+      const elExpression = await buildEligibleExpression(values as any)
       setFieldValue(props.name, elExpression)
     }
     eligibleExpression()
   }, [props.name, setFieldValue, touched, values])
+
+  // Simplistic Example to close the loop - then we will use the dnd Expression UI Builder and match to this
+  async function buildEligibleExpression(fields) {
+    let eligibleExpression = "" //Default value when no condition has been specified.
+    // Minimum Requirements has been selected
+    switch (fields.xp_MinimumReq) {
+      case "min-amount": {
+        eligibleExpression = `order.Subtotal>= ${fields.xp_MinReqValue}`
+        break
+      }
+      case "min-qty": {
+        eligibleExpression = `items.quantity()>= ${fields.xp_MinReqValue}`
+        break
+      }
+      default: {
+        eligibleExpression = "true"
+        break
+      }
+    }
+
+    return eligibleExpression
+  }
 
   return (
     <>
@@ -79,7 +101,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
   const router = useRouter()
 
   async function createPromotion(fields: Promotion) {
-    await promotionsService.create(fields)
+    await Promotions.Create<IPromotion>(fields)
     successToast({
       description: "Promotion created successfully."
     })
@@ -87,7 +109,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
   }
 
   async function updatePromotion(fields: Promotion) {
-    await promotionsService.update(fields)
+    await Promotions.Save<IPromotion>(fields.ID, fields)
     successToast({
       description: "Promotion updated successfully."
     })
@@ -96,7 +118,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
 
   async function deletePromotion(promotionid) {
     try {
-      await promotionsService.delete(promotionid)
+      await Promotions.Delete(promotionid)
       successToast({
         description: "Promotion deleted successfully."
       })

@@ -16,11 +16,11 @@ import {CheckIcon, CloseIcon} from "@chakra-ui/icons"
 import {FiTrash2} from "react-icons/fi"
 import {InventoryRecord, InventoryRecords} from "ordercloud-javascript-sdk"
 import React, {useEffect} from "react"
-
 import BrandedSpinner from "../branding/BrandedSpinner"
 import BrandedTable from "../branding/BrandedTable"
 import {ComposedProduct} from "../../services/ordercloud.service"
 import {useState} from "react"
+import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
@@ -39,7 +39,7 @@ export default function ProductInventoryRecords({composedProduct, setComposedPro
   useEffect(() => {
     async function GetProdcutSupplier() {
       if (composedProduct?.Product) {
-        var productSupplier = await InventoryRecords.List(composedProduct?.Product?.ID)
+        var productSupplier = await InventoryRecords.List<IInventoryRecord>(composedProduct?.Product?.ID)
         setInventoryRecords(productSupplier.Items)
       }
     }

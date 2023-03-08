@@ -19,12 +19,12 @@ import {
   Checkbox
 } from "@chakra-ui/react"
 import {ComposedProduct, GetComposedProduct} from "../../services/ordercloud.service"
-import {ProductXPs} from "types/ProductXPs"
 import {Product, Products} from "ordercloud-javascript-sdk"
 import {ChangeEvent, useEffect, useState} from "react"
 import BrandedSpinner from "../branding/BrandedSpinner"
 import TagContainer from "../generic/tagContainer"
 import {useErrorToast} from "hooks/useToast"
+import {IProduct, IProductXp} from "types/ordercloud/IProduct"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
@@ -39,7 +39,7 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
   const [isEditingBasicData, setIsEditingBasicData] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
-  const [formValues, setFormValues] = useState<ProductXPs>(Object.assign({}, composedProduct?.Product?.xp))
+  const [formValues, setFormValues] = useState<IProductXp>(Object.assign({}, composedProduct?.Product?.xp))
   const [newXpFormName, setNewXpFormName] = useState<string>("")
   const [newXpFormType, setNewXpFormType] = useState<string>("text")
   const [newXpFormValue, setNewXpFormValue] = useState<string | number>("")
@@ -310,22 +310,22 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
   const onProductSave = async () => {
     setIsLoading(true)
     if (isDeleting) {
-      var newProduct: Product<ProductXPs> = composedProduct.Product
+      var newProduct: IProduct = composedProduct.Product
       delete newProduct.xp
       var tempXPs = Object.assign({}, formValues)
       xpsToBeDeleted.forEach((e) => delete tempXPs[e])
       newProduct["xp"] = tempXPs
       //console.log("Deleting XPs newProduct")
       //console.log(newProduct)
-      await Products.Save(composedProduct?.Product?.ID, newProduct)
+      await Products.Save<IProduct>(composedProduct?.Product?.ID, newProduct)
       setIsDeleting(false)
       setXpsToBeDeleted([])
     } else {
-      const newProduct: Product<ProductXPs> = {
+      const newProduct: IProduct = {
         Name: composedProduct?.Product?.Name,
         xp: formValues
       }
-      await Products.Patch(composedProduct?.Product?.ID, newProduct)
+      await Products.Patch<IProduct>(composedProduct?.Product?.ID, newProduct)
     }
 
     // Hack to ensure Data are loaded before showing -> AWAIT is not enough

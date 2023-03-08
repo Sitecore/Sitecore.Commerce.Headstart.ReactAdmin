@@ -2,10 +2,10 @@ import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "../../../../components/usergroups/CreateUpdateForm"
 import {Box} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {UserGroup} from "ordercloud-javascript-sdk"
+import {SupplierUserGroups, UserGroup} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
-import {supplierUserGroupsService} from "../../../../api"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
+import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -25,21 +25,22 @@ export async function getServerSideProps() {
 
 const UserGroupListItem = () => {
   const router = useRouter()
-  const [userGroup, setuserGroup] = useState({} as UserGroup)
+  const [userGroup, setUserGroup] = useState({} as UserGroup)
   useEffect(() => {
+    const getUserGroup = async () => {
+      const group = await SupplierUserGroups.Get<ISupplierUserGroup>(
+        router.query.supplierid as string,
+        router.query.usergroupid as string
+      )
+      setUserGroup(group)
+    }
     if (router.query.supplierid && router.query.usergroupid) {
-      supplierUserGroupsService
-        .getById(router.query.supplierid, router.query.usergroupid)
-        .then((userGroup) => setuserGroup(userGroup))
+      getUserGroup()
     }
   }, [router.query.supplierid, router.query.usergroupid])
   return (
     <>
-      {userGroup?.ID ? (
-        <CreateUpdateForm userGroup={userGroup} ocService={supplierUserGroupsService} />
-      ) : (
-        <div> Loading</div>
-      )}
+      {userGroup?.ID ? <CreateUpdateForm userGroup={userGroup} ocService={SupplierUserGroups} /> : <div> Loading</div>}
     </>
   )
 }

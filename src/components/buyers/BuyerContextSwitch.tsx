@@ -14,12 +14,13 @@ import {
   Text,
   VStack
 } from "@chakra-ui/react"
-import {buyersService, catalogsService, userGroupsService, usersService} from "api"
 import {useEffect, useState} from "react"
-
-import {Buyer} from "ordercloud-javascript-sdk"
+import {Buyer, Buyers, Catalogs, UserGroups, Users} from "ordercloud-javascript-sdk"
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
+import {IBuyer} from "types/ordercloud/IBuyer"
+import {IBuyerUser} from "types/ordercloud/IBuyerUser"
+import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 
 export default function BuyerContextSwitch({...props}) {
   const [currentBuyer, setCurrentBuyer] = useState({} as Buyer)
@@ -41,13 +42,18 @@ export default function BuyerContextSwitch({...props}) {
 
   async function initBuyersData() {
     let _buyerListMeta = {}
-    const buyersList = await buyersService.list()
+    const buyersList = await Buyers.List<IBuyer>()
     setBuyers(buyersList.Items)
     const requests = buyersList.Items.map(async (buyer) => {
+      const [userGroupsList, usersList, catalogsList] = await Promise.all([
+        UserGroups.List<IBuyerUserGroup>(buyer.ID),
+        Users.List<IBuyerUser>(buyer.ID),
+        Catalogs.ListAssignments({buyerID: buyer.ID})
+      ])
       _buyerListMeta[buyer.ID] = {}
-      _buyerListMeta[buyer.ID]["userGroupsCount"] = await userGroupsService.getUserGroupsCountByBuyerID(buyer.ID)
-      _buyerListMeta[buyer.ID]["usersCount"] = await usersService.getUsersCountByBuyerID(buyer.ID)
-      _buyerListMeta[buyer.ID]["catalogsCount"] = await catalogsService.getCatalogsCountByBuyerID(buyer.ID)
+      _buyerListMeta[buyer.ID]["userGroupsCount"] = userGroupsList.Meta.TotalCount
+      _buyerListMeta[buyer.ID]["usersCount"] = usersList.Meta.TotalCount
+      _buyerListMeta[buyer.ID]["catalogsCount"] = catalogsList.Meta.TotalCount
     })
     await Promise.all(requests)
     setBuyersMeta(_buyerListMeta)

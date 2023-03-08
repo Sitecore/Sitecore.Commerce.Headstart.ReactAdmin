@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "components/catalogs/CreateUpdateForm"
-import {Catalog} from "ordercloud-javascript-sdk"
+import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {catalogsService} from "api"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
+import {ICatalog} from "types/ordercloud/ICatalog"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -27,7 +27,7 @@ const CatalogListItem = () => {
   const [catalog, setCatalog] = useState({} as Catalog)
   useEffect(() => {
     if (router.query.catalogid) {
-      catalogsService.getById(router.query.catalogid).then((catalog) => setCatalog(catalog))
+      Catalogs.Get<ICatalog>(router.query.catalogid as string).then((catalog) => setCatalog(catalog))
     }
   }, [router.query.catalogid])
   return <>{catalog?.ID ? <CreateUpdateForm catalog={catalog} /> : <div> Loading</div>}</>

@@ -47,22 +47,20 @@ import {
 import {ChangeEvent, useEffect, useRef, useState} from "react"
 import {FiChevronDown, FiChevronUp} from "react-icons/fi"
 import {HiOutlineViewGrid, HiOutlineViewList} from "react-icons/hi"
-import {Product, Products} from "ordercloud-javascript-sdk"
+import {Product, Products, Promotions} from "ordercloud-javascript-sdk"
 
 import {AiOutlineSearch} from "react-icons/ai"
 import BrandedSpinner from "../branding/BrandedSpinner"
 import BrandedTable from "../branding/BrandedTable"
 import {CalculateEditorialProcess} from "./EditorialProgressBar"
 import Card from "../card/Card"
-import {ChevronDownIcon} from "@chakra-ui/icons"
-import ExportToCsv from "components/demo/ExportToCsv"
+import {IProduct} from "types/ordercloud/IProduct"
+import {IPromotion} from "types/ordercloud/IPromotion"
 import {Link} from "../navigation/Link"
 import {NextSeo} from "next-seo"
 import ProductGrid from "./ProductGrid"
 import ProductList from "./ProductList"
 import {ProductListOptions} from "../../services/ordercloud.service"
-import {ProductXPs} from "types/ProductXPs"
-import {promotionsService} from "api"
 import {useErrorToast} from "hooks/useToast"
 
 interface ProductSearchProps {
@@ -76,8 +74,8 @@ export default function ProductSearch({query}: ProductSearchProps) {
   const [optionsSearch, setOptionsSearch] = useState("")
   const [optionsSortBy, setOptionsSortBy] = useState("name")
   const errorToast = useErrorToast()
-  const [products, setProducts] = useState<Product<ProductXPs>[]>(null)
-  const [componentProducts, setComponentProducts] = useState<Product<ProductXPs>[]>(null)
+  const [products, setProducts] = useState<IProduct[]>(null)
+  const [componentProducts, setComponentProducts] = useState<IProduct[]>(null)
   const [isLoading, setIsLoading] = useState(true)
   const sliderColor = useColorModeValue("brand.400", "brand.600")
   const [editorialProgressFilter, setEditorialProgressFilter] = useState(100)
@@ -108,12 +106,12 @@ export default function ProductSearch({query}: ProductSearchProps) {
       options.searchType = optionsSearchType
       options.sortBy = [optionsSortBy]
       options.pageSize = 100
-      var productList = await Products.List<ProductXPs>(options)
+      var productList = await Products.List<IProduct>(options)
       let productItems = productList.Items
       setComponentProducts(productItems)
       setProducts(productItems)
       setIsLoading(false)
-      const promotionsList = await promotionsService.list()
+      const promotionsList = await Promotions.List<IPromotion>()
       let promotionItems = promotionsList.Items
       setPromotions(promotionItems)
     }
@@ -163,7 +161,7 @@ export default function ProductSearch({query}: ProductSearchProps) {
       ID: formValues.id,
       Active: formValues.isActive
     }
-    await Products.Create(newProduct)
+    await Products.Create<IProduct>(newProduct)
 
     setFormValues((v) => ({
       ...v,
@@ -227,7 +225,9 @@ export default function ProductSearch({query}: ProductSearchProps) {
       return
     }
 
-    const requests = selectedProductIds.map((productId) => Products.Patch(productId, {Active: newActivationStatus}))
+    const requests = selectedProductIds.map((productId) =>
+      Products.Patch<IProduct>(productId, {Active: newActivationStatus})
+    )
     const responses = await Promise.all(requests)
 
     const updatedProducts = products.map((p) => {

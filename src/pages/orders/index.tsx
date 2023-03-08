@@ -27,6 +27,7 @@ import Card from "components/card/Card"
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {IOrder} from "types/ordercloud/IOrder"
 import {Link} from "../../components/navigation/Link"
 import {NextSeo} from "next-seo"
 import ProtectedContent from "components/auth/ProtectedContent"
@@ -54,7 +55,7 @@ const OrdersPage = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const ordersList = await Orders.List("All", filters)
+    const ordersList = await Orders.List<IOrder>("All", filters)
     setTableData(ordersList)
   }, [])
 

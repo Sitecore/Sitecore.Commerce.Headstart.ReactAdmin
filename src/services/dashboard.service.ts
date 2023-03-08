@@ -1,4 +1,5 @@
-import {Orders, Users} from "ordercloud-javascript-sdk"
+import {Orders} from "ordercloud-javascript-sdk"
+import {IOrder} from "types/ordercloud/IOrder"
 
 const d = new Date()
 let day = d.getDate()
@@ -37,7 +38,7 @@ async function getTodaysMoney() {
   let result
 
   if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
-    const ordersList = await Orders.List("All", {
+    const ordersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + year + "-" + month + "-01", "<" + year + "-" + month + "-" + day]
       }
@@ -57,7 +58,7 @@ async function getPreviousTodaysMoney() {
   let result
 
   if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
-    const ordersList = await Orders.List("All", {
+    const ordersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [
           ">" + previousMonthYear + "-" + previousMonth + "-01",
@@ -81,7 +82,7 @@ async function getTotalSales() {
   let result
 
   if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
-    const ordersList = await Orders.List("All", {
+    const ordersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
       }
@@ -102,7 +103,7 @@ async function getPreviousTotalSales() {
   let result
 
   if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
-    const ordersList = await Orders.List("All", {
+    const ordersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + (year - 1) + "-01-01", "<" + (year - 1) + "-" + month + "-" + day]
       }
@@ -120,7 +121,7 @@ async function getPreviousTotalSales() {
 // async function getTotalSalesByMonth() {
 //   // Total Sales todate this month
 //   // console.log("dashboardService::getTotalSales")
-//   const ordersList = await Orders.List("All", {
+//   const ordersList = await Orders.List<IOrder>("All", {
 //     filters: {
 //       DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
 //     }
@@ -134,7 +135,7 @@ async function getPreviousTotalSales() {
 // async function getTotalSalesPreviousYearByMonth() {
 //   // Total Sales todate last month
 //   // console.log("dashboardService::getPreviousTotalSales")
-//   const ordersList = await Orders.List("All", {
+//   const ordersList = await Orders.List<IOrder>("All", {
 //     filters: {
 //       DateCreated: [
 //         ">" + (year - 1) + "-01-01",
@@ -154,7 +155,7 @@ async function getTotalUsers() {
   let result
 
   if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
-    const usersList = await Orders.List("All", {
+    const usersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
       }
@@ -172,7 +173,7 @@ async function getPreviousTotalUsers() {
   let result
 
   if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
-    const usersList = await Orders.List("All", {
+    const usersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + (year - 1) + "-01-01", "<" + (year - 1) + "-" + month + "-" + day]
       }
@@ -191,7 +192,7 @@ async function getTotalNewUsers() {
   let result
 
   if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
-    const usersList = await Orders.List("All", {
+    const usersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
       }
@@ -209,7 +210,7 @@ async function getPreviousTotalNewUsers() {
   let result
 
   if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
-    const usersList = await Orders.List("All", {
+    const usersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [
           ">" + previousMonthYear + "-" + previousMonth + "-01",

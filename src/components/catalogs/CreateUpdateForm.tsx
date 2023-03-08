@@ -2,11 +2,11 @@ import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
 import {InputControl, SwitchControl, TextareaControl} from "components/formik"
 import Card from "../card/Card"
-import {Catalog} from "ordercloud-javascript-sdk"
+import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {Formik} from "formik"
-import {catalogsService} from "api"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {ICatalog} from "types/ordercloud/ICatalog"
 
 export {CreateUpdateForm}
 
@@ -23,8 +23,8 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
     useCreateUpdateForm<Catalog>(catalog, formShape, createCatalog, updateCatalog)
 
   async function createCatalog(fields: Catalog) {
-    const createdCatalog = await catalogsService.create(fields)
-    await catalogsService.saveAssignment(router.query.buyerid, createdCatalog.ID)
+    const createdCatalog = await Catalogs.Create<ICatalog>(fields)
+    await Catalogs.SaveAssignment({BuyerID: router.query.buyerid as string, CatalogID: createdCatalog.ID})
     successToast({
       description: "Catalog created successfully."
     })
@@ -32,8 +32,8 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
   }
 
   async function updateCatalog(fields: Catalog) {
-    const updatedCatalog = await catalogsService.update(fields)
-    await catalogsService.saveAssignment(router.query.buyerid, updatedCatalog.ID)
+    const updatedCatalog = await Catalogs.Save<ICatalog>(fields.ID, fields)
+    await Catalogs.SaveAssignment({BuyerID: router.query.buyerid as string, CatalogID: updatedCatalog.ID})
     successToast({
       description: "Catalog updated successfully."
     })

@@ -2,10 +2,10 @@ import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "../../../../components/users/CreateUpdateForm"
 import {Box} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {User} from "ordercloud-javascript-sdk"
+import {SupplierUsers, User} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
-import {supplierUsersService} from "../../../../api"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
+import {ISupplierUser} from "types/ordercloud/ISupplierUser"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -27,11 +27,18 @@ const UserListItem = () => {
   const router = useRouter()
   const [user, setUser] = useState({} as User)
   useEffect(() => {
+    const getUser = async () => {
+      const data = await SupplierUsers.Get<ISupplierUser>(
+        router.query.supplierid as string,
+        router.query.userid as string
+      )
+      setUser(data)
+    }
     if (router.query.supplierid) {
-      supplierUsersService.getById(router.query.supplierid, router.query.userid).then((user) => setUser(user))
+      getUser()
     }
   }, [router.query.supplierid, router.query.userid])
-  return <>{user?.ID ? <CreateUpdateForm user={user} ocService={supplierUsersService} /> : <div> Loading</div>}</>
+  return <>{user?.ID ? <CreateUpdateForm user={user} ocService={SupplierUsers} /> : <div> Loading</div>}</>
 }
 
 const ProtectedSupplierListItem = () => {

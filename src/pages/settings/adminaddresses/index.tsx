@@ -17,13 +17,14 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react"
 import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 import {Link} from "components/navigation/Link"
 import {NextSeo} from "next-seo"
 import {OrderCloudTableFilters} from "components/ordercloud-table"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {addressHelper} from "utils/address.utils"
 import {appPermissions} from "constants/app-permissions.config"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
@@ -49,7 +50,7 @@ const AdminAddressesPage = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const adminAddresses = await AdminAddresses.List(filters)
+    const adminAddresses = await AdminAddresses.List<IAdminAddress>(filters)
     setTableData(adminAddresses)
   }, [])
 

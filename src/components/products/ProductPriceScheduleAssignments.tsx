@@ -39,6 +39,9 @@ import BrandedSpinner from "../branding/BrandedSpinner"
 import BrandedTable from "../branding/BrandedTable"
 import React from "react"
 import {priceHelper} from "utils"
+import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
+import {IBuyer} from "types/ordercloud/IBuyer"
+import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
@@ -81,13 +84,15 @@ export default function ProductPriceScheduleAssignments({composedProduct, setCom
         })
 
         if (composedProduct?.Product?.DefaultPriceScheduleID) {
-          const defaultPriceSchedule = await PriceSchedules.Get(composedProduct?.Product?.DefaultPriceScheduleID)
+          const defaultPriceSchedule = await PriceSchedules.Get<IPriceSchedule>(
+            composedProduct?.Product?.DefaultPriceScheduleID
+          )
           setDefaultPriceScheduleAssignment(defaultPriceSchedule)
         }
 
         await Promise.all(
           assignments.Items.map(async (index) => {
-            var priceSchedule = await PriceSchedules.Get(index.PriceScheduleID)
+            var priceSchedule = await PriceSchedules.Get<IPriceSchedule>(index.PriceScheduleID)
             const priceScheduleWithAssignment: PriceScheduleWithAssignment = {
               assignment: index,
               priceSchedule: priceSchedule
@@ -195,7 +200,7 @@ export default function ProductPriceScheduleAssignments({composedProduct, setCom
         }))
       }
 
-      PriceSchedules.List({
+      PriceSchedules.List<IPriceSchedule>({
         searchOn: ["Name", "ID"],
         search: newValue
       }).then((innerPriceSchedules) => {
@@ -221,7 +226,7 @@ export default function ProductPriceScheduleAssignments({composedProduct, setCom
         }))
       }
 
-      Buyers.List({
+      Buyers.List<IBuyer>({
         searchOn: ["Name", "ID"],
         search: newValue
       }).then((innerBuyers) => {
@@ -238,7 +243,7 @@ export default function ProductPriceScheduleAssignments({composedProduct, setCom
         setAvailablePriceSchedules(null)
       })
     } else if (fieldKey == "userGroup") {
-      UserGroups.List(newPriceScheduleAssignment.buyerGroup, {
+      UserGroups.List<IBuyerUserGroup>(newPriceScheduleAssignment.buyerGroup, {
         searchOn: ["Name", "ID"],
         search: newValue
       }).then((innerUserGroups) => {

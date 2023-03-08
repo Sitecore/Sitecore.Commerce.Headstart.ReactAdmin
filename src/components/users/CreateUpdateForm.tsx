@@ -5,7 +5,7 @@ import {InputControl, SwitchControl} from "components/formik"
 import Card from "../card/Card"
 import {MdCheckCircle} from "react-icons/md"
 import {User} from "ordercloud-javascript-sdk"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useState} from "react"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 
@@ -43,7 +43,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
   if (router.query.supplierid !== undefined) parentId = router.query.supplierid
 
   async function createUser(fields: User) {
-    await ocService.create(parentId, fields)
+    await ocService.Create(parentId, fields)
     successToast({
       description: "User created successfully."
     })
@@ -51,7 +51,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
   }
 
   async function updateUser(fields: User) {
-    await ocService.update(parentId, router.query.userid, fields)
+    await ocService.Save(parentId, router.query.userid, fields)
     successToast({
       description: "User updated successfully."
     })

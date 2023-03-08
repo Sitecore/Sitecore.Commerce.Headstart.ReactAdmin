@@ -18,6 +18,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react"
 
 import Card from "components/card/Card"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {IAdminUser} from "types/ordercloud/IAdminUser"
 import {IoMdClose} from "react-icons/io"
 import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
@@ -25,7 +26,7 @@ import {NextSeo} from "next-seo"
 import {OrderCloudTable} from "components/ordercloud-table/OrderCloudTable"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
@@ -51,7 +52,7 @@ const AdminUsersPage = () => {
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
-    const adminUsersList = await AdminUsers.List(filters)
+    const adminUsersList = await AdminUsers.List<IAdminUser>(filters)
     setTableData(adminUsersList)
   }, [])
 

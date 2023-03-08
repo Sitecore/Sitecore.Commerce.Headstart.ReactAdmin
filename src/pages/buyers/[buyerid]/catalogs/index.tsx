@@ -8,9 +8,12 @@ import ExportToCsv from "components/demo/ExportToCsv"
 import {Link} from "components/navigation/Link"
 import {OrderCloudTableFilters} from "components/ordercloud-table"
 import React from "react"
-import {catalogsService} from "api"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
+import {DataTable} from "components/data-table/DataTable"
+import {OrderCloudTableFilters} from "components/ordercloud-table"
+import {ListPage, Catalog, Catalogs} from "ordercloud-javascript-sdk"
+import {ICatalog} from "types/ordercloud/ICatalog"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -34,10 +37,16 @@ const CatalogsList = () => {
   const [tableData, setTableData] = useState(null as ListPage<Catalog>)
   const [filters, setFilters] = useState({} as OrderCloudTableFilters)
 
+  const getCatalogsByBuyerId = async (buyerId: string) => {
+    const assignments = await Catalogs.ListAssignments({buyerID: buyerId})
+    const catalogIds = assignments.Items.map((assignment) => assignment.CatalogID)
+    return await Catalogs.List<ICatalog>({filters: {ID: catalogIds.join("|")}})
+  }
+
   const fetchData = useCallback(
     async (filters: OrderCloudTableFilters) => {
       setFilters(filters)
-      const catalogsList = await catalogsService.getCatalogsbyBuyerID(router.query.buyerid)
+      const catalogsList = await getCatalogsByBuyerId(router.query.buyerid as string)
       setTableData(catalogsList)
     },
     [router.query.buyerid]
@@ -49,7 +58,7 @@ const CatalogsList = () => {
 
   const deleteCatalog = useCallback(
     async (catalogid: string) => {
-      await catalogsService.delete(catalogid)
+      await Catalogs.Delete(catalogid)
       fetchData({})
       successToast({
         description: "Buyer deleted successfully."

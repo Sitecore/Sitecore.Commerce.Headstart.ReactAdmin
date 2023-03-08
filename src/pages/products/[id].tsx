@@ -44,6 +44,7 @@ import Card from "components/card/Card"
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import EditorialProgressBar from "components/products/EditorialProgressBar"
 import ExportToCsv from "components/demo/ExportToCsv"
+import {IProduct} from "types/ordercloud/IProduct"
 import {Link} from "components/navigation/Link"
 import {NextSeo} from "next-seo"
 import ProductCatalogAssignments from "components/products/ProductCatalogAssignments"
@@ -60,7 +61,7 @@ import ProductXpCards from "components/products/ProductXpCards"
 import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
 import {appPermissions} from "constants/app-permissions.config"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
@@ -149,7 +150,7 @@ const ProductDetails = () => {
       ID: formValues.id,
       Active: formValues.isActive
     }
-    await Products.Create(newProduct)
+    await Products.Create<IProduct>(newProduct)
 
     setFormValues((v) => ({
       ...v,

@@ -3,7 +3,7 @@ import {Box, Button, ButtonGroup, Card, Flex, Stack} from "@chakra-ui/react"
 import {InputControl, TextareaControl} from "components/formik"
 import {Formik} from "formik"
 import {UserGroup} from "ordercloud-javascript-sdk"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 
 export {CreateUpdateForm}
@@ -30,7 +30,7 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
   if (router.query.supplierid !== undefined) parentId = router.query.supplierid
 
   async function createUserGroup(fields: UserGroup) {
-    await ocService.create(parentId, fields)
+    await ocService.Create(parentId, fields)
     successToast({
       description: "User Group created successfully."
     })
@@ -38,7 +38,7 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
   }
 
   async function updateUserGroup(fields: UserGroup) {
-    await ocService.update(parentId, router.query.usergroupid, fields)
+    await ocService.Save(parentId, router.query.usergroupid, fields)
     successToast({
       description: "Buyer updated successfully."
     })

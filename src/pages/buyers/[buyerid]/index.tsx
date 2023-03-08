@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "components/buyers"
 import {Box} from "@chakra-ui/react"
-import {Buyer} from "ordercloud-javascript-sdk"
+import {Buyer, Buyers} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {buyersService} from "api"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
+import {IBuyer} from "types/ordercloud/IBuyer"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 /* TODO Ask if this is the way to go or better to have getStaticProps + GetStaticPath in this case */
@@ -29,7 +29,7 @@ const BuyerListItem = () => {
   const [buyer, setBuyer] = useState({} as Buyer)
   useEffect(() => {
     if (router.query.buyerid) {
-      buyersService.getById(router.query.buyerid).then((buyer) => setBuyer(buyer))
+      Buyers.Get<IBuyer>(router.query.buyerid as string).then((buyer) => setBuyer(buyer))
     }
   }, [router.query.buyerid])
   return <>{buyer?.ID ? <CreateUpdateForm buyer={buyer} /> : <div> Loading</div>}</>

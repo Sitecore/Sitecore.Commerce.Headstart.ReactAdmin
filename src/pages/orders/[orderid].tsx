@@ -34,6 +34,7 @@ import ExportToCsv from "components/demo/ExportToCsv"
 import ExportToPdf from "components/demo/ExportToPdf"
 import LettersCard from "components/card/LettersCard"
 import LineItemList from "components/shoppingcart/LineItemList"
+import {useRouter} from "hooks/useRouter"
 import {Link} from "components/navigation/Link"
 import {NextSeo} from "next-seo"
 import PrintShippingLabel from "components/demo/PrintShippingLabel"
@@ -41,6 +42,7 @@ import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "next/router"
 import {useSuccessToast} from "hooks/useToast"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -89,7 +91,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
       }
       const [worksheet, returns] = await Promise.all([
         IntegrationEvents.GetWorksheet("All", orderId),
-        OrderReturns.List({filters: {OrderID: orderId}})
+        OrderReturns.List<IOrderReturn>({filters: {OrderID: orderId}})
       ])
       setOrderWorksheet(worksheet)
       setOrderReturns(returns.Items)
@@ -120,7 +122,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
     const createReturn = async () => {
       try {
         setLoading(true)
-        const submittedReturn = await OrderReturns.Create(orderReturn)
+        const submittedReturn = await OrderReturns.Create<IOrderReturn>(orderReturn)
         await OrderReturns.Submit(submittedReturn.ID)
         setOrderReturn({} as OrderReturn)
         setLoading(false)

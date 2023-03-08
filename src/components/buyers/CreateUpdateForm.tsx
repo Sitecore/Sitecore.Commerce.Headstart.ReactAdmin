@@ -1,13 +1,14 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
 import {InputControl, NumberInputControl, PercentComplete, SelectControl, SwitchControl} from "components/formik"
-import {Buyer, Catalog} from "ordercloud-javascript-sdk"
+import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import Card from "../card/Card"
 import {Formik} from "formik"
-import {buyersService, catalogsService} from "../../api"
-import {useRouter} from "next/router"
+import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {useEffect, useState} from "react"
+import {ICatalog} from "types/ordercloud/ICatalog"
+import {IBuyer} from "types/ordercloud/IBuyer"
 
 export {CreateUpdateForm}
 
@@ -34,12 +35,12 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
   }, [])
 
   async function initCatalogsData() {
-    const response = await catalogsService.list()
+    const response = await Catalogs.List<ICatalog>()
     setCatalogs(response.Items)
   }
 
   async function createBuyer(fields: Buyer) {
-    await buyersService.create(fields)
+    await Buyers.Create<IBuyer>(fields)
     successToast({
       description: "Buyer created successfully."
     })
@@ -47,7 +48,7 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
   }
 
   async function updateBuyer(fields: Buyer) {
-    await buyersService.update(fields)
+    await Buyers.Save<IBuyer>(fields.ID, fields)
     successToast({
       description: "Buyer updated successfully."
     })

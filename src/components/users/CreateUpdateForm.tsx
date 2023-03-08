@@ -22,7 +22,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
     FirstName: Yup.string().required("First Name is required"),
     LastName: Yup.string().required("Last Name is required"),
     Email: Yup.string().email("Email is invalid").required("Email is required"),
-    Password: Yup.string().required("Password is required").min(10, "Password must be at least 6 characters"),
+    Password: Yup.string().required("Password is required").min(10, "Password must be at least 10 characters"),
     ConfirmPassword: Yup.string()
       .transform((x) => (x === "" ? undefined : x))
       .when("Password", (password, schema) => {
@@ -68,19 +68,21 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
               values,
               errors,
               touched,
+              dirty,
               handleChange,
               handleBlur,
               handleSubmit,
+              isValid,
               isSubmitting,
               setFieldValue,
               resetForm
             }) => (
               <Box as="form" onSubmit={handleSubmit as any}>
                 <Stack spacing={5}>
-                  <InputControl name="Username" label="Username" />
-                  <InputControl name="FirstName" label="First name" />
-                  <InputControl name="LastName" label="Last name" />
-                  <InputControl name="Email" label="Email" />
+                  <InputControl name="Username" label="Username" isRequired />
+                  <InputControl name="FirstName" label="First name" isRequired />
+                  <InputControl name="LastName" label="Last name" isRequired />
+                  <InputControl name="Email" label="Email" isRequired />
                   <InputControl name="Phone" label="Phone" />
                   <SwitchControl name="Active" label="Active" />
                   {/* {isAddMode && (  This has been commented to fix a validation bug duing update */}
@@ -94,6 +96,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
                         pr="4.5rem"
                         type={show ? "text" : "password"}
                         placeholder="Enter password"
+                        isRequired
                       />
                       <Button position="absolute" right="2px" top="2px" size="sm" onClick={handleClick}>
                         {show ? "Hide" : "Show"}
@@ -107,12 +110,18 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
                       pr="4.5rem"
                       type={show ? "text" : "password"}
                       placeholder="Enter password"
+                      isRequired
                     />
                     <ErrorMessage name="ConfirmPassword" />
                   </>
                   {/* )} */}
                   <ButtonGroup>
-                    <Button variant="primaryButton" type="submit" isLoading={isSubmitting}>
+                    <Button
+                      variant="primaryButton"
+                      type="submit"
+                      isLoading={isSubmitting}
+                      isDisabled={!isValid || !dirty}
+                    >
                       Save
                     </Button>
                     <Button

@@ -49,20 +49,27 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
             values,
             errors,
             touched,
+            dirty,
             handleChange,
             handleBlur,
             handleSubmit,
+            isValid,
             isSubmitting,
             setFieldValue,
             resetForm
           }) => (
             <Box as="form" onSubmit={handleSubmit as any}>
               <Stack spacing={5}>
-                <InputControl name="Name" label="Catalog Name" />
+                <InputControl name="Name" label="Catalog Name" isRequired />
                 <TextareaControl name="Description" label="Description" />
                 <SwitchControl name="Active" label="Active" />
                 <ButtonGroup>
-                  <Button variant="primaryButton" type="submit" isLoading={isSubmitting}>
+                  <Button
+                    variant="primaryButton"
+                    type="submit"
+                    isLoading={isSubmitting}
+                    isDisabled={!isValid || !dirty}
+                  >
                     Save
                   </Button>
                   <Button

@@ -142,19 +142,21 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
             values,
             errors,
             touched,
+            dirty,
             handleChange,
             handleBlur,
             handleSubmit,
+            isValid,
             isSubmitting,
             setFieldValue,
             resetForm
           }) => (
             <Box as="form" onSubmit={handleSubmit as any}>
               <Stack spacing={5}>
-                <InputControl name="Username" label="Username" />
-                <InputControl name="FirstName" label="First name" />
-                <InputControl name="LastName" label="Last name" />
-                <InputControl name="Email" label="Email" />
+                <InputControl name="Username" label="Username" isRequired />
+                <InputControl name="FirstName" label="First name" isRequired />
+                <InputControl name="LastName" label="Last name" isRequired />
+                <InputControl name="Email" label="Email" isRequired />
                 <InputControl name="Phone" label="Phone" />
                 <SwitchControl name="Active" label="Active" marginBottom={5} />
                 <PermissionsTable
@@ -162,7 +164,12 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
                   assignedPermissions={assignedPermissions || []}
                 />
                 <ButtonGroup>
-                  <Button variant="primaryButton" type="submit" isLoading={isSubmitting}>
+                  <Button
+                    variant="primaryButton"
+                    type="submit"
+                    isLoading={isSubmitting}
+                    isDisabled={!isValid || !dirty}
+                  >
                     Save
                   </Button>
                   <Button

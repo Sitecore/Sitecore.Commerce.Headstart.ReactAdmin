@@ -1,10 +1,11 @@
-import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "components/catalogs/CreateUpdateForm"
 import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
+import {useEffect, useState} from "react"
+
+import {CreateUpdateForm} from "components/catalogs/CreateUpdateForm"
+import {ICatalog} from "types/ordercloud/ICatalog"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
-import {ICatalog} from "types/ordercloud/ICatalog"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -14,7 +15,7 @@ export async function getServerSideProps() {
         title: "Edit catalog",
         metas: {
           hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
+          hasBuyerContextSwitch: true
         }
       },
       revalidate: 5 * 60

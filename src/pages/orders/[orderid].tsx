@@ -27,17 +27,21 @@ import {
 import {IntegrationEvents, OrderReturn, OrderReturns, OrderWorksheet, Orders} from "ordercloud-javascript-sdk"
 import React, {FunctionComponent, useEffect, useRef, useState} from "react"
 import {dateHelper, priceHelper} from "utils/"
+
 import AddressCard from "../../components/card/AddressCard"
 import Card from "components/card/Card"
+import ExportToCsv from "components/demo/ExportToCsv"
+import ExportToPdf from "components/demo/ExportToPdf"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 import LettersCard from "components/card/LettersCard"
-import {NextSeo} from "next-seo"
 import LineItemList from "components/shoppingcart/LineItemList"
-import {useRouter} from "hooks/useRouter"
+import {Link} from "components/navigation/Link"
+import {NextSeo} from "next-seo"
+import PrintShippingLabel from "components/demo/PrintShippingLabel"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
+import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
-import {Link} from "components/navigation/Link"
-import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -65,14 +69,6 @@ const OrderConfirmationPage: FunctionComponent = () => {
   const [loading, setLoading] = useState(false)
   const cancelRef = useRef()
   const successToast = useSuccessToast()
-  const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
-  const requestExportCSV = () => {}
-
-  const [isExportPDFDialogOpen, setExportPDFDialogOpen] = useState(false)
-  const requestExportPDF = () => {}
-
-  const [isPrintLabelDialogOpen, setPrintLabelDialogOpen] = useState(false)
-  const requestPrintLabel = () => {}
 
   const requestRefund = () => {
     setOrderReturn({
@@ -184,15 +180,9 @@ const OrderConfirmationPage: FunctionComponent = () => {
             <Button variant="primaryButton">Place re-order</Button>
           </Link>
           <HStack>
-            <Button variant="secondaryButton" onClick={() => setPrintLabelDialogOpen(true)}>
-              Print Shipping Label
-            </Button>
-            <Button variant="secondaryButton" onClick={() => setExportPDFDialogOpen(true)}>
-              Export PDF
-            </Button>
-            <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-              Export CSV
-            </Button>
+            <PrintShippingLabel />
+            <ExportToCsv />
+            <ExportToPdf />
           </HStack>
         </HStack>
         <Card variant="primaryCard">
@@ -369,7 +359,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      <AlertDialog
+      {/* <AlertDialog
         isOpen={isExportCSVDialogOpen}
         onClose={() => setExportCSVDialogOpen(false)}
         leastDestructiveRef={cancelRef}
@@ -403,9 +393,9 @@ const OrderConfirmationPage: FunctionComponent = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>
-      </AlertDialog>
+      </AlertDialog> */}
 
-      <AlertDialog
+      {/* <AlertDialog
         isOpen={isExportPDFDialogOpen}
         onClose={() => setExportPDFDialogOpen(false)}
         leastDestructiveRef={cancelRef}
@@ -439,9 +429,9 @@ const OrderConfirmationPage: FunctionComponent = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>
-      </AlertDialog>
+      </AlertDialog> */}
 
-      <AlertDialog
+      {/* <AlertDialog
         isOpen={isPrintLabelDialogOpen}
         onClose={() => setPrintLabelDialogOpen(false)}
         leastDestructiveRef={cancelRef}
@@ -475,7 +465,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>
-      </AlertDialog>
+      </AlertDialog> */}
     </>
   )
 }

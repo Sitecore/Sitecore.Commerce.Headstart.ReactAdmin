@@ -45,23 +45,25 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 import {ChangeEvent, useEffect, useRef, useState} from "react"
-import {ChevronDownIcon} from "@chakra-ui/icons"
 import {FiChevronDown, FiChevronUp} from "react-icons/fi"
 import {HiOutlineViewGrid, HiOutlineViewList} from "react-icons/hi"
 import {Product, Products, Promotions} from "ordercloud-javascript-sdk"
+
 import {AiOutlineSearch} from "react-icons/ai"
 import BrandedSpinner from "../branding/BrandedSpinner"
 import BrandedTable from "../branding/BrandedTable"
 import {CalculateEditorialProcess} from "./EditorialProgressBar"
 import Card from "../card/Card"
+import {ChevronDownIcon} from "@chakra-ui/icons"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {IProduct} from "types/ordercloud/IProduct"
+import {IPromotion} from "types/ordercloud/IPromotion"
+import {Link} from "../navigation/Link"
 import {NextSeo} from "next-seo"
 import ProductGrid from "./ProductGrid"
 import ProductList from "./ProductList"
 import {ProductListOptions} from "../../services/ordercloud.service"
 import {useErrorToast} from "hooks/useToast"
-import {Link} from "../navigation/Link"
-import {IPromotion} from "types/ordercloud/IPromotion"
-import {IProduct} from "types/ordercloud/IProduct"
 
 interface ProductSearchProps {
   query: string
@@ -483,9 +485,7 @@ export default function ProductSearch({query}: ProductSearchProps) {
                   <Button variant="secondaryButton" onClick={() => setBulkImportDialogOpen(true)}>
                     Bulk Import
                   </Button>
-                  <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-                    Export CSV
-                  </Button>
+                  <ExportToCsv />
                 </HStack>
               </HStack>
               <Card showclosebutton="false">
@@ -679,41 +679,6 @@ export default function ProductSearch({query}: ProductSearchProps) {
           )}
         </ModalContent>
       </Modal>
-      <AlertDialog
-        isOpen={isExportCSVDialogOpen}
-        onClose={() => setExportCSVDialogOpen(false)}
-        leastDestructiveRef={cancelRef}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Export Selected Products to CSV
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              <Text display="inline">
-                Export the selected products to a CSV, once the export button is clicked behind the scenes a job will be
-                kicked off to create the csv and then will automatically download to your downloads folder in the
-                browser.
-              </Text>
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <HStack justifyContent="space-between" w="100%">
-                <Button
-                  ref={cancelRef}
-                  onClick={() => setExportCSVDialogOpen(false)}
-                  disabled={loading}
-                  variant="secondaryButton"
-                >
-                  Cancel
-                </Button>
-                <Button onClick={requestExportCSV} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Export Orders"}
-                </Button>
-              </HStack>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
 
       <AlertDialog
         isOpen={isBulkImportDialogOpen}

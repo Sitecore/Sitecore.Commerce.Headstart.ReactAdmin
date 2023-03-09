@@ -1,28 +1,18 @@
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-  ButtonGroup,
-  Container,
-  HStack,
-  Text
-} from "@chakra-ui/react"
+import {Button, ButtonGroup, Container, HStack, Text} from "@chakra-ui/react"
+import {Catalog, ListPage, ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
+import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useRef, useState} from "react"
+
 import Card from "components/card/Card"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {Link} from "../../../components/navigation/Link"
 import {NextSeo} from "next-seo"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableFilters, OrderCloudTableColumn} from "components/ordercloud-table"
-import {ListPage, Catalog, ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
-import {IProductFacet} from "types/ordercloud/IProductFacet"
+import {useSuccessToast} from "hooks/useToast"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -42,11 +32,6 @@ export async function getServerSideProps() {
 const ProductFacetsPage = () => {
   const router = useRouter()
   const successToast = useSuccessToast()
-  const errorToast = useErrorToast()
-  const [productfacets, setProductFacets] = useState([])
-  const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
-  const requestExportCSV = () => {}
-  const cancelRef = useRef()
   const [tableData, setTableData] = useState(null as ListPage<ProductFacet>)
   const [filters, setFilters] = useState({} as OrderCloudTableFilters)
 
@@ -115,42 +100,12 @@ const ProductFacetsPage = () => {
           <Button variant="primaryButton">New Product Facet</Button>
         </Link>
         <HStack>
-          <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-            Export CSV
-          </Button>
+          <ExportToCsv />
         </HStack>
       </HStack>
       <Card variant="primaryCard">
         <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData}></DataTable>
       </Card>
-      <AlertDialog
-        isOpen={isExportCSVDialogOpen}
-        onClose={() => setExportCSVDialogOpen(false)}
-        leastDestructiveRef={cancelRef}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Export Selected Product Facets to CSV
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              <Text display="inline">
-                Export the selected product facets to a CSV, once the export button is clicked behind the scense a job
-                will be kicked off to create the csv and then will automatically download to your downloads folder in
-                the browser.
-              </Text>
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <HStack justifyContent="space-between" w="100%">
-                <Button ref={cancelRef} onClick={() => setExportCSVDialogOpen(false)} variant="secondaryButton">
-                  Cancel
-                </Button>
-                <Button onClick={requestExportCSV}>Export Product Facets</Button>
-              </HStack>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
     </Container>
   )
 }

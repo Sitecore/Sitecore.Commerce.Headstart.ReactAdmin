@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Grid,
   GridItem,
   HStack,
@@ -13,15 +12,17 @@ import {
   ModalOverlay,
   useDisclosure
 } from "@chakra-ui/react"
+import {Categories, Category} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useState} from "react"
+
 import Card from "components/card/Card"
+import {CreateUpdateForm} from "components/categories"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {ICategory} from "types/ordercloud/ICategoryXp"
 import React from "react"
 import TreeView from "components/dndtreeview/TreeView"
 import {ocNodeModel} from "@minoru/react-dnd-treeview"
 import {useRouter} from "hooks/useRouter"
-import {CreateUpdateForm} from "components/categories"
-import {Categories, Category} from "ordercloud-javascript-sdk"
-import {ICategory} from "types/ordercloud/ICategoryXp"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -104,7 +105,7 @@ const CategoriesList = (props) => {
       <Box padding="20px">
         <HStack justifyContent="end" w="100%" mb={5}>
           <HStack>
-            <Button variant="secondaryButton">Export CSV</Button>
+            <ExportToCsv />
           </HStack>
         </HStack>
         <Card variant="primaryCard">

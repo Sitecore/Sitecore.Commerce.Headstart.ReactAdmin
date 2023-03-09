@@ -1,9 +1,10 @@
-import {Box, Flex} from "@chakra-ui/react"
-import ProtectedContent from "components/auth/ProtectedContent"
+import React, {useEffect, useState} from "react"
+
+import {Box} from "@chakra-ui/react"
 import ProductSearch from "components/products/ProductSearch"
+import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
-import React, {useEffect, useState} from "react"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

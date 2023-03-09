@@ -7,38 +7,45 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
+  Checkbox,
+  CheckboxGroup,
   Container,
+  Divider,
+  FormControl,
+  FormLabel,
   Grid,
   GridItem,
   HStack,
-  VStack,
+  Input,
   Menu,
-  useDisclosure,
   MenuButton,
-  MenuList,
   MenuItem,
-  Checkbox,
-  CheckboxGroup,
-  Divider,
-  Text,
+  MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Select,
   SimpleGrid,
   Spinner,
-  Select,
-  Modal,
-  ModalOverlay,
-  ModalHeader,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
-  FormControl,
-  FormLabel,
-  Input,
-  ModalFooter
+  Text,
+  VStack,
+  useDisclosure
 } from "@chakra-ui/react"
-import {ComposedProduct, GetComposedProduct} from "services/ordercloud.service"
 import {ChangeEvent, useEffect, useState} from "react"
+import {ComposedProduct, GetComposedProduct} from "services/ordercloud.service"
+import {Product, Products} from "ordercloud-javascript-sdk"
+
 import BrandedSpinner from "components/branding/BrandedSpinner"
+import Card from "components/card/Card"
+import {ChevronDownIcon} from "@chakra-ui/icons"
 import EditorialProgressBar from "components/products/EditorialProgressBar"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {IProduct} from "types/ordercloud/IProduct"
+import {Link} from "components/navigation/Link"
 import {NextSeo} from "next-seo"
 import ProductCatalogAssignments from "components/products/ProductCatalogAssignments"
 import ProductData from "components/products/ProductData"
@@ -51,16 +58,11 @@ import ProductSpecs from "components/products/ProductSpecs"
 import ProductSuppliers from "components/products/ProductSupllier"
 import ProductVariants from "components/products/ProductVariants"
 import ProductXpCards from "components/products/ProductXpCards"
-import {Product, Products} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
-import Card from "components/card/Card"
-import {ChevronDownIcon} from "@chakra-ui/icons"
 import {useSuccessToast} from "hooks/useToast"
-import {Link} from "components/navigation/Link"
-import {IProduct} from "types/ordercloud/IProduct"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -84,7 +86,6 @@ const ProductDetails = () => {
   const [selectedLanguage, setselectedLanguage] = useState("")
   const {id} = router.query
   const [composedProduct, setComposedProduct] = useState<ComposedProduct>(null)
-  const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
   const [isViewProductDialogOpen, setViewProductDialogOpen] = useState(false)
   const [isDeleteProductDialogOpen, setDeleteProductDialogOpen] = useState(false)
   const [isLanguageDialogOpen, setLanguageDialogOpen] = useState(false)
@@ -93,9 +94,7 @@ const ProductDetails = () => {
   const [isDeleting, setIsDeleting] = useState(false)
   const {isOpen, onOpen, onClose} = useDisclosure()
   const cancelRef = React.useRef()
-  const [isLoading, setIsLoading] = useState(true)
   const [isAdding, setIsAdding] = useState(false)
-
   const [formValues, setFormValues] = useState({
     id: "",
     name: "",
@@ -271,9 +270,7 @@ const ProductDetails = () => {
               <Button variant="secondaryButton" onClick={() => setLanguageDialogOpen(true)}>
                 Languages
               </Button>
-              <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-                Export CSV
-              </Button>
+              <ExportToCsv />
             </HStack>
           </HStack>
           <VStack justifyContent={"space-between"} width={"full"}>
@@ -392,41 +389,6 @@ const ProductDetails = () => {
                   </AlertDialogFooter>
                 </>
               )}
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
-        <AlertDialog
-          isOpen={isExportCSVDialogOpen}
-          onClose={() => setExportCSVDialogOpen(false)}
-          leastDestructiveRef={cancelRef}
-        >
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Export Selected Product to CSV
-              </AlertDialogHeader>
-              <AlertDialogBody>
-                <Text display="inline">
-                  Export the selected product to a CSV, once the export button is clicked behind the scenes a job will
-                  be kicked off to create the csv and then will automatically download to your downloads folder in the
-                  browser.
-                </Text>
-              </AlertDialogBody>
-              <AlertDialogFooter>
-                <HStack justifyContent="space-between" w="100%">
-                  <Button
-                    ref={cancelRef}
-                    onClick={() => setExportCSVDialogOpen(false)}
-                    disabled={loading}
-                    variant="secondaryButton"
-                  >
-                    Cancel
-                  </Button>
-                  <Button onClick={requestExportCSV} disabled={loading}>
-                    {loading ? <Spinner color="brand.500" /> : "Export Product"}
-                  </Button>
-                </HStack>
-              </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialogOverlay>
         </AlertDialog>

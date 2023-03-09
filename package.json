@@ -36,8 +36,6 @@
     "lodash": "^4.17.21",
     "next": "12.2.0",
     "next-seo": "^5.4.0",
-    "nextra": "^2.2.14",
-    "nextra-theme-docs": "^2.2.14",
     "ordercloud-javascript-sdk": "^5.0.0-beta.2",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",

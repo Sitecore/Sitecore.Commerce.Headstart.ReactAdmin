@@ -14,13 +14,14 @@ import {
   Text,
   VStack
 } from "@chakra-ui/react"
-import {useEffect, useState} from "react"
 import {Buyer, Buyers, Catalogs, UserGroups, Users} from "ordercloud-javascript-sdk"
+import {useEffect, useState} from "react"
+
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import {useRouter} from "hooks/useRouter"
 import {IBuyer} from "types/ordercloud/IBuyer"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
+import {useRouter} from "hooks/useRouter"
 
 export default function BuyerContextSwitch({...props}) {
   const [currentBuyer, setCurrentBuyer] = useState({} as Buyer)
@@ -96,29 +97,31 @@ export default function BuyerContextSwitch({...props}) {
               </Text>
             </VStack>
             <Spacer width="40px"></Spacer>
-            {buyers.length > 1 && (
-              <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} size="lg" ml="30px">
-                  {currentBuyer?.Name}
-                </MenuButton>
-                <MenuList>
-                  {buyers.map((buyer, index) => (
-                    <>
-                      <MenuItem key={index} minH="40px" onClick={() => router.push({query: {buyerid: buyer.ID}})}>
-                        <Image
-                          boxSize="2rem"
-                          borderRadius="full"
-                          src={`https://robohash.org/${buyer.ID}.png`}
-                          alt={buyer.Name}
-                          mr="12px"
-                        />
-                        <span>{buyer.Name}</span>
-                      </MenuItem>
-                    </>
-                  ))}
-                </MenuList>
-              </Menu>
-            )}
+            {typeof router.query.userid == "undefined" &&
+              typeof router.query.usergroupid == "undefined" &&
+              buyers.length > 1 && (
+                <Menu>
+                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />} size="lg" ml="30px">
+                    {currentBuyer?.Name}
+                  </MenuButton>
+                  <MenuList>
+                    {buyers.map((buyer, index) => (
+                      <>
+                        <MenuItem key={index} minH="40px" onClick={() => router.push({query: {buyerid: buyer.ID}})}>
+                          <Image
+                            boxSize="2rem"
+                            borderRadius="full"
+                            src={`https://robohash.org/${buyer.ID}.png`}
+                            alt={buyer.Name}
+                            mr="12px"
+                          />
+                          <span>{buyer.Name}</span>
+                        </MenuItem>
+                      </>
+                    ))}
+                  </MenuList>
+                </Menu>
+              )}
           </HStack>
 
           <Flex direction={{sm: "column", lg: "row"}} w={{sm: "100%", md: "50%", lg: "auto"}}>

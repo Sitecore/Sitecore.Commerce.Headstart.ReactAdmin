@@ -40,7 +40,7 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
   async function updateUserGroup(fields: UserGroup) {
     await ocService.Save(parentId, router.query.usergroupid, fields)
     successToast({
-      description: "Buyer updated successfully."
+      description: "User Group updated successfully."
     })
     router.back()
   }
@@ -55,19 +55,26 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
               values,
               errors,
               touched,
+              dirty,
               handleChange,
               handleBlur,
               handleSubmit,
+              isValid,
               isSubmitting,
               setFieldValue,
               resetForm
             }) => (
               <Box as="form" onSubmit={handleSubmit as any}>
                 <Stack spacing={5}>
-                  <InputControl name="Name" label="User Group Name" />
+                  <InputControl name="Name" label="User Group Name" isRequired />
                   <TextareaControl name="Description" label="Description" />
                   <ButtonGroup>
-                    <Button variant="primaryButton" type="submit" isLoading={isSubmitting}>
+                    <Button
+                      variant="primaryButton"
+                      type="submit"
+                      isLoading={isSubmitting}
+                      isDisabled={!isValid || !dirty}
+                    >
                       Save
                     </Button>
                     <Button

@@ -143,8 +143,10 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
             values,
             errors,
             touched,
+            dirty,
             handleBlur,
             handleSubmit,
+            isValid,
             isSubmitting,
             setFieldValue,
             resetForm
@@ -234,7 +236,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                               </NumberInput>
                             </Box>
                             <Box>
-                              <InputControl name="Code" label="Coupon Code" helperText="" />
+                              <InputControl name="Code" label="Coupon Code" helperText="" isRequired />
                               <Divider mt="15" mb="15" />
                               <TextareaControl name="FinePrint" label="Fine Print" />
                               <Divider mt="15" mb="15" />
@@ -301,10 +303,14 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                         <TabPanel>
                           <SimpleGrid columns={2} spacing={10}>
                             <Box>
-                              <EligibleExpressionField name="EligibleExpression" label="Eligible Expression" />
+                              <EligibleExpressionField
+                                name="EligibleExpression"
+                                label="Eligible Expression"
+                                isRequired
+                              />
                             </Box>
                             <Box>
-                              <TextareaControl name="ValueExpression" label="Value Expression" />
+                              <TextareaControl name="ValueExpression" label="Value Expression" isRequired />
                             </Box>
                           </SimpleGrid>
                           <ExpressionBuilder />
@@ -315,7 +321,12 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                   <GridItem pl="2" area={"footer"}>
                     <Divider mt="15" mb="15" />
                     <ButtonGroup>
-                      <Button variant="primaryButton" type="submit" isLoading={isSubmitting}>
+                      <Button
+                        variant="primaryButton"
+                        type="submit"
+                        isLoading={isSubmitting}
+                        isDisabled={!isValid || !dirty}
+                      >
                         Save
                       </Button>
                       <Button

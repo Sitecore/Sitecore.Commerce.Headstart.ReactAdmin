@@ -129,6 +129,7 @@ export default function ProductSearch({query}: ProductSearchProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [isMassEditing, setIsMassEditing] = useState(false)
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>([])
+  const [isFormValid, setIsFormValid] = useState(false)
   const [formValues, setFormValues] = useState({
     id: "",
     name: "",
@@ -180,7 +181,11 @@ export default function ProductSearch({query}: ProductSearchProps) {
   }
 
   const handleInputChange = (fieldKey: string) => (e: ChangeEvent<HTMLInputElement>) => {
-    setFormValues((v) => ({...v, [fieldKey]: e.target.value}))
+    setFormValues((v) => {
+      const updatedValues = {...v, [fieldKey]: e.target.value}
+      setIsFormValid(updatedValues.id !== "" && updatedValues.name !== "")
+      return updatedValues
+    })
   }
 
   const handleCheckboxChange = (fieldKey: string) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -580,8 +585,8 @@ export default function ProductSearch({query}: ProductSearchProps) {
               <ModalHeader>Add a new Product</ModalHeader>
               <ModalCloseButton />
               <ModalBody pb={6}>
-                <FormControl>
-                  <FormLabel>ID*</FormLabel>
+                <FormControl isRequired>
+                  <FormLabel>ID</FormLabel>
                   <Input
                     autoComplete="off"
                     placeholder="123456"
@@ -590,8 +595,8 @@ export default function ProductSearch({query}: ProductSearchProps) {
                   />
                 </FormControl>
 
-                <FormControl mt={4}>
-                  <FormLabel>Name*</FormLabel>
+                <FormControl mt={4} isRequired>
+                  <FormLabel>Name</FormLabel>
                   <Input
                     autoComplete="off"
                     placeholder="New Product"
@@ -621,7 +626,13 @@ export default function ProductSearch({query}: ProductSearchProps) {
                   <Button onClick={onCloseAddProduct} variant="secondaryButton">
                     Cancel
                   </Button>
-                  <Button colorScheme="purple" mr={3} onClick={onProductAdd} variant="primaryButton">
+                  <Button
+                    colorScheme="purple"
+                    mr={3}
+                    onClick={onProductAdd}
+                    variant="primaryButton"
+                    isDisabled={!isFormValid}
+                  >
                     Add
                   </Button>
                 </HStack>

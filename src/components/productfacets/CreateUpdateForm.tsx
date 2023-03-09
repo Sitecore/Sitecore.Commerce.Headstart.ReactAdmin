@@ -114,16 +114,18 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
             values,
             errors,
             touched,
+            dirty,
             handleChange,
             handleBlur,
             handleSubmit,
+            isValid,
             isSubmitting,
             setFieldValue,
             resetForm
           }) => (
             <Box as="form" onSubmit={handleSubmit as any}>
               <Stack spacing={5}>
-                <InputControl name="Name" label="Product Facet Name" />
+                <InputControl name="Name" label="Product Facet Name" isRequired />
                 <FormLabel>
                   Facet Options :<Text fontSize="sm">Create options for this facet group?</Text>
                 </FormLabel>
@@ -197,7 +199,13 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
                 <ButtonGroup>
                   <HStack justifyContent="space-between" w="100%" mb={5}>
                     <Box>
-                      <Button variant="primaryButton" type="submit" isLoading={isSubmitting} mr="15px">
+                      <Button
+                        variant="primaryButton"
+                        type="submit"
+                        isLoading={isSubmitting}
+                        mr="15px"
+                        isDisabled={!isValid || !dirty}
+                      >
                         Save
                       </Button>
                       <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting} mr="15px">

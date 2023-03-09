@@ -3,7 +3,6 @@
 import "react-querybuilder/dist/query-builder.css"
 
 import type {AppProps} from "next/app"
-import {AuthProvider} from "context/auth-context"
 import {Chakra} from "components/Chakra"
 import {DefaultSeo} from "next-seo"
 import Head from "next/head"

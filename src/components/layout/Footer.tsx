@@ -28,7 +28,7 @@ const Footer = () => {
         >
           <FooterLogo />
         </Flex>
-        <Text pt={6} fontSize={"sm"} textAlign={"center"}>
+        <Text pt={6} fontSize={"sm"} textAlign={"center"} data-testid="copyright">
           Copyright © {new Date().getFullYear()} Sitecore.com All Rights Reserved.
         </Text>
       </Box>

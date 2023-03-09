@@ -1,11 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-const withNextra = require("nextra")({
-  theme: "nextra-theme-docs",
-  themeConfig: "./theme.config.tsx"
-})
-
-module.exports = withNextra({
+module.exports = {
   devIndicators: {
     autoPrerender: true
   },
@@ -27,4 +22,4 @@ module.exports = withNextra({
   },
   // !! WARN !!
   ignoreBuildErrors: true
-})
+}

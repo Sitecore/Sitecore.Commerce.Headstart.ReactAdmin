@@ -1,6 +1,6 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
-import {InputControl, PercentComplete, SwitchControl} from "components/formik"
+import {InputControl, SwitchControl} from "components/formik"
 import Card from "../card/Card"
 import {Formik} from "formik"
 import {Supplier, Suppliers} from "ordercloud-javascript-sdk"
@@ -54,25 +54,28 @@ function CreateUpdateForm({supplier}: CreateUpdateFormProps) {
               values,
               errors,
               touched,
+              dirty,
               handleChange,
               handleBlur,
               handleSubmit,
+              isValid,
               isSubmitting,
               setFieldValue,
               resetForm
             }) => (
               <Box as="form" onSubmit={handleSubmit as any}>
                 <Stack spacing={5}>
-                  <InputControl name="Name" label="Supplier Name" />
+                  <InputControl name="Name" label="Supplier Name" isRequired />
                   <SwitchControl name="Active" label="Active" />
                   <SwitchControl name="AllBuyersCanOrder" label="All Buyers Can Order" />
-                  {isCreating ? (
-                    <PercentComplete />
-                  ) : (
-                    <InputControl name="DateCreated" label="Date created" isReadOnly />
-                  )}
+                  {!isCreating && <InputControl name="DateCreated" label="Date created" isReadOnly />}
                   <ButtonGroup>
-                    <Button variant="primaryButton" type="submit" isLoading={isSubmitting}>
+                    <Button
+                      variant="primaryButton"
+                      type="submit"
+                      isLoading={isSubmitting}
+                      isDisabled={!isValid || !dirty}
+                    >
                       Save
                     </Button>
                     <Button

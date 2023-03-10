@@ -1,10 +1,4 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Button,
   Checkbox,
   CheckboxGroup,
@@ -19,19 +13,21 @@ import {
   Text,
   VStack
 } from "@chakra-ui/react"
+import {ListPage, Order, Orders} from "ordercloud-javascript-sdk"
+import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useRef, useState} from "react"
+
 import Card from "components/card/Card"
 import {ChevronDownIcon} from "@chakra-ui/icons"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {IOrder} from "types/ordercloud/IOrder"
 import {Link} from "../../components/navigation/Link"
 import {NextSeo} from "next-seo"
-import {ListPage, Order, Orders} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
 import {priceHelper} from "utils/price.utils"
-import {DataTable} from "components/data-table/DataTable"
-import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
-import {IOrder} from "types/ordercloud/IOrder"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -48,12 +44,8 @@ export async function getServerSideProps() {
   }
 }
 const OrdersPage = () => {
-  const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
-  const cancelRef = useRef()
   const [tableData, setTableData] = useState(null as ListPage<Order>)
   const [filters, setFilters] = useState({} as OrderCloudTableFilters)
-
-  const requestExportCSV = () => {}
 
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
@@ -149,43 +141,12 @@ const OrdersPage = () => {
               </MenuItem>
             </MenuList>
           </Menu>
-          <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-            Export CSV
-          </Button>
+          <ExportToCsv />
         </HStack>
       </HStack>
       <Card variant="primaryCard">
         <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData} />
       </Card>
-
-      <AlertDialog
-        isOpen={isExportCSVDialogOpen}
-        onClose={() => setExportCSVDialogOpen(false)}
-        leastDestructiveRef={cancelRef}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Export Selected Orders to CSV
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              <Text display="inline">
-                Export the selected orders to a CSV, once the export button is clicked behind the scenes a job will be
-                kicked off to create the csv and then will automatically download to your downloads folder in the
-                browser.
-              </Text>
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <HStack justifyContent="space-between" w="100%">
-                <Button ref={cancelRef} onClick={() => setExportCSVDialogOpen(false)} variant="secondaryButton">
-                  Cancel
-                </Button>
-                <Button onClick={requestExportCSV}>Export Orders</Button>
-              </HStack>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
     </Container>
   )
 }

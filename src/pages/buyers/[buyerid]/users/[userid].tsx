@@ -1,11 +1,12 @@
-import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "../../../../components/users/CreateUpdateForm"
-import {Box} from "@chakra-ui/react"
-import ProtectedContent from "components/auth/ProtectedContent"
 import {User, Users} from "ordercloud-javascript-sdk"
+import {useEffect, useState} from "react"
+
+import {Box} from "@chakra-ui/react"
+import {CreateUpdateForm} from "../../../../components/users/CreateUpdateForm"
+import {IBuyerUser} from "types/ordercloud/IBuyerUser"
+import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
-import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -15,7 +16,7 @@ export async function getServerSideProps() {
         title: "Update user",
         metas: {
           hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
+          hasBuyerContextSwitch: true
         }
       },
       revalidate: 5 * 60

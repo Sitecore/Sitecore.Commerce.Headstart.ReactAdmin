@@ -1,6 +1,6 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
-import {InputControl, NumberInputControl, PercentComplete, SelectControl, SwitchControl} from "components/formik"
+import {InputControl, NumberInputControl, SelectControl, SwitchControl} from "components/formik"
 import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import Card from "../card/Card"
 import {Formik} from "formik"
@@ -64,16 +64,18 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
             values,
             errors,
             touched,
+            dirty,
             handleChange,
             handleBlur,
             handleSubmit,
+            isValid,
             isSubmitting,
             setFieldValue,
             resetForm
           }) => (
             <Box as="form" onSubmit={handleSubmit as any}>
               <Stack spacing={5}>
-                <InputControl name="Name" label="Buyer Name" />
+                <InputControl name="Name" label="Buyer Name" isRequired />
                 <SwitchControl name="Active" label="Active" />
                 <SelectControl
                   name="DefaultCatalogID"
@@ -89,9 +91,14 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
                 <NumberInputControl name="xp_MarkupPercent" label="Markup percent" />
                 <InputControl name="xp_URL" label="Url" />
 
-                {isCreating ? <PercentComplete /> : <InputControl name="DateCreated" label="Date created" isReadOnly />}
+                {!isCreating && <InputControl name="DateCreated" label="Date created" isReadOnly />}
                 <ButtonGroup>
-                  <Button variant="primaryButton" type="submit" isLoading={isSubmitting}>
+                  <Button
+                    variant="primaryButton"
+                    type="submit"
+                    isLoading={isSubmitting}
+                    isDisabled={!isValid || !dirty}
+                  >
                     Save
                   </Button>
                   <Button

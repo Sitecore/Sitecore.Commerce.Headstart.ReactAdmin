@@ -15,14 +15,18 @@ import {
 import {FunctionComponent, useEffect, useState} from "react"
 import {OrderReturn, OrderReturns, Payment, Payments} from "ordercloud-javascript-sdk"
 import {dateHelper, priceHelper} from "utils"
+
 import Card from "components/card/Card"
-import {NextSeo} from "next-seo"
-import OcOrderReturnItemList from "components/returns/OcOrderReturnItem"
-import {useRouter} from "hooks/useRouter"
-import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import ExportToCsv from "components/demo/ExportToCsv"
+import ExportToPdf from "components/demo/ExportToPdf"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 import {IPayment} from "types/ordercloud/IPayment"
+import {NextSeo} from "next-seo"
+import OcOrderReturnItemList from "components/returns/OcOrderReturnItem"
+import PrintShippingLabel from "components/demo/PrintShippingLabel"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
+import {useRouter} from "hooks/useRouter"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -103,9 +107,9 @@ const OrderReturnDetailPage: FunctionComponent = () => {
         <NextSeo title="Order Return Detail" />
         <HStack justifyContent="space-between" w="100%" mb={5}>
           <HStack>
-            <Button variant="secondaryButton">Print Shipping Label</Button>
-            <Button variant="secondaryButton">Export PDF</Button>
-            <Button variant="secondaryButton">Export CSV</Button>
+            <PrintShippingLabel />
+            <ExportToCsv />
+            <ExportToPdf />
           </HStack>
         </HStack>
         <Card variant="primaryCard">

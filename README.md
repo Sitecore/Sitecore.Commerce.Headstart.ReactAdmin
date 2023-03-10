@@ -85,6 +85,13 @@ Next, find the admin client ID and set it as NEXT_PUBLIC_OC_CLIENT_ID in your .e
 
 Finally log in as `initialadminuser` with the password `Testingsetup123!`
 
+### Unit Tests
+This project uses [Jest](https://jestjs.io/) for unit testing. To write a unit test:
+
+1. Create  a file under either test/components or tests/pages that ends in .test.tsx (so it gets picked up by test runner)
+2. Write your unit test
+3. Run unit tests by running the command `npm test`
+
 ### Deploy on Vercel
 To deploy your local project to Vercel, push it to public GitHub/GitLab/Bitbucket repository then [import to Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example).
 

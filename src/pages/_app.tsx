@@ -1,10 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import "react-querybuilder/dist/query-builder.css"
-import "nextjs-breadcrumbs/dist/index.css"
 
 import type {AppProps} from "next/app"
-import {AuthProvider} from "context/auth-context"
 import {Chakra} from "components/Chakra"
 import {DefaultSeo} from "next-seo"
 import Head from "next/head"
@@ -13,13 +11,17 @@ import {ProtectedApp} from "components/auth/ProtectedApp"
 import {SetConfiguration} from "../services/ordercloud.service"
 import {axiosService} from "services/axios.service"
 import defaultSEOConfig from "../../next-seo.config"
+import dynamic from "next/dynamic"
 
 axiosService.initializeInterceptors()
 SetConfiguration()
 
-const MyApp = ({Component, pageProps, ...appProps}: AppProps) => {
-  if (appProps.router.pathname.startsWith("/docs")) return <Component {...pageProps} />
+//This fixes a the hydration error on first page load of base URL
+const DynamicAuthProvider = dynamic(() => import("context/auth-context").then((mod) => mod.AuthProvider), {
+  ssr: false
+})
 
+const MyApp = ({Component, pageProps, ...appProps}: AppProps) => {
   return (
     <Chakra>
       <Head>
@@ -29,13 +31,13 @@ const MyApp = ({Component, pageProps, ...appProps}: AppProps) => {
         />
       </Head>
       <DefaultSeo {...defaultSEOConfig} />
-      <AuthProvider>
+      <DynamicAuthProvider>
         <ProtectedApp>
           <Layout {...pageProps}>
             <Component {...pageProps} />
           </Layout>
         </ProtectedApp>
-      </AuthProvider>
+      </DynamicAuthProvider>
     </Chakra>
   )
 }

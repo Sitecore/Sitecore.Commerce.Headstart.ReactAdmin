@@ -96,22 +96,30 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
             values,
             errors,
             touched,
+            dirty,
             handleChange,
             handleBlur,
             handleSubmit,
+            isValid,
             isSubmitting,
             setFieldValue,
             resetForm
           }) => (
             <Box as="form" onSubmit={handleSubmit as any}>
               <Stack spacing={5}>
-                <InputControl name="Name" label="Category Name" />
+                <InputControl name="Name" label="Category Name" isRequired />
                 <TextareaControl name="Description" label="Description" />
                 <SwitchControl name="Active" label="Active" colorScheme="teal" size="lg" />
                 <ButtonGroup>
                   <HStack justifyContent="space-between" w="100%" mb={5}>
                     <Box>
-                      <Button variant="primaryButton" type="submit" isLoading={isSubmitting} mr="15px">
+                      <Button
+                        variant="primaryButton"
+                        type="submit"
+                        isLoading={isSubmitting}
+                        mr="15px"
+                        isDisabled={!isValid || !dirty}
+                      >
                         Save
                       </Button>
                       <Button

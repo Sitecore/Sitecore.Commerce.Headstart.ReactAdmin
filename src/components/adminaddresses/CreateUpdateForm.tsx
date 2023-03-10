@@ -62,9 +62,11 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
             values,
             errors,
             touched,
+            dirty,
             handleChange,
             handleBlur,
             handleSubmit,
+            isValid,
             isSubmitting,
             setFieldValue,
             resetForm
@@ -75,15 +77,20 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
                 <InputControl name="CompanyName" label="Company Name" />
                 <InputControl name="FirstName" label="First Name" />
                 <InputControl name="LastName" label="Last Name" />
-                <InputControl name="Street1" label="Street 1" />
+                <InputControl name="Street1" label="Street 1" isRequired />
                 <InputControl name="Street2" label="Street 2" />
-                <InputControl name="City" label="City" />
-                <InputControl name="State" label="State" />
-                <InputControl name="Zip" label="Zip" />
-                <InputControl name="Country" label="Country" />
+                <InputControl name="City" label="City" isRequired />
+                <InputControl name="State" label="State" isRequired />
+                <InputControl name="Zip" label="Zip" isRequired />
+                <InputControl name="Country" label="Country" isRequired />
                 <InputControl name="Phone" label="Phone" />
                 <ButtonGroup>
-                  <Button variant="primaryButton" type="submit" isLoading={isSubmitting}>
+                  <Button
+                    variant="primaryButton"
+                    type="submit"
+                    isLoading={isSubmitting}
+                    isDisabled={!isValid || !dirty}
+                  >
                     Save
                   </Button>
                   <Button

@@ -42,7 +42,7 @@ const BuyersList = () => {
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
     let _buyerListMeta = {}
-    const buyersList = await Buyers.List<IBuyer>()
+    const buyersList = await Buyers.List<IBuyer>(filters)
     const requests = buyersList.Items.map(async (buyer) => {
       const [userGroupsList, usersList, catalogsList] = await Promise.all([
         UserGroups.List<IBuyerUserGroup>(buyer.ID),

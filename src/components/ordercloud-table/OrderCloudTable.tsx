@@ -13,7 +13,8 @@ import {
   Select,
   Skeleton,
   Box,
-  Spinner
+  Spinner,
+  Button
 } from "@chakra-ui/react"
 import {debounce, get} from "lodash"
 import {ListPage} from "ordercloud-javascript-sdk"
@@ -44,8 +45,6 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
   const rows = data ? buildRows(columns, data) : buildSkeletonRows(columns)
   const meta = data?.Meta || {}
   const [loading, setLoading] = useState(false)
-  const [pageSize, setPageSize] = useState(meta.PageSize)
-  const [page, setPage] = useState(meta.Page)
   const [filters, setFilters] = useState({
     page: meta.Page,
     pageSize: meta.PageSize,
@@ -98,28 +97,22 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
 
   const handlePageChange = (page: number) => {
     setLoading(true)
-    const updatedFilters = {...filters, page}
-    setPage(page)
-    setFilters(updatedFilters)
-    fetchData(updatedFilters)
+    setFilters((f) => ({...f, page}))
   }
 
   const handlePageSizeChange = (pageSize: number) => {
     setLoading(true)
-    const updatedFilters = {...filters, pageSize, page: 1}
-    setPage(1)
-    setPageSize(pageSize)
-    setFilters(updatedFilters)
-    fetchData(updatedFilters)
+    setFilters((f) => ({...f, pageSize, page: 1}))
   }
 
   const handleSearchChange = (search: string) => {
     setLoading(true)
-    const updatedFilters = {...filters, search, page: 1}
-    setPage(1)
-    setFilters(updatedFilters)
-    debouncedFetchData(updatedFilters)
+    setFilters((f) => ({...f, search, page: 1}))
   }
+
+  useEffect(() => {
+    debouncedFetchData(filters)
+  }, [debouncedFetchData, filters])
 
   return (
     <Flex direction="column" w="100%" overflowX={{sm: "scroll", lg: "hidden"}}>
@@ -150,6 +143,7 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
             flexGrow={1}
             fontSize="sm"
             _focus={{borderColor: "blue.500"}}
+            value={filters.search}
             onChange={(e) => handleSearchChange(e.target.value)}
           />
         </Flex>
@@ -189,11 +183,18 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
           ))}
         </Tbody>
       </Table>
+      {meta.TotalCount == 0 && (
+        <Flex direction={{sm: "column", md: "row"}} justify="space-between" align="center" px="22px" w="100%">
+          <Text>
+            No results found {filters.search && <Button onClick={() => handleSearchChange("")}>Clear Search</Button>}
+          </Text>
+        </Flex>
+      )}
       {meta.TotalCount > 10 && (
         <Flex direction={{sm: "column", md: "row"}} justify="space-between" align="center" px="22px" w="100%">
           <Select
             variant="main"
-            value={pageSize}
+            value={filters.pageSize}
             onChange={(e) => handlePageSizeChange(Number(e.target.value))}
             color="gray.500"
             size="sm"
@@ -211,13 +212,17 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
             entries per page
           </Text>
           <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
-            {page !== 1 && <PreviousNextButton type="previous" page={page} onPageChange={handlePageChange} />}
-            {meta.TotalPages > 5 ? (
-              <PaginationInput totalPages={meta.TotalPages} page={page} onPageChange={handlePageChange} />
-            ) : (
-              <PaginationButtons page={page} totalPages={meta.TotalPages} onPageChange={handlePageChange} />
+            {filters.page !== 1 && (
+              <PreviousNextButton type="previous" page={filters.page} onPageChange={handlePageChange} />
             )}
-            {page < meta.TotalPages && <PreviousNextButton type="next" page={page} onPageChange={handlePageChange} />}
+            {meta.TotalPages > 5 ? (
+              <PaginationInput totalPages={meta.TotalPages} page={filters.page} onPageChange={handlePageChange} />
+            ) : (
+              <PaginationButtons page={filters.page} totalPages={meta.TotalPages} onPageChange={handlePageChange} />
+            )}
+            {filters.page < meta.TotalPages && (
+              <PreviousNextButton type="next" page={filters.page} onPageChange={handlePageChange} />
+            )}
           </Stack>
         </Flex>
       )}

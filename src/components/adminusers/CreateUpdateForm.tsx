@@ -24,6 +24,7 @@ import {textHelper} from "utils"
 import {appPermissions} from "constants/app-permissions.config"
 import {isEqual, sortBy, difference, pick} from "lodash"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
+import AdminUserXpCard from "./AdminUserXpCard"
 
 interface PermissionTableProps {
   assignedPermissions?: string[]
@@ -134,63 +135,68 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
   }
 
   return (
-    <Card variant="primaryCard">
-      <Flex flexDirection="column" p="10">
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-          {({
-            // most of the useful available Formik props
-            values,
-            errors,
-            touched,
-            dirty,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isValid,
-            isSubmitting,
-            setFieldValue,
-            resetForm
-          }) => (
-            <Box as="form" onSubmit={handleSubmit as any}>
-              <Stack spacing={5}>
-                <InputControl name="Username" label="Username" isRequired />
-                <InputControl name="FirstName" label="First name" isRequired />
-                <InputControl name="LastName" label="Last name" isRequired />
-                <InputControl name="Email" label="Email" isRequired />
-                <InputControl name="Phone" label="Phone" />
-                <SwitchControl name="Active" label="Active" marginBottom={5} />
-                <PermissionsTable
-                  onPermissionChange={handlePermissionChange}
-                  assignedPermissions={assignedPermissions || []}
-                />
-                <ButtonGroup>
-                  <Button
-                    variant="primaryButton"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    isDisabled={!isValid || !dirty}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      resetForm()
-                    }}
-                    type="reset"
-                    variant="secondaryButton"
-                    isLoading={isSubmitting}
-                  >
-                    Reset
-                  </Button>
-                  <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
-                    Cancel
-                  </Button>
-                </ButtonGroup>
-              </Stack>
-            </Box>
-          )}
-        </Formik>
-      </Flex>
-    </Card>
+    <>
+      <Card variant="primaryCard">
+        <Flex flexDirection="column" p="10">
+          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+            {({
+              // most of the useful available Formik props
+              values,
+              errors,
+              touched,
+              dirty,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isValid,
+              isSubmitting,
+              setFieldValue,
+              resetForm
+            }) => (
+              <Box as="form" onSubmit={handleSubmit as any}>
+                <Stack spacing={5}>
+                  <InputControl name="Username" label="Username" isRequired />
+                  <InputControl name="FirstName" label="First name" isRequired />
+                  <InputControl name="LastName" label="Last name" isRequired />
+                  <InputControl name="Email" label="Email" isRequired />
+                  <InputControl name="Phone" label="Phone" />
+                  <SwitchControl name="Active" label="Active" marginBottom={5} />
+                  <PermissionsTable
+                    onPermissionChange={handlePermissionChange}
+                    assignedPermissions={assignedPermissions || []}
+                  />
+                  <ButtonGroup>
+                    <Button
+                      variant="primaryButton"
+                      type="submit"
+                      isLoading={isSubmitting}
+                      isDisabled={!isValid || !dirty}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        resetForm()
+                      }}
+                      type="reset"
+                      variant="secondaryButton"
+                      isLoading={isSubmitting}
+                    >
+                      Reset
+                    </Button>
+                    <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
+                      Cancel
+                    </Button>
+                  </ButtonGroup>
+                </Stack>
+              </Box>
+            )}
+          </Formik>
+        </Flex>
+      </Card>
+      <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">
+        <AdminUserXpCard user={user} />
+      </Card>
+    </>
   )
 }

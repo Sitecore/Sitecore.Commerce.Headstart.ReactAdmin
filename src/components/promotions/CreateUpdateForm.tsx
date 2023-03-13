@@ -34,6 +34,7 @@ import {Promotion, Promotions} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {IPromotion} from "types/ordercloud/IPromotion"
+import PromotionXpCard from "./PromotionXpCard"
 
 export {CreateUpdateForm}
 
@@ -196,9 +197,11 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                         {/* This tab contains all default Promotion API options (No extended propreties) */}
                         <Tab>Default Options</Tab>
                         {/* This tab contains some examples of how we can leverage XP (extended Propreties) */}
-                        <Tab>Advanced Rules (xp)</Tab>
+                        <Tab>Advanced Rules</Tab>
                         {/* This tab contains another examples to show the flexibility offered by EligibleExpressions and ValueExpression Fileds. */}
                         <Tab>Expression Builder</Tab>
+                        {/* This tab contains a way to add any other extended properties. */}
+                        <Tab>Extended Properties (xp)</Tab>
                       </TabList>
                       <TabPanels>
                         <TabPanel>
@@ -314,6 +317,13 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                             </Box>
                           </SimpleGrid>
                           <ExpressionBuilder />
+                        </TabPanel>
+                        <TabPanel>
+                          <SimpleGrid columns={2} spacing={10}>
+                            <Box>
+                              <PromotionXpCard promotion={promotion} />
+                            </Box>
+                          </SimpleGrid>
                         </TabPanel>
                       </TabPanels>
                     </Tabs>

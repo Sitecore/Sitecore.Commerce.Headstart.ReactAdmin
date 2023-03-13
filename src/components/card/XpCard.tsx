@@ -2,6 +2,7 @@ import {
   Heading,
   Box,
   Text,
+  Card,
   Button,
   HStack,
   Tooltip,
@@ -18,52 +19,58 @@ import {
   CheckboxGroup,
   Checkbox
 } from "@chakra-ui/react"
-// import {User, GetUser} from "../../services/ordercloud.service"
-// import {Product, Products} from "ordercloud-javascript-sdk"
-import {ChangeEvent, useEffect, useState} from "react"
+import {ChangeEvent, MouseEventHandler, useEffect, useState} from "react"
 import BrandedSpinner from "../branding/BrandedSpinner"
 import TagContainer from "../generic/tagContainer"
 import {useErrorToast} from "hooks/useToast"
-import {Buyer, Supplier, User, Users} from "ordercloud-javascript-sdk"
-import {IAdminUser, IAdminUserXp} from "types/ordercloud/IAdminUser"
-import {ISupplierUser, ISupplierUserXp} from "types/ordercloud/ISupplierUser"
-import {IBuyerUser, IBuyerUserXp} from "types/ordercloud/IBuyerUser"
-import {useRouter} from "hooks/useRouter"
-// import {IProduct, IProductXp} from "types/ordercloud/IProduct"
 
-type UserDataProps = {
-  organizationID: string
-  user: User
-  //   setUser: React.Dispatch<React.SetStateAction<User>>
+type DataProps<T> = {
+  data: T & {xp?: unknown}
+  formValues: unknown
+  setFormValues: Function
+  isLoading: boolean
+  setIsLoading: Function
+  isEditingBasicData: boolean
+  setIsEditingBasicData: Function
+  setIsDeleting: Function
+  xpsToBeDeleted: string[]
+  setXpsToBeDeleted: Function
+  onSave: MouseEventHandler<HTMLButtonElement>
 }
 
-export default function ProductXpCards({organizationID, user}: UserDataProps) {
+export default function XpCard<T>({
+  data,
+  formValues,
+  setFormValues,
+  isLoading,
+  setIsLoading,
+  isEditingBasicData,
+  setIsEditingBasicData,
+  setIsDeleting,
+  xpsToBeDeleted,
+  setXpsToBeDeleted,
+  onSave
+}: DataProps<T>) {
   const {isOpen: isOpenAddXP, onOpen: onOpenAddXP, onClose: onCloseAddXP} = useDisclosure()
   const {isOpen: isOpenEditXP, onOpen: onOpenEditXP, onClose: onCloseEditXP} = useDisclosure()
 
   const [isAdding, setIsAdding] = useState(false)
-  const [isEditingBasicData, setIsEditingBasicData] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [formValues, setFormValues] = useState<ISupplierUserXp | IBuyerUserXp>(Object.assign({}, user?.xp))
   const [newXpFormName, setNewXpFormName] = useState<string>("")
   const [newXpFormType, setNewXpFormType] = useState<string>("text")
   const [newXpFormValue, setNewXpFormValue] = useState<string | number>("")
-  const [xpsToBeDeleted, setXpsToBeDeleted] = useState<string[]>([])
   const [expanded, setExpanded] = useState(true)
   const [editing, setEditing] = useState("")
   //const [editingType, setEditingType] = useState("text")
   const errorToast = useErrorToast()
   const tags = ["1", "2", "3", "4", "5", "6"]
-  let router = useRouter()
 
   useEffect(() => {
-    setFormValues(Object.assign({}, user?.xp))
-  }, [user?.xp])
+    setFormValues(Object.assign({}, data?.xp))
+  }, [data?.xp])
 
   const onEditClicked = (e) => {
     e.preventDefault()
-    setFormValues(Object.assign({}, user?.xp))
+    setFormValues(Object.assign({}, data?.xp))
     setIsEditingBasicData(true)
     setExpanded(true)
   }
@@ -72,7 +79,7 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
     e.preventDefault()
     setIsDeleting(false)
     setIsEditingBasicData(false)
-    setFormValues(Object.assign({}, user?.xp))
+    setFormValues(Object.assign({}, data?.xp))
     setXpsToBeDeleted([])
   }
 
@@ -82,14 +89,10 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
     setNewXpFormValue(formValues[name])
     onOpenEditXP()
   }
-  const onEditUserXP = () => {
+  const onEditProductXP = () => {
     setIsLoading(true)
-    //console.log("newXpFormName:", newXpFormName)
-    //console.log("newXpFormType:", newXpFormType)
-    console.log("onEditUserXP:newXpFormValue:", newXpFormValue)
-    console.log("onEditUserXP:editing:", editing)
     formValues[editing] = newXpFormValue
-    onEditUserXPClosed()
+    onEditProductXPClosed()
     setIsLoading(false)
     return
   }
@@ -106,24 +109,13 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
     if (editing.endsWith("###")) {
       var strValues = newXpFormValue.toString()
       var tempValues = strValues.includes(",") ? strValues.split(",") : [strValues]
-      console.log("handleEditXP:tempValues", tempValues)
       tempValues = tempValues.includes(e.target.value)
         ? tempValues.filter((ele) => ele !== e.target.value)
         : [...tempValues, e.target.value]
-      console.log("after handleEditXP:tempValues", tempValues)
-      console.log("handleEditXP:tempValues.join(',')", tempValues.join(","))
       setNewXpFormValue(tempValues.length > 1 ? tempValues.join(",") : tempValues[0])
     } else setNewXpFormValue(typeof formValues[editing] == "string" ? e.target.value : Number(e.target.value))
   }
-  const handleNewXPChange = (
-    e /* :
-        | ChangeEvent<HTMLInputElement>
-        | ChangeEvent<HTMLTextAreaElement>
-        | ChangeEvent<HTMLSelectElement> */
-  ) => {
-    //var newVal = e.target.type == "number" ? Number(e.target.value) : e.target.value
-    console.log(e.target.name)
-    console.log(e.target.value)
+  const handleNewXPChange = (e) => {
     switch (e.target.name) {
       case "name":
         setNewXpFormName(e.target.value)
@@ -135,12 +127,9 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
         if (newXpFormType == "tag") {
           var strValues = newXpFormValue.toString()
           var tempValues = strValues.includes(",") ? strValues.split(",") : [strValues]
-          console.log("handleEditXP:tempValues", tempValues)
           tempValues = tempValues.includes(e.target.value)
             ? tempValues.filter((ele) => ele !== e.target.value)
             : [...tempValues, e.target.value]
-          console.log("after handleEditXP:tempValues", tempValues)
-          console.log("handleEditXP:tempValues.join(',')", tempValues.join(","))
           setNewXpFormValue(tempValues.length > 1 ? tempValues.join(",") : tempValues[0])
         } else {
           setNewXpFormValue(newXpFormType == "number" ? Number(e.target.value) : e.target.value)
@@ -150,30 +139,19 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
       default:
         return
     }
-    //setNewXPFormValues(tempNewVal)
-    //console.log(e.target.value)
   }
 
-  const onDeleteUserXPClicked = (key: string) => async (e) => {
+  const onDeleteProductXPClicked = (key: string) => async (e) => {
     setIsLoading(true)
     setIsDeleting(true)
-    // console.log("key:" + key)
-    // console.log("xpsToBeDeleted.includes(key):", xpsToBeDeleted.includes(key))
-    // console.log("xpsToBeDeleted.indexOf(key)", xpsToBeDeleted.indexOf(key))
-    // console.log(
-    //   "xpsToBeDeleted.filter((thing) => thing !== key)",
-    //   xpsToBeDeleted.filter((thing) => thing !== key)
-    // )
     const tempDeleted = xpsToBeDeleted.includes(key)
       ? xpsToBeDeleted.filter((thing) => thing !== key)
       : [...xpsToBeDeleted, key]
     setXpsToBeDeleted(tempDeleted)
     setIsLoading(false)
-    //console.log(tempDeleted)
   }
 
-  const onNewUserXP = async () => {
-    //console.log(formValues[newXpFormName])
+  const onNewProductXP = async () => {
     const TempXpFormName = newXpFormType == "tag" ? newXpFormName + "###" : newXpFormName
     console.log("TempXpFormName:", TempXpFormName)
     if (formValues[TempXpFormName] !== undefined) {
@@ -184,27 +162,19 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
       return
     }
     setIsLoading(true)
-    //console.log("newXpFormName:", newXpFormName)
-    //console.log("newXpFormType:", newXpFormType)
-    //console.log("newXpFormValue:", newXpFormValue)
 
     formValues[TempXpFormName] = newXpFormValue
-    onNewUserXPClosed()
+    onNewProductXPClosed()
     setIsLoading(false)
   }
-  const onNewUserXPClosed = async () => {
-    //console.log("close function")
+  const onNewProductXPClosed = async () => {
     setNewXpFormName("")
     setNewXpFormType("text")
     setNewXpFormValue("")
 
     onCloseAddXP()
   }
-  const onEditUserXPClosed = async () => {
-    //console.log("close function")
-    //setNewXpFormName("")
-    //setNewXpFormType("text")
-    //setNewXpFormValue("")
+  const onEditProductXPClosed = async () => {
     setEditing("")
     onCloseEditXP()
   }
@@ -245,8 +215,6 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
   }
   const renderCurrentEditing = () => {
     const editingType = editing.endsWith("###") ? "tag" : typeof formValues[editing] == "string" ? "text" : "number"
-    console.log("editingType:", editingType)
-    console.log("renderCurrentEditing:formValues[editing].length", formValues[editing]?.length)
     switch (editingType) {
       case "text":
         if (formValues[editing].length > 60)
@@ -314,37 +282,12 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
     }
   }
 
-  const onUserSave = async () => {
-    setIsLoading(true)
-    if (isDeleting) {
-      var newUser: IBuyerUser | ISupplierUser = user
-      delete newUser.xp
-      var tempXPs = Object.assign({}, formValues)
-      xpsToBeDeleted.forEach((e) => delete tempXPs[e])
-      newUser["xp"] = tempXPs
-      //console.log("Deleting XPs newProduct")
-      //console.log(newProduct)
-      await Users.Save<IBuyerUser | ISupplierUser>(organizationID, user?.ID, newUser)
-      setIsDeleting(false)
-      setXpsToBeDeleted([])
-    } else {
-      const newUser: IBuyerUser | ISupplierUser = {
-        ...user,
-        xp: formValues
-      }
-      console.log("org", organizationID)
-      await Users.Patch<IBuyerUser | ISupplierUser>(organizationID, user?.ID, newUser)
-    }
-
-    setIsEditingBasicData(false)
-    setIsLoading(false)
-    router.back()
-  }
-
   return (
-    <>
+    <Card>
       <>
-        <Heading size={{base: "sm", md: "md", lg: "md"}}>Extended Properties</Heading>
+        <Heading size={{base: "sm", md: "md", lg: "md"}} mb={6}>
+          Extended Properties
+        </Heading>
 
         {(isLoading || !formValues) && expanded ? (
           <Box pt={6} textAlign={"center"} pb="50">
@@ -357,16 +300,16 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
               toBeDeleted={xpsToBeDeleted}
               isEditing={isEditingBasicData}
               onNameClicked={handleXPChange}
-              onDeleteClicked={onDeleteUserXPClicked}
+              onDeleteClicked={onDeleteProductXPClicked}
             />
           </>
         )}
         {isEditingBasicData /*&&
-                formValues?.images[formValues?.images?.length - 1]?.Url != ""*/ ? (
+                  formValues?.images[formValues?.images?.length - 1]?.Url != ""*/ ? (
           <Tooltip label="Add new Extended Property">
-            <Box pt={4}>
+            <Box pt={4} mb={20}>
               <Center>
-                <Button variant="tertiaryButton" onClick={onOpenAddXP}>
+                <Button variant="tertiaryButton" onClick={onOpenAddXP} minW="80px">
                   Add XP
                 </Button>
               </Center>
@@ -377,9 +320,9 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
         )}
       </>
       {isEditingBasicData ? (
-        <HStack float={"right"} position="absolute" bottom="20px">
+        <HStack justifyContent="flex-end" alignItems="flex-end">
           <Tooltip label="Save">
-            <Button variant="primaryButton" aria-label="Save" onClick={onUserSave}>
+            <Button variant="primaryButton" aria-label="Save" onClick={onSave} mr={2}>
               Save
             </Button>
           </Tooltip>
@@ -390,16 +333,16 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
           </Tooltip>
         </HStack>
       ) : (
-        <HStack float={"right"} position="absolute" bottom="20px">
+        <HStack float={"right"} position="relative" bottom="20px" mt={3}>
           <Tooltip label="Edit">
-            <Button aria-label="Edit" variant="tertiaryButton" onClick={onEditClicked}>
+            <Button aria-label="Edit" mt={4} variant="tertiaryButton" onClick={onEditClicked} minW="80px">
               Edit
             </Button>
           </Tooltip>
         </HStack>
       )}
 
-      <Modal isOpen={isOpenAddXP} onClose={onNewUserXPClosed} size={"xl"}>
+      <Modal isOpen={isOpenAddXP} onClose={onNewProductXPClosed} size={"xl"}>
         <ModalOverlay backdropFilter="blur(10px) hue-rotate(90deg)" />
         <ModalContent>
           {isAdding ? (
@@ -421,10 +364,10 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
                 </Select>
                 {renderCurrentSelection()}
                 <HStack justifyContent="space-between" w="100%">
-                  <Button variant="secondaryButton" onClick={onNewUserXPClosed}>
+                  <Button variant="secondaryButton" onClick={onNewProductXPClosed}>
                     Cancel
                   </Button>
-                  <Button variant="primaryButton" mr={3} onClick={onNewUserXP}>
+                  <Button variant="primaryButton" mr={3} onClick={onNewProductXP}>
                     Save
                   </Button>
                 </HStack>
@@ -433,7 +376,7 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
           )}
         </ModalContent>
       </Modal>
-      <Modal isOpen={isOpenEditXP} onClose={onEditUserXPClosed} size={"xl"}>
+      <Modal isOpen={isOpenEditXP} onClose={onEditProductXPClosed} size={"xl"}>
         <ModalOverlay backdropFilter="blur(10px) hue-rotate(90deg)" />
         <ModalContent>
           {isAdding ? (
@@ -451,10 +394,10 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
                 {renderEditType()}
                 {renderCurrentEditing()}
                 <HStack justifyContent="space-between" w="100%">
-                  <Button variant="secondaryButton" onClick={onEditUserXPClosed}>
+                  <Button variant="secondaryButton" onClick={onEditProductXPClosed}>
                     Cancel
                   </Button>
-                  <Button variant="primaryButton" mr={3} onClick={onEditUserXP}>
+                  <Button variant="primaryButton" mr={3} onClick={onEditProductXP}>
                     Save
                   </Button>
                 </HStack>
@@ -463,6 +406,6 @@ export default function ProductXpCards({organizationID, user}: UserDataProps) {
           )}
         </ModalContent>
       </Modal>
-    </>
+    </Card>
   )
 }

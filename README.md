@@ -103,7 +103,7 @@ To deploy your local project to Vercel, push it to public GitHub/GitLab/Bitbucke
 Check out our [Contributing](./CONTRIBUTING.md) guide.
 
 ## Changelog
-Changes from release-to-release are tracked in the [Changelog](./CHANGELOG.md).
+Changes from release-to-release are tracked in the [Changelog wiki page](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/wiki/Changelog).
 
 ## Roadmap
 Larger roadmap items are outlined in the [project milestones](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/milestones)

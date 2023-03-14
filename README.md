@@ -1,8 +1,11 @@
-# Sitecore Commerce Seller app
-Welcome to Sitecore Commerce Seller App. This is a basic implementation of the Sitecore Commerce using the OrderCloud Javascript SDK. 
-You can use it as a starting point to discover, understand, and learn more about the Sitecore Commerce OrderCloud capabilities. 
+# Sitecore Commerce Headstart: React Admin
+This is an Open Source implementation of Sitecore Commerce using the OrderCloud Javascript SDK. You can use it as a starting point to discover how Sitecore Commerce administrative projects are built and teach you about the various Sitecore services that are involved and how they work together.
 
-This app showcase different marketplace scenarios and commerce strategies: B2B, B2C, B2B2C.
+> **Important Note:** This application is **not production-ready**.
+>
+> It is meant as a demonstration and learning tool for enabling sales and speeding up the solution development process.
+
+This app is capable of showcasing different marketplace scenarios and commerce strategies: B2B, B2C, B2B2C. It is actively being worked on and maintained by internal developers at Sitecore and the larger Sitecore community. You can expect some major changes in the near future regarding design system choice, feature additions / modifications, and further integrations with additional Sitecore services.
 
 ## What is Sitecore Commerce OrderCloud?
 ----
@@ -38,8 +41,9 @@ Using the Deploy Button below, you'll deploy on Vercel the Next.js project as we
 
 ## Working locally
 ----
-1. Pull the latest version from this github repository
-2. Copy the `.env.local.example` file in the root directory to `.env.local` (ignored by default during your next Git commit):
+1. Using this repository as a template, create a new repository.
+2. Clone your new repository locally
+3. Copy the `.env.local.example` file in the root directory to `.env.local` (ignored by default during your next Git commit):
 
 ```bash
 cp .env.local.example .env.local
@@ -66,12 +70,12 @@ NEXT_PUBLIC_OC_USELIVEANALYTICSDATA='false'
 
 3. Run Next.js in development mode
 ```bash
-npm install --legacy-peer-deps
+npm install
 npm run dev
 ```
 
 Your app should be up and running on [http://localhost:3000](http://localhost:3000)! 
-If it doesn't work, post on [GitHub issues](https://github.com/medkrimi/commercenext.js/discussions).
+If it doesn't work, post on [GitHub issues](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/issues).
 
 ### Seeding a new marketplace
 
@@ -95,10 +99,14 @@ This project uses [Jest](https://jestjs.io/) for unit testing. To write a unit t
 ### Deploy on Vercel
 To deploy your local project to Vercel, push it to public GitHub/GitLab/Bitbucket repository then [import to Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example).
 
-## Not implemented / on the Roadmap
-* Create, read, update, delete sellers and suppliers
-* Create, read, update, delete addresses
-* ....
+## Contributing Guide
+Check out our [Contributing](./CONTRIBUTING.md) guide.
+
+## Changelog
+Changes from release-to-release are tracked in the [Changelog wiki page](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/wiki/Changelog).
+
+## Roadmap
+Larger roadmap items are outlined in the [project milestones](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/milestones)
 
 ## References
 - [OrderCloud Javascript SDK](https://www.npmjs.com/package/ordercloud-javascript-sdk)

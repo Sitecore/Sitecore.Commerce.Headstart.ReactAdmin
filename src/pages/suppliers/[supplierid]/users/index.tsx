@@ -1,16 +1,18 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
+import {ListPage, SupplierUsers, User} from "ordercloud-javascript-sdk"
+import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useState} from "react"
-import Card from "lib/components/card/Card"
+
+import Card from "components/card/Card"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {ISupplierUser} from "types/ordercloud/ISupplierUser"
 import {IoMdClose} from "react-icons/io"
-import {Link} from "lib/components/navigation/Link"
+import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
 import React from "react"
-import {supplierUsersService} from "lib/api"
-import {useRouter} from "next/router"
-import {DataTable} from "lib/components/data-table/DataTable"
-import {OrderCloudTableFilters, OrderCloudTableColumn} from "lib/components/ordercloud-table"
-import {ListPage, User} from "ordercloud-javascript-sdk"
-import {useSuccessToast} from "lib/hooks/useToast"
+import {useRouter} from "hooks/useRouter"
+import {useSuccessToast} from "hooks/useToast"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -37,7 +39,7 @@ const UsersList = () => {
   const fetchData = useCallback(
     async (filters: OrderCloudTableFilters) => {
       setFilters(filters)
-      const usersList = await supplierUsersService.list(router.query.supplierid, filters)
+      const usersList = await SupplierUsers.List<ISupplierUser>(router.query.supplierid as string, filters)
       setTableData(usersList)
     },
     [router.query.supplierid]
@@ -49,7 +51,7 @@ const UsersList = () => {
 
   const deleteSupplier = useCallback(
     async (userId: string) => {
-      await supplierUsersService.delete(router.query.supplierid, userId)
+      await SupplierUsers.Delete(router.query.supplierid as string, userId)
       await fetchData({})
       successToast({
         description: "User deleted successfully"
@@ -138,7 +140,7 @@ const UsersList = () => {
           </Button>
 
           <HStack>
-            <Button variant="secondaryButton">Export CSV</Button>
+            <ExportToCsv />
           </HStack>
         </HStack>
         <Card variant="primaryCard">

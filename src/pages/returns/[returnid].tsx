@@ -14,13 +14,19 @@ import {
 } from "@chakra-ui/react"
 import {FunctionComponent, useEffect, useState} from "react"
 import {OrderReturn, OrderReturns, Payment, Payments} from "ordercloud-javascript-sdk"
-import {dateHelper, priceHelper} from "lib/utils"
-import Card from "lib/components/card/Card"
+import {dateHelper, priceHelper} from "utils"
+
+import Card from "components/card/Card"
+import ExportToCsv from "components/demo/ExportToCsv"
+import ExportToPdf from "components/demo/ExportToPdf"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
+import {IPayment} from "types/ordercloud/IPayment"
 import {NextSeo} from "next-seo"
-import OcOrderReturnItemList from "lib/components/returns/OcOrderReturnItem"
-import {useRouter} from "next/router"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import OcOrderReturnItemList from "components/returns/OcOrderReturnItem"
+import PrintShippingLabel from "components/demo/PrintShippingLabel"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
+import {useRouter} from "hooks/useRouter"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -48,7 +54,7 @@ const OrderReturnDetailPage: FunctionComponent = () => {
       if (!orderReturnId) {
         return
       }
-      const ocOrderReturn = await OrderReturns.Get(orderReturnId)
+      const ocOrderReturn = await OrderReturns.Get<IOrderReturn>(orderReturnId)
       setOrderReturn(ocOrderReturn)
       setItemsToReturn(ocOrderReturn.ItemsToReturn)
     }
@@ -77,8 +83,8 @@ const OrderReturnDetailPage: FunctionComponent = () => {
       Accepted: true,
       OrderReturnID: orderReturn.ID
     }
-    await Payments.Create("All", orderReturn.OrderID, orderReturnPaymentRequest)
-    const updatedOrderReturn = await OrderReturns.Get(orderReturn.ID)
+    await Payments.Create<IPayment>("All", orderReturn.OrderID, orderReturnPaymentRequest)
+    const updatedOrderReturn = await OrderReturns.Get<IOrderReturn>(orderReturn.ID)
     setOrderReturn(updatedOrderReturn)
   }
 
@@ -101,9 +107,9 @@ const OrderReturnDetailPage: FunctionComponent = () => {
         <NextSeo title="Order Return Detail" />
         <HStack justifyContent="space-between" w="100%" mb={5}>
           <HStack>
-            <Button variant="secondaryButton">Print Shipping Label</Button>
-            <Button variant="secondaryButton">Export PDF</Button>
-            <Button variant="secondaryButton">Export CSV</Button>
+            <PrintShippingLabel />
+            <ExportToCsv />
+            <ExportToPdf />
           </HStack>
         </HStack>
         <Card variant="primaryCard">

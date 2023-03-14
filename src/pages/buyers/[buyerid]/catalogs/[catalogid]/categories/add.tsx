@@ -1,7 +1,7 @@
-import {CreateUpdateForm} from "lib/components/categories"
+import {CreateUpdateForm} from "components/categories"
 import {Box} from "@chakra-ui/react"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

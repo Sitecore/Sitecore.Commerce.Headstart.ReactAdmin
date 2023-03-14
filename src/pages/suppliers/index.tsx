@@ -1,19 +1,23 @@
 import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
-import {supplierUserGroupsService, supplierUsersService, suppliersService} from "lib/api"
+import {ListPage, Supplier, SupplierUserGroups, SupplierUsers, Suppliers} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useMemo, useState} from "react"
-import Card from "lib/components/card/Card"
+
+import Card from "components/card/Card"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {ISupplier} from "types/ordercloud/ISupplier"
+import {ISupplierUser} from "types/ordercloud/ISupplierUser"
+import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
 import {IoMdClose} from "react-icons/io"
-import {Link} from "lib/components/navigation/Link"
+import {Link} from "components/navigation/Link"
 import {MdCheck} from "react-icons/md"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
+import {OrderCloudTableFilters} from "components/ordercloud-table"
+import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
-import {appPermissions} from "lib/constants/app-permissions.config"
-import {dateHelper} from "lib/utils/date.utils"
-import router from "next/router"
-import {DataTable} from "lib/components/data-table/DataTable"
-import {useSuccessToast} from "lib/hooks/useToast"
-import {OrderCloudTableFilters} from "lib/components/ordercloud-table"
-import {ListPage, Supplier} from "ordercloud-javascript-sdk"
+import {appPermissions} from "constants/app-permissions.config"
+import {dateHelper} from "utils/date.utils"
+import {useRouter} from "hooks/useRouter"
+import {useSuccessToast} from "hooks/useToast"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -31,6 +35,7 @@ export async function getStaticProps() {
 }
 
 const SuppliersList = () => {
+  let router = useRouter()
   const [suppliersMeta, setSuppliersMeta] = useState({})
   const successToast = useSuccessToast()
   const [tableData, setTableData] = useState(null as ListPage<Supplier>)
@@ -39,14 +44,15 @@ const SuppliersList = () => {
   const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
     setFilters(filters)
     let _supplierListMeta = {}
-    const suppliersList = await suppliersService.list(filters)
-
+    const suppliersList = await Suppliers.List<ISupplier>(filters)
     const requests = suppliersList.Items.map(async (supplier) => {
+      const [usersList, userGroupsList] = await Promise.all([
+        SupplierUsers.List<ISupplierUser>(supplier.ID),
+        SupplierUserGroups.List<ISupplierUserGroup>(supplier.ID)
+      ])
       _supplierListMeta[supplier.ID] = {}
-      _supplierListMeta[supplier.ID]["userGroupsCount"] = await supplierUserGroupsService.getSuppliersUserGroupsCount(
-        supplier.ID
-      )
-      _supplierListMeta[supplier.ID]["usersCount"] = await supplierUsersService.getSuppliersUsersCount(supplier.ID)
+      _supplierListMeta[supplier.ID]["usersCount"] = usersList.Meta.TotalCount
+      _supplierListMeta[supplier.ID]["userGroupsCount"] = userGroupsList.Meta.TotalCount
     })
     await Promise.all(requests)
     setSuppliersMeta(_supplierListMeta)
@@ -59,7 +65,7 @@ const SuppliersList = () => {
 
   const deleteSupplier = useCallback(
     async (supplierId: string) => {
-      await suppliersService.delete(supplierId)
+      await Suppliers.Delete(supplierId)
       await fetchData({})
       successToast({
         description: "Supplier deleted successfully."
@@ -134,6 +140,7 @@ const SuppliersList = () => {
 }
 
 const ProtectedSuppliersList = () => {
+  let router = useRouter()
   return (
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
       <Box padding="GlobalPadding">
@@ -142,7 +149,7 @@ const ProtectedSuppliersList = () => {
             Create supplier
           </Button>
           <HStack>
-            <Button variant="secondaryButton">Export CSV</Button>
+            <ExportToCsv />
           </HStack>
         </HStack>
         <Card variant="primaryCard">

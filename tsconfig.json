@@ -19,8 +19,11 @@
     "jsx": "preserve",
     "baseUrl": "src",
     "incremental": true,
-    "sourceMap": true
-    
+    "sourceMap": true,
+    "paths": {
+      "@/pages/*": ["pages/*"],
+      "@/components/*": ["components/*"]
+    }
   },
   "include": [
     "next-env.d.ts",

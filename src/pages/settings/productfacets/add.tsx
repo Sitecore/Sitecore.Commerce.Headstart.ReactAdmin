@@ -1,7 +1,7 @@
 import {Box, Container} from "@chakra-ui/react"
-import {CreateUpdateForm} from "../../../lib/components/productfacets/CreateUpdateForm"
-import ProtectedContent from "lib/components/auth/ProtectedContent"
-import {appPermissions} from "lib/constants/app-permissions.config"
+import {CreateUpdateForm} from "../../../components/productfacets/CreateUpdateForm"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
 import {NextSeo} from "next-seo"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */

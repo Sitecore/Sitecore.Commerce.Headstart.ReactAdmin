@@ -14,20 +14,24 @@ import {
   useColorModeValue
 } from "@chakra-ui/react"
 import {HiOutlineCurrencyDollar, HiOutlineFolderOpen, HiOutlineUserAdd, HiOutlineUserCircle} from "react-icons/hi"
-import {dashboardService, ordersService, productsService, promotionsService} from "lib/api"
 import {useEffect, useState} from "react"
-import AverageOrderAmount from "lib/components/analytics/AverageOrderAmount"
-import BrandedSpinner from "lib/components/branding/BrandedSpinner"
-import Card from "lib/components/card/Card"
-import NewClients from "lib/components/analytics/PercentChangeTile"
+import AverageOrderAmount from "components/analytics/AverageOrderAmount"
+import BrandedSpinner from "components/branding/BrandedSpinner"
+import Card from "components/card/Card"
+import NewClients from "components/analytics/PercentChangeTile"
 import {NextSeo} from "next-seo"
-import TodaysMoney from "lib/components/analytics/PercentChangeTile"
-import TodaysUsers from "lib/components/analytics/PercentChangeTile"
-import TotalSales from "lib/components/analytics/PercentChangeTile"
-import {appPermissions} from "lib/constants/app-permissions.config"
-import {priceHelper} from "lib/utils/price.utils"
-import useHasAccess from "lib/hooks/useHasAccess"
-import {Link} from "lib/components/navigation/Link"
+import TodaysMoney from "components/analytics/PercentChangeTile"
+import TodaysUsers from "components/analytics/PercentChangeTile"
+import TotalSales from "components/analytics/PercentChangeTile"
+import {appPermissions} from "constants/app-permissions.config"
+import {priceHelper} from "utils/price.utils"
+import useHasAccess from "hooks/useHasAccess"
+import {Link} from "components/navigation/Link"
+import {Orders, Products, Promotions} from "ordercloud-javascript-sdk"
+import {IOrder} from "types/ordercloud/IOrder"
+import {IProduct} from "types/ordercloud/IProduct"
+import {IPromotion} from "types/ordercloud/IPromotion"
+import {dashboardService} from "services/dashboard.service"
 
 const Dashboard = () => {
   const {colorMode, toggleColorMode} = useColorMode()
@@ -68,10 +72,10 @@ const Dashboard = () => {
 
   async function initDashboardData() {
     let _dashboardListMeta = {}
-    const ordersList = await ordersService.list()
-    const productsList = await productsService.list()
-    const promotionsList = await promotionsService.list()
-    const usersList = await promotionsService.list()
+    const ordersList = await Orders.List<IOrder>("All")
+    const productsList = await Products.List<IProduct>()
+    const promotionsList = await Promotions.List<IPromotion>()
+    const usersList = await Promotions.List<IPromotion>()
     //Todays Sales
     const todaysSales = await dashboardService.getTodaysMoney()
     settotalTodaysSales(todaysSales)

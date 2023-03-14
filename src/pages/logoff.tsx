@@ -1,7 +1,7 @@
 import {Flex} from "@chakra-ui/react"
 import {NextSeo} from "next-seo"
-import Login from "../lib/components/account/Login"
-import {useRouter} from "next/router"
+import Login from "../components/account/Login"
+import {useRouter} from "hooks/useRouter"
 
 const LogOff = () => {
   const {push} = useRouter()

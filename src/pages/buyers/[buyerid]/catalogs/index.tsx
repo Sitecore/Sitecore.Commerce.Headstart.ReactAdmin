@@ -1,14 +1,16 @@
 import {Box, Button, ButtonGroup, HStack, Switch, Tooltip} from "@chakra-ui/react"
+import {Catalog, Catalogs, ListPage} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useMemo, useState} from "react"
-import Card from "lib/components/card/Card"
-import {Link} from "lib/components/navigation/Link"
+
+import Card from "components/card/Card"
+import {DataTable} from "components/data-table/DataTable"
+import ExportToCsv from "components/demo/ExportToCsv"
+import {ICatalog} from "types/ordercloud/ICatalog"
+import {Link} from "components/navigation/Link"
+import {OrderCloudTableFilters} from "components/ordercloud-table"
 import React from "react"
-import {catalogsService} from "lib/api"
-import {useRouter} from "next/router"
-import {useSuccessToast} from "lib/hooks/useToast"
-import {DataTable} from "lib/components/data-table/DataTable"
-import {OrderCloudTableFilters} from "lib/components/ordercloud-table"
-import {ListPage, Catalog} from "ordercloud-javascript-sdk"
+import {useRouter} from "hooks/useRouter"
+import {useSuccessToast} from "hooks/useToast"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -32,10 +34,16 @@ const CatalogsList = () => {
   const [tableData, setTableData] = useState(null as ListPage<Catalog>)
   const [filters, setFilters] = useState({} as OrderCloudTableFilters)
 
+  const getCatalogsByBuyerId = async (buyerId: string) => {
+    const assignments = await Catalogs.ListAssignments({buyerID: buyerId})
+    const catalogIds = assignments.Items.map((assignment) => assignment.CatalogID)
+    return await Catalogs.List<ICatalog>({filters: {ID: catalogIds.join("|")}})
+  }
+
   const fetchData = useCallback(
     async (filters: OrderCloudTableFilters) => {
       setFilters(filters)
-      const catalogsList = await catalogsService.getCatalogsbyBuyerID(router.query.buyerid)
+      const catalogsList = await getCatalogsByBuyerId(router.query.buyerid as string)
       setTableData(catalogsList)
     },
     [router.query.buyerid]
@@ -47,7 +55,7 @@ const CatalogsList = () => {
 
   const deleteCatalog = useCallback(
     async (catalogid: string) => {
-      await catalogsService.delete(catalogid)
+      await Catalogs.Delete(catalogid)
       fetchData({})
       successToast({
         description: "Buyer deleted successfully."
@@ -125,7 +133,7 @@ const CatalogsList = () => {
             Create catalog
           </Button>
           <HStack>
-            <Button variant="secondaryButton">Export CSV</Button>
+            <ExportToCsv />
           </HStack>
         </HStack>
         <Card variant="primaryCard">

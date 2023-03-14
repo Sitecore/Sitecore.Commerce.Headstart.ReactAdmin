@@ -7,6 +7,7 @@ import {Formik} from "formik"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {ICatalog} from "types/ordercloud/ICatalog"
+import CatalogXpCard from "./CatalogXpCard"
 
 export {CreateUpdateForm}
 
@@ -41,60 +42,66 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
   }
 
   return (
-    <Card variant="primaryCard">
-      <Flex flexDirection="column" p="10">
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-          {({
-            // most of the useful available Formik props
-            values,
-            errors,
-            touched,
-            dirty,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isValid,
-            isSubmitting,
-            setFieldValue,
-            resetForm
-          }) => (
-            <Box as="form" onSubmit={handleSubmit as any}>
-              <Stack spacing={5}>
-                <InputControl name="Name" label="Catalog Name" isRequired />
-                <TextareaControl name="Description" label="Description" />
-                <SwitchControl name="Active" label="Active" />
-                <ButtonGroup>
-                  <Button
-                    variant="primaryButton"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    isDisabled={!isValid || !dirty}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      resetForm()
-                    }}
-                    type="reset"
-                    variant="secondaryButton"
-                    isLoading={isSubmitting}
-                  >
-                    Reset
-                  </Button>
-                  <Button
-                    onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
-                    variant="secondaryButton"
-                    isLoading={isSubmitting}
-                  >
-                    Cancel
-                  </Button>
-                </ButtonGroup>
-              </Stack>
-            </Box>
-          )}
-        </Formik>
-      </Flex>
-    </Card>
+    <>
+      <Card variant="primaryCard">
+        <Flex flexDirection="column" p="10">
+          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+            {({
+              // most of the useful available Formik props
+              values,
+              errors,
+              touched,
+              dirty,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isValid,
+              isSubmitting,
+              setFieldValue,
+              resetForm
+            }) => (
+              <Box as="form" onSubmit={handleSubmit as any}>
+                <Stack spacing={5}>
+                  <InputControl name="Name" label="Catalog Name" isRequired />
+                  <TextareaControl name="Description" label="Description" />
+                  <SwitchControl name="Active" label="Active" />
+                  <ButtonGroup>
+                    <Button
+                      variant="primaryButton"
+                      type="submit"
+                      isLoading={isSubmitting}
+                      isDisabled={!isValid || !dirty}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        resetForm()
+                      }}
+                      type="reset"
+                      variant="secondaryButton"
+                      isLoading={isSubmitting}
+                    >
+                      Reset
+                    </Button>
+                    <Button
+                      onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
+                      variant="secondaryButton"
+                      isLoading={isSubmitting}
+                    >
+                      Cancel
+                    </Button>
+                  </ButtonGroup>
+                </Stack>
+              </Box>
+            )}
+          </Formik>
+        </Flex>
+      </Card>
+
+      <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">
+        <CatalogXpCard catalog={catalog} />
+      </Card>
+    </>
   )
 }

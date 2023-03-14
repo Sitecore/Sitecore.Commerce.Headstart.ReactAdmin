@@ -2,6 +2,7 @@ import {
   Heading,
   Box,
   Text,
+  Card,
   Button,
   HStack,
   Tooltip,
@@ -18,32 +19,45 @@ import {
   CheckboxGroup,
   Checkbox
 } from "@chakra-ui/react"
-import {ComposedProduct, GetComposedProduct} from "../../services/ordercloud.service"
-import {Product, Products} from "ordercloud-javascript-sdk"
-import {ChangeEvent, useEffect, useState} from "react"
+import {ChangeEvent, MouseEventHandler, useEffect, useState} from "react"
 import BrandedSpinner from "../branding/BrandedSpinner"
 import TagContainer from "../generic/tagContainer"
 import {useErrorToast} from "hooks/useToast"
-import {IProduct, IProductXp} from "types/ordercloud/IProduct"
 
-type ProductDataProps = {
-  composedProduct: ComposedProduct
-  setComposedProduct: React.Dispatch<React.SetStateAction<ComposedProduct>>
+type DataProps<T> = {
+  data: T & {xp?: unknown}
+  formValues: unknown
+  setFormValues: Function
+  isLoading: boolean
+  setIsLoading: Function
+  isEditingBasicData: boolean
+  setIsEditingBasicData: Function
+  setIsDeleting: Function
+  xpsToBeDeleted: string[]
+  setXpsToBeDeleted: Function
+  onSave: MouseEventHandler<HTMLButtonElement>
 }
 
-export default function ProductXpCards({composedProduct, setComposedProduct}: ProductDataProps) {
+export default function XpCard<T>({
+  data,
+  formValues,
+  setFormValues,
+  isLoading,
+  setIsLoading,
+  isEditingBasicData,
+  setIsEditingBasicData,
+  setIsDeleting,
+  xpsToBeDeleted,
+  setXpsToBeDeleted,
+  onSave
+}: DataProps<T>) {
   const {isOpen: isOpenAddXP, onOpen: onOpenAddXP, onClose: onCloseAddXP} = useDisclosure()
   const {isOpen: isOpenEditXP, onOpen: onOpenEditXP, onClose: onCloseEditXP} = useDisclosure()
 
   const [isAdding, setIsAdding] = useState(false)
-  const [isEditingBasicData, setIsEditingBasicData] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [formValues, setFormValues] = useState<IProductXp>(Object.assign({}, composedProduct?.Product?.xp))
   const [newXpFormName, setNewXpFormName] = useState<string>("")
   const [newXpFormType, setNewXpFormType] = useState<string>("text")
   const [newXpFormValue, setNewXpFormValue] = useState<string | number>("")
-  const [xpsToBeDeleted, setXpsToBeDeleted] = useState<string[]>([])
   const [expanded, setExpanded] = useState(true)
   const [editing, setEditing] = useState("")
   //const [editingType, setEditingType] = useState("text")
@@ -51,12 +65,12 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
   const tags = ["1", "2", "3", "4", "5", "6"]
 
   useEffect(() => {
-    setFormValues(Object.assign({}, composedProduct?.Product?.xp))
-  }, [composedProduct?.Product?.xp])
+    setFormValues(Object.assign({}, data?.xp))
+  }, [data?.xp])
 
   const onEditClicked = (e) => {
     e.preventDefault()
-    setFormValues(Object.assign({}, composedProduct?.Product?.xp))
+    setFormValues(Object.assign({}, data?.xp))
     setIsEditingBasicData(true)
     setExpanded(true)
   }
@@ -65,7 +79,7 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
     e.preventDefault()
     setIsDeleting(false)
     setIsEditingBasicData(false)
-    setFormValues(Object.assign({}, composedProduct?.Product?.xp))
+    setFormValues(Object.assign({}, data?.xp))
     setXpsToBeDeleted([])
   }
 
@@ -77,10 +91,6 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
   }
   const onEditProductXP = () => {
     setIsLoading(true)
-    //console.log("newXpFormName:", newXpFormName)
-    //console.log("newXpFormType:", newXpFormType)
-    console.log("onEditProductXP:newXpFormValue:", newXpFormValue)
-    console.log("onEditProductXP:editing:", editing)
     formValues[editing] = newXpFormValue
     onEditProductXPClosed()
     setIsLoading(false)
@@ -99,24 +109,13 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
     if (editing.endsWith("###")) {
       var strValues = newXpFormValue.toString()
       var tempValues = strValues.includes(",") ? strValues.split(",") : [strValues]
-      console.log("handleEditXP:tempValues", tempValues)
       tempValues = tempValues.includes(e.target.value)
         ? tempValues.filter((ele) => ele !== e.target.value)
         : [...tempValues, e.target.value]
-      console.log("after handleEditXP:tempValues", tempValues)
-      console.log("handleEditXP:tempValues.join(',')", tempValues.join(","))
       setNewXpFormValue(tempValues.length > 1 ? tempValues.join(",") : tempValues[0])
     } else setNewXpFormValue(typeof formValues[editing] == "string" ? e.target.value : Number(e.target.value))
   }
-  const handleNewXPChange = (
-    e /* :
-      | ChangeEvent<HTMLInputElement>
-      | ChangeEvent<HTMLTextAreaElement>
-      | ChangeEvent<HTMLSelectElement> */
-  ) => {
-    //var newVal = e.target.type == "number" ? Number(e.target.value) : e.target.value
-    console.log(e.target.name)
-    console.log(e.target.value)
+  const handleNewXPChange = (e) => {
     switch (e.target.name) {
       case "name":
         setNewXpFormName(e.target.value)
@@ -128,12 +127,9 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
         if (newXpFormType == "tag") {
           var strValues = newXpFormValue.toString()
           var tempValues = strValues.includes(",") ? strValues.split(",") : [strValues]
-          console.log("handleEditXP:tempValues", tempValues)
           tempValues = tempValues.includes(e.target.value)
             ? tempValues.filter((ele) => ele !== e.target.value)
             : [...tempValues, e.target.value]
-          console.log("after handleEditXP:tempValues", tempValues)
-          console.log("handleEditXP:tempValues.join(',')", tempValues.join(","))
           setNewXpFormValue(tempValues.length > 1 ? tempValues.join(",") : tempValues[0])
         } else {
           setNewXpFormValue(newXpFormType == "number" ? Number(e.target.value) : e.target.value)
@@ -143,30 +139,19 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
       default:
         return
     }
-    //setNewXPFormValues(tempNewVal)
-    //console.log(e.target.value)
   }
 
   const onDeleteProductXPClicked = (key: string) => async (e) => {
     setIsLoading(true)
     setIsDeleting(true)
-    // console.log("key:" + key)
-    // console.log("xpsToBeDeleted.includes(key):", xpsToBeDeleted.includes(key))
-    // console.log("xpsToBeDeleted.indexOf(key)", xpsToBeDeleted.indexOf(key))
-    // console.log(
-    //   "xpsToBeDeleted.filter((thing) => thing !== key)",
-    //   xpsToBeDeleted.filter((thing) => thing !== key)
-    // )
     const tempDeleted = xpsToBeDeleted.includes(key)
       ? xpsToBeDeleted.filter((thing) => thing !== key)
       : [...xpsToBeDeleted, key]
     setXpsToBeDeleted(tempDeleted)
     setIsLoading(false)
-    //console.log(tempDeleted)
   }
 
   const onNewProductXP = async () => {
-    //console.log(formValues[newXpFormName])
     const TempXpFormName = newXpFormType == "tag" ? newXpFormName + "###" : newXpFormName
     console.log("TempXpFormName:", TempXpFormName)
     if (formValues[TempXpFormName] !== undefined) {
@@ -177,16 +162,12 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
       return
     }
     setIsLoading(true)
-    //console.log("newXpFormName:", newXpFormName)
-    //console.log("newXpFormType:", newXpFormType)
-    //console.log("newXpFormValue:", newXpFormValue)
 
     formValues[TempXpFormName] = newXpFormValue
     onNewProductXPClosed()
     setIsLoading(false)
   }
   const onNewProductXPClosed = async () => {
-    //console.log("close function")
     setNewXpFormName("")
     setNewXpFormType("text")
     setNewXpFormValue("")
@@ -194,10 +175,6 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
     onCloseAddXP()
   }
   const onEditProductXPClosed = async () => {
-    //console.log("close function")
-    //setNewXpFormName("")
-    //setNewXpFormType("text")
-    //setNewXpFormValue("")
     setEditing("")
     onCloseEditXP()
   }
@@ -238,8 +215,6 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
   }
   const renderCurrentEditing = () => {
     const editingType = editing.endsWith("###") ? "tag" : typeof formValues[editing] == "string" ? "text" : "number"
-    console.log("editingType:", editingType)
-    console.log("renderCurrentEditing:formValues[editing].length", formValues[editing]?.length)
     switch (editingType) {
       case "text":
         if (formValues[editing].length > 60)
@@ -307,42 +282,12 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
     }
   }
 
-  const onProductSave = async () => {
-    setIsLoading(true)
-    if (isDeleting) {
-      var newProduct: IProduct = composedProduct.Product
-      delete newProduct.xp
-      var tempXPs = Object.assign({}, formValues)
-      xpsToBeDeleted.forEach((e) => delete tempXPs[e])
-      newProduct["xp"] = tempXPs
-      //console.log("Deleting XPs newProduct")
-      //console.log(newProduct)
-      await Products.Save<IProduct>(composedProduct?.Product?.ID, newProduct)
-      setIsDeleting(false)
-      setXpsToBeDeleted([])
-    } else {
-      const newProduct: IProduct = {
-        Name: composedProduct?.Product?.Name,
-        xp: formValues
-      }
-      await Products.Patch<IProduct>(composedProduct?.Product?.ID, newProduct)
-    }
-
-    // Hack to ensure Data are loaded before showing -> AWAIT is not enough
-    setTimeout(async () => {
-      var product = await GetComposedProduct(composedProduct?.Product?.ID)
-      setComposedProduct(product)
-      setTimeout(() => {
-        setIsEditingBasicData(false)
-        setIsLoading(false)
-      }, 1000)
-    }, 4500)
-  }
-
   return (
-    <>
+    <Card>
       <>
-        <Heading size={{base: "sm", md: "md", lg: "md"}}>Extended Properties</Heading>
+        <Heading size={{base: "sm", md: "md", lg: "md"}} mb={6}>
+          Extended Properties
+        </Heading>
 
         {(isLoading || !formValues) && expanded ? (
           <Box pt={6} textAlign={"center"} pb="50">
@@ -360,11 +305,11 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
           </>
         )}
         {isEditingBasicData /*&&
-              formValues?.images[formValues?.images?.length - 1]?.Url != ""*/ ? (
+                  formValues?.images[formValues?.images?.length - 1]?.Url != ""*/ ? (
           <Tooltip label="Add new Extended Property">
-            <Box pt={4}>
+            <Box pt={4} mb={20}>
               <Center>
-                <Button variant="tertiaryButton" onClick={onOpenAddXP}>
+                <Button variant="tertiaryButton" onClick={onOpenAddXP} minW="80px">
                   Add XP
                 </Button>
               </Center>
@@ -375,9 +320,9 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
         )}
       </>
       {isEditingBasicData ? (
-        <HStack float={"right"} position="absolute" bottom="20px">
+        <HStack justifyContent="flex-end" alignItems="flex-end">
           <Tooltip label="Save">
-            <Button variant="primaryButton" aria-label="Save" onClick={onProductSave}>
+            <Button variant="primaryButton" aria-label="Save" onClick={onSave} mr={2}>
               Save
             </Button>
           </Tooltip>
@@ -388,9 +333,9 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
           </Tooltip>
         </HStack>
       ) : (
-        <HStack float={"right"} position="absolute" bottom="20px">
+        <HStack float={"right"} position="relative" bottom="20px" mt={3}>
           <Tooltip label="Edit">
-            <Button aria-label="Edit" variant="tertiaryButton" onClick={onEditClicked}>
+            <Button aria-label="Edit" mt={4} variant="tertiaryButton" onClick={onEditClicked} minW="80px">
               Edit
             </Button>
           </Tooltip>
@@ -461,6 +406,6 @@ export default function ProductXpCards({composedProduct, setComposedProduct}: Pr
           )}
         </ModalContent>
       </Modal>
-    </>
+    </Card>
   )
 }

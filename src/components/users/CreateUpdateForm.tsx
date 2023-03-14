@@ -8,6 +8,7 @@ import {User} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useState} from "react"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import UserXpCard from "./UserXpCard"
 
 export {CreateUpdateForm}
 interface CreateUpdateFormProps {
@@ -161,6 +162,9 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
                 ))}
               </List>
             </Flex>
+          </Card>
+          <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">
+            <UserXpCard organizationID={parentId} user={user} />
           </Card>
         </>
       )}

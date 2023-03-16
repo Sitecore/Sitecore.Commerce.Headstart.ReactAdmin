@@ -32,7 +32,7 @@ interface ListViewProps<T = {ID: string; Name: string}, F = any> {
   children?: (props: ListViewChildrenProps) => React.ReactElement
 }
 
-interface ListViewChildrenProps {
+export interface ListViewChildrenProps {
   metaInformationDisplay: React.ReactElement
   viewModeToggle: React.ReactElement
   updateQuery: (queryKey: string) => (value: string | boolean | number) => void

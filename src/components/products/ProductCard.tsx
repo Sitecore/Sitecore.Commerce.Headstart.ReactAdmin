@@ -49,13 +49,13 @@ const ProductCard = (props: ProductCardProps) => {
       </Flex>
       <VStack flex="1" justifyContent="flex-end" alignItems="flex-start" p={[4, 2, 20, 6]}>
         {/* <Heading fontSize="xx-small" fontWeight='normal' color='gray.300' >NEW ARRIVALS</Heading>  */}
-        <Tooltip label={product.Name}>
-          <Link href={"/products/" + product.ID}>
-            <Heading as="h3" fontSize="lg">
+        <Link href={"/products/" + product.ID}>
+          <Heading as="h3" fontSize="lg">
+            <Tooltip label={product.Name} placement="top" isDisabled={product.Name.length < 40}>
               {product.Name.length > 39 ? product.Name.substring(0, 39) + "..." : product.Name}
-            </Heading>
-          </Link>
-        </Tooltip>
+            </Tooltip>
+          </Heading>
+        </Link>
         <Link href={"/products/" + product.ID}>
           <Text fontSize="small" color="brand.500">
             {textHelper.stripHTML(product.Description).length > 40

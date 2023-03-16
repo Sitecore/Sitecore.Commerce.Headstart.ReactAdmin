@@ -1,26 +1,25 @@
-import {Box, ButtonGroup, Container, Grid, GridItem, Heading, IconButton, Text, VStack} from "@chakra-ui/react"
+import {Box, ButtonGroup, Grid, GridItem, Heading, IconButton, Text, VStack} from "@chakra-ui/react"
 import {useRouter} from "next/router"
-import {ListPage, ListPageWithFacets, Meta, MetaWithFacets, Product} from "ordercloud-javascript-sdk"
-import {ParsedUrlQuery} from "querystring"
+import {ListPage, ListPageWithFacets, Product} from "ordercloud-javascript-sdk"
 import {ReactElement, useCallback, useEffect, useMemo, useState} from "react"
 import {HiOutlineViewGrid, HiOutlineViewList} from "react-icons/hi"
-import {resourceLimits} from "worker_threads"
+import DataTable, {DataTableColumn, DataTableRowActionsCallback} from "../DataTable/DataTable"
 
-interface ColumnDefinition<T> {
-  Header: string
-  accessor?: string
-  Cell?: ({row, value}: {row: {original: T}; value: any}) => ReactElement | string
-  sortable?: boolean
+interface ListViewTableOptions<T> {
+  columns: DataTableColumn<T>[]
+  rowActions?: DataTableRowActionsCallback<T>
+}
+
+interface ListViewGridOptions {
+  templateColumns?: string
+  templateRows?: string
+  gap?: number
 }
 
 interface ListViewProps<T = {ID: string; Name: string}, F = any> {
   service?: (...args) => Promise<T extends Product ? ListPageWithFacets<T, F> : ListPage<T>>
-  columns?: ColumnDefinition<T>
-  gridOptions?: {
-    templateColumns?: string
-    templateRows?: string
-    gap?: number
-  }
+  tableOptions: ListViewTableOptions<T>
+  gridOptions?: ListViewGridOptions
   renderCard?: (
     item: T,
     index: number,
@@ -38,6 +37,8 @@ export interface ListViewChildrenProps {
   updateQuery: (queryKey: string) => (value: string | boolean | number) => void
   routeParams: any
   queryParams: any
+  selected: string[]
+  loading: boolean
   children: any
 }
 
@@ -62,9 +63,9 @@ const DEFAULT_GRID_OPTIONS = {templateColumns: "repeat(3, 1fr)", templateRows: "
 
 const ListView = <T,>({
   service,
-  columns,
   paramMap,
   queryMap,
+  tableOptions,
   gridOptions = DEFAULT_GRID_OPTIONS,
   renderCard = DEFAULT_CARD,
   children
@@ -72,6 +73,11 @@ const ListView = <T,>({
   const [data, setData] = useState<(T extends Product ? ListPageWithFacets<T> : ListPage<T>) | undefined>()
   const [viewMode, setViewMode] = useState<"grid" | "table">("table")
   const [selected, setSelected] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const handleSelectAll = useCallback(() => {
+    setSelected((s) => (s.length && s.length === data.Items.length ? [] : data.Items.map((i) => i.ID)))
+  }, [data])
 
   const handleSelectChange = useCallback((id: string, isSelected: boolean) => {
     setSelected((s) => (isSelected ? [...s, id] : s.filter((sid) => sid !== id)))
@@ -103,12 +109,14 @@ const ListView = <T,>({
 
   const fetchData = useCallback(async () => {
     let response
+    setLoading(true)
     if (Object.values(params.routeParams).length) {
       response = await service(...Object.values(params.routeParams), params.queryParams)
     } else {
       response = await service(params.queryParams)
     }
     setData(response)
+    setLoading(false)
   }, [service, params])
 
   useEffect(() => {
@@ -119,7 +127,7 @@ const ListView = <T,>({
 
   const viewModeToggle = useMemo(() => {
     return (
-      <ButtonGroup isAttached variant="outline">
+      <ButtonGroup isAttached variant="secondaryButton">
         <IconButton
           aria-label="Grid View"
           isActive={viewMode === "grid"}
@@ -171,6 +179,7 @@ const ListView = <T,>({
                     w="full"
                     width="100%"
                     rounded="lg"
+                    overflow="h"
                     key={i}
                     borderStyle="none"
                   >
@@ -180,11 +189,15 @@ const ListView = <T,>({
               </Grid>
             ) : (
               //TABLE VIEW
-              data.Items.map((o, i) => (
-                <pre key={i}>
-                  {JSON.stringify({ID: o.ID, Name: o.Name, isSelected: selected.includes(o.ID)}, null, 2)}
-                </pre>
-              ))
+              <DataTable
+                {...tableOptions}
+                data={data.Items}
+                selected={selected}
+                onSelectChange={handleSelectChange}
+                onSelectAll={handleSelectAll}
+                currentSort={params.queryParams["SortBy"]}
+                // onSortChange={() => console.log("SORT CHANGE")}
+              />
             )}
             {/* PAGINATION */}
           </Box>
@@ -202,9 +215,11 @@ const ListView = <T,>({
       updateQuery: handleUpdateQuery,
       routeParams: params.routeParams,
       queryParams: params.queryParams,
+      selected,
+      loading,
       children: renderList
     }
-  }, [metaInformationDisplay, viewModeToggle, params, handleUpdateQuery, renderList])
+  }, [selected, loading, metaInformationDisplay, viewModeToggle, params, handleUpdateQuery, renderList])
 
   return children(childrenProps)
 }

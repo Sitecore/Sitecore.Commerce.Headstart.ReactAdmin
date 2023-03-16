@@ -4,11 +4,11 @@ import {Button, Menu, MenuButton, MenuItem, MenuList} from "@chakra-ui/react"
 const ProductFilters = () => {
   return (
     <Menu>
-      <MenuButton as={Button} variant="outline">
+      <MenuButton as={Button} variant="secondaryButton" colorScheme="white">
         Filter <ChevronDownIcon />
       </MenuButton>
       <MenuList>
-        <MenuItem onClick={() => {}}>Active</MenuItem>
+        <MenuItem>Active</MenuItem>
       </MenuList>
     </Menu>
   )

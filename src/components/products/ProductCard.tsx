@@ -22,7 +22,7 @@ const ProductCard = (props: ProductCardProps) => {
       backgroundColor="white"
       border="1px solid"
       borderColor="gray.200"
-      borderRadius="xl"
+      borderRadius="lg"
       shadow="xl"
     >
       <Flex w="full" alignItems={"flex-start"}>

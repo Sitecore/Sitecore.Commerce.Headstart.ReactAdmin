@@ -17,8 +17,8 @@ import {Products} from "ordercloud-javascript-sdk"
 import {TbDotsVertical} from "react-icons/tb"
 import {IProduct} from "types/ordercloud/IProduct"
 import {textHelper} from "utils"
-import {DataTableColumn} from "../DataTable/DataTable"
-import ListView, {ListViewGridOptions, ListViewTableOptions} from "./ListView"
+import {DataTableColumn} from "../../shared/DataTable/DataTable"
+import ListView, {ListViewGridOptions, ListViewTableOptions} from "../../shared/ListView/ListView"
 import ProductListToolbar from "./ProductListToolbar"
 
 const ProductQueryMap = {

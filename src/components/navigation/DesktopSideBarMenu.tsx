@@ -61,7 +61,7 @@ const DesktopSideBarMenu = () => {
             </Link>
             <ProtectedContent hasAccess={appPermissions.ProductManager}>
               <Link
-                href="/test"
+                href="/products"
                 pl="2"
                 pr="2"
                 pb="15px"

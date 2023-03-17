@@ -27,8 +27,8 @@ import {
 } from "@chakra-ui/react"
 import {useErrorToast} from "hooks/useToast"
 import {ChangeEvent, FC, useRef, useState} from "react"
-import DebouncedSearchInput from "../DebouncedSearchInput/DebouncedSearchInput"
-import {ListViewChildrenProps} from "./ListView"
+import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"
+import {ListViewChildrenProps} from "../../shared/ListView/ListView"
 import ProductFilters from "./ProductFilters"
 
 interface ProductListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}

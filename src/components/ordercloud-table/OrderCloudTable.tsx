@@ -1,29 +1,26 @@
 import {
+  Button,
   Flex,
-  Stack,
-  Input,
-  Table,
-  Text,
-  Thead,
-  Tr,
-  Th,
   Icon,
-  Tbody,
-  Td,
+  Input,
   Select,
   Skeleton,
-  Box,
   Spinner,
-  Button
+  Stack,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr
 } from "@chakra-ui/react"
 import {debounce, get} from "lodash"
 import {ListPage} from "ordercloud-javascript-sdk"
 import {useEffect, useMemo, useState} from "react"
 import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from "react-icons/ti"
-import {OrderCloudTableFilters, OrderCloudTableColumn, OrderCloudTableHeaders, OrderCloudTableRow} from "./models"
-import {PreviousNextButton} from "./PreviousNextButton"
-import {PaginationButtons} from "./PaginationButtons"
-import {PaginationInput} from "./PaginationInput"
+import Pagination from "../shared/Pagination/Pagination"
+import {OrderCloudTableColumn, OrderCloudTableFilters, OrderCloudTableHeaders, OrderCloudTableRow} from "./models"
 
 interface OrderCloudTableProps<T> {
   columns: OrderCloudTableColumn<T>[]
@@ -211,19 +208,7 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
           <Text fontSize="xs" color="gray.400" fontWeight="normal">
             entries per page
           </Text>
-          <Stack direction="row" alignSelf="flex-end" spacing="4px" ms="auto">
-            {filters.page !== 1 && (
-              <PreviousNextButton type="previous" page={filters.page} onPageChange={handlePageChange} />
-            )}
-            {meta.TotalPages > 5 ? (
-              <PaginationInput totalPages={meta.TotalPages} page={filters.page} onPageChange={handlePageChange} />
-            ) : (
-              <PaginationButtons page={filters.page} totalPages={meta.TotalPages} onPageChange={handlePageChange} />
-            )}
-            {filters.page < meta.TotalPages && (
-              <PreviousNextButton type="next" page={filters.page} onPageChange={handlePageChange} />
-            )}
-          </Stack>
+          <Pagination page={filters.page} totalPages={data.Meta.TotalPages} onChange={handlePageChange} />
         </Flex>
       )}
     </Flex>

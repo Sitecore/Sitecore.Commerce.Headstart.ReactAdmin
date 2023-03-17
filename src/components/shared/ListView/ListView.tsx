@@ -1,10 +1,11 @@
-import {Box, ButtonGroup, IconButton, Text} from "@chakra-ui/react"
+import {Box, ButtonGroup, Center, IconButton, Stack, Text} from "@chakra-ui/react"
 import {useRouter} from "next/router"
 import {ListPage, ListPageWithFacets, Product} from "ordercloud-javascript-sdk"
 import {ReactElement, useCallback, useEffect, useMemo, useState} from "react"
 import {HiOutlineViewGrid, HiOutlineViewList} from "react-icons/hi"
 import DataGrid, {IDataGrid} from "../DataGrid/DataGrid"
 import DataTable, {IDataTable} from "../DataTable/DataTable"
+import Pagination from "../Pagination/Pagination"
 
 export interface IDefaultResource {
   ID?: string
@@ -17,7 +18,10 @@ export interface ListViewTableOptions<T>
 export interface ListViewGridOptions<T>
   extends Omit<IDataGrid<T>, "data" | "selected" | "handleSelectionChange" | "gridItemActions"> {}
 
+export type ListViewTemplate = ReactElement | ReactElement[] | string
+
 interface IListView<T, F = any> {
+  initialViewMode?: "grid" | "table"
   service?: (...args) => Promise<T extends Product ? ListPageWithFacets<T, F> : ListPage<T>>
   itemActions: (item: T) => ReactElement
   tableOptions: ListViewTableOptions<T>
@@ -25,6 +29,8 @@ interface IListView<T, F = any> {
   paramMap?: {[key: string]: string}
   queryMap?: {[key: string]: string}
   children?: (props: ListViewChildrenProps) => ReactElement
+  noResultsMessage?: ListViewTemplate
+  noDataMessage?: ListViewTemplate
 }
 
 export interface ListViewChildrenProps {
@@ -35,7 +41,7 @@ export interface ListViewChildrenProps {
   queryParams: any
   selected: string[]
   loading: boolean
-  renderContent: ReactElement | ReactElement[]
+  renderContent: ListViewTemplate
 }
 
 const ListView = <T extends IDefaultResource>({
@@ -45,10 +51,13 @@ const ListView = <T extends IDefaultResource>({
   itemActions,
   tableOptions,
   gridOptions,
-  children
+  initialViewMode = "grid",
+  children,
+  noResultsMessage = "No results :(",
+  noDataMessage = "Nothing here yet."
 }: IListView<T>) => {
   const [data, setData] = useState<(T extends Product ? ListPageWithFacets<T> : ListPage<T>) | undefined>()
-  const [viewMode, setViewMode] = useState<"grid" | "table">("table")
+  const [viewMode, setViewMode] = useState<"grid" | "table">(initialViewMode)
   const [selected, setSelected] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -139,41 +148,62 @@ const ListView = <T extends IDefaultResource>({
     )
   }, [data])
 
+  const currentPage = useMemo(() => {
+    return params.queryParams["Page"] ? Number(params.queryParams["Page"]) : 1
+  }, [params.queryParams])
+
   const renderContent = useMemo(() => {
-    if (data) {
-      if (data.Items.length) {
-        return (
-          <Box mb={5}>
-            {viewMode === "grid" ? (
-              //GRID VIEW
-              <DataGrid
-                {...gridOptions}
-                gridItemActions={itemActions}
-                data={data.Items}
-                selected={selected}
-                onSelectChange={handleSelectChange}
-              />
-            ) : (
-              //TABLE VIEW
-              <DataTable
-                {...tableOptions}
-                rowActions={itemActions}
-                data={data.Items}
-                selected={selected}
-                onSelectChange={handleSelectChange}
-                onSelectAll={handleSelectAll}
-                currentSort={params.queryParams["SortBy"]}
-                // onSortChange={() => console.log("SORT CHANGE")}
-              />
-            )}
-            {/* PAGINATION */}
-          </Box>
-        )
-      }
-      //NO RESULTS DISPLAY
+    if (loading || (!loading && data)) {
+      return (
+        <Box mb={5}>
+          {viewMode === "grid" ? (
+            //GRID VIEW
+            <DataGrid
+              {...gridOptions}
+              loading={loading}
+              gridItemActions={itemActions}
+              data={data && data.Items}
+              selected={selected}
+              onSelectChange={handleSelectChange}
+            />
+          ) : (
+            //TABLE VIEW
+            <DataTable
+              {...tableOptions}
+              loading={loading}
+              rowActions={itemActions}
+              data={data && data.Items}
+              selected={selected}
+              onSelectChange={handleSelectChange}
+              onSelectAll={handleSelectAll}
+              currentSort={params.queryParams["SortBy"]}
+              // onSortChange={() => console.log("SORT CHANGE")}
+            />
+          )}
+          <Center>
+            <Pagination
+              page={currentPage}
+              totalPages={data && data.Meta.TotalPages}
+              onChange={handleUpdateQuery("p")}
+            />
+          </Center>
+        </Box>
+      )
     }
-    //NONE CREATED DISPLAY
-  }, [data, viewMode, itemActions, tableOptions, gridOptions, params, selected, handleSelectChange, handleSelectAll])
+  }, [
+    data,
+    viewMode,
+    loading,
+    itemActions,
+    tableOptions,
+    gridOptions,
+    params,
+    selected,
+    currentPage,
+    handleUpdateQuery,
+    handleSelectChange,
+    handleSelectAll
+  ])
 
   const childrenProps = useMemo(() => {
     return {

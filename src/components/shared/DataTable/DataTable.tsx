@@ -1,7 +1,11 @@
 import {
+  Box,
+  Center,
   Checkbox,
   Flex,
   Icon,
+  ModalOverlay,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -28,6 +32,7 @@ export type DataTableRowActionsCallback<T> = (data: T) => ReactElement
 
 export interface IDataTable<T> {
   data: T[]
+  loading?: boolean
   selected?: string[]
   onSelectAll?: () => void
   onSelectChange?: (id: string, isSelected: boolean) => void
@@ -39,6 +44,7 @@ export interface IDataTable<T> {
 const DataTable = <T extends IDefaultResource>({
   columns,
   data,
+  loading,
   currentSort,
   rowActions,
   onSelectAll,
@@ -60,6 +66,7 @@ const DataTable = <T extends IDefaultResource>({
   }, [currentSort, columns])
 
   const rows = useMemo(() => {
+    if (!data) return []
     return data.map((row) => ({
       data: row,
       isSelected: selected.includes(row["ID"]),
@@ -79,11 +86,19 @@ const DataTable = <T extends IDefaultResource>({
   const tableBorder = useColorModeValue("gray.400", "gray.400")
 
   const indeterminateSelectAll = useMemo(() => {
+    if (!data) return false
     return selected.length && selected.length !== data.length
   }, [selected, data])
 
+  const columnCount = useMemo(() => {
+    let result = columns.length
+    if (rowActions) result++
+    if (onSelectChange) result++
+    return result
+  }, [rowActions, onSelectChange, columns])
+
   return (
-    <TableContainer width={"full"} rounded={8} bg={tableHeaderBg} color={tableColor}>
+    <TableContainer position="relative" width={"full"} rounded={8} bg={tableHeaderBg} color={tableColor}>
       <Table role="table" variant="simple">
         <Thead>
           <Tr role="row">
@@ -92,7 +107,7 @@ const DataTable = <T extends IDefaultResource>({
                 <Checkbox
                   isIndeterminate={indeterminateSelectAll}
                   colorScheme={indeterminateSelectAll ? "gray" : "blue"}
-                  isChecked={data.length === selected.length}
+                  isChecked={data && data.length === selected.length}
                   onChange={onSelectAll}
                 />
               </Th>
@@ -118,9 +133,25 @@ const DataTable = <T extends IDefaultResource>({
             {rowActions && <Th />}
           </Tr>
         </Thead>
-        <Tbody role="rowgroup">
+        <Tbody role="rowgroup" position="relative" h={20}>
+          {loading && (
+            <Box
+              zIndex={2}
+              position="absolute"
+              left={0}
+              right={0}
+              top={0}
+              bottom={0}
+              pointerEvents="none"
+              bgColor="whiteAlpha.700"
+            >
+              <Center h="100%">
+                <Spinner size="xl" />
+              </Center>
+            </Box>
+          )}
           {rows.map((row, rowIndex) => (
-            <Tr key={rowIndex} role="row">
+            <Tr key={rowIndex} role="row" position="relative" zIndex={1}>
               {onSelectChange && (
                 <Td colSpan={1}>
                   <Checkbox

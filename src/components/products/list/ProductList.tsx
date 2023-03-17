@@ -23,7 +23,8 @@ import ProductListToolbar from "./ProductListToolbar"
 
 const ProductQueryMap = {
   s: "Search",
-  sort: "SortBy"
+  sort: "SortBy",
+  p: "Page"
 }
 
 const ProductListTableColumns: DataTableColumn<IProduct>[] = [
@@ -115,7 +116,15 @@ const ProductTableOptions: ListViewTableOptions<IProduct> = {
 }
 
 const ProductGridOptions: ListViewGridOptions<IProduct> = {
-  renderGridItem: renderProductActionsMenu
+  renderGridItem: (p, index, renderActions, selected, onSelectChange) => (
+    <ProductCard
+      key={index}
+      product={p}
+      selected={selected}
+      renderProductActions={renderActions}
+      onProductSelected={onSelectChange}
+    />
+  )
 }
 
 const ProductList = () => {

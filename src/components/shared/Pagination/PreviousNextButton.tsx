@@ -1,3 +1,4 @@
+import {useMemo} from "react"
 import {Button, Icon} from "@chakra-ui/react"
 import {GrFormNext, GrFormPrevious} from "react-icons/gr"
 
@@ -7,10 +8,13 @@ interface PreviousNextButtonProps {
   onPageChange: (page: number) => void
 }
 export function PreviousNextButton({page, type, onPageChange}: PreviousNextButtonProps) {
+  const newPage = useMemo(() => {
+    return type === "next" ? page + 1 : page - 1
+  }, [page, type])
   return (
     <Button
       variant="no-effects"
-      onClick={() => onPageChange(page + 1)}
+      onClick={() => onPageChange(newPage)}
       transition="all .5s ease"
       w="40px"
       h="40px"

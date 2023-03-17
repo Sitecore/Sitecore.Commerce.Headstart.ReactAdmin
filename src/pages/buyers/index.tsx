@@ -147,7 +147,7 @@ const BuyersList = () => {
         )
       }
     ],
-    [buyersMeta, deleteBuyer]
+    [buyersMeta, deleteBuyer, router]
   )
 
   return <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData} />

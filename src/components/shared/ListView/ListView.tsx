@@ -1,34 +1,30 @@
-import {Box, ButtonGroup, Grid, GridItem, Heading, IconButton, Text, VStack} from "@chakra-ui/react"
+import {Box, ButtonGroup, IconButton, Text} from "@chakra-ui/react"
 import {useRouter} from "next/router"
 import {ListPage, ListPageWithFacets, Product} from "ordercloud-javascript-sdk"
 import {ReactElement, useCallback, useEffect, useMemo, useState} from "react"
 import {HiOutlineViewGrid, HiOutlineViewList} from "react-icons/hi"
-import DataTable, {DataTableColumn, DataTableRowActionsCallback} from "../DataTable/DataTable"
+import DataGrid, {IDataGrid} from "../DataGrid/DataGrid"
+import DataTable, {IDataTable} from "../DataTable/DataTable"
 
-interface ListViewTableOptions<T> {
-  columns: DataTableColumn<T>[]
-  rowActions?: DataTableRowActionsCallback<T>
+export interface IDefaultResource {
+  ID?: string
+  Name?: string
 }
 
-interface ListViewGridOptions {
-  templateColumns?: string
-  templateRows?: string
-  gap?: number
-}
+export interface ListViewTableOptions<T>
+  extends Omit<IDataTable<T>, "data" | "selected" | "handleSelectionChange" | "rowActions"> {}
 
-interface ListViewProps<T = {ID: string; Name: string}, F = any> {
+export interface ListViewGridOptions<T>
+  extends Omit<IDataGrid<T>, "data" | "selected" | "handleSelectionChange" | "gridItemActions"> {}
+
+interface IListView<T, F = any> {
   service?: (...args) => Promise<T extends Product ? ListPageWithFacets<T, F> : ListPage<T>>
+  itemActions: (item: T) => ReactElement
   tableOptions: ListViewTableOptions<T>
-  gridOptions?: ListViewGridOptions
-  renderCard?: (
-    item: T,
-    index: number,
-    isSelected: boolean,
-    onSelectChange: (id: string, isSelected: boolean) => void
-  ) => ReactElement
+  gridOptions?: ListViewGridOptions<T>
   paramMap?: {[key: string]: string}
   queryMap?: {[key: string]: string}
-  children?: (props: ListViewChildrenProps) => React.ReactElement
+  children?: (props: ListViewChildrenProps) => ReactElement
 }
 
 export interface ListViewChildrenProps {
@@ -39,37 +35,18 @@ export interface ListViewChildrenProps {
   queryParams: any
   selected: string[]
   loading: boolean
-  children: any
+  renderContent: ReactElement | ReactElement[]
 }
 
-const DEFAULT_CARD = (o: any, i: number) => (
-  <VStack
-    h="full"
-    justifyContent="space-between"
-    p={2}
-    backgroundColor="white"
-    border="1px solid"
-    borderColor="gray.200"
-    borderRadius="xl"
-    shadow="xl"
-  >
-    <Heading as="h3" fontSize="lg">
-      {o.Name.length > 39 ? o.Name.substring(0, 39) + "..." : o.Name}
-    </Heading>
-  </VStack>
-)
-
-const DEFAULT_GRID_OPTIONS = {templateColumns: "repeat(3, 1fr)", templateRows: "(3, 1fr)", gap: 4}
-
-const ListView = <T,>({
+const ListView = <T extends IDefaultResource>({
   service,
   paramMap,
   queryMap,
+  itemActions,
   tableOptions,
-  gridOptions = DEFAULT_GRID_OPTIONS,
-  renderCard = DEFAULT_CARD,
+  gridOptions,
   children
-}: ListViewProps<T>) => {
+}: IListView<T>) => {
   const [data, setData] = useState<(T extends Product ? ListPageWithFacets<T> : ListPage<T>) | undefined>()
   const [viewMode, setViewMode] = useState<"grid" | "table">("table")
   const [selected, setSelected] = useState<string[]>([])
@@ -162,35 +139,25 @@ const ListView = <T,>({
     )
   }, [data])
 
-  const renderList = useMemo(() => {
+  const renderContent = useMemo(() => {
     if (data) {
       if (data.Items.length) {
-        const mergedGridOptions = {...DEFAULT_GRID_OPTIONS, ...gridOptions}
         return (
           <Box mb={5}>
             {viewMode === "grid" ? (
               //GRID VIEW
-              <Grid as="section" {...mergedGridOptions} w="full" width="100%">
-                {data.Items.map((o, i) => (
-                  <GridItem
-                    colSpan={1}
-                    rowSpan={1}
-                    bg="gridCellBg"
-                    w="full"
-                    width="100%"
-                    rounded="lg"
-                    overflow="h"
-                    key={i}
-                    borderStyle="none"
-                  >
-                    {renderCard(o, i, selected.includes(o.ID), handleSelectChange)}
-                  </GridItem>
-                ))}
-              </Grid>
+              <DataGrid
+                {...gridOptions}
+                gridItemActions={itemActions}
+                data={data.Items}
+                selected={selected}
+                onSelectChange={handleSelectChange}
+              />
             ) : (
               //TABLE VIEW
               <DataTable
                 {...tableOptions}
+                rowActions={itemActions}
                 data={data.Items}
                 selected={selected}
                 onSelectChange={handleSelectChange}
@@ -206,7 +173,7 @@ const ListView = <T,>({
       //NO RESULTS DISPLAY
     }
     //NONE CREATED DISPLAY
-  }, [data, viewMode, gridOptions, renderCard, selected, handleSelectChange])
+  }, [data, viewMode, itemActions, tableOptions, gridOptions, params, selected, handleSelectChange, handleSelectAll])
 
   const childrenProps = useMemo(() => {
     return {
@@ -217,9 +184,9 @@ const ListView = <T,>({
       queryParams: params.queryParams,
       selected,
       loading,
-      children: renderList
+      renderContent
     }
-  }, [selected, loading, metaInformationDisplay, viewModeToggle, params, handleUpdateQuery, renderList])
+  }, [selected, loading, metaInformationDisplay, viewModeToggle, params, handleUpdateQuery, renderContent])
 
   return children(childrenProps)
 }

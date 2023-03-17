@@ -8,9 +8,10 @@ interface ProductCardProps {
   product: Product
   selected: boolean
   onProductSelected: (productId: string, selected: boolean) => void
+  renderProductActions?: (product: Product) => React.ReactElement
 }
 const ProductCard = (props: ProductCardProps) => {
-  const product = props.product
+  const {product, renderProductActions} = props
   const okColor = useColorModeValue("okColor.800", "okColor.200")
   const errorColor = useColorModeValue("errorColor.800", "errorColor.200")
 
@@ -28,6 +29,7 @@ const ProductCard = (props: ProductCardProps) => {
       <Flex w="full" alignItems={"flex-start"}>
         <Checkbox isChecked={props.selected} onChange={(e) => props.onProductSelected(product.ID, e.target.checked)} />
         <Spacer />
+        {renderProductActions && renderProductActions(product)}
         <Spacer />
         <Link href={"/products/" + product.ID}>
           <Image

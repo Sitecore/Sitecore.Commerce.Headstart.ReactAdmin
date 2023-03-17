@@ -3,9 +3,23 @@ import {IconButton, Input, InputGroup, InputRightElement} from "@chakra-ui/react
 import useDebounce from "hooks/useDebounce"
 import {FC, useCallback, useEffect, useState} from "react"
 
-const ProductSearch: FC<{value: string; onSearch: any}> = ({value, onSearch}) => {
+interface IDebouncedSearchInputProps {
+  value: string
+  label: string
+  placeholder?: string
+  debounce?: number
+  onSearch: (value: string) => void
+}
+
+const DebouncedSearchInput: FC<IDebouncedSearchInputProps> = ({
+  label,
+  placeholder,
+  value,
+  onSearch,
+  debounce = 300
+}) => {
   const [searchTerm, setSearchTerm] = useState(value)
-  const debouncedSearchTerm = useDebounce(searchTerm, 300)
+  const debouncedSearchTerm = useDebounce(searchTerm, debounce)
 
   useEffect(() => {
     setSearchTerm(value)
@@ -25,8 +39,8 @@ const ProductSearch: FC<{value: string; onSearch: any}> = ({value, onSearch}) =>
     <InputGroup maxW="300px">
       <Input
         marginBottom="0 !important"
-        aria-label="Search Products"
-        placeholder="Search Products..."
+        aria-label={label}
+        placeholder={`${placeholder || label}...`}
         value={searchTerm}
         onChange={handleInputChange}
       ></Input>
@@ -41,4 +55,4 @@ const ProductSearch: FC<{value: string; onSearch: any}> = ({value, onSearch}) =>
   )
 }
 
-export default ProductSearch
+export default DebouncedSearchInput

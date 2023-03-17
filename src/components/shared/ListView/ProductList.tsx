@@ -1,13 +1,5 @@
 import ProductCard from "@/components/products/ProductCard"
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  CheckCircleIcon,
-  DeleteIcon,
-  EditIcon,
-  NotAllowedIcon,
-  SettingsIcon
-} from "@chakra-ui/icons"
+import {CheckCircleIcon, DeleteIcon, EditIcon, NotAllowedIcon, SettingsIcon} from "@chakra-ui/icons"
 import {
   Badge,
   Container,
@@ -22,12 +14,11 @@ import {
 } from "@chakra-ui/react"
 import Link from "next/link"
 import {Products} from "ordercloud-javascript-sdk"
-import {HiChevronDoubleUp, HiSparkles} from "react-icons/hi"
 import {TbDotsVertical} from "react-icons/tb"
 import {IProduct} from "types/ordercloud/IProduct"
 import {textHelper} from "utils"
 import {DataTableColumn} from "../DataTable/DataTable"
-import ListView from "./ListView"
+import ListView, {ListViewGridOptions, ListViewTableOptions} from "./ListView"
 import ProductListToolbar from "./ProductListToolbar"
 
 const ProductQueryMap = {
@@ -88,7 +79,7 @@ const ProductListTableColumns: DataTableColumn<IProduct>[] = [
   }
 ]
 
-const rowActions = (rowData: IProduct) => {
+const renderProductActionsMenu = (rowData: IProduct) => {
   return (
     <Menu>
       <MenuButton
@@ -119,24 +110,27 @@ const rowActions = (rowData: IProduct) => {
   )
 }
 
+const ProductTableOptions: ListViewTableOptions<IProduct> = {
+  columns: ProductListTableColumns
+}
+
+const ProductGridOptions: ListViewGridOptions<IProduct> = {
+  renderGridItem: renderProductActionsMenu
+}
+
 const ProductList = () => {
   return (
     <ListView<IProduct>
       service={Products.List}
       queryMap={ProductQueryMap}
-      tableOptions={{
-        columns: ProductListTableColumns,
-        rowActions
-      }}
-      gridOptions={{templateColumns: "repeat(4, 1fr)"}}
-      renderCard={(p, index, selected, onSelectChange) => (
-        <ProductCard key={index} product={p} selected={selected} onProductSelected={onSelectChange} />
-      )}
+      itemActions={renderProductActionsMenu}
+      tableOptions={ProductTableOptions}
+      gridOptions={ProductGridOptions}
     >
-      {({children, ...listViewChildProps}) => (
+      {({renderContent, ...listViewChildProps}) => (
         <Container maxW="container.2xl">
           <ProductListToolbar {...listViewChildProps} />
-          {children}
+          {renderContent}
         </Container>
       )}
     </ListView>

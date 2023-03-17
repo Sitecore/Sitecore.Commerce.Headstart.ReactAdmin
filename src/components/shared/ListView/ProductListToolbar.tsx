@@ -12,7 +12,6 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -27,14 +26,12 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 import {useErrorToast} from "hooks/useToast"
-import {PartialDeep, Products} from "ordercloud-javascript-sdk"
 import {ChangeEvent, FC, useRef, useState} from "react"
-import {IProduct} from "types/ordercloud/IProduct"
+import DebouncedSearchInput from "../DebouncedSearchInput/DebouncedSearchInput"
 import {ListViewChildrenProps} from "./ListView"
 import ProductFilters from "./ProductFilters"
-import ProductSearch from "./ProductSearch"
 
-interface ProductListToolbarProps extends Omit<ListViewChildrenProps, "children"> {}
+interface ProductListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
 const ProductListToolbar: FC<ProductListToolbarProps> = ({
   metaInformationDisplay,
@@ -116,7 +113,7 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
   return (
     <>
       <Stack direction="row" mb={5}>
-        <ProductSearch value={queryParams["Search"]} onSearch={updateQuery("s")} />
+        <DebouncedSearchInput label="Search products" value={queryParams["Search"]} onSearch={updateQuery("s")} />
         <ProductFilters />
 
         <Button variant="secondaryButton" onClick={onMassEditOpenClicked}>

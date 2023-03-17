@@ -11,9 +11,10 @@ import {
   Tr,
   useColorModeValue
 } from "@chakra-ui/react"
-import {FC, ReactElement, useCallback, useMemo} from "react"
 import get from "lodash/get"
+import {ReactElement, useMemo} from "react"
 import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from "react-icons/ti"
+import {IDefaultResource} from "../ListView/ListView"
 
 export interface DataTableColumn<T> {
   header: string
@@ -25,7 +26,7 @@ export interface DataTableColumn<T> {
 
 export type DataTableRowActionsCallback<T> = (data: T) => ReactElement
 
-export interface DataTableProps<T> {
+export interface IDataTable<T> {
   data: T[]
   selected?: string[]
   onSelectAll?: () => void
@@ -35,7 +36,7 @@ export interface DataTableProps<T> {
   rowActions?: (rowData: T) => ReactElement
 }
 
-const DataTable = <T,>({
+const DataTable = <T extends IDefaultResource>({
   columns,
   data,
   currentSort,
@@ -43,7 +44,7 @@ const DataTable = <T,>({
   onSelectAll,
   onSelectChange,
   selected
-}: DataTableProps<T>) => {
+}: IDataTable<T>) => {
   const headers = useMemo(() => {
     return columns.map((column) => {
       const isSorted = currentSort?.length

@@ -24,8 +24,7 @@ export const useCreateUpdateForm = <ResourceType extends object>(
   const validationSchema = object().shape(objectShape)
   const initialValues = isCreating ? {} : xpHelper.flattenXpObject(resource, "_")
 
-  const onSubmit = (fields, {setStatus, setSubmitting}) => {
-    setStatus()
+  const onSubmit = (fields, {setSubmitting}) => {
     const resourceToUpdate = xpHelper.unflattenXpObject(fields, "_") as ResourceType
     try {
       if (isCreating) {

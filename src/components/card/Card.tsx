@@ -32,8 +32,6 @@ function Card(props) {
       pb="2"
       mb="6"
       shadow="xl"
-      w="100%"
-      width="full"
       position="relative"
       _hover={{
         textDecoration: "none",

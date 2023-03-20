@@ -1,12 +1,14 @@
 import {HStack, PinInput, PinInputField, PinInputProps, StackProps} from "@chakra-ui/react"
 import {useField, useFormikContext} from "formik"
 import React, {FC} from "react"
+import {isRequiredField} from "utils"
 import {BaseProps, FormControl} from "../form-control"
 
 export type PinInputControlProps = BaseProps & {
   pinAmount: number
   stackProps?: StackProps
   pinInputProps?: Omit<PinInputProps, "children">
+  validationSchema?: any
 }
 
 export const PinInputControl: FC<PinInputControlProps> = (props: PinInputControlProps) => {
@@ -21,8 +23,10 @@ export const PinInputControl: FC<PinInputControlProps> = (props: PinInputControl
     setValue(value)
   }
 
+  const isRequired = isRequiredField(props.validationSchema, field.name)
+
   return (
-    <FormControl name={name} label={label} {...rest}>
+    <FormControl name={name} label={label} isRequired={isRequired} {...rest}>
       <HStack {...stackProps}>
         <PinInput {...field} onChange={handleChange} isDisabled={isSubmitting} {...pinInputProps}>
           {renderedPinInputFields}

@@ -126,7 +126,7 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
   return (
     <>
       <>
-        <Heading size={{base: "sm", md: "md", lg: "md"}}>Specs</Heading>{" "}
+        <Heading size={{base: "sm", md: "md", lg: "md"}}>Specs2</Heading>{" "}
         {(isLoading || !composedProduct?.Product) && expanded ? (
           <Box pt={6} textAlign={"center"}>
             Updating... <BrandedSpinner />

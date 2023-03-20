@@ -46,9 +46,9 @@ export default function ProductDetailToolbar({product, isFormValid, resetForm}: 
           </HStack>
         </MenuButton>
         <MenuList>
-          <MenuItem as={Link} href={`/products/${product?.ID}`}>
-            Create
-          </MenuItem>
+          <Link href="/products/new">
+            <MenuItem>Create</MenuItem>
+          </Link>
           <ViewProduct variant="menuitem" />
           <ExportToCsv variant="menuitem" />
           <LanguageSelector variant="menuitem" />

@@ -5,6 +5,7 @@ import {Link} from "@/components/navigation/Link"
 import ConfirmDelete from "@/components/shared/ConfirmDelete"
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {Box, Button, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text} from "@chakra-ui/react"
+import {FormikState} from "formik"
 import {useRouter} from "hooks/useRouter"
 import {Products} from "ordercloud-javascript-sdk"
 import React, {useState} from "react"
@@ -14,9 +15,10 @@ import ViewManager from "./ViewManager"
 interface ProductDetailToolbarProps {
   product?: IProduct
   isFormValid?: boolean
+  resetForm?: (nextState?: Partial<FormikState<any>>) => void
 }
 
-export default function ProductDetailToolbar({product, isFormValid}: ProductDetailToolbarProps) {
+export default function ProductDetailToolbar({product, isFormValid, resetForm}: ProductDetailToolbarProps) {
   const router = useRouter()
   const [deleteLoading, setDeleteLoading] = useState(false)
 
@@ -27,6 +29,10 @@ export default function ProductDetailToolbar({product, isFormValid}: ProductDeta
     } finally {
       setDeleteLoading(true)
     }
+  }
+
+  const discardChanges = () => {
+    resetForm()
   }
 
   return (
@@ -52,6 +58,9 @@ export default function ProductDetailToolbar({product, isFormValid}: ProductDeta
       </Menu>
       <Box as="span" flexGrow="1"></Box>
 
+      <Button type="button" onClick={discardChanges}>
+        Discard Changes
+      </Button>
       <Button type="submit" variant="primaryButton" isDisabled={!isFormValid}>
         Save
       </Button>

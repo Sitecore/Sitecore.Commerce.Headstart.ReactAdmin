@@ -98,7 +98,7 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
         resetForm
       }) => (
         <Box as="form" onSubmit={handleSubmit as any}>
-          <ProductDetailToolbar product={product} isFormValid={isValid} />
+          <ProductDetailToolbar product={product} isFormValid={isValid} resetForm={resetForm} />
           {showTabbedView ? (
             <Tabs>
               <TabList>

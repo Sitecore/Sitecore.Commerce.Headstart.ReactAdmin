@@ -3,7 +3,7 @@ import {ValuesType} from "types/type-helpers/ValuesType"
 
 type FieldName = ValuesType<typeof fieldNames>
 
-const defaultValues: Record<FieldName, any> = {
+export const defaultValues: Record<FieldName, any> = {
   [fieldNames.SHIP_LENGTH]: "",
   [fieldNames.SHIP_WIDTH]: "",
   [fieldNames.SHIP_HEIGHT]: "",
@@ -14,5 +14,3 @@ const defaultValues: Record<FieldName, any> = {
   [fieldNames.SHIP_FROM]: "",
   [fieldNames.ELIGIBLE_FOR_RETURNS]: true
 }
-
-export default defaultValues

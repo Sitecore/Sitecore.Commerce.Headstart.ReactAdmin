@@ -1,60 +1,37 @@
 import * as yup from "yup"
 import {makeNestedValidationSchema} from "utils"
 import {values} from "lodash"
-
-// form shapes
-import descriptionFormShape from "./DescriptionForm/formShape"
-import detailsFormShape from "./DetailsForm/formShape"
-import inventoryFormShape from "./InventoryForm/formShape"
-import shippingFormShape from "./ShippingForm/formShape"
-import unitOfMeasureFormShape from "./UnitOfMeasureForm/formShape"
-
-// form initial values
-import descriptionFormInitialValues from "./DescriptionForm/defaultValues"
-import detailsFormInitialValues from "./DetailsForm/defaultValues"
-import inventoryFormInitialValues from "./InventoryForm/defaultValues"
-import shippingFormInitialValues from "./ShippingForm/defaultValues"
-import unitOfMeasureFormInitialValues from "./UnitOfMeasureForm/defaultValues"
-
-// form fields
-import * as descriptionFormFields from "./DescriptionForm/fieldNames"
-import * as detailsFormFields from "./DetailsForm/fieldNames"
-import * as inventoryFormFields from "./InventoryForm/fieldNames"
-import * as shippingFormFields from "./ShippingForm/fieldNames"
-import * as unitOfMeasureFormFields from "./UnitOfMeasureForm/fieldNames"
-
-// form field names
-const descriptionFormFieldNames = values(descriptionFormFields)
-const detailsFormFieldNames = values(detailsFormFields)
-const inventoryFormFieldNames = values(inventoryFormFields)
-const shippingFormFieldNames = values(shippingFormFields)
-const unitOfMeasureFormFieldNames = values(unitOfMeasureFormFields)
+import * as descriptionForm from "./DescriptionForm"
+import * as detailsForm from "./DetailsForm"
+import * as inventoryForm from "./InventoryForm"
+import * as shippingForm from "./ShippingForm"
+import * as unitOfMeasureForm from "./UnitOfMeasureForm"
 
 export const defaultValues = {
-  ...descriptionFormInitialValues,
-  ...detailsFormInitialValues,
-  ...inventoryFormInitialValues,
-  ...shippingFormInitialValues,
-  ...unitOfMeasureFormInitialValues
+  ...descriptionForm.defaultValues,
+  ...detailsForm.defaultValues,
+  ...inventoryForm.defaultValues,
+  ...shippingForm.defaultValues,
+  ...unitOfMeasureForm.defaultValues
 }
 
 export const validationSchema = yup.object().shape(
   makeNestedValidationSchema({
-    ...descriptionFormShape,
-    ...detailsFormShape,
-    ...inventoryFormShape,
-    ...shippingFormShape,
-    ...unitOfMeasureFormShape
+    ...descriptionForm.formShape,
+    ...detailsForm.formShape,
+    ...inventoryForm.formShape,
+    ...shippingForm.formShape,
+    ...unitOfMeasureForm.formShape
   })
 )
 
 export const tabFieldNames = {
   Details: [
-    ...descriptionFormFieldNames,
-    ...detailsFormFieldNames,
-    ...inventoryFormFieldNames,
-    ...shippingFormFieldNames,
-    ...unitOfMeasureFormFieldNames
+    ...values(descriptionForm.fieldNames),
+    ...values(detailsForm.fieldNames),
+    ...values(inventoryForm.fieldNames),
+    ...values(shippingForm.fieldNames),
+    ...values(unitOfMeasureForm.fieldNames)
   ],
   Pricing: [],
   Variants: [],

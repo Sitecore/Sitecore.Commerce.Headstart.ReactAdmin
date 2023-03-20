@@ -4,7 +4,7 @@ import {ValuesType} from "types/type-helpers/ValuesType"
 
 type FieldName = ValuesType<typeof fieldNames>
 
-const formShape: Record<FieldName, any> = {
+export const formShape: Record<FieldName, any> = {
   [fieldNames.SHIP_LENGTH]: yup.number(),
   [fieldNames.SHIP_WIDTH]: yup.number(),
   [fieldNames.SHIP_HEIGHT]: yup.number(),
@@ -15,5 +15,3 @@ const formShape: Record<FieldName, any> = {
   [fieldNames.SHIP_FROM]: yup.string(),
   [fieldNames.ELIGIBLE_FOR_RETURNS]: yup.bool()
 }
-
-export default formShape

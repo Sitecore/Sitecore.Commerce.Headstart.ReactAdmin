@@ -4,8 +4,6 @@ import * as fieldNames from "./fieldNames"
 
 type FieldName = ValuesType<typeof fieldNames>
 
-const formShape: Record<FieldName, any> = {
+export const formShape: Record<FieldName, any> = {
   [fieldNames.DESCRIPTION]: yup.string().max(2000)
 }
-
-export default formShape

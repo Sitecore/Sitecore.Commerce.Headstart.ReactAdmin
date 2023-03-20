@@ -70,7 +70,7 @@ const ProductCard = (props: ProductCardProps) => {
         </Link>
         {/* </HStack> */}
         <Link href={"/products/" + product.ID}>
-          <Text noOfLines={2} fontSize="small" color="brand.500">
+          <Text noOfLines={2} fontSize="small">
             {textHelper.stripHTML(product.Description)}
           </Text>
         </Link>

@@ -29,6 +29,7 @@ interface IListView<T, F = any> {
   gridOptions?: ListViewGridOptions<T>
   paramMap?: {[key: string]: string}
   queryMap?: {[key: string]: string}
+  filterMap?: {[key: string]: string}
   children?: (props: ListViewChildrenProps) => ReactElement
   noResultsMessage?: ListViewTemplate
   noDataMessage?: ListViewTemplate
@@ -40,6 +41,7 @@ export interface ListViewChildrenProps {
   updateQuery: (queryKey: string, resetPage?: boolean) => (value: string | boolean | number) => void
   routeParams: any
   queryParams: any
+  filterParams: any
   selected: string[]
   loading: boolean
   renderContent: ListViewTemplate
@@ -49,6 +51,7 @@ const ListView = <T extends IDefaultResource>({
   service,
   paramMap,
   queryMap,
+  filterMap,
   itemActions,
   tableOptions,
   gridOptions,
@@ -88,17 +91,23 @@ const ListView = <T extends IDefaultResource>({
   const params = useMemo(() => {
     return {
       routeParams: mapRouterQuery(paramMap),
-      queryParams: mapRouterQuery(queryMap)
+      queryParams: mapRouterQuery(queryMap),
+      filterParams: mapRouterQuery(filterMap)
     }
-  }, [paramMap, queryMap, mapRouterQuery])
+  }, [paramMap, queryMap, filterMap, mapRouterQuery])
 
   const fetchData = useCallback(async () => {
     let response
     setLoading(true)
+    const listOptions = {
+      ...params.queryParams,
+      filters: params.filterParams
+    }
     if (Object.values(params.routeParams).length) {
-      response = await service(...Object.values(params.routeParams), params.queryParams)
+      console.log(listOptions)
+      response = await service(...Object.values(params.routeParams), listOptions)
     } else {
-      response = await service(params.queryParams)
+      response = await service(listOptions)
     }
     setData(response)
     setLoading(false)
@@ -173,6 +182,10 @@ const ListView = <T extends IDefaultResource>({
     return params.queryParams["Page"] ? Number(params.queryParams["Page"]) : 1
   }, [params.queryParams])
 
+  const isSearching = useMemo(() => {
+    return Boolean(params.queryParams["Search"])
+  }, [params.queryParams])
+
   const renderContent = useMemo(() => {
     if (loading || (!loading && data)) {
       return (
@@ -195,6 +208,7 @@ const ListView = <T extends IDefaultResource>({
               rowActions={itemActions}
               data={data && data.Items}
               selected={selected}
+              emptyDisplay={isSearching ? noResultsMessage : noDataMessage}
               onSelectChange={handleSelectChange}
               onSortChange={handleSortChange}
               currentSort={currentSort}
@@ -215,6 +229,9 @@ const ListView = <T extends IDefaultResource>({
     itemActions,
     tableOptions,
     gridOptions,
+    isSearching,
+    noResultsMessage,
+    noDataMessage,
     currentSort,
     selected,
     currentPage,
@@ -230,6 +247,7 @@ const ListView = <T extends IDefaultResource>({
       updateQuery: handleUpdateQuery,
       routeParams: params.routeParams,
       queryParams: params.queryParams,
+      filterParams: params.filterParams,
       selected,
       loading,
       renderContent

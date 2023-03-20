@@ -34,6 +34,7 @@ export interface IDataTable<T> {
   data: T[]
   loading?: boolean
   selected?: string[]
+  emptyDisplay?: ReactElement | ReactElement[] | string
   onSelectChange?: (changedIds: string[] | string, isSelected: boolean) => void
   columns: DataTableColumn<T>[]
   currentSort?: string
@@ -46,6 +47,7 @@ const DataTable = <T extends IDefaultResource>({
   data,
   loading,
   currentSort,
+  emptyDisplay,
   rowActions,
   onSortChange,
   onSelectChange,
@@ -186,6 +188,13 @@ const DataTable = <T extends IDefaultResource>({
               {rowActions && <Td>{rowActions(row.data)}</Td>}
             </Tr>
           ))}
+          {!loading && !rows.length && (
+            <Tr>
+              <Td align="center" colSpan={columnCount}>
+                {emptyDisplay}
+              </Td>
+            </Tr>
+          )}
         </Tbody>
       </Table>
     </TableContainer>

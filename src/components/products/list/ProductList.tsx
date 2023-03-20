@@ -1,4 +1,3 @@
-import ProductCard from "./ProductCard"
 import {CheckCircleIcon, DeleteIcon, EditIcon, NotAllowedIcon, SettingsIcon} from "@chakra-ui/icons"
 import {
   Badge,
@@ -19,12 +18,17 @@ import {IProduct} from "types/ordercloud/IProduct"
 import {textHelper} from "utils"
 import {DataTableColumn} from "../../shared/DataTable/DataTable"
 import ListView, {ListViewGridOptions, ListViewTableOptions} from "../../shared/ListView/ListView"
+import ProductCard from "./ProductCard"
 import ProductListToolbar from "./ProductListToolbar"
 
 const ProductQueryMap = {
   s: "Search",
   sort: "SortBy",
   p: "Page"
+}
+
+const ProductFilterMap = {
+  active: "Active"
 }
 
 const ProductListTableColumns: DataTableColumn<IProduct>[] = [
@@ -131,6 +135,7 @@ const ProductList = () => {
     <ListView<IProduct>
       service={Products.List}
       queryMap={ProductQueryMap}
+      filterMap={ProductFilterMap}
       itemActions={renderProductActionsMenu}
       tableOptions={ProductTableOptions}
       gridOptions={ProductGridOptions}

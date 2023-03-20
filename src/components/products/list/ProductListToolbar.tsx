@@ -30,7 +30,8 @@ import {useErrorToast} from "hooks/useToast"
 import {ChangeEvent, FC, useRef, useState} from "react"
 import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"
 import {ListViewChildrenProps} from "../../shared/ListView/ListView"
-import ProductFilters from "./ProductFilters"
+import ProductListActions from "./ProductListActions"
+import ProductStatusFilter from "./ProductStatusFilter"
 
 interface ProductListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
@@ -38,6 +39,7 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
   meta,
   viewModeToggle,
   updateQuery,
+  filterParams,
   queryParams,
   selected,
   loading
@@ -115,17 +117,8 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
     <>
       <Stack direction="row" mb={5}>
         <DebouncedSearchInput label="Search products" value={queryParams["Search"]} onSearch={updateQuery("s", true)} />
-        <ProductFilters />
-
-        <Button variant="secondaryButton" onClick={onMassEditOpenClicked}>
-          Bulk Edit
-        </Button>
-        <Button variant="secondaryButton" onClick={() => setPromotionDialogOpen(true)}>
-          Assign Promotion
-        </Button>
-        <Button variant="secondaryButton" onClick={() => setBulkImportDialogOpen(true)}>
-          Bulk Import
-        </Button>
+        <ProductStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
+        <ProductListActions selected={selected} />
         <Box as="span" flexGrow="1"></Box>
         {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
         <Box as="span" width="2"></Box>

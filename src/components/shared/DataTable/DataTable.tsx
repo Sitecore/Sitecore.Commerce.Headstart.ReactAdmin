@@ -37,6 +37,7 @@ export interface IDataTable<T> {
   onSelectChange?: (changedIds: string[] | string, isSelected: boolean) => void
   columns: DataTableColumn<T>[]
   currentSort?: string
+  onSortChange: (sortKey: string, isSorted: boolean, isSortedDesc: boolean) => void
   rowActions?: (rowData: T) => ReactElement
 }
 
@@ -46,6 +47,7 @@ const DataTable = <T extends IDefaultResource>({
   loading,
   currentSort,
   rowActions,
+  onSortChange,
   onSelectChange,
   selected
 }: IDataTable<T>) => {
@@ -118,7 +120,19 @@ const DataTable = <T extends IDefaultResource>({
               </Th>
             )}
             {headers.map((header, index) => (
-              <Th textAlign={header.align} role="columnheader" pe="0px" key={index}>
+              <Th
+                textAlign={header.align}
+                role="columnheader"
+                pe="0px"
+                key={index}
+                style={{cursor: header.sortable ? "pointer" : "auto"}}
+                onClick={
+                  header.sortable &&
+                  (() => {
+                    onSortChange(header.accessor, header.isSorted, header.isSortedDesc)
+                  })
+                }
+              >
                 <Flex justify="space-between" align="center" fontSize={{sm: "10px", lg: "12px"}} color="gray.400">
                   {header.header}
                   {header.sortable && (

@@ -1,5 +1,5 @@
 import {Box, ButtonGroup, Center, IconButton, Stack, Text} from "@chakra-ui/react"
-import {union, without} from "lodash"
+import {invert, union, without} from "lodash"
 import {useRouter} from "next/router"
 import {ListPage, ListPageWithFacets, Meta, Product} from "ordercloud-javascript-sdk"
 import {ReactElement, useCallback, useEffect, useMemo, useState} from "react"
@@ -14,7 +14,7 @@ export interface IDefaultResource {
 }
 
 export interface ListViewTableOptions<T>
-  extends Omit<IDataTable<T>, "data" | "selected" | "handleSelectionChange" | "rowActions"> {}
+  extends Omit<IDataTable<T>, "data" | "selected" | "handleSelectionChange" | "rowActions" | "onSortChange"> {}
 
 export interface ListViewGridOptions<T>
   extends Omit<IDataGrid<T>, "data" | "selected" | "handleSelectionChange" | "gridItemActions"> {}
@@ -37,7 +37,7 @@ interface IListView<T, F = any> {
 export interface ListViewChildrenProps {
   meta?: Meta
   viewModeToggle: React.ReactElement
-  updateQuery: (queryKey: string) => (value: string | boolean | number) => void
+  updateQuery: (queryKey: string, resetPage?: boolean) => (value: string | boolean | number) => void
   routeParams: any
   queryParams: any
   selected: string[]
@@ -61,6 +61,7 @@ const ListView = <T extends IDefaultResource>({
   const [viewMode, setViewMode] = useState<"grid" | "table">(initialViewMode)
   const [selected, setSelected] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
+  const invertedQueryMap = invert(queryMap)
 
   const handleSelectChange = useCallback((changed: string | string[], isSelected: boolean) => {
     let changedIds = typeof changed === "string" ? [changed] : changed
@@ -129,10 +130,43 @@ const ListView = <T extends IDefaultResource>({
   }, [viewMode])
 
   const handleUpdateQuery = useCallback(
-    (queryKey: string) => (value: string | boolean | number) => {
-      push({pathname: pathname, query: {...query, [queryKey]: value}})
+    (queryKey: string, resetPage?: boolean) => (value: string | boolean | number) => {
+      push({
+        pathname: pathname,
+        query: {
+          ...query,
+          [invertedQueryMap["Page"]]: resetPage ? 1 : query[invertedQueryMap["Page"]],
+          [queryKey]: value
+        }
+      })
     },
-    [push, pathname, query]
+    [push, pathname, query, invertedQueryMap]
+  )
+
+  const currentSort = useMemo(() => {
+    return params.queryParams["SortBy"]
+  }, [params.queryParams])
+
+  const handleSortChange = useCallback(
+    (sortKey: string, isSorted: boolean, isSortedDesc: boolean) => {
+      let sorts = currentSort ? currentSort.split(",") : []
+      if (isSorted) {
+        if (isSortedDesc) {
+          sorts = sorts.filter((s) => s !== `!${sortKey}`)
+        } else {
+          sorts = sorts.map((s) => {
+            if (s === sortKey) {
+              return `!${sortKey}`
+            }
+            return s
+          })
+        }
+      } else {
+        sorts.push(sortKey)
+      }
+      handleUpdateQuery(invertedQueryMap["SortBy"])(sorts.join(","))
+    },
+    [handleUpdateQuery, currentSort, invertedQueryMap]
   )
 
   const currentPage = useMemo(() => {
@@ -162,17 +196,15 @@ const ListView = <T extends IDefaultResource>({
               data={data && data.Items}
               selected={selected}
               onSelectChange={handleSelectChange}
-              currentSort={params.queryParams["SortBy"]}
-              // onSortChange={() => console.log("SORT CHANGE")}
+              onSortChange={handleSortChange}
+              currentSort={currentSort}
             />
           )}
-          <Center>
-            <Pagination
-              page={currentPage}
-              totalPages={data && data.Meta.TotalPages}
-              onChange={handleUpdateQuery("p")}
-            />
-          </Center>
+          {data && data.Meta && (
+            <Center>
+              <Pagination page={currentPage} totalPages={data.Meta.TotalPages} onChange={handleUpdateQuery("p")} />
+            </Center>
+          )}
         </Box>
       )
     }
@@ -183,11 +215,12 @@ const ListView = <T extends IDefaultResource>({
     itemActions,
     tableOptions,
     gridOptions,
-    params,
+    currentSort,
     selected,
     currentPage,
     handleUpdateQuery,
-    handleSelectChange
+    handleSelectChange,
+    handleSortChange
   ])
 
   const childrenProps = useMemo(() => {

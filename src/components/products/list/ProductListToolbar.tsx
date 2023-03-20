@@ -114,7 +114,7 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
   return (
     <>
       <Stack direction="row" mb={5}>
-        <DebouncedSearchInput label="Search products" value={queryParams["Search"]} onSearch={updateQuery("s")} />
+        <DebouncedSearchInput label="Search products" value={queryParams["Search"]} onSearch={updateQuery("s", true)} />
         <ProductFilters />
 
         <Button variant="secondaryButton" onClick={onMassEditOpenClicked}>

@@ -80,9 +80,11 @@ In some cases it may be useful to have your own marketplace. Maybe you need to c
 npm run seed -- -u=YOUR_PORTAL_USERNAME -p=YOUR_PORTAL_PASSWORD -n=YOUR_MARKETPLACE_NAME
 ```
 
-Next, find the admin client ID and set it as NEXT_PUBLIC_OC_CLIENT_ID in your .env file. 
+Next, find the admin client ID and set it as NEXT_PUBLIC_OC_CLIENT_ID in your .env.local file.
 
-Finally log in as `initialadminuser` with the password `Testingsetup123!`
+Then, run the application by running `npm run dev`.
+
+Finally, log in as `initialadminuser` with the password `Testingsetup123!`
 
 ### Unit Tests
 This project uses [Jest](https://jestjs.io/) for unit testing. To write a unit test:

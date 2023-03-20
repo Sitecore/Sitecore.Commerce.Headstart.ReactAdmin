@@ -7,12 +7,14 @@ interface ImagePreviewProps {
 }
 export default function ImagePreview({images = []}: ImagePreviewProps) {
   const [selectedImage, setSelectedImage] = useState(0)
-  if (!images?.length) {
-    return
-  }
   return (
     <>
-      <Image boxSize="200px" objectFit="scale-down" mt={4} alt={"Product Image"} src={images[selectedImage].Url} />
+      <Image
+        maxWidth="300px"
+        mt={4}
+        alt={"Product Image"}
+        src={images?.length ? images[selectedImage].Url : "/images/dummy-image-square.jpg"}
+      />
       <HStack mt={4}>
         {images.map((image, index) => {
           return (

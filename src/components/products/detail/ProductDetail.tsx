@@ -113,7 +113,7 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
               <TabPanels>
                 <TabPanel>
                   {/* Details Tab */}
-                  <Flex justifyContent="space-between" flexWrap="wrap" gap={7}>
+                  <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
                     <Flex flexFlow="column" flexGrow="1" rowGap={7}>
                       <SimpleCard title="Details">
                         <DetailsForm />

@@ -4,10 +4,11 @@ export type IProduct = Product<IProductXp>
 
 export interface IProductXp {
   // add custom xp properties required for this project here
-  Images: XpImage[]
+  Images?: XpImage[]
+  UnitOfMeasure?: string
 }
 
 export interface XpImage {
-  Url: string
-  ThumbnailUrl: string
+  Url?: string
+  ThumbnailUrl?: string
 }

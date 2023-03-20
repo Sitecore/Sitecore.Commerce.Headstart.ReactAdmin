@@ -35,8 +35,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
     setFacetOptions(productfacet?.xp?.Options || [])
   }, [productfacet?.xp?.Options])
 
-  function onSubmit(fields, {setStatus, setSubmitting}) {
-    setStatus()
+  function onSubmit(fields, {setSubmitting}) {
     fields.xp_Options = facetOptions
     const productfacet = xpHelper.unflattenXpObject(fields, "_") as ProductFacet
     if (isCreating) {

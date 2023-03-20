@@ -9,16 +9,18 @@ import {
 } from "@chakra-ui/react"
 import {useField, useFormikContext} from "formik"
 import React, {FC} from "react"
+import {isRequiredField} from "utils"
 import {BaseProps, FormControl} from "../form-control"
 
 export type SliderControlProps = BaseProps & {
   sliderProps?: SliderProps
   sliderTrackProps?: SliderTrackProps
   sliderThumbProps?: SliderThumbProps
+  validationSchema?: any
 }
 
 export const SliderControl: FC<SliderControlProps> = (props: SliderControlProps) => {
-  const {name, label, sliderProps, sliderTrackProps, sliderThumbProps, ...rest} = props
+  const {name, label, sliderProps, sliderTrackProps, sliderThumbProps, validationSchema, ...rest} = props
   const [field, , {setValue}] = useField(name)
   const {isSubmitting} = useFormikContext()
 
@@ -31,8 +33,10 @@ export const SliderControl: FC<SliderControlProps> = (props: SliderControlProps)
     field.onBlur(e)
   }
 
+  const isRequired = isRequiredField(props.validationSchema, field.name)
+
   return (
-    <FormControl name={name} label={label} {...rest}>
+    <FormControl name={name} label={label} isRequired={isRequired} {...rest}>
       <Slider
         {...field}
         id={name}

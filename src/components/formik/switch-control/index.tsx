@@ -2,15 +2,17 @@ import {Box, Flex, Switch, SwitchProps} from "@chakra-ui/react"
 import {css} from "@emotion/react"
 import {useField, useFormikContext} from "formik"
 import React, {FC} from "react"
+import {isRequiredField} from "utils"
 import {BaseProps, FormControl} from "../form-control"
 
-export type SwitchControlProps = BaseProps & {switchProps?: SwitchProps}
+export type SwitchControlProps = BaseProps & {switchProps?: SwitchProps; validationSchema?: any}
 
 export const SwitchControl: FC<SwitchControlProps> = React.forwardRef(
   (props: SwitchControlProps, ref: React.ForwardedRef<HTMLInputElement>) => {
-    const {name, label, switchProps, ...rest} = props
+    const {name, label, switchProps, validationSchema, ...rest} = props
     const [field, {error, touched}] = useField(name)
     const {isSubmitting} = useFormikContext()
+    const isRequired = isRequiredField(props.validationSchema, field.name)
 
     return (
       <Box
@@ -28,7 +30,7 @@ export const SwitchControl: FC<SwitchControlProps> = React.forwardRef(
           }
         `}
       >
-        <FormControl name={name} label={label} as={Flex} alignItems="center" {...rest}>
+        <FormControl name={name} label={label} as={Flex} alignItems="center" isRequired={isRequired} {...rest}>
           <Switch
             {...field}
             id={name}

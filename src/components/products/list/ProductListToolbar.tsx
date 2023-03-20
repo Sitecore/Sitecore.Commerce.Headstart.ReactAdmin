@@ -1,4 +1,5 @@
 import BrandedSpinner from "@/components/branding/BrandedSpinner"
+import ListViewMetaInfo from "@/components/shared/ListViewMetaInfo/ListViewMetaInfo"
 import {
   AlertDialog,
   AlertDialogBody,
@@ -34,7 +35,7 @@ import ProductFilters from "./ProductFilters"
 interface ProductListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
 const ProductListToolbar: FC<ProductListToolbarProps> = ({
-  metaInformationDisplay,
+  meta,
   viewModeToggle,
   updateQuery,
   queryParams,
@@ -126,7 +127,7 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
           Bulk Import
         </Button>
         <Box as="span" flexGrow="1"></Box>
-        {metaInformationDisplay}
+        {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
         <Box as="span" width="2"></Box>
         {viewModeToggle}
         <Button variant="primaryButton">Create Product</Button>

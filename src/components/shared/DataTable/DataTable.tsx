@@ -34,8 +34,7 @@ export interface IDataTable<T> {
   data: T[]
   loading?: boolean
   selected?: string[]
-  onSelectAll?: () => void
-  onSelectChange?: (id: string, isSelected: boolean) => void
+  onSelectChange?: (changedIds: string[] | string, isSelected: boolean) => void
   columns: DataTableColumn<T>[]
   currentSort?: string
   rowActions?: (rowData: T) => ReactElement
@@ -47,7 +46,6 @@ const DataTable = <T extends IDefaultResource>({
   loading,
   currentSort,
   rowActions,
-  onSelectAll,
   onSelectChange,
   selected
 }: IDataTable<T>) => {
@@ -97,6 +95,13 @@ const DataTable = <T extends IDefaultResource>({
     return result
   }, [rowActions, onSelectChange, columns])
 
+  const handleSelectAllChange = (isChecked) => {
+    onSelectChange(
+      data.map((r) => r.ID),
+      isChecked
+    )
+  }
+
   return (
     <TableContainer position="relative" width={"full"} rounded={8} bg={tableHeaderBg} color={tableColor}>
       <Table role="table" variant="simple">
@@ -108,7 +113,7 @@ const DataTable = <T extends IDefaultResource>({
                   isIndeterminate={indeterminateSelectAll}
                   colorScheme={indeterminateSelectAll ? "gray" : "blue"}
                   isChecked={data && data.length === selected.length}
-                  onChange={onSelectAll}
+                  onChange={(e) => handleSelectAllChange(e.target.checked)}
                 />
               </Th>
             )}
@@ -136,7 +141,6 @@ const DataTable = <T extends IDefaultResource>({
         <Tbody role="rowgroup" position="relative" h={20}>
           {loading && (
             <Box
-              zIndex={2}
               position="absolute"
               left={0}
               right={0}
@@ -151,7 +155,7 @@ const DataTable = <T extends IDefaultResource>({
             </Box>
           )}
           {rows.map((row, rowIndex) => (
-            <Tr key={rowIndex} role="row" position="relative" zIndex={1}>
+            <Tr key={rowIndex} role="row">
               {onSelectChange && (
                 <Td colSpan={1}>
                   <Checkbox

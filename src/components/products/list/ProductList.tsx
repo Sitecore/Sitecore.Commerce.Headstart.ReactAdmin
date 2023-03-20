@@ -1,4 +1,4 @@
-import ProductCard from "@/components/products/ProductCard"
+import ProductCard from "./ProductCard"
 import {CheckCircleIcon, DeleteIcon, EditIcon, NotAllowedIcon, SettingsIcon} from "@chakra-ui/icons"
 import {
   Badge,
@@ -42,7 +42,7 @@ const ProductListTableColumns: DataTableColumn<IProduct>[] = [
       <Link href={"/products/" + row.original.ID}>
         <Image
           src={
-            typeof value != "undefined"
+            value && value.length
               ? value[0]?.ThumbnailUrl ?? value[0]?.Url
               : "https://mss-p-006-delivery.stylelabs.cloud/api/public/content/4fc742feffd14e7686e4820e55dbfbaa"
           }
@@ -69,7 +69,6 @@ const ProductListTableColumns: DataTableColumn<IProduct>[] = [
   {
     header: "Status",
     accessor: "Active",
-    align: "center",
     cell: ({row, value}) => <Badge colorScheme={value ? "green" : "red"}>{value ? "Active" : "Inactive"}</Badge>,
     sortable: true
   },

@@ -32,7 +32,7 @@ const DEFAULT_RENDER_GRID_ITEM = (o: IDefaultResource, i: number) => (
     shadow="xl"
   >
     <Heading as="h3" fontSize="lg">
-      {o.Name.length > 39 ? o.Name.substring(0, 39) + "..." : o.Name}
+      {o.Name}
     </Heading>
   </VStack>
 )

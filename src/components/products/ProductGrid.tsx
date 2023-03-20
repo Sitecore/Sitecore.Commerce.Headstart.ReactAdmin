@@ -1,7 +1,7 @@
 import {Text, Tbody, Td, Tr, Box, Grid, GridItem, Checkbox} from "@chakra-ui/react"
 import {useEffect, useState} from "react"
 import {Product} from "ordercloud-javascript-sdk"
-import ProductCard from "./ProductCard"
+import ProductCard from "./list/ProductCard"
 import {IProduct} from "types/ordercloud/IProduct"
 
 interface ProductGridProps {

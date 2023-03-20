@@ -1,8 +1,20 @@
 import {CheckIcon, CloseIcon} from "@chakra-ui/icons"
-import {Checkbox, Flex, Heading, Image, Spacer, Text, Tooltip, VStack, useColorModeValue} from "@chakra-ui/react"
+import {
+  Checkbox,
+  Flex,
+  Heading,
+  Image,
+  Spacer,
+  Text,
+  Tooltip,
+  VStack,
+  useColorModeValue,
+  HStack,
+  Badge
+} from "@chakra-ui/react"
 import {textHelper} from "utils/text.utils"
 import {Product} from "ordercloud-javascript-sdk"
-import {Link} from "../navigation/Link"
+import {Link} from "../../navigation/Link"
 
 interface ProductCardProps {
   product: Product
@@ -19,17 +31,15 @@ const ProductCard = (props: ProductCardProps) => {
     <VStack
       h="full"
       justifyContent="space-between"
-      p={2}
-      backgroundColor="white"
-      border="1px solid"
-      borderColor="gray.200"
+      p={4}
+      backgroundColor="Background"
+      border="1px"
+      borderColor="blackAlpha.300"
       borderRadius="lg"
       shadow="xl"
     >
       <Flex w="full" alignItems={"flex-start"}>
         <Checkbox isChecked={props.selected} onChange={(e) => props.onProductSelected(product.ID, e.target.checked)} />
-        <Spacer />
-        {renderProductActions && renderProductActions(product)}
         <Spacer />
         <Link href={"/products/" + product.ID}>
           <Image
@@ -43,26 +53,25 @@ const ProductCard = (props: ProductCardProps) => {
           />
         </Link>
         <Spacer />
-        <VStack>
-          <p>Active</p>
-          {product.Active ? <CheckIcon boxSize={6} color={okColor} /> : <CloseIcon boxSize={6} color={errorColor} />}
-        </VStack>
-        <Spacer />
+        {renderProductActions && renderProductActions(product)}
       </Flex>
-      <VStack flex="1" justifyContent="flex-end" alignItems="flex-start" p={[4, 2, 20, 6]}>
+      <VStack flex="1" justifyContent="flex-end" alignItems="flex-start" w="full">
         {/* <Heading fontSize="xx-small" fontWeight='normal' color='gray.300' >NEW ARRIVALS</Heading>  */}
+        {/* <HStack> */}
+        <Badge colorScheme={product.Active ? "green" : "red"}>{product.Active ? "Active" : "Inactive"}</Badge>
         <Link href={"/products/" + product.ID}>
           <Heading as="h3" fontSize="lg">
-            <Tooltip label={product.Name} placement="top" isDisabled={product.Name.length < 40}>
-              {product.Name.length > 39 ? product.Name.substring(0, 39) + "..." : product.Name}
+            <Tooltip label={product.Name} placement="top">
+              <Text as="span" noOfLines={1}>
+                {product.Name}
+              </Text>
             </Tooltip>
           </Heading>
         </Link>
+        {/* </HStack> */}
         <Link href={"/products/" + product.ID}>
-          <Text fontSize="small" color="brand.500">
-            {textHelper.stripHTML(product.Description).length > 40
-              ? textHelper.stripHTML(product.Description).substring(0, 40) + "..."
-              : textHelper.stripHTML(product.Description)}
+          <Text noOfLines={2} fontSize="small" color="brand.500">
+            {textHelper.stripHTML(product.Description)}
           </Text>
         </Link>
       </VStack>

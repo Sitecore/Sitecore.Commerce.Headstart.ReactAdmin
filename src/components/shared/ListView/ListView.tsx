@@ -1,6 +1,7 @@
 import {Box, ButtonGroup, Center, IconButton, Stack, Text} from "@chakra-ui/react"
+import {union, without} from "lodash"
 import {useRouter} from "next/router"
-import {ListPage, ListPageWithFacets, Product} from "ordercloud-javascript-sdk"
+import {ListPage, ListPageWithFacets, Meta, Product} from "ordercloud-javascript-sdk"
 import {ReactElement, useCallback, useEffect, useMemo, useState} from "react"
 import {HiOutlineViewGrid, HiOutlineViewList} from "react-icons/hi"
 import DataGrid, {IDataGrid} from "../DataGrid/DataGrid"
@@ -34,7 +35,7 @@ interface IListView<T, F = any> {
 }
 
 export interface ListViewChildrenProps {
-  metaInformationDisplay: React.ReactElement
+  meta?: Meta
   viewModeToggle: React.ReactElement
   updateQuery: (queryKey: string) => (value: string | boolean | number) => void
   routeParams: any
@@ -51,7 +52,7 @@ const ListView = <T extends IDefaultResource>({
   itemActions,
   tableOptions,
   gridOptions,
-  initialViewMode = "grid",
+  initialViewMode = "table",
   children,
   noResultsMessage = "No results :(",
   noDataMessage = "Nothing here yet."
@@ -61,12 +62,9 @@ const ListView = <T extends IDefaultResource>({
   const [selected, setSelected] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
-  const handleSelectAll = useCallback(() => {
-    setSelected((s) => (s.length && s.length === data.Items.length ? [] : data.Items.map((i) => i.ID)))
-  }, [data])
-
-  const handleSelectChange = useCallback((id: string, isSelected: boolean) => {
-    setSelected((s) => (isSelected ? [...s, id] : s.filter((sid) => sid !== id)))
+  const handleSelectChange = useCallback((changed: string | string[], isSelected: boolean) => {
+    let changedIds = typeof changed === "string" ? [changed] : changed
+    setSelected((s) => (isSelected ? union(s, changedIds) : without(s, ...changedIds)))
   }, [])
 
   const {push, pathname, isReady, query} = useRouter()
@@ -137,17 +135,6 @@ const ListView = <T extends IDefaultResource>({
     [push, pathname, query]
   )
 
-  const metaInformationDisplay = useMemo(() => {
-    if (!data) return
-    return (
-      <Text
-        alignSelf="center"
-        flexShrink={0}
-        fontWeight="bold"
-      >{`${data.Meta.ItemRange[0]} - ${data.Meta.ItemRange[1]} of ${data.Meta.TotalCount}`}</Text>
-    )
-  }, [data])
-
   const currentPage = useMemo(() => {
     return params.queryParams["Page"] ? Number(params.queryParams["Page"]) : 1
   }, [params.queryParams])
@@ -175,7 +162,6 @@ const ListView = <T extends IDefaultResource>({
               data={data && data.Items}
               selected={selected}
               onSelectChange={handleSelectChange}
-              onSelectAll={handleSelectAll}
               currentSort={params.queryParams["SortBy"]}
               // onSortChange={() => console.log("SORT CHANGE")}
             />
@@ -201,14 +187,13 @@ const ListView = <T extends IDefaultResource>({
     selected,
     currentPage,
     handleUpdateQuery,
-    handleSelectChange,
-    handleSelectAll
+    handleSelectChange
   ])
 
   const childrenProps = useMemo(() => {
     return {
       viewModeToggle,
-      metaInformationDisplay,
+      meta: data ? data.Meta : undefined,
       updateQuery: handleUpdateQuery,
       routeParams: params.routeParams,
       queryParams: params.queryParams,
@@ -216,7 +201,7 @@ const ListView = <T extends IDefaultResource>({
       loading,
       renderContent
     }
-  }, [selected, loading, metaInformationDisplay, viewModeToggle, params, handleUpdateQuery, renderContent])
+  }, [data, selected, loading, viewModeToggle, params, handleUpdateQuery, renderContent])
 
   return children(childrenProps)
 }

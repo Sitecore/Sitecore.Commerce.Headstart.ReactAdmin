@@ -9,7 +9,7 @@ Before logging a new issue, please check to see if your concern / idea has alrea
 Once an issue is moved (by a project maintainer) to the "Todo" column in the project backlog it is considered ready to be worked on. Please assign yourself and mark the issue as "In Progress" once development has started in order to avoid duplicate work.
 
 ## Development
-1. Fork and clone the template repository locally
+1. Fork and clone the template repository locally, be sure to check "Include all branches" to get the development branch
 2. Follow the working locally guide outlined in the main README.md
 3. After you have completed development, run `npm test` and `npm build` locally to ensure everything still works.
 4. Feel free to push changes to your forked development branch or create a new feature branch if it's a larger change.

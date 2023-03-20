@@ -8,12 +8,10 @@ This is an Open Source implementation of Sitecore Commerce using the OrderCloud 
 This app is capable of showcasing different marketplace scenarios and commerce strategies: B2B, B2C, B2B2C. It is actively being worked on and maintained by internal developers at Sitecore and the larger Sitecore community. You can expect some major changes in the near future regarding design system choice, feature additions / modifications, and further integrations with additional Sitecore services.
 
 ## What is Sitecore Commerce OrderCloud?
-----
 [OrderCloud](https://ordercloud.io/discover/platform-overview) is a B2B, B2C, B2X commerce and marketplace development platform, 
 OrderCloud delivers cloud-based, API-first, headless eCommerce architecture. Limitless customizations and endless freedom for growth to support your complete commerce strategy.
 
 ## What is Sitecore Commerce Seller App?
-----
 A **simple**, **powerful** and **flexible** Commerce Seller Application built on top of Sitecore [OrderCloud API](https://ordercloud.io/api-reference) and the [Javascript SDK](https://www.npmjs.com/package/ordercloud-javascript-sdk) built with:
 * React
 * Next.JS
@@ -23,7 +21,6 @@ A **simple**, **powerful** and **flexible** Commerce Seller Application built on
 * SEO optimization configured with `next-seo` and `next-sitemap`. you'll need to reconfigure or tinker with it to get it right according to your needs, but it's there if you need it.
 
 ## What you can do with this app?
----- 
 * Create, read, update delete product catalogs and categories
 * Create, read, update delete products with Extended propreties
 * Create, read, update delete promotions
@@ -37,10 +34,9 @@ Create an OrderCloud Marketplace instance (https://portal.ordercloud.io)
 ## How do I get started? 
 Using the Deploy Button below, you'll deploy on Vercel the Next.js project as well as connect it to your Sitecore Commerce OrderCloud sandbox.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSitecoreNA%2Fsitecore-commerce%2Ftree%2Fmain)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin&env=NEXT_PUBLIC_APP_NAME,NEXT_PUBLIC_OC_CLIENT_ID,NEXT_PUBLIC_OC_API_URL,NEXT_PUBLIC_OC_MARKETPLACE_ID,NEXT_PUBLIC_OC_MARKETPLACE_NAME,NEXT_PUBLIC_OC_USELIVEANALYTICSDATA&envDescription=Environment%20Variables%20Description&envLink=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%23working-locally&project-name=sitecore-commerce-headstart-reactadmin&repository-name=Sitecore.Commerce.Headstart.ReactAdmin&demo-title=Sitecore%20Commerce%20Headstart%20ReactAdmin&demo-description=This%20is%20a%20basic%20implementation%20of%20Sitecore%20Commerce%20using%20the%20OrderCloud%20Javascript%20SDK.%20You%20can%20use%20it%20as%20a%20starting%20point%20to%20discover%2C%20understand%2C%20and%20learn%20more%20about%20the%20Sitecore%20Commerce%20OrderCloud%20capabilities.&demo-url=sitecore-commerce-headstart-react-admin.vercel.app&demo-image=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%2Fblob%2Fmain%2Fpublic%2Fimages%2Fdemo-image.png)
 
 ## Working locally
-----
 1. Using this repository as a template, create a new repository.
 2. Clone your new repository locally
 3. Copy the `.env.local.example` file in the root directory to `.env.local` (ignored by default during your next Git commit):
@@ -74,8 +70,7 @@ npm install
 npm run dev
 ```
 
-Your app should be up and running on [http://localhost:3000](http://localhost:3000)! 
-If it doesn't work, post on [GitHub issues](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/issues).
+Your app should be up and running on [http://localhost:3000](http://localhost:3000)!
 
 ### Seeding a new marketplace
 
@@ -85,9 +80,11 @@ In some cases it may be useful to have your own marketplace. Maybe you need to c
 npm run seed -- -u=YOUR_PORTAL_USERNAME -p=YOUR_PORTAL_PASSWORD -n=YOUR_MARKETPLACE_NAME
 ```
 
-Next, find the admin client ID and set it as NEXT_PUBLIC_OC_CLIENT_ID in your .env file. 
+Next, find the admin client ID and set it as NEXT_PUBLIC_OC_CLIENT_ID in your .env.local file.
 
-Finally log in as `initialadminuser` with the password `Testingsetup123!`
+Then, run the application by running `npm run dev`.
+
+Finally, log in as `initialadminuser` with the password `Testingsetup123!`
 
 ### Unit Tests
 This project uses [Jest](https://jestjs.io/) for unit testing. To write a unit test:
@@ -98,6 +95,11 @@ This project uses [Jest](https://jestjs.io/) for unit testing. To write a unit t
 
 ### Deploy on Vercel
 To deploy your local project to Vercel, push it to public GitHub/GitLab/Bitbucket repository then [import to Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example).
+
+### Questions or New Ideas?
+Check out the [Discussion board](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/discussions). You ask questions or suggest answers in our [Q&A](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/discussions/categories/q-a) board.
+
+---
 
 ## Contributing Guide
 Check out our [Contributing](./CONTRIBUTING.md) guide.

@@ -1,7 +1,7 @@
 import ExportToCsv from "@/components/demo/ExportToCsv"
 import LanguageSelector from "@/components/demo/LanguageSelector"
 import ViewProduct from "@/components/demo/ViewProduct"
-import {Link} from "@/components/navigation/Link"
+import Link from "next/link"
 import ConfirmDelete from "@/components/shared/ConfirmDelete"
 import {Box, Button, Stack} from "@chakra-ui/react"
 import {FormikState} from "formik"

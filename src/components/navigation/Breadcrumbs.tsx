@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react"
 import {useRouter} from "hooks/useRouter"
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink} from "@chakra-ui/react"
-import {Link} from "./Link"
+import Link from "next/link"
 import {ChevronRightIcon} from "@chakra-ui/icons"
 
 export interface Breadcrumb {
@@ -46,9 +46,11 @@ export const Breadcrumbs = () => {
   return (
     <Breadcrumb separator={<ChevronRightIcon color={linkSecondaryColor} />}>
       <BreadcrumbItem>
-        <BreadcrumbLink color={linkSecondaryColor} href="/" as={Link}>
-          Home
-        </BreadcrumbLink>
+        <Link passHref href="/dashboard">
+          <BreadcrumbLink as="a" color={linkSecondaryColor}>
+            Home
+          </BreadcrumbLink>
+        </Link>
       </BreadcrumbItem>
       {breadcrumbs
         .filter((breadcrumb) => breadcrumb && breadcrumb.href)
@@ -56,14 +58,16 @@ export const Breadcrumbs = () => {
           const isLastBreadcrumb = breadcrumbs.length - 1 === index
           return (
             <BreadcrumbItem key={index}>
-              <BreadcrumbLink
-                color={isLastBreadcrumb ? "initial" : linkSecondaryColor}
-                pointerEvents={isLastBreadcrumb ? "none" : "initial"}
-                isCurrentPage={isLastBreadcrumb}
-                href={breadcrumb.href}
-              >
-                {breadcrumb.text}
-              </BreadcrumbLink>
+              <Link passHref href={breadcrumb.href}>
+                <BreadcrumbLink
+                  as="a"
+                  color={isLastBreadcrumb ? "initial" : linkSecondaryColor}
+                  pointerEvents={isLastBreadcrumb ? "none" : "initial"}
+                  isCurrentPage={isLastBreadcrumb}
+                >
+                  {breadcrumb.text}
+                </BreadcrumbLink>
+              </Link>
             </BreadcrumbItem>
           )
         })}

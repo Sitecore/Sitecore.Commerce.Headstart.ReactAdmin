@@ -7,16 +7,13 @@ import {
   AlertDialogOverlay,
   Button,
   HStack,
-  MenuItem,
   Text,
   useDisclosure
 } from "@chakra-ui/react"
 import {useRef} from "react"
 
-interface ViewProductProps {
-  variant?: "button" | "menuitem"
-}
-export default function ViewProduct({variant = "button"}: ViewProductProps) {
+interface ViewProductProps {}
+export default function ViewProduct({}: ViewProductProps) {
   const {isOpen, onOpen, onClose} = useDisclosure()
   const cancelRef = useRef()
 
@@ -27,13 +24,9 @@ export default function ViewProduct({variant = "button"}: ViewProductProps) {
 
   return (
     <>
-      {variant === "button" ? (
-        <Button variant="secondaryButton" onClick={onOpen}>
-          View Product
-        </Button>
-      ) : (
-        <MenuItem onClick={onOpen}>View Product</MenuItem>
-      )}
+      <Button variant="secondaryButton" onClick={onOpen}>
+        View Product
+      </Button>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>

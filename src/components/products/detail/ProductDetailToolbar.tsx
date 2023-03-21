@@ -10,15 +10,24 @@ import {useRouter} from "hooks/useRouter"
 import {Products} from "ordercloud-javascript-sdk"
 import React, {useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
+import {ProductDetailTab} from "./ProductDetail"
 import ViewManager from "./ViewManager"
 
 interface ProductDetailToolbarProps {
   product?: IProduct
   isFormValid?: boolean
   resetForm?: (nextState?: Partial<FormikState<any>>) => void
+  viewVisibility: Record<ProductDetailTab, boolean>
+  setViewVisibility: (update: Record<ProductDetailTab, boolean>) => void
 }
 
-export default function ProductDetailToolbar({product, isFormValid, resetForm}: ProductDetailToolbarProps) {
+export default function ProductDetailToolbar({
+  product,
+  isFormValid,
+  resetForm,
+  viewVisibility,
+  setViewVisibility
+}: ProductDetailToolbarProps) {
   const router = useRouter()
   const [deleteLoading, setDeleteLoading] = useState(false)
 
@@ -37,7 +46,7 @@ export default function ProductDetailToolbar({product, isFormValid, resetForm}: 
 
   return (
     <Stack direction="row" mb={5}>
-      <ViewManager />
+      <ViewManager viewVisibility={viewVisibility} setViewVisibility={setViewVisibility} />
       <Menu>
         <MenuButton aria-label={`Product action menu for ${product?.Name}`} type="button">
           <HStack>

@@ -9,58 +9,85 @@ import {
   CheckboxGroup,
   SimpleGrid,
   Checkbox,
-  Text
+  Text,
+  Popover,
+  PopoverTrigger,
+  Button,
+  PopoverContent,
+  PopoverHeader,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  PopoverFooter,
+  Flex
 } from "@chakra-ui/react"
+import {ChangeEvent, useState} from "react"
+import {ProductDetailTab} from "./ProductDetail"
 
-interface ViewMangerProps {}
+interface ViewManagerProps {
+  viewVisibility: Record<ProductDetailTab, boolean>
+  setViewVisibility: (update: Record<ProductDetailTab, boolean>) => void
+}
 
-export default function ViewManager({}: ViewMangerProps) {
+export default function ViewManager({viewVisibility, setViewVisibility}: ViewManagerProps) {
+  const [visibility, setVisibility] = useState(viewVisibility)
+  const onSubmit = (onClose: () => void) => {
+    setViewVisibility(visibility)
+    onClose()
+  }
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const update = {...visibility, [event.target.value]: event.target.checked}
+    setVisibility(update)
+  }
   return (
-    <Menu>
-      <MenuButton
-        type="button"
-        px={4}
-        py={2}
-        transition="all 0.2s"
-        borderRadius="md"
-        borderWidth="1px"
-        _hover={{bg: "gray.400"}}
-        _expanded={{bg: "blue.400"}}
-        _focus={{boxShadow: "outline"}}
-      >
-        <HStack>
-          <Text>Views </Text>
-          <ChevronDownIcon />
-        </HStack>
-      </MenuButton>
-      <MenuList>
-        <MenuItem>
-          <VStack>
-            <Text>Manage Product Views</Text>
-            <CheckboxGroup>
-              <SimpleGrid columns={3} spacing={3}>
-                <Checkbox value="ProductData" defaultChecked>
-                  Product Data
+    <Popover>
+      {({onClose}) => (
+        <>
+          <PopoverTrigger>
+            <Button>
+              <HStack>
+                <Text>Views </Text>
+                <ChevronDownIcon />
+              </HStack>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverHeader>Manage Product Views</PopoverHeader>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverBody margin={10}>
+              <SimpleGrid columns={2} spacing={3}>
+                <Checkbox value="details" isChecked={visibility.details} onChange={handleChange}>
+                  Details
                 </Checkbox>
-                <Checkbox value="Media" defaultChecked>
+                <Checkbox value="pricing" isChecked={visibility.pricing} onChange={handleChange}>
+                  Pricing
+                </Checkbox>
+                <Checkbox value="variants" isChecked={visibility.variants} onChange={handleChange}>
+                  Variants
+                </Checkbox>
+                <Checkbox value="media" isChecked={visibility.media} onChange={handleChange}>
                   Media
                 </Checkbox>
-                <Checkbox value="ExtededProperties" defaultChecked>
-                  Extended Properties
+                <Checkbox value="facets" isChecked={visibility.facets} onChange={handleChange}>
+                  Facets
                 </Checkbox>
-                <Checkbox value="CatalogAssignments">Catalog Assignments</Checkbox>
-                <Checkbox value="Inventory">Inventory</Checkbox>
-                <Checkbox value="PriceSchedule">Price Schedule</Checkbox>
-                <Checkbox value="Suppliers">Suppliers</Checkbox>
-                <Checkbox value="Sizes">Sizes</Checkbox>
-                <Checkbox value="Specs">Specs</Checkbox>
-                <Checkbox value="Variants">Variants</Checkbox>
-                <Checkbox value="InventoryRecords">Inventory Records</Checkbox>
+                <Checkbox value="seo" isChecked={visibility.seo} onChange={handleChange}>
+                  SEO
+                </Checkbox>
               </SimpleGrid>
-            </CheckboxGroup>
-          </VStack>
-        </MenuItem>
-      </MenuList>
-    </Menu>
+            </PopoverBody>
+            <PopoverFooter>
+              <Flex justifyContent="space-between">
+                <Button onClick={onClose}>Cancel</Button>
+                <Button variant="primaryButton" onClick={() => onSubmit(onClose)}>
+                  Save
+                </Button>
+              </Flex>
+            </PopoverFooter>
+          </PopoverContent>
+        </>
+      )}
+    </Popover>
   )
 }

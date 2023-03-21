@@ -28,8 +28,9 @@ import PanelCard from "components/card/Card"
 import {useSuccessToast} from "hooks/useToast"
 import {IProduct} from "types/ordercloud/IProduct"
 import {useRouter} from "hooks/useRouter"
+import {useState} from "react"
 
-type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "SEO"
+export type ProductDetailTab = "details" | "pricing" | "variants" | "media" | "facets" | "seo"
 
 interface ProductDetailProps {
   showTabbedView?: boolean
@@ -39,6 +40,15 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
   const router = useRouter()
   const successToast = useSuccessToast()
   const isCreatingNew = !Boolean(product?.ID)
+  const initialViewVisibility: Record<ProductDetailTab, boolean> = {
+    details: true,
+    pricing: true,
+    variants: true,
+    media: true,
+    facets: true,
+    seo: true
+  }
+  const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
 
   const initialValues = product
     ? withDefaultValuesFallback({Product: cloneDeep(product)}, defaultValues)
@@ -98,62 +108,72 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
         resetForm
       }) => (
         <Box as="form" onSubmit={handleSubmit as any}>
-          <ProductDetailToolbar product={product} isFormValid={isValid} resetForm={resetForm} />
+          <ProductDetailToolbar
+            product={product}
+            isFormValid={isValid}
+            resetForm={resetForm}
+            viewVisibility={viewVisibility}
+            setViewVisibility={setViewVisibility}
+          />
           {showTabbedView ? (
             <Tabs>
               <TabList>
-                <Tab>Details {tabHasError("Details", errors, touched) && "Tab Error"}</Tab>
-                <Tab>Pricing</Tab>
-                <Tab>Variants</Tab>
-                <Tab>Media</Tab>
-                <Tab>Facets</Tab>
-                <Tab>SEO</Tab>
+                {viewVisibility.details && <Tab>Details {tabHasError("details", errors, touched) && "Tab Error"}</Tab>}
+                {viewVisibility.pricing && <Tab>Pricing</Tab>}
+                {viewVisibility.variants && <Tab>Variants</Tab>}
+                {viewVisibility.media && <Tab>Media</Tab>}
+                {viewVisibility.facets && <Tab>Facets</Tab>}
+                {viewVisibility.seo && <Tab>SEO</Tab>}
               </TabList>
 
               <TabPanels>
-                <TabPanel>
-                  {/* Details Tab */}
-                  <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
-                    <Flex flexFlow="column" flexGrow="1" rowGap={7}>
-                      <SimpleCard title="Details">
-                        <DetailsForm />
-                      </SimpleCard>
-                      <SimpleCard title="Description">
-                        <DescriptionForm />
-                      </SimpleCard>
-                      <SimpleCard title="Unit of Measure">
-                        <UnitOfMeasureForm />
-                      </SimpleCard>
-                      <SimpleCard title="Inventory">
-                        <InventoryForm />
-                      </SimpleCard>
-                      <SimpleCard title="Shipping">
-                        <ShippingForm product={product} />
-                      </SimpleCard>
+                {viewVisibility.details && (
+                  <TabPanel>
+                    {/* Details Tab */}
+                    <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
+                      <Flex flexFlow="column" flexGrow="1" rowGap={7}>
+                        <SimpleCard title="Details">
+                          <DetailsForm />
+                        </SimpleCard>
+                        <SimpleCard title="Description">
+                          <DescriptionForm />
+                        </SimpleCard>
+                        <SimpleCard title="Unit of Measure">
+                          <UnitOfMeasureForm />
+                        </SimpleCard>
+                        <SimpleCard title="Inventory">
+                          <InventoryForm />
+                        </SimpleCard>
+                        <SimpleCard title="Shipping">
+                          <ShippingForm product={product} />
+                        </SimpleCard>
+                      </Flex>
+                      <Box>
+                        <SimpleCard>
+                          <ImagePreview images={product?.xp?.Images} />
+                        </SimpleCard>
+                      </Box>
                     </Flex>
-                    <Box>
-                      <SimpleCard>
-                        <ImagePreview images={product?.xp?.Images} />
-                      </SimpleCard>
-                    </Box>
-                  </Flex>
-                </TabPanel>
+                  </TabPanel>
+                )}
               </TabPanels>
             </Tabs>
           ) : (
             <Flex gap={3} flexDirection="column">
-              <PanelCard width={{base: "100%", xl: "50%"}} variant="primaryCard" closedText="Details">
-                <Heading marginBottom={5}>Details</Heading>
-                <DetailsForm />
-                <Divider marginY={5} />
-                <DescriptionForm />
-                <Divider marginY={5} />
-                <UnitOfMeasureForm />
-                <Divider marginY={5} />
-                <InventoryForm />
-                <Divider marginY={5} />
-                <ShippingForm product={product} />
-              </PanelCard>
+              {viewVisibility.details && (
+                <PanelCard width={{base: "100%", xl: "50%"}} variant="primaryCard" closedText="Details">
+                  <Heading marginBottom={5}>Details</Heading>
+                  <DetailsForm />
+                  <Divider marginY={5} />
+                  <DescriptionForm />
+                  <Divider marginY={5} />
+                  <UnitOfMeasureForm />
+                  <Divider marginY={5} />
+                  <InventoryForm />
+                  <Divider marginY={5} />
+                  <ShippingForm product={product} />
+                </PanelCard>
+              )}
             </Flex>
           )}
         </Box>

@@ -9,6 +9,7 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -41,12 +42,18 @@ export interface IDataTable<T> {
   rowActions?: (rowData: T) => ListViewTemplate
 }
 
+const DEFAULT_DATA_TABLE_EMPTY_DISPLAY: ReactElement = (
+  <Center h={100}>
+    <Text>No Data</Text>
+  </Center>
+)
+
 const DataTable = <T extends IDefaultResource>({
   columns,
   data,
   loading,
   currentSort,
-  emptyDisplay,
+  emptyDisplay = DEFAULT_DATA_TABLE_EMPTY_DISPLAY,
   rowActions,
   onSortChange,
   onSelectChange,
@@ -106,7 +113,23 @@ const DataTable = <T extends IDefaultResource>({
   }
 
   return (
-    <TableContainer position="relative" width={"full"} rounded={8} bg={tableHeaderBg} color={tableColor}>
+    <TableContainer position="relative" width={"full"} rounded={8} bg={tableHeaderBg} color={tableColor} minH={160}>
+      {loading && (
+        <Box
+          position="absolute"
+          zIndex={2}
+          left={0}
+          right={0}
+          top={0}
+          bottom={0}
+          pointerEvents="none"
+          bgColor="whiteAlpha.700"
+        >
+          <Center h="100%" color="teal">
+            <Spinner size="xl" />
+          </Center>
+        </Box>
+      )}
       <Table role="table" variant="simple">
         <Thead>
           <Tr role="row">
@@ -153,22 +176,8 @@ const DataTable = <T extends IDefaultResource>({
             {rowActions && <Th />}
           </Tr>
         </Thead>
-        <Tbody role="rowgroup" position="relative" h={20}>
-          {loading && (
-            <Box
-              position="absolute"
-              left={0}
-              right={0}
-              top={0}
-              bottom={0}
-              pointerEvents="none"
-              bgColor="whiteAlpha.700"
-            >
-              <Center h="100%">
-                <Spinner size="xl" />
-              </Center>
-            </Box>
-          )}
+
+        <Tbody role="rowgroup" position="relative" minH={100}>
           {rows.map((row, rowIndex) => (
             <Tr key={rowIndex} role="row">
               {onSelectChange && (

@@ -1,10 +1,11 @@
-import {Box, Center, Grid, GridItem, Heading, Spinner, VStack} from "@chakra-ui/react"
+import {Box, Center, Grid, GridItem, Heading, Spinner, Text, VStack} from "@chakra-ui/react"
 import {ReactElement} from "react"
 import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
 
 export interface IDataGrid<T extends IDefaultResource> {
   data: T[]
   loading?: boolean
+  emptyDisplay?: ListViewTemplate
   columns?: number
   gap?: number
   selected?: string[]
@@ -18,9 +19,9 @@ export interface IDataGrid<T extends IDefaultResource> {
     onSelectChange?: (id: string, isSelected: boolean) => void
   ) => ReactElement
 }
-const DEFAULT_GRID_COLUMNS = 4
-const DEFAULT_GRID_GAP = 2
-const DEFAULT_RENDER_GRID_ITEM = (o: IDefaultResource, i: number) => (
+const DEFAULT_DATA_GRID__COLUMNS = 4
+const DEFAULT_DATA_GRID__GRID_GAP = 2
+const DEFAULT_DATA_GRID__RENDER_GRID_ITEM = (o: IDefaultResource, i: number) => (
   <VStack
     h="full"
     justifyContent="space-between"
@@ -37,13 +38,20 @@ const DEFAULT_RENDER_GRID_ITEM = (o: IDefaultResource, i: number) => (
   </VStack>
 )
 
+const DEFAULT_DATA_GRID__EMPTY_DISPLAY: ReactElement = (
+  <Center h={100}>
+    <Text>No Data</Text>
+  </Center>
+)
+
 const DataGrid = <T extends IDefaultResource>({
   data,
   loading,
-  columns = DEFAULT_GRID_COLUMNS,
-  gap = DEFAULT_GRID_GAP,
+  emptyDisplay = DEFAULT_DATA_GRID__EMPTY_DISPLAY,
+  columns = DEFAULT_DATA_GRID__COLUMNS,
+  gap = DEFAULT_DATA_GRID__GRID_GAP,
   gridItemActions,
-  renderGridItem = DEFAULT_RENDER_GRID_ITEM,
+  renderGridItem = DEFAULT_DATA_GRID__RENDER_GRID_ITEM,
   selected,
   onSelectChange
 }: IDataGrid<T>) => {
@@ -55,7 +63,7 @@ const DataGrid = <T extends IDefaultResource>({
       templateColumns={`repeat(${columns}, 1fr)`}
       w="full"
       width="100%"
-      minH={30}
+      minH={100}
     >
       {loading && (
         <Box
@@ -68,7 +76,7 @@ const DataGrid = <T extends IDefaultResource>({
           pointerEvents="none"
           bgColor="whiteAlpha.700"
         >
-          <Center h="100%">
+          <Center h="100%" color="teal">
             <Spinner size="xl" />
           </Center>
         </Box>
@@ -89,6 +97,20 @@ const DataGrid = <T extends IDefaultResource>({
             {renderGridItem(o, i, gridItemActions, selected.includes(o.ID), onSelectChange)}
           </GridItem>
         ))}
+      {!loading && !data.length && (
+        <GridItem
+          colSpan={columns}
+          rowSpan={1}
+          bg="gridCellBg"
+          w="full"
+          width="100%"
+          rounded="lg"
+          overflow="h"
+          borderStyle="none"
+        >
+          {emptyDisplay}
+        </GridItem>
+      )}
     </Grid>
   )
 }

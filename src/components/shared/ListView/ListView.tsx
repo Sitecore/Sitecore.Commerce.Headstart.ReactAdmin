@@ -51,13 +51,13 @@ export interface ListViewChildrenProps {
 }
 
 const DEFAULT_NO_RESULTS_MESSAGE: ReactElement = (
-  <Center>
+  <Center h={100}>
     <Text>No results. Try clearing your search and/or filters.</Text>
   </Center>
 )
 
 const DEFAULT_NO_DATA_MESSAGE: ReactElement = (
-  <Center>
+  <Center h={100}>
     <Text>Nothing here yet. Try creating a new item first.</Text>
   </Center>
 )
@@ -75,17 +75,11 @@ const ListView = <T extends IDefaultResource>({
   noResultsMessage = DEFAULT_NO_RESULTS_MESSAGE,
   noDataMessage = DEFAULT_NO_DATA_MESSAGE
 }: IListView<T>) => {
-  const [refreshCount, setRefreshCount] = useState(0)
   const [data, setData] = useState<(T extends Product ? ListPageWithFacets<T> : ListPage<T>) | undefined>()
   const [viewMode, setViewMode] = useState<"grid" | "table">(initialViewMode)
   const [selected, setSelected] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const invertedQueryMap = invert(queryMap)
-
-  const refresh = useCallback(() => {
-    if (loading) return
-    setRefreshCount((c) => c + 1)
-  }, [loading])
 
   const handleSelectChange = useCallback((changed: string | string[], isSelected: boolean) => {
     let changedIds = typeof changed === "string" ? [changed] : changed
@@ -119,7 +113,6 @@ const ListView = <T extends IDefaultResource>({
 
   const fetchData = useCallback(async () => {
     let response
-    console.log("Refresh Count", refreshCount)
     setLoading(true)
     const listOptions = {
       ...params.queryParams,
@@ -132,7 +125,7 @@ const ListView = <T extends IDefaultResource>({
     }
     setData(response)
     setLoading(false)
-  }, [service, params, refreshCount])
+  }, [service, params])
 
   useEffect(() => {
     if (isReady) {
@@ -241,6 +234,7 @@ const ListView = <T extends IDefaultResource>({
             <DataGrid
               {...gridOptions}
               loading={loading}
+              emptyDisplay={isSearching ? noResultsMessage : noDataMessage}
               gridItemActions={itemActions}
               data={data && data.Items}
               selected={selected}

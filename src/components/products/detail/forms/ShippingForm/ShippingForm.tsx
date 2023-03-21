@@ -10,11 +10,9 @@ import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
 
-type ShippingFormProps = {
-  product: IProduct
-}
+type ShippingFormProps = {}
 
-export function ShippingForm({product}: ShippingFormProps) {
+export function ShippingForm({}: ShippingFormProps) {
   const [sellerCompanyIds, setSellerCompanyIds] = useState([] as string[])
   const [sellerAddress, setSellerAddresses] = useState([] as (IAdminAddress | ISupplierAddress)[])
   const [loading, setLoading] = useState(false)

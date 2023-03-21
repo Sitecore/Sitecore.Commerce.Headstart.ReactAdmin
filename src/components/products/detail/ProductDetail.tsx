@@ -55,8 +55,6 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
     : makeNestedObject(defaultValues)
 
   const onSubmit = async (fields, {setSubmitting}) => {
-    let product: IProduct
-
     if (isCreatingNew) {
       product = await Products.Create<IProduct>(fields.Product)
     } else {
@@ -145,7 +143,7 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
                           <InventoryForm />
                         </SimpleCard>
                         <SimpleCard title="Shipping">
-                          <ShippingForm product={product} />
+                          <ShippingForm />
                         </SimpleCard>
                       </Flex>
                       <Box>
@@ -171,7 +169,7 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
                   <Divider marginY={5} />
                   <InventoryForm />
                   <Divider marginY={5} />
-                  <ShippingForm product={product} />
+                  <ShippingForm />
                 </PanelCard>
               )}
             </Flex>

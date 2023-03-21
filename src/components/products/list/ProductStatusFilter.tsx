@@ -13,8 +13,8 @@ const ProductStatusFilter: FC<IProductStatusFilter> = ({value, onChange}) => {
       <MenuButton as={Button} variant="secondaryButton" colorScheme="white">
         <HStack>
           <Text>Status</Text>
-          <Tag size="sm" colorScheme={value.length ? (value === "true" ? "green" : "red") : "gray"}>
-            {value.length ? (value === "true" ? "Active" : "Inactive") : "Any"}
+          <Tag size="sm" colorScheme={value && value.length ? (value === "true" ? "green" : "red") : "gray"}>
+            {value && value.length ? (value === "true" ? "Active" : "Inactive") : "Any"}
           </Tag>
           <ChevronDownIcon />
         </HStack>

@@ -23,6 +23,7 @@ export type ListViewTemplate = ReactElement | ReactElement[] | string
 
 interface IListView<T, F = any> {
   initialViewMode?: "grid" | "table"
+  defaultServiceOptions?: {parameters?: string[]; listOptions?: {[key: string]: string}}
   service?: (...args) => Promise<T extends Product ? ListPageWithFacets<T, F> : ListPage<T>>
   itemActions?: (item: T) => ListViewTemplate
   tableOptions: ListViewTableOptions<T>
@@ -63,6 +64,7 @@ const DEFAULT_NO_DATA_MESSAGE: ReactElement = (
 )
 
 const ListView = <T extends IDefaultResource>({
+  defaultServiceOptions,
   service,
   paramMap,
   queryMap,
@@ -114,18 +116,20 @@ const ListView = <T extends IDefaultResource>({
   const fetchData = useCallback(async () => {
     let response
     setLoading(true)
+    const {parameters: defaultParameters = [], listOptions: defaultListOptions = {}} = defaultServiceOptions || {}
     const listOptions = {
+      ...defaultListOptions,
       ...params.queryParams,
       filters: params.filterParams
     }
-    if (Object.values(params.routeParams).length) {
-      response = await service(...Object.values(params.routeParams), listOptions)
+    if (Object.values(params.routeParams).length || defaultParameters.length) {
+      response = await service(...defaultParameters, ...Object.values(params.routeParams), listOptions)
     } else {
       response = await service(listOptions)
     }
     setData(response)
     setLoading(false)
-  }, [service, params])
+  }, [service, params, defaultServiceOptions])
 
   useEffect(() => {
     if (isReady) {
@@ -174,14 +178,18 @@ const ListView = <T extends IDefaultResource>({
 
   const handleUpdateQuery = useCallback(
     (queryKey: string, resetPage?: boolean) => (value: string | boolean | number) => {
-      push({
-        pathname: pathname,
-        query: {
-          ...query,
-          [invertedQueryMap["Page"]]: resetPage ? 1 : query[invertedQueryMap["Page"]],
-          [queryKey]: value
-        }
-      })
+      push(
+        {
+          pathname: pathname,
+          query: {
+            ...query,
+            [invertedQueryMap["Page"]]: resetPage ? 1 : query[invertedQueryMap["Page"]],
+            [queryKey]: value
+          }
+        },
+        undefined,
+        {shallow: true}
+      )
     },
     [push, pathname, query, invertedQueryMap]
   )

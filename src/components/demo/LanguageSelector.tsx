@@ -7,17 +7,14 @@ import {
   AlertDialogOverlay,
   Button,
   HStack,
-  MenuItem,
   Select,
   Text,
   useDisclosure
 } from "@chakra-ui/react"
 import {useRef} from "react"
 
-interface LanguageSelectorProps {
-  variant?: "button" | "menuitem"
-}
-export default function LanguageSelector({variant}: LanguageSelectorProps) {
+interface LanguageSelectorProps {}
+export default function LanguageSelector({}: LanguageSelectorProps) {
   const {isOpen, onOpen, onClose} = useDisclosure()
   const cancelRef = useRef()
 
@@ -28,13 +25,9 @@ export default function LanguageSelector({variant}: LanguageSelectorProps) {
 
   return (
     <>
-      {variant === "button" ? (
-        <Button variant="secondaryButton" onClick={onOpen}>
-          Switch Language
-        </Button>
-      ) : (
-        <MenuItem onClick={onOpen}>Switch Language</MenuItem>
-      )}
+      <Button variant="secondaryButton" onClick={onOpen}>
+        Switch Language
+      </Button>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>

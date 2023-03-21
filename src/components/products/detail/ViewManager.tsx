@@ -1,12 +1,6 @@
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {
-  Menu,
-  MenuButton,
   HStack,
-  MenuList,
-  MenuItem,
-  VStack,
-  CheckboxGroup,
   SimpleGrid,
   Checkbox,
   Text,
@@ -44,7 +38,7 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
       {({onClose}) => (
         <>
           <PopoverTrigger>
-            <Button>
+            <Button variant="secondaryButton">
               <HStack>
                 <Text>Views </Text>
                 <ChevronDownIcon />

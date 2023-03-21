@@ -3,8 +3,7 @@ import LanguageSelector from "@/components/demo/LanguageSelector"
 import ViewProduct from "@/components/demo/ViewProduct"
 import {Link} from "@/components/navigation/Link"
 import ConfirmDelete from "@/components/shared/ConfirmDelete"
-import {ChevronDownIcon} from "@chakra-ui/icons"
-import {Box, Button, HStack, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, Text} from "@chakra-ui/react"
+import {Box, Button, Stack} from "@chakra-ui/react"
 import {FormikState} from "formik"
 import {useRouter} from "hooks/useRouter"
 import {Products} from "ordercloud-javascript-sdk"
@@ -47,24 +46,13 @@ export default function ProductDetailToolbar({
   return (
     <Stack direction="row" mb={5}>
       <ViewManager viewVisibility={viewVisibility} setViewVisibility={setViewVisibility} />
-      <Menu>
-        <MenuButton aria-label={`Product action menu for ${product?.Name}`} type="button">
-          <HStack>
-            <Text>Actions </Text>
-            <ChevronDownIcon />
-          </HStack>
-        </MenuButton>
-        <MenuList>
-          <Link href="/products/new">
-            <MenuItem>Create</MenuItem>
-          </Link>
-          <ViewProduct variant="menuitem" />
-          <ExportToCsv variant="menuitem" />
-          <LanguageSelector variant="menuitem" />
-          <MenuDivider />
-          <ConfirmDelete variant="menuitem" deleteText="Delete Product" loading={deleteLoading} onDelete={onDelete} />
-        </MenuList>
-      </Menu>
+      <Link href="/products/new">
+        <Button variant="secondaryButton">Create</Button>
+      </Link>
+      <ViewProduct />
+      <ExportToCsv />
+      <LanguageSelector />
+      <ConfirmDelete deleteText="Delete Product" loading={deleteLoading} onDelete={onDelete} />
       <Box as="span" flexGrow="1"></Box>
 
       <Button type="button" onClick={discardChanges}>

@@ -34,7 +34,7 @@ Create an OrderCloud Marketplace instance (https://portal.ordercloud.io)
 ## How do I get started? 
 Using the Deploy Button below, you'll deploy on Vercel the Next.js project as well as connect it to your Sitecore Commerce OrderCloud sandbox.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin&env=NEXT_PUBLIC_APP_NAME,NEXT_PUBLIC_OC_CLIENT_ID,NEXT_PUBLIC_OC_API_URL,NEXT_PUBLIC_OC_MARKETPLACE_ID,NEXT_PUBLIC_OC_MARKETPLACE_NAME,NEXT_PUBLIC_OC_USELIVEANALYTICSDATA&envDescription=Environment%20Variables%20Description&envLink=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%23working-locally&project-name=sitecore-commerce-headstart-reactadmin&repository-name=Sitecore.Commerce.Headstart.ReactAdmin&demo-title=Sitecore%20Commerce%20Headstart%20ReactAdmin&demo-description=This%20is%20a%20basic%20implementation%20of%20Sitecore%20Commerce%20using%20the%20OrderCloud%20Javascript%20SDK.%20You%20can%20use%20it%20as%20a%20starting%20point%20to%20discover%2C%20understand%2C%20and%20learn%20more%20about%20the%20Sitecore%20Commerce%20OrderCloud%20capabilities.&demo-url=sitecore-commerce-headstart-react-admin.vercel.app&demo-image=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%2Fblob%2Fmain%2Fpublic%2Fimages%2Fdemo-image.png)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin&env=NEXT_PUBLIC_APP_NAME,NEXT_PUBLIC_OC_CLIENT_ID,NEXT_PUBLIC_OC_API_URL,NEXT_PUBLIC_OC_MARKETPLACE_ID,NEXT_PUBLIC_OC_MARKETPLACE_NAME,NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED&project-name=sitecore-commerce-headstart-reactadmin&repository-name=Sitecore.Commerce.Headstart.ReactAdmin&demo-title=OrderCloud%20Admin%20App&demo-description=An%20ecommerce%20admin%20app%20built%20on%20Sitecore%20OrderCloud&demo-url=sitecore-commerce-headstart-react-admin.vercel.app&demo-image=https%3A%2F%2Fraw.githubusercontent.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%2Fmain%2Fpublic%2Fimages%2Fdemo-image.png)
 
 ## Working locally
 1. Using this repository as a template, create a new repository.
@@ -51,7 +51,7 @@ Then set each variable on `.env.local`:
 `NEXT_PUBLIC_OC_API_URL`='https://sandboxapi.ordercloud.io' Sandbox URL from portal.ordercloud.io  
 `NEXT_PUBLIC_OC_MARKETPLACE_ID` 
 `NEXT_PUBLIC_OC_MARKETPLACE_NAME`
-`NEXT_PUBLIC_OC_USELIVEANALYTICSDATA`='false'
+`NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED`='true' Whether product detail should used tabbed UI or single page UI
 
 Your `.env.local` file should look like this:
 
@@ -61,7 +61,7 @@ NEXT_PUBLIC_OC_CLIENT_ID='****0BAC-****-4711-B01F-1A**4F7*****'
 NEXT_PUBLIC_OC_API_URL='https://sandboxapi.ordercloud.io'
 NEXT_PUBLIC_OC_MARKETPLACE_ID='SitecoreCommerce'
 NEXT_PUBLIC_OC_MARKETPLACE_NAME='Sitecore Commerce'
-NEXT_PUBLIC_OC_USELIVEANALYTICSDATA='false'
+NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED='true'
 ```
 
 3. Run Next.js in development mode

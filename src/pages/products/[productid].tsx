@@ -26,9 +26,23 @@ const ProductDetailPage = () => {
   const [loading, setLoading] = useState(true)
   const [showTabbedView, setShowTabbedView] = useState(true)
 
+  const shouldShowTabbedView = (query?: string) => {
+    if (query === "true" || query === "false") {
+      return query === "true"
+    } else if (
+      process.env.NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED === "false" ||
+      process.env.NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED === "true"
+    ) {
+      return process.env.NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED === "true"
+    } else {
+      return true
+    }
+  }
+
   useEffect(() => {
     if (isReady) {
-      setShowTabbedView(query?.tabbed?.toString() !== "false")
+      const showTabbedView = shouldShowTabbedView(query?.tabbed?.toString())
+      setShowTabbedView(showTabbedView)
       setLoading(false)
     }
   }, [isReady, query])

@@ -1,6 +1,6 @@
 import {Box, Center, Grid, GridItem, Heading, Spinner, VStack} from "@chakra-ui/react"
 import {ReactElement} from "react"
-import {IDefaultResource} from "../ListView/ListView"
+import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
 
 export interface IDataGrid<T extends IDefaultResource> {
   data: T[]
@@ -9,11 +9,11 @@ export interface IDataGrid<T extends IDefaultResource> {
   gap?: number
   selected?: string[]
   onSelectChange?: (id: string, isSelected: boolean) => void
-  gridItemActions?: (itemData: T) => ReactElement
+  gridItemActions?: (itemData: T) => ListViewTemplate
   renderGridItem?: (
     item: T,
     index: number,
-    gridItemActions?: (itemData: T) => ReactElement,
+    gridItemActions?: (itemData: T) => ListViewTemplate,
     isSelected?: boolean,
     onSelectChange?: (id: string, isSelected: boolean) => void
   ) => ReactElement

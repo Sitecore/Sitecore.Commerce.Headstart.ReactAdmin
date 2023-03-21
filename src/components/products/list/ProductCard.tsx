@@ -1,26 +1,13 @@
-import {CheckIcon, CloseIcon} from "@chakra-ui/icons"
-import {
-  Checkbox,
-  Flex,
-  Heading,
-  Image,
-  Spacer,
-  Text,
-  Tooltip,
-  VStack,
-  useColorModeValue,
-  HStack,
-  Badge
-} from "@chakra-ui/react"
-import {textHelper} from "utils/text.utils"
+import {Badge, Checkbox, Flex, Heading, Image, Spacer, Text, Tooltip, useColorModeValue, VStack} from "@chakra-ui/react"
 import {Product} from "ordercloud-javascript-sdk"
+import {textHelper} from "utils/text.utils"
 import {Link} from "../../navigation/Link"
 
 interface ProductCardProps {
   product: Product
   selected: boolean
   onProductSelected: (productId: string, selected: boolean) => void
-  renderProductActions?: (product: Product) => React.ReactElement
+  renderProductActions?: (product: Product) => React.ReactElement | React.ReactElement[] | string
 }
 const ProductCard = (props: ProductCardProps) => {
   const {product, renderProductActions} = props

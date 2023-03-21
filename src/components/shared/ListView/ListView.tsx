@@ -1,4 +1,4 @@
-import {Box, ButtonGroup, Center, IconButton, Stack, Text} from "@chakra-ui/react"
+import {Box, ButtonGroup, Center, IconButton} from "@chakra-ui/react"
 import {invert, union, without} from "lodash"
 import {useRouter} from "next/router"
 import {ListPage, ListPageWithFacets, Meta, Product} from "ordercloud-javascript-sdk"
@@ -24,7 +24,7 @@ export type ListViewTemplate = ReactElement | ReactElement[] | string
 interface IListView<T, F = any> {
   initialViewMode?: "grid" | "table"
   service?: (...args) => Promise<T extends Product ? ListPageWithFacets<T, F> : ListPage<T>>
-  itemActions: (item: T) => ReactElement
+  itemActions?: (item: T) => ListViewTemplate
   tableOptions: ListViewTableOptions<T>
   gridOptions?: ListViewGridOptions<T>
   paramMap?: {[key: string]: string}
@@ -37,6 +37,7 @@ interface IListView<T, F = any> {
 
 export interface ListViewChildrenProps {
   meta?: Meta
+  items?: any[] //TODO can we make this strongly typed?
   viewModeToggle: React.ReactElement
   updateQuery: (queryKey: string, resetPage?: boolean) => (value: string | boolean | number) => void
   routeParams: any
@@ -104,7 +105,6 @@ const ListView = <T extends IDefaultResource>({
       filters: params.filterParams
     }
     if (Object.values(params.routeParams).length) {
-      console.log(listOptions)
       response = await service(...Object.values(params.routeParams), listOptions)
     } else {
       response = await service(listOptions)
@@ -243,6 +243,7 @@ const ListView = <T extends IDefaultResource>({
   const childrenProps = useMemo(() => {
     return {
       viewModeToggle,
+      items: data ? data.Items : undefined,
       meta: data ? data.Meta : undefined,
       updateQuery: handleUpdateQuery,
       routeParams: params.routeParams,

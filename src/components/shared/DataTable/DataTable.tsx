@@ -4,7 +4,6 @@ import {
   Checkbox,
   Flex,
   Icon,
-  ModalOverlay,
   Spinner,
   Table,
   TableContainer,
@@ -18,7 +17,7 @@ import {
 import get from "lodash/get"
 import {ReactElement, useMemo} from "react"
 import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from "react-icons/ti"
-import {IDefaultResource} from "../ListView/ListView"
+import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
 
 export interface DataTableColumn<T> {
   header: string
@@ -34,12 +33,12 @@ export interface IDataTable<T> {
   data: T[]
   loading?: boolean
   selected?: string[]
-  emptyDisplay?: ReactElement | ReactElement[] | string
+  emptyDisplay?: ListViewTemplate
   onSelectChange?: (changedIds: string[] | string, isSelected: boolean) => void
   columns: DataTableColumn<T>[]
   currentSort?: string
   onSortChange: (sortKey: string, isSorted: boolean, isSortedDesc: boolean) => void
-  rowActions?: (rowData: T) => ReactElement
+  rowActions?: (rowData: T) => ListViewTemplate
 }
 
 const DataTable = <T extends IDefaultResource>({

@@ -1,4 +1,5 @@
-import {Box, Button, Stack} from "@chakra-ui/react"
+import {Box, Button, Stack, Text} from "@chakra-ui/react"
+import Link from "next/link"
 import {FC} from "react"
 import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"
 import {ListViewChildrenProps} from "../../shared/ListView/ListView"
@@ -31,7 +32,11 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
         {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
         <Box as="span" width="2"></Box>
         {viewModeToggle}
-        <Button variant="primaryButton">Create Product</Button>
+        <Link passHref href="/products/new">
+          <Button variant="solid" colorScheme="teal" fontSize="sm" as="a">
+            Create Product
+          </Button>
+        </Link>
       </Stack>
     </>
   )

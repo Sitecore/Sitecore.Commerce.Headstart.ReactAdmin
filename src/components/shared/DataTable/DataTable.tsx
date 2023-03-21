@@ -88,7 +88,7 @@ const DataTable = <T extends IDefaultResource>({
 
   const indeterminateSelectAll = useMemo(() => {
     if (!data) return false
-    return selected.length && selected.length !== data.length
+    return selected.length && selected.length < data.length
   }, [selected, data])
 
   const columnCount = useMemo(() => {
@@ -115,7 +115,7 @@ const DataTable = <T extends IDefaultResource>({
                 <Checkbox
                   isIndeterminate={indeterminateSelectAll}
                   colorScheme={indeterminateSelectAll ? "gray" : "blue"}
-                  isChecked={data && data.length === selected.length}
+                  isChecked={data && data.length <= selected.length}
                   onChange={(e) => handleSelectAllChange(e.target.checked)}
                 />
               </Th>
@@ -184,7 +184,7 @@ const DataTable = <T extends IDefaultResource>({
                   {cell.value}
                 </Td>
               ))}
-              {rowActions && <Td>{rowActions(row.data)}</Td>}
+              {rowActions && <Td width="1%">{rowActions(row.data)}</Td>}
             </Tr>
           ))}
           {!loading && !rows.length && (

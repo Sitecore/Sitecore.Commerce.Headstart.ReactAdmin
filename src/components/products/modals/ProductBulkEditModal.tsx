@@ -1,13 +1,13 @@
 import {
   Badge,
   Button,
+  Center,
   Collapse,
   Divider,
   FormControl,
   FormLabel,
   Heading,
   HStack,
-  Image,
   List,
   ListItem,
   Modal,
@@ -19,47 +19,53 @@ import {
   ModalOverlay,
   Radio,
   RadioGroup,
+  Spinner,
   Tag,
   Text,
   UseDisclosureProps,
   VStack
 } from "@chakra-ui/react"
-import {FC, useMemo, useState} from "react"
+import {Products} from "ordercloud-javascript-sdk"
+import {FC, useEffect, useState, useCallback} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
+import ProductThumbnail from "../list/ProductThumbnail"
 
 interface IProductBulkEditModal {
   products?: IProduct[]
   disclosure: UseDisclosureProps
+  onComplete: (updated: IProduct[]) => void
 }
 
-const ProductThumbnail = ({product, width = "50px"}) => {
-  const value = useMemo(() => {
-    if (product && product.xp && product.xp.Images) {
-      return product.xp.Images
-    }
-  }, [product])
-  return (
-    <Image
-      src={
-        value && value.length
-          ? value[0]?.ThumbnailUrl ?? value[0]?.Url
-          : "https://mss-p-006-delivery.stylelabs.cloud/api/public/content/4fc742feffd14e7686e4820e55dbfbaa"
-      }
-      alt="product image"
-      width={width}
-    />
-  )
-}
-
-const ProductBulkEditModal: FC<IProductBulkEditModal> = ({products, disclosure}) => {
+const ProductBulkEditModal: FC<IProductBulkEditModal> = ({products, disclosure, onComplete}) => {
   const {isOpen, onClose} = disclosure
   const [showProducts, setShowProducts] = useState(false)
-  const [value, setValue] = useState<string>()
+  const [loading, setLoading] = useState(false)
+  const [value, setValue] = useState<boolean>()
+
+  useEffect(() => {
+    if (!isOpen) {
+      setLoading(false)
+      setShowProducts(false)
+      setValue(undefined)
+    }
+  }, [isOpen])
+
+  const handleUpdateProducts = useCallback(async () => {
+    setLoading(true)
+    const updatedProducts = await Promise.all(products.map((p) => Products.Patch(p.ID, {Active: Boolean(value)})))
+    onComplete(updatedProducts)
+    onClose()
+  }, [products, value, onComplete, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
+        {loading && (
+          <Center position="absolute" left={0} w="full" h="full" bg="whiteAlpha.500" zIndex={2} color="teal">
+            <Spinner></Spinner>
+          </Center>
+        )}
         <ModalHeader>Bulk Edit</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -92,7 +98,12 @@ const ProductBulkEditModal: FC<IProductBulkEditModal> = ({products, disclosure})
           </Collapse>
           <FormControl>
             <FormLabel>Status</FormLabel>
-            <RadioGroup onChange={setValue} value={value}>
+            <RadioGroup
+              onChange={(newValue: string) => {
+                setValue(newValue === "true")
+              }}
+              value={String(value)}
+            >
               <HStack>
                 <Radio value="true">Active</Radio>
                 <Radio value="false">Inactive</Radio>
@@ -104,7 +115,13 @@ const ProductBulkEditModal: FC<IProductBulkEditModal> = ({products, disclosure})
           <Button variant="ghost" fontSize="sm" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="solid" fontSize="sm" colorScheme="teal" isDisabled={typeof value !== "string"}>
+          <Button
+            variant="solid"
+            fontSize="sm"
+            colorScheme="teal"
+            isDisabled={typeof value === "undefined"}
+            onClick={handleUpdateProducts}
+          >
             Update Products
           </Button>
         </ModalFooter>

@@ -15,7 +15,7 @@ interface IProductActionMenu {
 
 const ProductActionMenu: FC<IProductActionMenu> = ({product, onOpen, onClose, onDelete, onPromote}) => {
   return (
-    <Menu isLazy onOpen={onOpen} onClose={onClose}>
+    <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
       <MenuButton
         as={IconButton}
         aria-label={`Product action menu for ${product.Name}`}
@@ -33,10 +33,6 @@ const ProductActionMenu: FC<IProductActionMenu> = ({product, onOpen, onClose, on
         <MenuItem color="blue.500" justifyContent="space-between" onClick={onPromote}>
           Promote <SettingsIcon />
         </MenuItem>
-        {/* <MenuItem justifyContent="space-between" color={product.Active ? "orange.500" : "green.500"}>
-          {product.Active ? "Deactivate" : "Activate"}
-          {product.Active ? <NotAllowedIcon /> : <CheckCircleIcon />}
-        </MenuItem> */}
         <MenuDivider />
         <MenuItem justifyContent="space-between" color="red.500" onClick={onDelete}>
           Delete <DeleteIcon />

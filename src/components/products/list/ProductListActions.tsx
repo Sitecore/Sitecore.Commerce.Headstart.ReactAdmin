@@ -37,9 +37,6 @@ const ProductListActions: FC<IProductListActions> = ({selected, onBulkPromote, o
         >
           Promote Products <SettingsIcon />
         </MenuItem>
-        {/* <MenuItem justifyContent="space-between" color="red.500" isDisabled={!hasBulkSelection}>
-          Delete Products <DeleteIcon />
-        </MenuItem> */}
       </MenuList>
     </Menu>
   )

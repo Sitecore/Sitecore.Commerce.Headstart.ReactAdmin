@@ -137,10 +137,12 @@ const ProductList = () => {
           />
           {renderContent}
           <ProductBulkEditModal
+            onComplete={listViewChildProps.upsertItems}
             products={items ? items.filter((p) => listViewChildProps.selected.includes(p.ID)) : []}
             disclosure={editDisclosure}
           />
           <ProductDeleteModal
+            onComplete={listViewChildProps.removeItems}
             products={
               actionProduct
                 ? [actionProduct]

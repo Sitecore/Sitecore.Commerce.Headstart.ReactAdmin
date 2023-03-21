@@ -1,4 +1,4 @@
-import {Box, ButtonGroup, Center, IconButton} from "@chakra-ui/react"
+import {Box, ButtonGroup, Center, IconButton, Text} from "@chakra-ui/react"
 import {invert, union, without} from "lodash"
 import {useRouter} from "next/router"
 import {ListPage, ListPageWithFacets, Meta, Product} from "ordercloud-javascript-sdk"
@@ -40,6 +40,8 @@ export interface ListViewChildrenProps {
   items?: any[] //TODO can we make this strongly typed?
   viewModeToggle: React.ReactElement
   updateQuery: (queryKey: string, resetPage?: boolean) => (value: string | boolean | number) => void
+  upsertItems: (items: any[]) => void
+  removeItems: (itemIds: string[]) => void
   routeParams: any
   queryParams: any
   filterParams: any
@@ -47,6 +49,18 @@ export interface ListViewChildrenProps {
   loading: boolean
   renderContent: ListViewTemplate
 }
+
+const DEFAULT_NO_RESULTS_MESSAGE: ReactElement = (
+  <Center>
+    <Text>No results. Try clearing your search and/or filters.</Text>
+  </Center>
+)
+
+const DEFAULT_NO_DATA_MESSAGE: ReactElement = (
+  <Center>
+    <Text>Nothing here yet. Try creating a new item first.</Text>
+  </Center>
+)
 
 const ListView = <T extends IDefaultResource>({
   service,
@@ -58,14 +72,20 @@ const ListView = <T extends IDefaultResource>({
   gridOptions,
   initialViewMode = "table",
   children,
-  noResultsMessage = "No results :(",
-  noDataMessage = "Nothing here yet."
+  noResultsMessage = DEFAULT_NO_RESULTS_MESSAGE,
+  noDataMessage = DEFAULT_NO_DATA_MESSAGE
 }: IListView<T>) => {
+  const [refreshCount, setRefreshCount] = useState(0)
   const [data, setData] = useState<(T extends Product ? ListPageWithFacets<T> : ListPage<T>) | undefined>()
   const [viewMode, setViewMode] = useState<"grid" | "table">(initialViewMode)
   const [selected, setSelected] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const invertedQueryMap = invert(queryMap)
+
+  const refresh = useCallback(() => {
+    if (loading) return
+    setRefreshCount((c) => c + 1)
+  }, [loading])
 
   const handleSelectChange = useCallback((changed: string | string[], isSelected: boolean) => {
     let changedIds = typeof changed === "string" ? [changed] : changed
@@ -99,6 +119,7 @@ const ListView = <T extends IDefaultResource>({
 
   const fetchData = useCallback(async () => {
     let response
+    console.log("Refresh Count", refreshCount)
     setLoading(true)
     const listOptions = {
       ...params.queryParams,
@@ -111,13 +132,33 @@ const ListView = <T extends IDefaultResource>({
     }
     setData(response)
     setLoading(false)
-  }, [service, params])
+  }, [service, params, refreshCount])
 
   useEffect(() => {
     if (isReady) {
       fetchData()
     }
   }, [fetchData, isReady])
+
+  const handleUpsertItems = useCallback((items: T[]) => {
+    setData(
+      (d) =>
+        ({
+          Meta: d.Meta,
+          Items: d.Items.map((item) => {
+            const newItem = items.find((i) => i.ID === item.ID)
+            if (newItem) {
+              return newItem
+            }
+            return item
+          })
+        } as typeof d)
+    )
+  }, [])
+
+  const handleRemoveItems = useCallback((itemIds: string[]) => {
+    setData((d) => ({Meta: d.Meta, Items: d.Items.filter((i) => !itemIds.includes(i.ID))} as typeof d))
+  }, [])
 
   const viewModeToggle = useMemo(() => {
     return (
@@ -182,9 +223,14 @@ const ListView = <T extends IDefaultResource>({
     return params.queryParams["Page"] ? Number(params.queryParams["Page"]) : 1
   }, [params.queryParams])
 
+  //reset selected on query change
+  useEffect(() => {
+    setSelected([])
+  }, [params.queryParams, params.filterParams, params.routeParams])
+
   const isSearching = useMemo(() => {
-    return Boolean(params.queryParams["Search"])
-  }, [params.queryParams])
+    return Boolean(params.queryParams["Search"] || Object.values(params.filterParams).filter((v) => Boolean(v)).length)
+  }, [params.queryParams, params.filterParams])
 
   const renderContent = useMemo(() => {
     if (loading || (!loading && data)) {
@@ -214,7 +260,7 @@ const ListView = <T extends IDefaultResource>({
               currentSort={currentSort}
             />
           )}
-          {data && data.Meta && (
+          {data && data.Meta && data.Meta.TotalPages > 1 && (
             <Center>
               <Pagination page={currentPage} totalPages={data.Meta.TotalPages} onChange={handleUpdateQuery("p")} />
             </Center>
@@ -245,6 +291,8 @@ const ListView = <T extends IDefaultResource>({
       viewModeToggle,
       items: data ? data.Items : undefined,
       meta: data ? data.Meta : undefined,
+      upsertItems: handleUpsertItems,
+      removeItems: handleRemoveItems,
       updateQuery: handleUpdateQuery,
       routeParams: params.routeParams,
       queryParams: params.queryParams,
@@ -253,7 +301,17 @@ const ListView = <T extends IDefaultResource>({
       loading,
       renderContent
     }
-  }, [data, selected, loading, viewModeToggle, params, handleUpdateQuery, renderContent])
+  }, [
+    data,
+    selected,
+    loading,
+    viewModeToggle,
+    params,
+    handleUpdateQuery,
+    handleUpsertItems,
+    handleRemoveItems,
+    renderContent
+  ])
 
   return children(childrenProps)
 }

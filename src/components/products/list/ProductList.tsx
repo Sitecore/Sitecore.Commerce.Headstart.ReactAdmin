@@ -43,11 +43,10 @@ const ImageColumn: DataTableColumn<IProduct> = {
   header: "Image",
   accessor: "xp.Images",
   align: "center",
-  width: "50px",
   cell: ({row, value}) => (
     <Link passHref href={"/products/" + row.original.ID}>
-      <Box as="a" display="inline-block">
-        <ProductDefaultImage rounded="lg" w="50px" product={row.original} />
+      <Box as="a" width="50px" display="inline-block">
+        <ProductDefaultImage product={row.original} w="50px" h="50px" fit="cover" rounded="6" />
       </Box>
     </Link>
   )

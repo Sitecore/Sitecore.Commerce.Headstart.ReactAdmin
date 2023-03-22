@@ -7,7 +7,6 @@ import {
   Divider,
   Heading,
   HStack,
-  Image,
   List,
   ListItem,
   Modal,
@@ -23,9 +22,9 @@ import {
   UseDisclosureProps,
   VStack
 } from "@chakra-ui/react"
-import {FC, useMemo, useState, useEffect} from "react"
+import {FC, useEffect, useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
-import ProductThumbnail from "../list/ProductDefaultImage"
+import ProductDefaultImage from "../list/ProductDefaultImage"
 
 interface IProductPromotionModal {
   products?: IProduct[]
@@ -62,7 +61,16 @@ const ProductPromotionModal: FC<IProductPromotionModal> = ({products, disclosure
       <ModalOverlay />
       <ModalContent>
         {loading && (
-          <Center position="absolute" left={0} w="full" h="full" bg="whiteAlpha.500" zIndex={2} color="teal">
+          <Center
+            rounded="md"
+            position="absolute"
+            left={0}
+            w="full"
+            h="full"
+            bg="whiteAlpha.500"
+            zIndex={2}
+            color="teal"
+          >
             <Spinner></Spinner>
           </Center>
         )}
@@ -82,7 +90,7 @@ const ProductPromotionModal: FC<IProductPromotionModal> = ({products, disclosure
               {products.map((p, i) => (
                 <>
                   <ListItem key={p.ID} as={HStack}>
-                    <ProductThumbnail product={p} />
+                    <ProductDefaultImage product={p} w="50px" h="50px" fit="cover" mr={2} rounded="6" />
                     <HStack flexGrow={1} justifyContent="space-between">
                       <VStack alignItems="start">
                         <Badge>{p.ID}</Badge>

@@ -1,15 +1,11 @@
 import {
-  Alert,
   Badge,
   Button,
   Center,
   Collapse,
   Divider,
-  FormControl,
-  FormLabel,
   Heading,
   HStack,
-  Input,
   List,
   ListItem,
   Modal,
@@ -25,9 +21,9 @@ import {
   UseDisclosureProps,
   VStack
 } from "@chakra-ui/react"
-import {FC, useEffect, useState, useCallback} from "react"
+import {FC, useCallback, useEffect, useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
-import ProductThumbnail from "../list/ProductDefaultImage"
+import ProductDefaultImage from "../list/ProductDefaultImage"
 
 interface IProductDeleteModal {
   products?: IProduct[]
@@ -53,14 +49,23 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
       onComplete(products.map((p) => p.ID))
       onClose()
     }, 2000)
-  }, [onComplete, products])
+  }, [onComplete, products, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         {loading && (
-          <Center position="absolute" left={0} w="full" h="full" bg="whiteAlpha.500" zIndex={2} color="teal">
+          <Center
+            rounded="md"
+            position="absolute"
+            left={0}
+            w="full"
+            h="full"
+            bg="whiteAlpha.500"
+            zIndex={2}
+            color="teal"
+          >
             <Spinner></Spinner>
           </Center>
         )}
@@ -80,7 +85,7 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
               {products.map((p, i) => (
                 <>
                   <ListItem key={p.ID} as={HStack}>
-                    <ProductThumbnail product={p} />
+                    <ProductDefaultImage product={p} w="50px" h="50px" fit="cover" mr={2} rounded="6" />
                     <HStack flexGrow={1} justifyContent="space-between">
                       <VStack alignItems="start">
                         <Badge>{p.ID}</Badge>

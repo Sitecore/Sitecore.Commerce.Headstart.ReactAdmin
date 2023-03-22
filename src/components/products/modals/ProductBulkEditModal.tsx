@@ -26,9 +26,9 @@ import {
   VStack
 } from "@chakra-ui/react"
 import {Products} from "ordercloud-javascript-sdk"
-import {FC, useEffect, useState, useCallback} from "react"
+import {FC, useCallback, useEffect, useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
-import ProductThumbnail from "../list/ProductDefaultImage"
+import ProductDefaultImage from "../list/ProductDefaultImage"
 
 interface IProductBulkEditModal {
   products?: IProduct[]
@@ -62,7 +62,16 @@ const ProductBulkEditModal: FC<IProductBulkEditModal> = ({products, disclosure, 
       <ModalOverlay />
       <ModalContent>
         {loading && (
-          <Center position="absolute" left={0} w="full" h="full" bg="whiteAlpha.500" zIndex={2} color="teal">
+          <Center
+            rounded="md"
+            position="absolute"
+            left={0}
+            w="full"
+            h="full"
+            bg="whiteAlpha.500"
+            zIndex={2}
+            color="teal"
+          >
             <Spinner></Spinner>
           </Center>
         )}
@@ -78,11 +87,11 @@ const ProductBulkEditModal: FC<IProductBulkEditModal> = ({products, disclosure, 
             </Button>
           </HStack>
           <Collapse in={showProducts}>
-            <List>
+            <List mb={5}>
               {products.map((p, i) => (
                 <>
                   <ListItem key={p.ID} as={HStack}>
-                    <ProductThumbnail product={p} />
+                    <ProductDefaultImage product={p} w="50px" h="50px" fit="cover" mr={2} rounded="6" />
                     <HStack flexGrow={1} justifyContent="space-between">
                       <VStack alignItems="start">
                         <Badge>{p.ID}</Badge>

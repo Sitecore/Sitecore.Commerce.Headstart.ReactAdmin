@@ -1,13 +1,14 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
-import {Formik} from "formik"
-import {InputControl} from "components/formik"
+import {InputControl} from "components/react-hook-form"
 import Card from "../card/Card"
 import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {pick} from "lodash"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
+import {useForm} from "react-hook-form"
+import {yupResolver} from "@hookform/resolvers/yup"
 
 export {CreateUpdateForm}
 interface CreateUpdateFormProps {
@@ -29,12 +30,19 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
     Phone: Yup.string().max(100)
   }
 
-  const {successToast, validationSchema, initialValues, onSubmit} = useCreateUpdateForm<Address>(
+  const {successToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<Address>(
     address,
     formShape,
     createAddress,
     updateAddress
   )
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isSubmitting, isValid, isDirty},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
 
   async function createAddress(fields: Address) {
     await AdminAddresses.Create<IAdminAddress>(fields)
@@ -56,61 +64,32 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
   return (
     <Card variant="primaryCard">
       <Flex flexDirection="column" p="10">
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-          {({
-            // most of the useful available Formik props
-            values,
-            errors,
-            touched,
-            dirty,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isValid,
-            isSubmitting,
-            setFieldValue,
-            resetForm
-          }) => (
-            <Box as="form" onSubmit={handleSubmit as any}>
-              <Stack spacing={5}>
-                <InputControl name="AddressName" label="Address Name" />
-                <InputControl name="CompanyName" label="Company Name" />
-                <InputControl name="FirstName" label="First Name" />
-                <InputControl name="LastName" label="Last Name" />
-                <InputControl name="Street1" label="Street 1" isRequired />
-                <InputControl name="Street2" label="Street 2" />
-                <InputControl name="City" label="City" isRequired />
-                <InputControl name="State" label="State" isRequired />
-                <InputControl name="Zip" label="Zip" isRequired />
-                <InputControl name="Country" label="Country" isRequired />
-                <InputControl name="Phone" label="Phone" />
-                <ButtonGroup>
-                  <Button
-                    variant="primaryButton"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    isDisabled={!isValid || !dirty}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      resetForm()
-                    }}
-                    type="reset"
-                    variant="secondaryButton"
-                    isLoading={isSubmitting}
-                  >
-                    Reset
-                  </Button>
-                  <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
-                    Cancel
-                  </Button>
-                </ButtonGroup>
-              </Stack>
-            </Box>
-          )}
-        </Formik>
+        <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+          <Stack spacing={5}>
+            <InputControl name="AddressName" label="Address Name" control={control} />
+            <InputControl name="CompanyName" label="Company Name" control={control} />
+            <InputControl name="FirstName" label="First Name" control={control} />
+            <InputControl name="LastName" label="Last Name" control={control} />
+            <InputControl name="Street1" label="Street 1" control={control} isRequired />
+            <InputControl name="Street2" label="Street 2" control={control} />
+            <InputControl name="City" label="City" control={control} isRequired />
+            <InputControl name="State" label="State" control={control} isRequired />
+            <InputControl name="Zip" label="Zip" control={control} isRequired />
+            <InputControl name="Country" label="Country" control={control} isRequired />
+            <InputControl name="Phone" label="Phone" control={control} />
+            <ButtonGroup>
+              <Button variant="primaryButton" type="submit" isLoading={isSubmitting} isDisabled={!isValid || !isDirty}>
+                Save
+              </Button>
+              <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting}>
+                Reset
+              </Button>
+              <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
+                Cancel
+              </Button>
+            </ButtonGroup>
+          </Stack>
+        </Box>
       </Flex>
     </Card>
   )

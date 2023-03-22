@@ -1,6 +1,6 @@
 export * from "./address.utils"
 export * from "./date.utils"
-export * from "./formik.utils"
+export * from "./form.utils"
 export * from "./object.utils"
 export * from "./price.utils"
 export * from "./text.utils"

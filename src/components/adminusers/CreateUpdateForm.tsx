@@ -13,8 +13,7 @@ import {
   Td,
   Tr
 } from "@chakra-ui/react"
-import {Formik} from "formik"
-import {InputControl, SwitchControl} from "components/formik"
+import {InputControl, SwitchControl} from "components/react-hook-form"
 import Card from "../card/Card"
 import {AdminUserGroups, AdminUsers, User} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
@@ -25,6 +24,8 @@ import {appPermissions} from "constants/app-permissions.config"
 import {isEqual, sortBy, difference, pick} from "lodash"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
 import AdminUserXpCard from "./AdminUserXpCard"
+import {useForm} from "react-hook-form"
+import {yupResolver} from "@hookform/resolvers/yup"
 
 interface PermissionTableProps {
   assignedPermissions?: string[]
@@ -93,12 +94,19 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
     setPermissions(updatedPermissions)
   }
 
-  const {successToast, validationSchema, initialValues, onSubmit} = useCreateUpdateForm<User>(
+  const {successToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<User>(
     user,
     formShape,
     createUser,
     updateUser
   )
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isSubmitting, isValid, isDirty},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
 
   async function createUser(fields: User) {
     const createdUser = await AdminUsers.Create<IAdminUser>(fields)
@@ -138,60 +146,36 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
     <>
       <Card variant="primaryCard">
         <Flex flexDirection="column" p="10">
-          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-            {({
-              // most of the useful available Formik props
-              values,
-              errors,
-              touched,
-              dirty,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isValid,
-              isSubmitting,
-              setFieldValue,
-              resetForm
-            }) => (
-              <Box as="form" onSubmit={handleSubmit as any}>
-                <Stack spacing={5}>
-                  <InputControl name="Username" label="Username" isRequired />
-                  <InputControl name="FirstName" label="First name" isRequired />
-                  <InputControl name="LastName" label="Last name" isRequired />
-                  <InputControl name="Email" label="Email" isRequired />
-                  <InputControl name="Phone" label="Phone" />
-                  <SwitchControl name="Active" label="Active" marginBottom={5} />
-                  <PermissionsTable
-                    onPermissionChange={handlePermissionChange}
-                    assignedPermissions={assignedPermissions || []}
-                  />
-                  <ButtonGroup>
-                    <Button
-                      variant="primaryButton"
-                      type="submit"
-                      isLoading={isSubmitting}
-                      isDisabled={!isValid || !dirty}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        resetForm()
-                      }}
-                      type="reset"
-                      variant="secondaryButton"
-                      isLoading={isSubmitting}
-                    >
-                      Reset
-                    </Button>
-                    <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
-                      Cancel
-                    </Button>
-                  </ButtonGroup>
-                </Stack>
-              </Box>
-            )}
-          </Formik>
+          <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={5}>
+              <InputControl name="Username" label="Username" control={control} isRequired />
+              <InputControl name="FirstName" label="First name" control={control} isRequired />
+              <InputControl name="LastName" label="Last name" control={control} isRequired />
+              <InputControl name="Email" label="Email" control={control} isRequired />
+              <InputControl name="Phone" label="Phone" control={control} />
+              <SwitchControl name="Active" label="Active" control={control} marginBottom={5} />
+              <PermissionsTable
+                onPermissionChange={handlePermissionChange}
+                assignedPermissions={assignedPermissions || []}
+              />
+              <ButtonGroup>
+                <Button
+                  variant="primaryButton"
+                  type="submit"
+                  isLoading={isSubmitting}
+                  isDisabled={!isValid || !isDirty}
+                >
+                  Save
+                </Button>
+                <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting}>
+                  Reset
+                </Button>
+                <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
+                  Cancel
+                </Button>
+              </ButtonGroup>
+            </Stack>
+          </Box>
         </Flex>
       </Card>
       <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">

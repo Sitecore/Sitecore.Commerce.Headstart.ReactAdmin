@@ -1,12 +1,13 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
-import {InputControl, SwitchControl} from "components/formik"
+import {InputControl, SwitchControl} from "components/react-hook-form"
 import Card from "../card/Card"
-import {Formik} from "formik"
 import {Supplier, Suppliers} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {ISupplier} from "types/ordercloud/ISupplier"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {useForm} from "react-hook-form"
 
 export {CreateUpdateForm}
 
@@ -21,12 +22,19 @@ function CreateUpdateForm({supplier}: CreateUpdateFormProps) {
     Active: Yup.bool(),
     AllBuyersCanOrder: Yup.bool()
   }
-  const {isCreating, successToast, validationSchema, initialValues, onSubmit} = useCreateUpdateForm<Supplier>(
+  const {isCreating, successToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<Supplier>(
     supplier,
     formShape,
     createSupplier,
     updateSupplier
   )
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isSubmitting, isValid, isDirty},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
 
   async function createSupplier(fields: Supplier) {
     await Suppliers.Create<ISupplier>(fields)
@@ -48,58 +56,30 @@ function CreateUpdateForm({supplier}: CreateUpdateFormProps) {
     <>
       <Card variant="primaryCard">
         <Flex flexDirection="column" p="10">
-          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-            {({
-              // most of the useful available Formik props
-              values,
-              errors,
-              touched,
-              dirty,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isValid,
-              isSubmitting,
-              setFieldValue,
-              resetForm
-            }) => (
-              <Box as="form" onSubmit={handleSubmit as any}>
-                <Stack spacing={5}>
-                  <InputControl name="Name" label="Supplier Name" isRequired />
-                  <SwitchControl name="Active" label="Active" />
-                  <SwitchControl name="AllBuyersCanOrder" label="All Buyers Can Order" />
-                  {!isCreating && <InputControl name="DateCreated" label="Date created" isReadOnly />}
-                  <ButtonGroup>
-                    <Button
-                      variant="primaryButton"
-                      type="submit"
-                      isLoading={isSubmitting}
-                      isDisabled={!isValid || !dirty}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        resetForm()
-                      }}
-                      type="reset"
-                      variant="secondaryButton"
-                      isLoading={isSubmitting}
-                    >
-                      Reset
-                    </Button>
-                    <Button
-                      onClick={() => router.push("/suppliers")}
-                      variant="secondaryButton"
-                      isLoading={isSubmitting}
-                    >
-                      Cancel
-                    </Button>
-                  </ButtonGroup>
-                </Stack>
-              </Box>
-            )}
-          </Formik>
+          <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={5}>
+              <InputControl name="Name" label="Supplier Name" control={control} isRequired />
+              <SwitchControl name="Active" label="Active" control={control} />
+              <SwitchControl name="AllBuyersCanOrder" label="All Buyers Can Order" control={control} />
+              {!isCreating && <InputControl name="DateCreated" label="Date created" isReadOnly control={control} />}
+              <ButtonGroup>
+                <Button
+                  variant="primaryButton"
+                  type="submit"
+                  isLoading={isSubmitting}
+                  isDisabled={!isValid || !isDirty}
+                >
+                  Save
+                </Button>
+                <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting}>
+                  Reset
+                </Button>
+                <Button onClick={() => router.push("/suppliers")} variant="secondaryButton" isLoading={isSubmitting}>
+                  Cancel
+                </Button>
+              </ButtonGroup>
+            </Stack>
+          </Box>
         </Flex>
       </Card>
     </>

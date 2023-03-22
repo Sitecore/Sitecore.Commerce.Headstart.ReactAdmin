@@ -80,11 +80,7 @@ const StatusColumn: DataTableColumn<IProduct> = {
   accessor: "Active",
   width: "1%",
   align: "center",
-  cell: ({row, value}) => (
-    <Tag size="sm" colorScheme={value ? "success" : "danger"}>
-      {value ? "Active" : "Inactive"}
-    </Tag>
-  ),
+  cell: ({row, value}) => <Tag colorScheme={value ? "success" : "danger"}>{value ? "Active" : "Inactive"}</Tag>,
   sortable: true
 }
 

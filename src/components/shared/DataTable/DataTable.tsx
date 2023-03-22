@@ -129,9 +129,10 @@ const DataTable = <T extends IDefaultResource>({
     <TableContainer
       whiteSpace="normal"
       background="Background"
+      border="1px solid"
+      borderColor="blackAlpha.200"
       shadow="lg"
       overflowX="hidden"
-      position="relative"
       w="100%"
       minH={100}
       rounded={8}
@@ -143,12 +144,13 @@ const DataTable = <T extends IDefaultResource>({
           </Center>
         </Box>
       )}
-      <Table role="table" w="100%">
+      <Table role="table" w="100%" variant="striped">
         <Thead>
           <Tr role="row">
             {onSelectChange && (
               <Th color="inherit" w="1%">
                 <Checkbox
+                  borderColor="chakra-body-text"
                   isIndeterminate={indeterminateSelectAll}
                   isChecked={data && data.length <= selected.length}
                   onChange={(e) => handleSelectAllChange(e.target.checked)}
@@ -198,6 +200,7 @@ const DataTable = <T extends IDefaultResource>({
               {onSelectChange && (
                 <Td w="1%">
                   <Checkbox
+                    borderColor="gray.400"
                     isChecked={selected.includes(row.data["ID"])}
                     onChange={(e) => onSelectChange(row.data["ID"], e.target.checked)}
                   />

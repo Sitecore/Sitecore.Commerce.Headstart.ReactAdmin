@@ -1,37 +1,11 @@
 import {ChakraProvider, extendTheme, localStorageManager, theme, withDefaultColorScheme} from "@chakra-ui/react"
 import contextualColors from "styles/theme/contextualColors"
-import Card from "styles/theme/components/card"
+import Card from "styles/theme/components/Card"
+import {Input, Select, Textarea} from "../styles/theme/components/Controls"
 
 interface ChakraProps {
   children: React.ReactNode
 }
-
-const variantOutlined = (colors) => ({
-  field: {
-    _focus: {
-      borderColor: colors.brand[500],
-      boxShadow: `0 0 0 1px ${colors.brand[500]}`
-    }
-  }
-})
-
-const variantFilled = (colors) => ({
-  field: {
-    _focus: {
-      borderColor: colors.brand[500],
-      boxShadow: `0 0 0 1px ${colors.brand[500]}`
-    }
-  }
-})
-
-const variantFlushed = (colors) => ({
-  field: {
-    _focus: {
-      borderColor: colors.brand[500],
-      boxShadow: `0 1px 0 0 ${colors.brand[500]}`
-    }
-  }
-})
 
 const colors = {
   ...theme.colors,
@@ -43,27 +17,9 @@ const customTheme = extendTheme(
     colors,
     components: {
       Card,
-      Input: {
-        variants: {
-          outline: variantOutlined(colors),
-          filled: variantFilled(colors),
-          flushed: variantFlushed(colors)
-        }
-      },
-      Select: {
-        variants: {
-          outline: variantOutlined(colors),
-          filled: variantFilled(colors),
-          flushed: variantFlushed(colors)
-        }
-      },
-      Textarea: {
-        variants: {
-          outline: () => variantOutlined(colors).field,
-          filled: () => variantFilled(colors).field,
-          flushed: () => variantFlushed(colors).field
-        }
-      }
+      Input: Input(colors),
+      Select: Select(colors),
+      Textarea: Textarea(colors)
     }
   },
   withDefaultColorScheme({

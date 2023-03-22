@@ -20,10 +20,10 @@ const ProductCard = (props: ProductCardProps) => {
       justifyContent="space-between"
       p={4}
       backgroundColor="Background"
-      border="1px"
-      borderColor="blackAlpha.300"
+      border="1px solid"
+      borderColor="blackAlpha.200"
       borderRadius="lg"
-      shadow="xl"
+      shadow="md"
     >
       <Flex w="full" alignItems={"flex-start"}>
         <Checkbox isChecked={props.selected} onChange={(e) => props.onProductSelected(product.ID, e.target.checked)} />

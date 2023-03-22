@@ -148,14 +148,16 @@ const ProductList = () => {
     >
       {({renderContent, items, ...listViewChildProps}) => (
         <Container maxW="100%">
-          <ProductListToolbar
-            {...listViewChildProps}
-            onBulkEdit={editDisclosure.onOpen}
-            onBulkPromote={() => {
-              setActionProduct(undefined)
-              promoteDisclosure.onOpen()
-            }}
-          />
+          <Box>
+            <ProductListToolbar
+              {...listViewChildProps}
+              onBulkEdit={editDisclosure.onOpen}
+              onBulkPromote={() => {
+                setActionProduct(undefined)
+                promoteDisclosure.onOpen()
+              }}
+            />
+          </Box>
           {renderContent}
           <ProductBulkEditModal
             onComplete={listViewChildProps.upsertItems}

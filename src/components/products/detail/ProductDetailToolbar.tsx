@@ -4,10 +4,10 @@ import ViewProduct from "@/components/demo/ViewProduct"
 import Link from "next/link"
 import ConfirmDelete from "@/components/shared/ConfirmDelete"
 import {Box, Button, Stack} from "@chakra-ui/react"
-import {FormikState} from "formik"
 import {useRouter} from "hooks/useRouter"
 import {Products} from "ordercloud-javascript-sdk"
 import React, {useState} from "react"
+import {UseFormReset} from "react-hook-form"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ProductDetailTab} from "./ProductDetail"
 import ViewManager from "./ViewManager"
@@ -15,7 +15,7 @@ import ViewManager from "./ViewManager"
 interface ProductDetailToolbarProps {
   product?: IProduct
   isFormValid?: boolean
-  resetForm?: (nextState?: Partial<FormikState<any>>) => void
+  resetForm?: UseFormReset<any>
   viewVisibility: Record<ProductDetailTab, boolean>
   setViewVisibility: (update: Record<ProductDetailTab, boolean>) => void
 }

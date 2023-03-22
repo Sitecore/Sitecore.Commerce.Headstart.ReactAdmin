@@ -12,7 +12,6 @@ import {
   Flex,
   Divider
 } from "@chakra-ui/react"
-import {Formik, FormikErrors, FormikTouched} from "formik"
 import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
 import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
 import {InventoryForm} from "./forms/InventoryForm/InventoryForm"
@@ -20,7 +19,7 @@ import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
 import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
 import ImagePreview from "./ImagePreview"
 import {withDefaultValuesFallback, getObjectDiff, makeNestedObject} from "utils"
-import {cloneDeep, get, isEmpty} from "lodash"
+import {cloneDeep, get, invert, isEmpty} from "lodash"
 import {Products} from "ordercloud-javascript-sdk"
 import {defaultValues, tabFieldNames, validationSchema} from "./forms/meta"
 import ProductDetailToolbar from "./ProductDetailToolbar"
@@ -29,9 +28,20 @@ import {useSuccessToast} from "hooks/useToast"
 import {IProduct} from "types/ordercloud/IProduct"
 import {useRouter} from "hooks/useRouter"
 import {useState} from "react"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {FieldErrors, useForm} from "react-hook-form"
 
 export type ProductDetailTab = "details" | "pricing" | "variants" | "media" | "facets" | "seo"
 
+const tabIndexMap: Record<ProductDetailTab, number> = {
+  details: 0,
+  pricing: 1,
+  variants: 2,
+  media: 3,
+  facets: 4,
+  seo: 5
+}
+const inverseTabIndexMap = invert(tabIndexMap)
 interface ProductDetailProps {
   showTabbedView?: boolean
   product?: IProduct
@@ -39,6 +49,7 @@ interface ProductDetailProps {
 export default function ProductDetail({showTabbedView, product}: ProductDetailProps) {
   const router = useRouter()
   const successToast = useSuccessToast()
+  const [tabIndex, setTabIndex] = useState(tabIndexMap[router.query.tab.toString()])
   const isCreatingNew = !Boolean(product?.ID)
   const initialViewVisibility: Record<ProductDetailTab, boolean> = {
     details: true,
@@ -54,7 +65,19 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
     ? withDefaultValuesFallback({Product: cloneDeep(product)}, defaultValues)
     : makeNestedObject(defaultValues)
 
-  const onSubmit = async (fields, {setSubmitting}) => {
+  const handleTabsChange = (index) => {
+    router.push({query: {...router.query, tab: inverseTabIndexMap[index]}}, undefined, {shallow: true})
+    setTabIndex(index)
+  }
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isValid, errors, touchedFields},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues: initialValues})
+
+  const onSubmit = async (fields) => {
     if (isCreatingNew) {
       product = await Products.Create<IProduct>(fields.Product)
     } else {
@@ -65,8 +88,6 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
     successToast({
       description: isCreatingNew ? "ProductCreated" : "Product updated"
     })
-
-    setSubmitting(false)
 
     if (isCreatingNew) {
       router.push(`/products/${product.ID}`)
@@ -82,7 +103,7 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
     </Card>
   )
 
-  const tabHasError = (tab: ProductDetailTab, errors: FormikErrors<any>, touched: FormikTouched<any>): boolean => {
+  const tabHasError = (tab: ProductDetailTab, errors: FieldErrors<any>, touched: Partial<Readonly<any>>): boolean => {
     if (isEmpty(errors)) {
       return false
     }
@@ -90,92 +111,77 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
   }
 
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-      {({
-        // most of the useful available Formik props
-        values,
-        errors,
-        touched,
-        dirty,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isValid,
-        isSubmitting,
-        setFieldValue,
-        resetForm
-      }) => (
-        <Box as="form" onSubmit={handleSubmit as any}>
-          <ProductDetailToolbar
-            product={product}
-            isFormValid={isValid}
-            resetForm={resetForm}
-            viewVisibility={viewVisibility}
-            setViewVisibility={setViewVisibility}
-          />
-          {showTabbedView ? (
-            <Tabs>
-              <TabList>
-                {viewVisibility.details && <Tab>Details {tabHasError("details", errors, touched) && "Tab Error"}</Tab>}
-                {viewVisibility.pricing && <Tab>Pricing</Tab>}
-                {viewVisibility.variants && <Tab>Variants</Tab>}
-                {viewVisibility.media && <Tab>Media</Tab>}
-                {viewVisibility.facets && <Tab>Facets</Tab>}
-                {viewVisibility.seo && <Tab>SEO</Tab>}
-              </TabList>
+    <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+      <ProductDetailToolbar
+        product={product}
+        isFormValid={isValid}
+        resetForm={reset}
+        viewVisibility={viewVisibility}
+        setViewVisibility={setViewVisibility}
+      />
+      {showTabbedView ? (
+        <Tabs variant="soft-rounded" colorScheme="teal" index={tabIndex} onChange={handleTabsChange}>
+          <TabList>
+            {viewVisibility.details && (
+              <Tab>Details {tabHasError("details", errors, touchedFields) && "Tab Error"}</Tab>
+            )}
+            {viewVisibility.pricing && <Tab>Pricing</Tab>}
+            {viewVisibility.variants && <Tab>Variants</Tab>}
+            {viewVisibility.media && <Tab>Media</Tab>}
+            {viewVisibility.facets && <Tab>Facets</Tab>}
+            {viewVisibility.seo && <Tab>SEO</Tab>}
+          </TabList>
 
-              <TabPanels>
-                {viewVisibility.details && (
-                  <TabPanel>
-                    {/* Details Tab */}
-                    <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
-                      <Flex flexFlow="column" flexGrow="1" rowGap={7}>
-                        <SimpleCard title="Details">
-                          <DetailsForm />
-                        </SimpleCard>
-                        <SimpleCard title="Description">
-                          <DescriptionForm />
-                        </SimpleCard>
-                        <SimpleCard title="Unit of Measure">
-                          <UnitOfMeasureForm />
-                        </SimpleCard>
-                        <SimpleCard title="Inventory">
-                          <InventoryForm />
-                        </SimpleCard>
-                        <SimpleCard title="Shipping">
-                          <ShippingForm />
-                        </SimpleCard>
-                      </Flex>
-                      <Box>
-                        <SimpleCard>
-                          <ImagePreview images={product?.xp?.Images} />
-                        </SimpleCard>
-                      </Box>
-                    </Flex>
-                  </TabPanel>
-                )}
-              </TabPanels>
-            </Tabs>
-          ) : (
-            <Flex gap={3} flexDirection="column">
-              {viewVisibility.details && (
-                <PanelCard width={{base: "100%", xl: "50%"}} variant="primaryCard" closedText="Details">
-                  <Heading marginBottom={5}>Details</Heading>
-                  <DetailsForm />
-                  <Divider marginY={5} />
-                  <DescriptionForm />
-                  <Divider marginY={5} />
-                  <UnitOfMeasureForm />
-                  <Divider marginY={5} />
-                  <InventoryForm />
-                  <Divider marginY={5} />
-                  <ShippingForm />
-                </PanelCard>
-              )}
-            </Flex>
+          <TabPanels>
+            {viewVisibility.details && (
+              <TabPanel>
+                {/* Details Tab */}
+                <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
+                  <Flex flexFlow="column" flexGrow="1" rowGap={7}>
+                    <SimpleCard title="Details">
+                      <DetailsForm control={control} />
+                    </SimpleCard>
+                    <SimpleCard title="Description">
+                      <DescriptionForm control={control} />
+                    </SimpleCard>
+                    <SimpleCard title="Unit of Measure">
+                      <UnitOfMeasureForm control={control} />
+                    </SimpleCard>
+                    <SimpleCard title="Inventory">
+                      <InventoryForm control={control} />
+                    </SimpleCard>
+                    <SimpleCard title="Shipping">
+                      <ShippingForm control={control} />
+                    </SimpleCard>
+                  </Flex>
+                  <Box>
+                    <SimpleCard>
+                      <ImagePreview images={product?.xp?.Images} />
+                    </SimpleCard>
+                  </Box>
+                </Flex>
+              </TabPanel>
+            )}
+          </TabPanels>
+        </Tabs>
+      ) : (
+        <Flex gap={3} flexDirection="column">
+          {viewVisibility.details && (
+            <PanelCard width={{base: "100%", xl: "50%"}} variant="primaryCard" closedText="Details">
+              <Heading marginBottom={5}>Details</Heading>
+              <DetailsForm control={control} />
+              <Divider marginY={5} />
+              <DescriptionForm control={control} />
+              <Divider marginY={5} />
+              <UnitOfMeasureForm control={control} />
+              <Divider marginY={5} />
+              <InventoryForm control={control} />
+              <Divider marginY={5} />
+              <ShippingForm control={control} />
+            </PanelCard>
           )}
-        </Box>
+        </Flex>
       )}
-    </Formik>
+    </Box>
   )
 }

@@ -1,10 +1,9 @@
 import {get, set} from "lodash"
 import * as yup from "yup"
-import {getIn} from "formik"
 
 /**
  * It is desirable to visually mark a field as required by displaying an asterisk
- * formik doesn't have a way of doing this so we must pass down the validationSchema
+ * react-hook-form doesn't have a way of doing this so we must pass down the validationSchema
  * and inspect it to determine if the field is required, this helper achieves that
  *
  */
@@ -14,7 +13,7 @@ export const isRequiredField = (validationSchema: any, name: string) => {
   }
   const schemaDescription = validationSchema.describe()
   const accessor = name.split(".").join(".fields.")
-  const field = getIn(schemaDescription.fields, accessor)
+  const field = get(schemaDescription.fields, accessor)
   if (!field) {
     return false
   }
@@ -23,7 +22,7 @@ export const isRequiredField = (validationSchema: any, name: string) => {
 }
 
 /**
- * In formik inputs can not be null or undefined. This function evaluates all properties
+ * In react-hook-form inputs can not be null or undefined. This function evaluates all properties
  * and if it finds any properties that are null or undefined it sets them to the default value
  *
  * @param obj the object to provide fallbacks to

@@ -1,9 +1,12 @@
-import {TextareaControl} from "@/components/formik"
+import {TextareaControl} from "@/components/react-hook-form"
+import {Control, FieldValues} from "react-hook-form"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
 
-type DescriptionFormProps = {}
+type DescriptionFormProps = {
+  control: Control<FieldValues, any>
+}
 
-export function DescriptionForm({}: DescriptionFormProps) {
-  return <TextareaControl name={fieldNames.DESCRIPTION} validationSchema={validationSchema} />
+export function DescriptionForm({control}: DescriptionFormProps) {
+  return <TextareaControl name={fieldNames.DESCRIPTION} control={control} validationSchema={validationSchema} />
 }

@@ -1,42 +1,32 @@
-import {CheckboxControl, InputControl, SelectControl} from "@/components/formik"
+import {CheckboxControl, InputControl, SelectControl} from "@/components/react-hook-form"
 import {Divider, Grid, GridItem} from "@chakra-ui/react"
-import {useFormikContext} from "formik"
-import {get} from "lodash"
 import {AdminAddresses, Me, SupplierAddresses, Suppliers} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
+import {Control, FieldValues, useWatch} from "react-hook-form"
+import {getMySellerCompanyIds} from "services/currentUser"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
-import {IProduct} from "types/ordercloud/IProduct"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
 
-type ShippingFormProps = {}
+type ShippingFormProps = {
+  control: Control<FieldValues, any>
+}
 
-export function ShippingForm({}: ShippingFormProps) {
+export function ShippingForm({control}: ShippingFormProps) {
   const [sellerCompanyIds, setSellerCompanyIds] = useState([] as string[])
   const [sellerAddress, setSellerAddresses] = useState([] as (IAdminAddress | ISupplierAddress)[])
   const [loading, setLoading] = useState(false)
-  const {setFieldValue, values} = useFormikContext()
   const linearUnits = ["in", "mm", "cm", "ft", "yard"]
   const weightUnits = ["lb", "kg"]
+  const watchedCompanyId = useWatch({name: fieldNames.SHIP_FROM_COMPANYID, control})
 
   useEffect(() => {
-    const getInitialSellerId = async () => {
-      const me = await Me.Get()
-      const sellerId = me.Seller?.ID ? "Admin" : me?.Supplier?.ID
-      if (sellerId === "Admin") {
-        // an admin can see their own company and all suppliers
-        const suppliers = await Suppliers.List()
-        setSellerCompanyIds([sellerId, ...suppliers.Items.map((supplier) => supplier.ID)])
-      } else {
-        // a supplier user can only see their own company
-        setSellerCompanyIds([sellerId])
-      }
-      setFieldValue(fieldNames.SHIP_FROM_COMPANYID, sellerId)
+    const getSellerCompanyIds = async () => {
+      setSellerCompanyIds(await getMySellerCompanyIds())
     }
-
-    getInitialSellerId()
-  }, [setFieldValue])
+    getSellerCompanyIds()
+  }, [])
 
   useEffect(() => {
     const getSellerAddresses = async (selectedSellerId: string) => {
@@ -53,11 +43,10 @@ export function ShippingForm({}: ShippingFormProps) {
         setLoading(false)
       }
     }
-    const companyId = values && get(values, fieldNames.SHIP_FROM_COMPANYID, null)
-    if (companyId) {
-      getSellerAddresses(companyId)
+    if (watchedCompanyId) {
+      getSellerAddresses(watchedCompanyId)
     }
-  }, [values, setFieldValue])
+  }, [watchedCompanyId])
 
   return (
     <>
@@ -71,6 +60,7 @@ export function ShippingForm({}: ShippingFormProps) {
             label="Length"
             inputProps={{type: "number"}}
             name={fieldNames.SHIP_LENGTH}
+            control={control}
             validationSchema={validationSchema}
           />
         </GridItem>
@@ -79,6 +69,7 @@ export function ShippingForm({}: ShippingFormProps) {
             label="Width"
             inputProps={{type: "number"}}
             name={fieldNames.SHIP_WIDTH}
+            control={control}
             validationSchema={validationSchema}
           />
         </GridItem>
@@ -87,11 +78,17 @@ export function ShippingForm({}: ShippingFormProps) {
             label="Height"
             inputProps={{type: "number"}}
             name={fieldNames.SHIP_HEIGHT}
+            control={control}
             validationSchema={validationSchema}
           />
         </GridItem>
         <GridItem>
-          <SelectControl label="&zwnj;" validationSchema={validationSchema} name={fieldNames.SHIP_LINEAR_UNIT}>
+          <SelectControl
+            label="&zwnj;"
+            validationSchema={validationSchema}
+            name={fieldNames.SHIP_LINEAR_UNIT}
+            control={control}
+          >
             {linearUnits.map((unit) => (
               <option key={unit} value={unit}>
                 {unit}
@@ -104,11 +101,17 @@ export function ShippingForm({}: ShippingFormProps) {
             label="Weight"
             inputProps={{type: "number"}}
             name={fieldNames.SHIP_WEIGHT}
+            control={control}
             validationSchema={validationSchema}
           />
         </GridItem>
         <GridItem gridColumnStart={{xl: 7}}>
-          <SelectControl label="&zwnj;" validationSchema={validationSchema} name={fieldNames.SHIP_LINEAR_UNIT}>
+          <SelectControl
+            label="&zwnj;"
+            validationSchema={validationSchema}
+            name={fieldNames.SHIP_LINEAR_UNIT}
+            control={control}
+          >
             {weightUnits.map((unit) => (
               <option key={unit} value={unit}>
                 {unit}
@@ -127,6 +130,7 @@ export function ShippingForm({}: ShippingFormProps) {
             label="Ship From Company"
             validationSchema={validationSchema}
             name={fieldNames.SHIP_FROM_COMPANYID}
+            control={control}
           >
             {sellerCompanyIds.map((companyId) => (
               <option key={companyId} value={companyId}>
@@ -141,6 +145,7 @@ export function ShippingForm({}: ShippingFormProps) {
             validationSchema={validationSchema}
             label="Ship From"
             name={fieldNames.SHIP_FROM}
+            control={control}
             isDisabled={loading}
           >
             {sellerAddress.map((address) => (
@@ -154,6 +159,7 @@ export function ShippingForm({}: ShippingFormProps) {
           <CheckboxControl
             label="This product is eligible for returns"
             name={fieldNames.ELIGIBLE_FOR_RETURNS}
+            control={control}
             validationSchema={validationSchema}
           />
         </GridItem>

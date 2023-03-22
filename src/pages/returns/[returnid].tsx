@@ -127,10 +127,10 @@ const OrderReturnDetailPage: FunctionComponent = () => {
               <ButtonGroup gap="2">
                 {orderReturn.Status === "Open" && (
                   <>
-                    <Button variant="primaryButton" onClick={handleCompleteAnOrderReturn}>
+                    <Button variant="solid" colorScheme="primary" onClick={handleCompleteAnOrderReturn}>
                       Complete
                     </Button>
-                    <Button variant="secondaryButton" onClick={handleCancelAnOrderReturn}>
+                    <Button variant="outline" onClick={handleCancelAnOrderReturn}>
                       Cancel
                     </Button>
                   </>

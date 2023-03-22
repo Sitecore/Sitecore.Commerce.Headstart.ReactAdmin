@@ -159,7 +159,7 @@ const Dashboard = () => {
     >
       <NextSeo title="Dashboard" />
       <VStack as="section" width="full" align="center">
-        <HStack as="section" w="100%" p="3">
+        <HStack as="section" w="100%">
           <Container maxW="full" fontSize="x-small" fontWeight="normal">
             <SimpleGrid
               columns={{xl: 2, lg: 2, md: 1, sm: 1, base: 1}}
@@ -176,30 +176,26 @@ const Dashboard = () => {
                 >
                   <GridItem>
                     <Box w="full" width="100%">
-                      <Link href="#">
-                        <TodaysMoney
-                          title="todays money"
-                          totalamount={` ${priceHelper.formatShortPrice(totalTodaysSales)}`}
-                          percentchange={previousTodaysSales}
-                          percentchangetype={percentTodaysSalesChange}
-                          percentlabel="Compared to last month (mtd)"
-                          icon={<Icon as={HiOutlineFolderOpen} />}
-                        />
-                      </Link>
+                      <TodaysMoney
+                        title="todays money"
+                        totalamount={` ${priceHelper.formatShortPrice(totalTodaysSales)}`}
+                        percentchange={previousTodaysSales}
+                        percentchangetype={percentTodaysSalesChange}
+                        percentlabel="Compared to last month (mtd)"
+                        icon={<Icon as={HiOutlineFolderOpen} />}
+                      />
                     </Box>
                   </GridItem>
                   <GridItem>
                     <Box w="full" width="100%">
-                      <Link href="#">
-                        <TotalSales
-                          title="total sales"
-                          totalamount={` ${priceHelper.formatShortPrice(totalSales)}`}
-                          percentchange={percentSales}
-                          percentchangetype={percentSalesChange}
-                          percentlabel="Compared to last year  (ytd)"
-                          icon={<Icon as={HiOutlineCurrencyDollar} />}
-                        />
-                      </Link>
+                      <TotalSales
+                        title="total sales"
+                        totalamount={` ${priceHelper.formatShortPrice(totalSales)}`}
+                        percentchange={percentSales}
+                        percentchangetype={percentSalesChange}
+                        percentlabel="Compared to last year  (ytd)"
+                        icon={<Icon as={HiOutlineCurrencyDollar} />}
+                      />
                     </Box>
                   </GridItem>
                 </SimpleGrid>
@@ -211,38 +207,32 @@ const Dashboard = () => {
                 >
                   <GridItem>
                     <Box w="full" width="100%">
-                      <Link href="#">
-                        <NewClients
-                          title="new users"
-                          totalamount={totalNewUsers}
-                          percentchange={percentNewUsers}
-                          percentchangetype={percentNewUsersChange}
-                          percentlabel="Compared to last month (mtd)"
-                          icon={<Icon as={HiOutlineUserAdd} />}
-                        />
-                      </Link>
+                      <NewClients
+                        title="new users"
+                        totalamount={totalNewUsers}
+                        percentchange={percentNewUsers}
+                        percentchangetype={percentNewUsersChange}
+                        percentlabel="Compared to last month (mtd)"
+                        icon={<Icon as={HiOutlineUserAdd} />}
+                      />
                     </Box>
                   </GridItem>
                   <GridItem>
                     <Box w="full" width="100%">
-                      <Link href="#">
-                        <TodaysUsers
-                          title="total users"
-                          totalamount={totalUsers}
-                          percentchange={percentTotalUsers}
-                          percentchangetype={percentTotalUsersChange}
-                          percentlabel="Compared to last year  (ytd)"
-                          icon={<Icon as={HiOutlineUserCircle} />}
-                        />
-                      </Link>
+                      <TodaysUsers
+                        title="total users"
+                        totalamount={totalUsers}
+                        percentchange={percentTotalUsers}
+                        percentchangetype={percentTotalUsersChange}
+                        percentlabel="Compared to last year  (ytd)"
+                        icon={<Icon as={HiOutlineUserCircle} />}
+                      />
                     </Box>
                   </GridItem>
                 </SimpleGrid>
               </GridItem>
               <GridItem mt={{xl: 4, lg: 4, md: 2, sm: 0, base: 0}} mb={{xl: 4, lg: 4, md: 2, sm: 4, base: 4}}>
-                <Link href="#">
-                  <AverageOrderAmount />
-                </Link>
+                <AverageOrderAmount />
               </GridItem>
             </SimpleGrid>
             <SimpleGrid

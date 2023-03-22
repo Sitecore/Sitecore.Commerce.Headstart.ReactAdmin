@@ -113,12 +113,12 @@ const UsersList = () => {
         Cell: ({row}) => (
           <ButtonGroup>
             <Button
-              variant="secondaryButton"
+              variant="outline"
               onClick={() => router.push(`/suppliers/${router.query.supplierid}/users/${row.original.ID}`)}
             >
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteSupplier(row.original.ID)}>
+            <Button variant="outline" onClick={() => deleteSupplier(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
@@ -134,7 +134,8 @@ const UsersList = () => {
         <HStack justifyContent="space-between" w="100%" mb={5}>
           <Button
             onClick={() => router.push(`/suppliers/${router.query.supplierid}/users/add`)}
-            variant="primaryButton"
+            variant="solid"
+            colorScheme="primary"
           >
             Create user
           </Button>

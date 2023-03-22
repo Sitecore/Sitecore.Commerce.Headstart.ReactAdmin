@@ -106,7 +106,8 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
                 <HStack justifyContent="space-between" w="100%" mb={5}>
                   <Box>
                     <Button
-                      variant="primaryButton"
+                      variant="solid"
+                      colorScheme="primary"
                       type="submit"
                       isLoading={isSubmitting}
                       mr="15px"
@@ -114,14 +115,14 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
                     >
                       Save
                     </Button>
-                    <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting} mr="15px">
+                    <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting} mr="15px">
                       Reset
                     </Button>
                     <Button
                       onClick={() =>
                         router.push(`/buyers/${router.query.buyerid}/catalogs/${router.query.catalogid}/categories`)
                       }
-                      variant="secondaryButton"
+                      variant="outline"
                       isLoading={isSubmitting}
                       mr="15px"
                     >
@@ -129,7 +130,7 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
                     </Button>
                   </Box>
                   {!isCreating && (
-                    <Button variant="secondaryButton" onClick={() => deleteCategory(category.ID)}>
+                    <Button variant="outline" onClick={() => deleteCategory(category.ID)}>
                       Delete
                     </Button>
                   )}

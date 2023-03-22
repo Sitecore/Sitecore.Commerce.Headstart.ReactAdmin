@@ -113,13 +113,12 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
 
   return (
     <Flex direction="column" w="100%" overflowX={{sm: "scroll", lg: "hidden"}}>
-      <Flex justify="space-between" align="center" w="100%" px="22px" marginBottom={3}>
+      <Flex justify="space-between" align="center" w="100%" px="5" marginBottom={3}>
         <Stack
           direction={{sm: "column", md: "row"}}
           spacing={{sm: "4px", md: "12px"}}
           align="center"
           me="12px"
-          my="24px"
           minW={{sm: "100px", md: "200px"}}
         >
           <Text fontSize="sm" color="gray.500" fontWeight="normal" mb={{sm: "24px", md: "0px"}}>
@@ -131,7 +130,7 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
         <Flex width="100%" justifyContent="end" alignItems="center">
           {loading && <Spinner display="flex" marginRight={5} />}
           <Input
-            variant="main"
+            variant="outline"
             type="text"
             placeholder="Search..."
             minW="200px"
@@ -139,7 +138,6 @@ export function OrderCloudTable<T = any>({columns, data, fetchData, filters: app
             marginBottom="0 !important"
             flexGrow={1}
             fontSize="sm"
-            _focus={{borderColor: "blue.500"}}
             value={filters.search}
             onChange={(e) => handleSearchChange(e.target.value)}
           />

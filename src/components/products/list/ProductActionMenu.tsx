@@ -19,8 +19,8 @@ const ProductActionMenu: FC<IProductActionMenu> = ({product, onOpen, onClose, on
       <MenuButton
         as={IconButton}
         aria-label={`Product action menu for ${product.Name}`}
-        variant="outline"
-        colorScheme="gray"
+        variant="ghost"
+        colorScheme="secondary"
       >
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>

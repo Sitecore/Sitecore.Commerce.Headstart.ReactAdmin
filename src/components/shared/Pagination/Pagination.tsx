@@ -12,14 +12,14 @@ interface IPagination {
 
 const Pagination: FC<IPagination> = ({page, totalPages, onChange}) => {
   return (
-    <Stack direction="row" m={5}>
-      {page !== 1 && <PreviousNextButton type="previous" page={page} onPageChange={onChange} />}
+    <Stack direction="row" my={5}>
+      <PreviousNextButton isDisabled={page === 1} type="previous" page={page} onPageChange={onChange} />
       {totalPages > 5 ? (
         <PaginationInput totalPages={totalPages} page={page} onPageChange={onChange} />
       ) : (
         <PaginationButtons page={page} totalPages={totalPages} onPageChange={onChange} />
       )}
-      {page < totalPages && <PreviousNextButton type="next" page={page} onPageChange={onChange} />}
+      <PreviousNextButton isDisabled={page >= totalPages} type="next" page={page} onPageChange={onChange} />
     </Stack>
   )
 }

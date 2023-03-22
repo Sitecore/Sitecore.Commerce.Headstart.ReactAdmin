@@ -107,7 +107,7 @@ const ProductPromotionModal: FC<IProductPromotionModal> = ({products, disclosure
           <Heading size="sm" as="h5" mb={5}>
             Promotion Type
           </Heading>
-          <ButtonGroup w="full" isAttached variant="secondaryButton">
+          <ButtonGroup w="full" isAttached variant="outline">
             <Button
               flexGrow={1}
               onClick={handlePromotionTypeChange("shipping")}
@@ -127,7 +127,7 @@ const ProductPromotionModal: FC<IProductPromotionModal> = ({products, disclosure
           <Button variant="ghost" fontSize="sm" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="primaryButton" onClick={handleSubmit}>
+          <Button variant="solid" colorScheme="primary" onClick={handleSubmit}>
             Save Promotion
           </Button>
         </ModalFooter>

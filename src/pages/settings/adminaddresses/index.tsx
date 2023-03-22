@@ -77,13 +77,10 @@ const AdminAddressesPage = () => {
         Header: "ACTIONS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button
-              variant="secondaryButton"
-              onClick={() => router.push(`/settings/adminaddresses/${row.original.ID}/`)}
-            >
+            <Button variant="outline" onClick={() => router.push(`/settings/adminaddresses/${row.original.ID}/`)}>
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteAddress(row.original.ID)}>
+            <Button variant="outline" onClick={() => deleteAddress(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
@@ -98,7 +95,9 @@ const AdminAddressesPage = () => {
       <NextSeo title="Admin Addresses List" />
       <HStack justifyContent="space-between" w="100%" mb={5}>
         <Link href={`/settings/adminaddresses/add`}>
-          <Button variant="primaryButton">New Admin Address</Button>
+          <Button variant="solid" colorScheme="primary">
+            New Admin Address
+          </Button>
         </Link>
         <HStack>
           <ExportToCsv />

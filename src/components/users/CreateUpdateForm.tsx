@@ -76,17 +76,18 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
               <SwitchControl name="Active" label="Active" control={control} />
               <ButtonGroup>
                 <Button
-                  variant="primaryButton"
+                  variant="solid"
+                  colorScheme="primary"
                   type="submit"
                   isLoading={isSubmitting}
                   isDisabled={!isValid || !isDirty}
                 >
                   Save
                 </Button>
-                <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting}>
+                <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
                   Reset
                 </Button>
-                <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
+                <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting}>
                   Cancel
                 </Button>
               </ButtonGroup>

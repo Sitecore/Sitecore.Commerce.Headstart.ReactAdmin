@@ -25,7 +25,7 @@ export default function LanguageSelector({}: LanguageSelectorProps) {
 
   return (
     <>
-      <Button variant="secondaryButton" onClick={onOpen}>
+      <Button variant="outline" onClick={onOpen}>
         Switch Language
       </Button>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
@@ -53,10 +53,10 @@ export default function LanguageSelector({}: LanguageSelectorProps) {
             </AlertDialogBody>
             <AlertDialogFooter>
               <HStack justifyContent="space-between" w="100%">
-                <Button ref={cancelRef} onClick={onClose} variant="secondaryButton">
+                <Button ref={cancelRef} onClick={onClose} variant="outline">
                   Cancel
                 </Button>
-                <Button variant="primaryButton" onClick={onSelectLanguage}>
+                <Button variant="solid" colorScheme="primary" onClick={onSelectLanguage}>
                   Change Language
                 </Button>
               </HStack>

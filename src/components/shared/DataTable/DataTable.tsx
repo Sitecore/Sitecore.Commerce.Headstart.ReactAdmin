@@ -129,11 +129,12 @@ const DataTable = <T extends IDefaultResource>({
     <TableContainer
       whiteSpace="normal"
       background="Background"
+      shadow="lg"
       overflowX="hidden"
       position="relative"
       w="100%"
+      minH={100}
       rounded={8}
-      minH={160}
     >
       {loading && (
         <Box position="absolute" zIndex={2} left={0} right={0} top={0} bottom={0} pointerEvents="none">

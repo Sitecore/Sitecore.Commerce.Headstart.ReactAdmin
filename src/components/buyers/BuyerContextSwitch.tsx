@@ -126,16 +126,13 @@ export default function BuyerContextSwitch({...props}) {
 
           <Flex direction={{sm: "column", lg: "row"}} w={{sm: "100%", md: "50%", lg: "auto"}}>
             <ButtonGroup>
-              <Button
-                onClick={() => router.push(`/buyers/${router.query.buyerid}/usergroups`)}
-                variant="secondaryButton"
-              >
+              <Button onClick={() => router.push(`/buyers/${router.query.buyerid}/usergroups`)} variant="outline">
                 User Groups ({buyersMeta[buyerid]?.userGroupsCount || "-"})
               </Button>
-              <Button onClick={() => router.push(`/buyers/${router.query.buyerid}/users`)} variant="secondaryButton">
+              <Button onClick={() => router.push(`/buyers/${router.query.buyerid}/users`)} variant="outline">
                 Users ({buyersMeta[buyerid]?.usersCount || "-"})
               </Button>
-              <Button onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)} variant="secondaryButton">
+              <Button onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)} variant="outline">
                 Catalogs ({buyersMeta[buyerid]?.catalogsCount || "-"})
               </Button>
             </ButtonGroup>

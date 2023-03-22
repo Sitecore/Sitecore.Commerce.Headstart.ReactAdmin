@@ -24,7 +24,7 @@ export default function ViewProduct({}: ViewProductProps) {
 
   return (
     <>
-      <Button variant="secondaryButton" onClick={onOpen}>
+      <Button variant="outline" onClick={onOpen}>
         View Product
       </Button>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
@@ -38,10 +38,10 @@ export default function ViewProduct({}: ViewProductProps) {
             </AlertDialogBody>
             <AlertDialogFooter>
               <HStack justifyContent="space-between" w="100%">
-                <Button onClick={onClose} variant="secondaryButton" ref={cancelRef}>
+                <Button onClick={onClose} variant="outline" ref={cancelRef}>
                   Cancel
                 </Button>
-                <Button variant="primaryButton" onClick={onViewProduct}>
+                <Button variant="solid" colorScheme="primary" onClick={onViewProduct}>
                   View Product
                 </Button>
               </HStack>

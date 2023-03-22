@@ -89,10 +89,10 @@ const AdminUsersPage = () => {
         accessor: "ID",
         Cell: ({value}) => (
           <ButtonGroup>
-            <Button variant="secondaryButton" onClick={() => router.push(`/settings/adminusers/${value}/`)}>
+            <Button variant="outline" onClick={() => router.push(`/settings/adminusers/${value}/`)}>
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteAdminUser(value)}>
+            <Button variant="outline" onClick={() => deleteAdminUser(value)}>
               Delete
             </Button>
           </ButtonGroup>
@@ -107,7 +107,9 @@ const AdminUsersPage = () => {
       <NextSeo title="Admin Users List" />
       <HStack justifyContent="space-between" w="100%" mb={5}>
         <Link href={`/settings/adminusers/add`}>
-          <Button variant="primaryButton">New Admin User</Button>
+          <Button variant="solid" colorScheme="primary">
+            New Admin User
+          </Button>
         </Link>
         <HStack>
           <ExportToCsv />

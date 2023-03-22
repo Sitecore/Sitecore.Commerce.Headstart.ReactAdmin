@@ -16,7 +16,7 @@ const ProductListActions: FC<IProductListActions> = ({selected, onBulkPromote, o
   }, [selected])
   return (
     <Menu>
-      <MenuButton as={Button} variant="secondaryButton" colorScheme="white">
+      <MenuButton as={Button} variant="outline">
         <HStack>
           <Text>Actions</Text>
           <ChevronDownIcon />

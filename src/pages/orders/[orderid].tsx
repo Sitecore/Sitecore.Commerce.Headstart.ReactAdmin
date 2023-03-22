@@ -177,7 +177,9 @@ const OrderConfirmationPage: FunctionComponent = () => {
         <NextSeo title="Order Details" />
         <HStack justifyContent="space-between" w="100%" mb={5}>
           <Link href={`/orders/new`} pl="2" pr="2">
-            <Button variant="primaryButton">Place re-order</Button>
+            <Button variant="solid" colorScheme="primary">
+              Place re-order
+            </Button>
           </Link>
           <HStack>
             <PrintShippingLabel />
@@ -344,12 +346,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
               />
             </AlertDialogBody>
             <AlertDialogFooter justifyContent="space-between" w="100%">
-              <Button
-                ref={cancelRef}
-                onClick={() => setRefundDialogOpen(false)}
-                disabled={loading}
-                variant="secondaryButton"
-              >
+              <Button ref={cancelRef} onClick={() => setRefundDialogOpen(false)} disabled={loading} variant="outline">
                 Cancel
               </Button>
               <Button onClick={requestRefund} disabled={loading}>
@@ -382,7 +379,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   ref={cancelRef}
                   onClick={() => setExportCSVDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
@@ -418,7 +415,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   ref={cancelRef}
                   onClick={() => setExportPDFDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
@@ -454,7 +451,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   ref={cancelRef}
                   onClick={() => setPrintLabelDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>

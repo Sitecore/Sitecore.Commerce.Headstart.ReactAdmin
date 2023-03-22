@@ -39,7 +39,7 @@ export default function ConfirmDelete({
   return (
     <>
       {variant === "button" ? (
-        <Button variant="secondaryButton" onClick={onOpen} disabled={loading}>
+        <Button variant="outline" onClick={onOpen} disabled={loading}>
           {loading ? <BrandedSpinner /> : deleteText}
         </Button>
       ) : (
@@ -58,10 +58,10 @@ export default function ConfirmDelete({
 
             <AlertDialogFooter>
               <HStack justifyContent="space-between" w="100%">
-                <Button variant="secondaryButton" onClick={onClose} ref={cancelRef}>
+                <Button variant="outline" onClick={onClose} ref={cancelRef}>
                   {alertCancelButtonText}
                 </Button>
-                <Button variant="primaryButton" colorScheme="red" onClick={onDelete} ml={3}>
+                <Button variant="solid" colorScheme="red" onClick={onDelete} ml={3}>
                   {alertDeleteButtonText}
                 </Button>
               </HStack>

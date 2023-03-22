@@ -76,13 +76,10 @@ const ProductFacetsPage = () => {
         Header: "ACTIONS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button
-              variant="secondaryButton"
-              onClick={() => router.push(`/settings/productfacets/${row.original.ID}/`)}
-            >
+            <Button variant="outline" onClick={() => router.push(`/settings/productfacets/${row.original.ID}/`)}>
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteProductFacet(row.original.ID)}>
+            <Button variant="outline" onClick={() => deleteProductFacet(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
@@ -97,7 +94,9 @@ const ProductFacetsPage = () => {
       <NextSeo title="Product Facets List" />
       <HStack justifyContent="space-between" w="100%" mb={5}>
         <Link href={`/settings/productfacets/add`}>
-          <Button variant="primaryButton">New Product Facet</Button>
+          <Button variant="solid" colorScheme="primary">
+            New Product Facet
+          </Button>
         </Link>
         <HStack>
           <ExportToCsv />

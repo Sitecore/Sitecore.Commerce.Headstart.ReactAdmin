@@ -88,13 +88,19 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
 
             {!isCreating && <InputControl name="DateCreated" label="Date created" control={control} isReadOnly />}
             <ButtonGroup>
-              <Button variant="primaryButton" type="submit" isLoading={isSubmitting} isDisabled={!isValid || !isDirty}>
+              <Button
+                variant="solid"
+                colorScheme="primary"
+                type="submit"
+                isLoading={isSubmitting}
+                isDisabled={!isValid || !isDirty}
+              >
                 Save
               </Button>
-              <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting}>
+              <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
                 Reset
               </Button>
-              <Button onClick={() => router.push("/buyers")} variant="secondaryButton" isLoading={isSubmitting}>
+              <Button onClick={() => router.push("/buyers")} variant="outline" isLoading={isSubmitting}>
                 Cancel
               </Button>
             </ButtonGroup>

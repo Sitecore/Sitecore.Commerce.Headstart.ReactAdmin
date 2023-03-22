@@ -36,7 +36,7 @@ const DebouncedSearchInput: FC<IDebouncedSearchInputProps> = ({
   }, [])
 
   return (
-    <InputGroup maxW="300px">
+    <InputGroup colorScheme="brand" maxW="300px">
       <Input
         marginBottom="0 !important"
         aria-label={label}

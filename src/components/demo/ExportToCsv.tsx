@@ -33,7 +33,7 @@ export default function ExportToCsv({variant = "button"}: ExportToCsvProps) {
   return (
     <>
       {variant === "button" ? (
-        <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
+        <Button variant="outline" onClick={() => setExportCSVDialogOpen(true)}>
           Export to CSV
         </Button>
       ) : (
@@ -62,11 +62,11 @@ export default function ExportToCsv({variant = "button"}: ExportToCsvProps) {
                   ref={cancelRef}
                   onClick={() => setExportCSVDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
-                <Button variant="primaryButton" onClick={() => requestExportCSV()} disabled={loading}>
+                <Button variant="solid" colorScheme="primary" onClick={() => requestExportCSV()} disabled={loading}>
                   {loading ? <Spinner color="brand.500" /> : "Export items to CSV"}
                 </Button>
               </HStack>

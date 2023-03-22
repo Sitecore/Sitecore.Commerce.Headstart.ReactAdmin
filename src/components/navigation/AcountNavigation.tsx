@@ -153,7 +153,6 @@ const MobileNavigation = () => {
           <DrawerBody color={color}>
             <Tooltip label={colorMode === "dark" ? "Set Light Model" : "Set Dark Model"}>
               <Button
-                colorScheme="brandButtons"
                 aria-label="Toggle Color Mode"
                 onClick={toggleColorMode}
                 _focus={{boxShadow: "none"}}
@@ -179,7 +178,7 @@ const MobileNavigation = () => {
                 <Text fontSize="10px">Please check our docs.</Text>
               </Flex>
               <Link href="/docs">
-                <Button variant="tertiaryButton" size="sm" fontWeight="bold" minW="185px" m="0" fontSize="10px">
+                <Button colorScheme="secondary" size="sm" fontWeight="bold" minW="185px" m="0" fontSize="10px">
                   Documentation
                 </Button>
               </Link>

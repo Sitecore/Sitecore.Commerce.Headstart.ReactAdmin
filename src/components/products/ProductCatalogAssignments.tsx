@@ -192,8 +192,7 @@ export default function ProductCatalogAssignments({composedProduct, setComposedP
                                   {" "}
                                   <Tooltip label="Remove from Catalog">
                                     <Button
-                                      colorScheme="brandButtons"
-                                      variant="secondaryButton"
+                                      variant="outline"
                                       aria-label="remove from catalog"
                                       onClick={onRemoveCatalog}
                                       data-id={item.ID}
@@ -226,7 +225,7 @@ export default function ProductCatalogAssignments({composedProduct, setComposedP
       </>
       <HStack float={"right"} position="absolute" bottom="20px">
         <Tooltip label="Add to catalog">
-          <Button colorScheme="brandButtons" variant="tertiaryButton" aria-label="add to catalog" onClick={onOpen}>
+          <Button colorScheme="secondary" aria-label="add to catalog" onClick={onOpen}>
             Add to Catalog
           </Button>
         </Tooltip>
@@ -292,15 +291,14 @@ export default function ProductCatalogAssignments({composedProduct, setComposedP
                     {isCatalogChosen ? null : (
                       <Text pb={2}>Please choose from the search results to link a Catalog</Text>
                     )}
-                    <Button width={"45%"} size={"md"} onClick={onClose} variant="tertiaryButton">
+                    <Button width={"45%"} size={"md"} onClick={onClose} colorScheme="secondary">
                       Cancel
                     </Button>
                     <Button
                       float={"right"}
                       width={"45%"}
                       size={"md"}
-                      colorScheme="brandButtons"
-                      variant="tertiaryButton"
+                      colorScheme="secondary"
                       onClick={onCatalogLink}
                       ml={3}
                       disabled={!isCatalogChosen}

@@ -5,29 +5,15 @@ import {GrFormNext, GrFormPrevious} from "react-icons/gr"
 interface PreviousNextButtonProps {
   type: "previous" | "next"
   page: number
+  isDisabled?: boolean
   onPageChange: (page: number) => void
 }
-export function PreviousNextButton({page, type, onPageChange}: PreviousNextButtonProps) {
+export function PreviousNextButton({page, type, onPageChange, isDisabled}: PreviousNextButtonProps) {
   const newPage = useMemo(() => {
     return type === "next" ? page + 1 : page - 1
   }, [page, type])
   return (
-    <Button
-      variant="no-effects"
-      onClick={() => onPageChange(newPage)}
-      transition="all .5s ease"
-      w="40px"
-      h="40px"
-      borderRadius="8px"
-      bg="#fff"
-      border="1px solid lightgray"
-      display="flex"
-      _hover={{
-        bg: "gray.200",
-        opacity: "0.7",
-        borderColor: "gray.500"
-      }}
-    >
+    <Button variant="outline" isDisabled={isDisabled} onClick={() => onPageChange(newPage)}>
       <Icon as={type === "previous" ? GrFormPrevious : GrFormNext} w="16px" h="16px" color="gray.400" />
     </Button>
   )

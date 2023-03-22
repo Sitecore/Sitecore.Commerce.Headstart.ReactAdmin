@@ -66,7 +66,7 @@ export default function XpCard<T>({
 
   useEffect(() => {
     setFormValues(Object.assign({}, data?.xp))
-  }, [data?.xp])
+  }, [data?.xp, setFormValues])
 
   const onEditClicked = (e) => {
     e.preventDefault()
@@ -309,7 +309,7 @@ export default function XpCard<T>({
           <Tooltip label="Add new Extended Property">
             <Box pt={4} mb={20}>
               <Center>
-                <Button variant="tertiaryButton" onClick={onOpenAddXP} minW="80px">
+                <Button colorScheme="secondary" onClick={onOpenAddXP} minW="80px">
                   Add XP
                 </Button>
               </Center>
@@ -322,12 +322,12 @@ export default function XpCard<T>({
       {isEditingBasicData ? (
         <HStack justifyContent="flex-end" alignItems="flex-end">
           <Tooltip label="Save">
-            <Button variant="primaryButton" aria-label="Save" onClick={onSave} mr={2}>
+            <Button variant="solid" colorScheme="primary" aria-label="Save" onClick={onSave} mr={2}>
               Save
             </Button>
           </Tooltip>
           <Tooltip label="Cancel">
-            <Button colorScheme="brandButtons" aria-label="Cancel" variant="secondaryButton" onClick={onAbortClicked}>
+            <Button aria-label="Cancel" variant="outline" onClick={onAbortClicked}>
               Cancel
             </Button>
           </Tooltip>
@@ -335,7 +335,7 @@ export default function XpCard<T>({
       ) : (
         <HStack float={"right"} position="relative" bottom="20px" mt={3}>
           <Tooltip label="Edit">
-            <Button aria-label="Edit" mt={4} variant="tertiaryButton" onClick={onEditClicked} minW="80px">
+            <Button aria-label="Edit" mt={4} colorScheme="secondary" onClick={onEditClicked} minW="80px">
               Edit
             </Button>
           </Tooltip>
@@ -364,10 +364,10 @@ export default function XpCard<T>({
                 </Select>
                 {renderCurrentSelection()}
                 <HStack justifyContent="space-between" w="100%">
-                  <Button variant="secondaryButton" onClick={onNewProductXPClosed}>
+                  <Button variant="outline" onClick={onNewProductXPClosed}>
                     Cancel
                   </Button>
-                  <Button variant="primaryButton" mr={3} onClick={onNewProductXP}>
+                  <Button variant="solid" colorScheme="primary" mr={3} onClick={onNewProductXP}>
                     Save
                   </Button>
                 </HStack>
@@ -394,10 +394,10 @@ export default function XpCard<T>({
                 {renderEditType()}
                 {renderCurrentEditing()}
                 <HStack justifyContent="space-between" w="100%">
-                  <Button variant="secondaryButton" onClick={onEditProductXPClosed}>
+                  <Button variant="outline" onClick={onEditProductXPClosed}>
                     Cancel
                   </Button>
-                  <Button variant="primaryButton" mr={3} onClick={onEditProductXP}>
+                  <Button variant="solid" colorScheme="primary" mr={3} onClick={onEditProductXP}>
                     Save
                   </Button>
                 </HStack>

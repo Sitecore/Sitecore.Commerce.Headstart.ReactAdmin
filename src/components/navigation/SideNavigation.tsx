@@ -9,7 +9,7 @@ const SideNavigation = () => {
   return (
     <Flex
       pos="sticky"
-      top="0px"
+      top="80px"
       left="2"
       h="95vh"
       borderRadius={{

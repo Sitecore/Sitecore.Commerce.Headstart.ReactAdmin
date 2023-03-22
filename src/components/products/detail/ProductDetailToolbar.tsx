@@ -47,7 +47,7 @@ export default function ProductDetailToolbar({
     <Stack direction="row" mb={5}>
       <ViewManager viewVisibility={viewVisibility} setViewVisibility={setViewVisibility} />
       <Link href="/products/new">
-        <Button variant="secondaryButton">Create</Button>
+        <Button variant="outline">Create</Button>
       </Link>
       <ViewProduct />
       <ExportToCsv />
@@ -58,7 +58,7 @@ export default function ProductDetailToolbar({
       <Button type="button" onClick={discardChanges}>
         Discard Changes
       </Button>
-      <Button type="submit" variant="primaryButton" isDisabled={!isFormValid}>
+      <Button type="submit" variant="solid" colorScheme="primary" isDisabled={!isFormValid}>
         Save
       </Button>
     </Stack>

@@ -1,4 +1,4 @@
-import {Box, Container, Flex} from "@chakra-ui/react"
+import {Box, Container, Flex, HStack} from "@chakra-ui/react"
 import {ReactNode, useEffect, useState} from "react"
 
 import ContentFooter from "./ContentFooter"
@@ -24,23 +24,14 @@ const Layout = (props) => {
   return (
     <Box as="section" w="100%" margin="0 auto" transition="0.5s ease-out">
       <Header />
-      <Flex
-        alignItems="flex-start"
-        height="100%"
-        w="100%"
-        width="full"
-        as="section"
-        mt="89px"
-        justify="space-between"
-        gap="GlobalPadding"
-      >
+      <HStack alignItems="start" gap={5}>
         <LeftNavigation />
-        <Box flexGrow={1} px={5} overflowX="hidden">
+        <Box flexGrow={1} overflowX="hidden">
           <ContentHeader {...props} />
           {props.children}
           <ContentFooter />
         </Box>
-      </Flex>
+      </HStack>
       <Footer />
     </Box>
   )

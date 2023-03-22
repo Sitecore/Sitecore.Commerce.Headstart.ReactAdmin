@@ -158,7 +158,7 @@ export default function ProductMediaInformation({composedProduct, setComposedPro
                       <Text>{key + 1}</Text>
                       <Input value={image.Url} onChange={handleInputChange(key)} />
                       <Tooltip pt={2} label="Remove Product Image">
-                        <Button onClick={onDeleteProductImageClicked(image.Url)} variant="secondaryButton">
+                        <Button onClick={onDeleteProductImageClicked(image.Url)} variant="outline">
                           Delete
                         </Button>
                       </Tooltip>
@@ -213,7 +213,7 @@ export default function ProductMediaInformation({composedProduct, setComposedPro
                   <Tooltip label="Add new Product Image">
                     <Box pt={4}>
                       <Center>
-                        <Button onClick={onNewProductImageClicked} variant="secondaryButton">
+                        <Button onClick={onNewProductImageClicked} variant="outline">
                           Add Image
                         </Button>
                       </Center>
@@ -230,12 +230,12 @@ export default function ProductMediaInformation({composedProduct, setComposedPro
       {isEditingBasicData ? (
         <HStack float={"right"} position="absolute" bottom="20px">
           <Tooltip label="Save">
-            <Button aria-label="Save" onClick={onProductSave} variant="primaryButton">
+            <Button aria-label="Save" onClick={onProductSave} variant="solid" colorScheme="primary">
               Save
             </Button>
           </Tooltip>
           <Tooltip label="Cancel">
-            <Button colorScheme="brandButtons" aria-label="Cancel" variant="secondaryButton" onClick={onAbortClicked}>
+            <Button aria-label="Cancel" variant="outline" onClick={onAbortClicked}>
               Cancel
             </Button>
           </Tooltip>
@@ -243,7 +243,7 @@ export default function ProductMediaInformation({composedProduct, setComposedPro
       ) : (
         <HStack float={"right"} position="absolute" bottom="20px">
           <Tooltip label="Edit">
-            <Button aria-label="Edit" variant="tertiaryButton" onClick={onEditClicked}>
+            <Button aria-label="Edit" colorScheme="secondary" onClick={onEditClicked}>
               Edit
             </Button>
           </Tooltip>

@@ -33,7 +33,7 @@ const NewOrdersPage = () => {
           </FormControl>
         </HStack>
         <HStack justifyContent="space-between" w="100%">
-          <Button variant="secondaryButton">Cancel</Button>
+          <Button variant="outline">Cancel</Button>
           <Button> Submit</Button>
         </HStack>
       </Card>

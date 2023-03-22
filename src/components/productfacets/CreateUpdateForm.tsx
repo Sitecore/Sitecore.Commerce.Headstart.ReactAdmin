@@ -179,7 +179,8 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
               <HStack justifyContent="space-between" w="100%" mb={5}>
                 <Box>
                   <Button
-                    variant="primaryButton"
+                    variant="solid"
+                    colorScheme="primary"
                     type="submit"
                     isLoading={isSubmitting}
                     mr="15px"
@@ -187,12 +188,12 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
                   >
                     Save
                   </Button>
-                  <Button onClick={resetForm} type="reset" variant="secondaryButton" isLoading={isSubmitting} mr="15px">
+                  <Button onClick={resetForm} type="reset" variant="outline" isLoading={isSubmitting} mr="15px">
                     Reset
                   </Button>
                   <Button
                     onClick={() => router.push("/settings/productfacets")}
-                    variant="secondaryButton"
+                    variant="outline"
                     isLoading={isSubmitting}
                     mr="15px"
                   >
@@ -201,7 +202,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
                 </Box>
                 <Button
                   onClick={() => deleteProductFacets()}
-                  variant="secondaryButton"
+                  variant="outline"
                   isLoading={isSubmitting}
                   hidden={isCreating}
                 >

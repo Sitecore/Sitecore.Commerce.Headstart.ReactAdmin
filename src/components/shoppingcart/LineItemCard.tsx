@@ -86,7 +86,7 @@ const LineItemCard: FunctionComponent<LineItemCardProps> = ({lineItem, editable}
       <Th>{priceHelper.formatPrice(lineItem.UnitPrice)}</Th>
       <Th>{priceHelper.formatPrice(lineItem.LineSubtotal)}</Th>
       <Th>
-        <Button variant="secondaryButton" onClick={() => setReturnItemDialogOpen(true)}>
+        <Button variant="outline" onClick={() => setReturnItemDialogOpen(true)}>
           Return item
         </Button>
       </Th>
@@ -114,7 +114,7 @@ const LineItemCard: FunctionComponent<LineItemCardProps> = ({lineItem, editable}
                   ref={cancelRef}
                   onClick={() => setReturnItemDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>

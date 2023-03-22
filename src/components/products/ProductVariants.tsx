@@ -124,10 +124,9 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
                                   {item?.Active ?? false ? (
                                     <Tooltip label="Deactivate Variant">
                                       <Button
-                                        colorScheme="brandButtons"
                                         aria-label="Deactivate variant"
                                         onClick={onVariantStatusChange}
-                                        variant="tertiaryButton"
+                                        colorScheme="secondary"
                                         data-id={item.ID}
                                       >
                                         <FiMinus />
@@ -136,10 +135,9 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
                                   ) : (
                                     <Tooltip label="Activate Variant">
                                       <Button
-                                        colorScheme="brandButtons"
                                         aria-label="Activate Variant"
                                         onClick={onVariantStatusChange}
-                                        variant="tertiaryButton"
+                                        colorScheme="secondary"
                                         data-id={item.ID}
                                       >
                                         <FiPlus />
@@ -166,7 +164,7 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
       </>
       <HStack float={"right"} position="absolute" bottom="20px">
         <Tooltip label="Generate variants">
-          <Button colorScheme="brandButtons" aria-label="Generate Variants" variant="tertiaryButton" onClick={onOpen}>
+          <Button aria-label="Generate Variants" colorScheme="secondary" onClick={onOpen}>
             Create Variant
           </Button>
         </Tooltip>
@@ -195,15 +193,10 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
                   }}
                 />
                 <AlertDialogFooter>
-                  <Button variant="tertiaryButton" onClick={onClose}>
+                  <Button colorScheme="secondary" onClick={onClose}>
                     Cancel
                   </Button>
-                  <Button
-                    colorScheme="brandButtons"
-                    onClick={onGenerateVariantsClicked}
-                    variant="tertiaryButton"
-                    ml={3}
-                  >
+                  <Button onClick={onGenerateVariantsClicked} colorScheme="secondary" ml={3}>
                     Generate
                   </Button>
                 </AlertDialogFooter>

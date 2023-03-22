@@ -47,7 +47,7 @@ const ProductCard = (props: ProductCardProps) => {
       <VStack flex="1" justifyContent="flex-end" alignItems="flex-start" w="full">
         {/* <Heading fontSize="xx-small" fontWeight='normal' color='gray.300' >NEW ARRIVALS</Heading>  */}
         {/* <HStack> */}
-        <Badge colorScheme={product.Active ? "green" : "red"}>{product.Active ? "Active" : "Inactive"}</Badge>
+        <Badge colorScheme={product.Active ? "success" : "danger"}>{product.Active ? "Active" : "Inactive"}</Badge>
         <Link passHref style={{cursor: "pointer"}} href={"/products/" + product.ID}>
           <Heading as="a" fontSize="lg">
             <Tooltip label={product.Name} placement="top">

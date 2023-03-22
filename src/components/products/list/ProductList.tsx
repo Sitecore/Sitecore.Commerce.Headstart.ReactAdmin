@@ -12,7 +12,6 @@ import ProductPromotionModal from "../modals/ProductPromotionModal"
 import ProductActionMenu from "./ProductActionMenu"
 import ProductCard from "./ProductCard"
 import ProductListToolbar from "./ProductListToolbar"
-import ProductThumbnail from "./ProductDefaultImage"
 import ProductDefaultImage from "./ProductDefaultImage"
 
 const ProductQueryMap = {
@@ -82,7 +81,7 @@ const StatusColumn: DataTableColumn<IProduct> = {
   width: "1%",
   align: "center",
   cell: ({row, value}) => (
-    <Tag size="sm" colorScheme={value ? "green" : "red"}>
+    <Tag size="sm" colorScheme={value ? "success" : "danger"}>
       {value ? "Active" : "Inactive"}
     </Tag>
   ),
@@ -148,7 +147,7 @@ const ProductList = () => {
       gridOptions={ProductGridOptions}
     >
       {({renderContent, items, ...listViewChildProps}) => (
-        <Container maxW="container.2xl">
+        <Container maxW="100%">
           <ProductListToolbar
             {...listViewChildProps}
             onBulkEdit={editDisclosure.onOpen}

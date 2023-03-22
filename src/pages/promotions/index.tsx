@@ -142,10 +142,10 @@ const PromotionsList = () => {
         Header: "ACTIONS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button variant="secondaryButton" onClick={() => router.push(`/promotions/${row.original.ID}/`)}>
+            <Button variant="outline" onClick={() => router.push(`/promotions/${row.original.ID}/`)}>
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deletePromotion(row.original.ID)}>
+            <Button variant="outline" onClick={() => deletePromotion(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
@@ -168,7 +168,7 @@ const ProtectedPromotionsList = () => {
     <ProtectedContent hasAccess={appPermissions.OrderManager}>
       <Box padding="GlobalPadding">
         <HStack justifyContent="space-between" w="100%" mb={5}>
-          <Button onClick={() => router.push(`/promotions/add`)} variant="primaryButton">
+          <Button onClick={() => router.push(`/promotions/add`)} variant="solid" colorScheme="primary">
             Create promotion
           </Button>
 

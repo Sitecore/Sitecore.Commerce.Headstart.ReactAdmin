@@ -33,7 +33,7 @@ export default function BulkImport({variant = "button"}: BulkImportProps) {
   return (
     <>
       {variant === "button" ? (
-        <Button variant="secondaryButton" onClick={() => setIsOpen(true)}>
+        <Button variant="outline" onClick={() => setIsOpen(true)}>
           Bulk Import
         </Button>
       ) : (
@@ -50,10 +50,10 @@ export default function BulkImport({variant = "button"}: BulkImportProps) {
             </AlertDialogBody>
             <AlertDialogFooter>
               <HStack justifyContent="space-between" w="100%">
-                <Button ref={cancelRef} onClick={() => setIsOpen(false)} disabled={loading} variant="secondaryButton">
+                <Button ref={cancelRef} onClick={() => setIsOpen(false)} disabled={loading} variant="outline">
                   Cancel
                 </Button>
-                <Button variant="primaryButton" onClick={() => requestBulkImport()} disabled={loading}>
+                <Button variant="solid" colorScheme="primary" onClick={() => requestBulkImport()} disabled={loading}>
                   {loading ? <Spinner color="brand.500" /> : "Bulk Import"}
                 </Button>
               </HStack>

@@ -323,25 +323,22 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
               <Divider mt="15" mb="15" />
               <ButtonGroup>
                 <Button
-                  variant="primaryButton"
+                  variant="solid"
+                  colorScheme="primary"
                   type="submit"
                   isLoading={isSubmitting}
                   isDisabled={!isValid || !isDirty}
                 >
                   Save
                 </Button>
-                <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting}>
+                <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
                   Reset
                 </Button>
-                <Button onClick={() => router.push(`/promotions`)} variant="secondaryButton" isLoading={isSubmitting}>
+                <Button onClick={() => router.push(`/promotions`)} variant="outline" isLoading={isSubmitting}>
                   Cancel
                 </Button>
                 {!isCreating && (
-                  <Button
-                    variant="secondaryButton"
-                    onClick={() => deletePromotion(values.ID)}
-                    leftIcon={<DeleteIcon />}
-                  >
+                  <Button variant="outline" onClick={() => deletePromotion(values.ID)} leftIcon={<DeleteIcon />}>
                     Delete
                   </Button>
                 )}

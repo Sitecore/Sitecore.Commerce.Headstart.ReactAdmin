@@ -78,13 +78,19 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
             <InputControl name="Country" label="Country" control={control} isRequired />
             <InputControl name="Phone" label="Phone" control={control} />
             <ButtonGroup>
-              <Button variant="primaryButton" type="submit" isLoading={isSubmitting} isDisabled={!isValid || !isDirty}>
+              <Button
+                variant="solid"
+                colorScheme="primary"
+                type="submit"
+                isLoading={isSubmitting}
+                isDisabled={!isValid || !isDirty}
+              >
                 Save
               </Button>
-              <Button onClick={reset} type="reset" variant="secondaryButton" isLoading={isSubmitting}>
+              <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
                 Reset
               </Button>
-              <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
+              <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting}>
                 Cancel
               </Button>
             </ButtonGroup>

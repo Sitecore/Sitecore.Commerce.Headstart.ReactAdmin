@@ -38,7 +38,7 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
       {({onClose}) => (
         <>
           <PopoverTrigger>
-            <Button variant="secondaryButton">
+            <Button variant="outline">
               <HStack>
                 <Text>Views </Text>
                 <ChevronDownIcon />
@@ -74,7 +74,7 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
             <PopoverFooter>
               <Flex justifyContent="space-between">
                 <Button onClick={onClose}>Cancel</Button>
-                <Button variant="primaryButton" onClick={() => onSubmit(onClose)}>
+                <Button variant="solid" colorScheme="primary" onClick={() => onSubmit(onClose)}>
                   Save
                 </Button>
               </Flex>

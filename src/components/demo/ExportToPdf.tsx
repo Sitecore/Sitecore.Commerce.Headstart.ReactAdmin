@@ -27,7 +27,7 @@ export default function ExportToPdf() {
 
   return (
     <>
-      <Button variant="secondaryButton" onClick={() => setExportPDFDialogOpen(true)}>
+      <Button variant="outline" onClick={() => setExportPDFDialogOpen(true)}>
         Export to Pdf
       </Button>
       <AlertDialog
@@ -53,11 +53,11 @@ export default function ExportToPdf() {
                   ref={cancelRef}
                   onClick={() => setExportPDFDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
-                <Button variant="primaryButton" onClick={requestExportPDF} disabled={loading}>
+                <Button variant="solid" colorScheme="primary" onClick={requestExportPDF} disabled={loading}>
                   {loading ? <Spinner color="brand.500" /> : "Export Orders PDF"}
                 </Button>
               </HStack>

@@ -168,7 +168,7 @@ const ListView = <T extends IDefaultResource>({
 
   const viewModeToggle = useMemo(() => {
     return (
-      <ButtonGroup isAttached variant="secondaryButton">
+      <ButtonGroup isAttached variant="outline">
         <IconButton
           aria-label="Grid View"
           isActive={viewMode === "grid"}

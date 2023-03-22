@@ -33,7 +33,7 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
         <Box as="span" width="2"></Box>
         {viewModeToggle}
         <Link passHref href="/products/new">
-          <Button variant="solid" colorScheme="teal" fontSize="sm" as="a">
+          <Button variant="solid" colorScheme="primary" as="a">
             Create Product
           </Button>
         </Link>

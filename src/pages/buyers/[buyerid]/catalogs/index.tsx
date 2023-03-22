@@ -97,7 +97,7 @@ const CatalogsList = () => {
         accessor: "CategoryCount",
         Cell: ({row, value}) => (
           <Link href={`/buyers/${router.query.buyerid}/catalogs/${row.original.ID}/categories`}>
-            <Button variant="secondaryButton">Categories ({value})</Button>
+            <Button variant="outline">Categories ({value})</Button>
           </Link>
         )
       },
@@ -110,12 +110,12 @@ const CatalogsList = () => {
         Cell: ({row}) => (
           <ButtonGroup>
             <Button
-              variant="secondaryButton"
+              variant="outline"
               onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs/${row.original.ID}`)}
             >
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteCatalog(row.original.ID)}>
+            <Button variant="outline" onClick={() => deleteCatalog(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
@@ -129,7 +129,11 @@ const CatalogsList = () => {
     <>
       <Box pl="GlobalPadding">
         <HStack justifyContent="space-between" w="100%" mb={5}>
-          <Button onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs/add`)} variant="primaryButton">
+          <Button
+            onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs/add`)}
+            variant="solid"
+            colorScheme="primary"
+          >
             Create catalog
           </Button>
           <HStack>

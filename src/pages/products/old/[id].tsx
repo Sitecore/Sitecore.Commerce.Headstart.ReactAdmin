@@ -202,13 +202,15 @@ const ProductDetails = () => {
             <HStack justifyContent="space-between" w="100%" mr="208px">
               <Box>
                 <Link href="" onClick={onOpenAddProduct} pr="10px">
-                  <Button variant="primaryButton">Create Product</Button>
+                  <Button variant="solid" colorScheme="primary">
+                    Create Product
+                  </Button>
                 </Link>
-                <Button variant="secondaryButton" onClick={() => setViewProductDialogOpen(true)}>
+                <Button variant="outline" onClick={() => setViewProductDialogOpen(true)}>
                   View Product
                 </Button>
               </Box>
-              <Button variant="secondaryButton" onClick={() => setDeleteProductDialogOpen(true)}>
+              <Button variant="outline" onClick={() => setDeleteProductDialogOpen(true)}>
                 Delete Product
               </Button>
             </HStack>
@@ -267,7 +269,7 @@ const ProductDetails = () => {
                   </MenuItem>
                 </MenuList>
               </Menu>
-              <Button variant="secondaryButton" onClick={() => setLanguageDialogOpen(true)}>
+              <Button variant="outline" onClick={() => setLanguageDialogOpen(true)}>
                 Languages
               </Button>
               <ExportToCsv />
@@ -380,10 +382,10 @@ const ProductDetails = () => {
                   <AlertDialogBody>Are you sure? You can&apos;t undo this action afterwards.</AlertDialogBody>
 
                   <AlertDialogFooter>
-                    <Button variant="tertiaryButton" onClick={onClose}>
+                    <Button colorScheme="secondary" onClick={onClose}>
                       Cancel
                     </Button>
-                    <Button variant="tertiaryButton" colorScheme="red" onClick={onDelete} ml={3}>
+                    <Button variant="solid" colorScheme="red" onClick={onDelete} ml={3}>
                       Delete
                     </Button>
                   </AlertDialogFooter>
@@ -411,7 +413,7 @@ const ProductDetails = () => {
                     ref={cancelRef}
                     onClick={() => setViewProductDialogOpen(false)}
                     disabled={loading}
-                    variant="secondaryButton"
+                    variant="outline"
                   >
                     Cancel
                   </Button>
@@ -442,7 +444,7 @@ const ProductDetails = () => {
                     ref={cancelRef}
                     onClick={() => setDeleteProductDialogOpen(false)}
                     disabled={loading}
-                    variant="secondaryButton"
+                    variant="outline"
                   >
                     Cancel
                   </Button>
@@ -487,7 +489,7 @@ const ProductDetails = () => {
                     ref={cancelRef}
                     onClick={() => setLanguageDialogOpen(false)}
                     disabled={loading}
-                    variant="secondaryButton"
+                    variant="outline"
                   >
                     Cancel
                   </Button>
@@ -549,10 +551,10 @@ const ProductDetails = () => {
 
                 <ModalFooter>
                   <HStack justifyContent="space-between" w="100%">
-                    <Button onClick={onCloseAddProduct} variant="secondaryButton">
+                    <Button onClick={onCloseAddProduct} variant="outline">
                       Cancel
                     </Button>
-                    <Button colorScheme="purple" mr={3} onClick={onProductAdd} variant="primaryButton">
+                    <Button mr={3} onClick={onProductAdd} variant="solid" colorScheme="primary">
                       Add
                     </Button>
                   </HStack>

@@ -116,10 +116,10 @@ const BuyersList = () => {
         Header: "USER GROUPS / USERS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button onClick={() => router.push(`/buyers/${row.original.ID}/usergroups`)} variant="secondaryButton">
+            <Button onClick={() => router.push(`/buyers/${row.original.ID}/usergroups`)} variant="outline">
               User Groups ({buyersMeta[row.original.ID]["userGroupsCount"]})
             </Button>
-            <Button onClick={() => router.push(`/buyers/${row.original.ID}/users`)} variant="secondaryButton">
+            <Button onClick={() => router.push(`/buyers/${row.original.ID}/users`)} variant="outline">
               Users ({buyersMeta[row.original.ID]["usersCount"]})
             </Button>
           </ButtonGroup>
@@ -129,7 +129,7 @@ const BuyersList = () => {
         Header: "CATALOGS",
         Cell: ({row}) => (
           <Link href={`/buyers/${row.original.ID}/catalogs`}>
-            <Button variant="secondaryButton">Catalogs ({buyersMeta[row.original.ID]["catalogsCount"]})</Button>
+            <Button variant="outline">Catalogs ({buyersMeta[row.original.ID]["catalogsCount"]})</Button>
           </Link>
         )
       },
@@ -137,10 +137,10 @@ const BuyersList = () => {
         Header: "ACTIONS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button variant="secondaryButton" onClick={() => router.push(`/buyers/${row.original.ID}/`)}>
+            <Button variant="outline" onClick={() => router.push(`/buyers/${row.original.ID}/`)}>
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteBuyer(row.original.ID)}>
+            <Button variant="outline" onClick={() => deleteBuyer(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
@@ -159,7 +159,7 @@ const ProtectedBuyersList = () => {
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
       <Box padding="GlobalPadding">
         <HStack justifyContent="space-between" w="100%" mb={5}>
-          <Button onClick={() => router.push(`/buyers/add`)} variant="primaryButton">
+          <Button onClick={() => router.push(`/buyers/add`)} variant="solid" colorScheme="primary">
             Create buyer
           </Button>
           <HStack>

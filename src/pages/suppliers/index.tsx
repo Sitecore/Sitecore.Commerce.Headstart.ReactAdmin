@@ -110,10 +110,10 @@ const SuppliersList = () => {
         Header: "USER GROUPS / USERS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button onClick={() => router.push(`/suppliers/${row.original.ID}/usergroups`)} variant="secondaryButton">
+            <Button onClick={() => router.push(`/suppliers/${row.original.ID}/usergroups`)} variant="outline">
               User Groups ({suppliersMeta[row.original.ID]["userGroupsCount"]})
             </Button>
-            <Button onClick={() => router.push(`/suppliers/${row.original.ID}/users`)} variant="secondaryButton">
+            <Button onClick={() => router.push(`/suppliers/${row.original.ID}/users`)} variant="outline">
               Users ({suppliersMeta[row.original.ID]["usersCount"]})
             </Button>
           </ButtonGroup>
@@ -123,17 +123,17 @@ const SuppliersList = () => {
         Header: "ACTIONS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button variant="secondaryButton" onClick={() => router.push(`/suppliers/${row.original.ID}/`)}>
+            <Button variant="outline" onClick={() => router.push(`/suppliers/${row.original.ID}/`)}>
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteSupplier(row.original.ID)}>
+            <Button variant="outline" onClick={() => deleteSupplier(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
         )
       }
     ],
-    [deleteSupplier, suppliersMeta]
+    [deleteSupplier, suppliersMeta, router]
   )
 
   return <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData} />
@@ -145,7 +145,7 @@ const ProtectedSuppliersList = () => {
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
       <Box padding="GlobalPadding">
         <HStack justifyContent="space-between" w="100%" mb={5}>
-          <Button onClick={() => router.push(`/suppliers/add`)} variant="primaryButton">
+          <Button onClick={() => router.push(`/suppliers/add`)} variant="solid" colorScheme="primary">
             Create supplier
           </Button>
           <HStack>

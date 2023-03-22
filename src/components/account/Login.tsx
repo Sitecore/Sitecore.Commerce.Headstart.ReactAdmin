@@ -94,7 +94,6 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({title = "Sign into yo
                     size="lg"
                     mx={1}
                     py={2}
-                    colorScheme="brandButtons"
                   />
                   <Text>Keep me logged in</Text>
                 </HStack>

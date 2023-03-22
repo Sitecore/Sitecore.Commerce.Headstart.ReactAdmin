@@ -1,4 +1,4 @@
-import {Button, Text} from "@chakra-ui/react"
+import {Button, ButtonGroup, Text} from "@chakra-ui/react"
 
 interface PaginationButtonsProps {
   page: number
@@ -14,30 +14,19 @@ export function PaginationButtons({page, totalPages, onPageChange}: PaginationBu
   }
 
   return (
-    <>
+    <ButtonGroup isAttached>
       {buildPagesArray(totalPages).map((pageNumber) => {
         return (
           <Button
-            variant="no-effects"
-            transition="all .5s ease"
+            variant="outline"
             onClick={() => onPageChange(pageNumber)}
-            w="40px"
-            h="40px"
-            borderRadius="8px"
-            bg={pageNumber === page ? "blue.500" : "#fff"}
-            border={pageNumber === page ? "none" : "1px solid lightgray"}
-            _hover={{
-              opacity: "0.7",
-              borderColor: "gray.500"
-            }}
+            isActive={pageNumber === page}
             key={pageNumber}
           >
-            <Text fontSize="sm" color={pageNumber === page ? "#fff" : "gray.600"}>
-              {pageNumber}
-            </Text>
+            {pageNumber}
           </Button>
         )
       })}
-    </>
+    </ButtonGroup>
   )
 }

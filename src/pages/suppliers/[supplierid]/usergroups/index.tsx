@@ -76,12 +76,12 @@ const UserGroupsList = () => {
         Cell: ({row}) => (
           <ButtonGroup>
             <Button
-              variant="secondaryButton"
+              variant="outline"
               onClick={() => router.push(`/suppliers/${router.query.supplierid}/usergroups/${row.original.ID}`)}
             >
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteUserGroup(row.original.ID)}>
+            <Button variant="outline" onClick={() => deleteUserGroup(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
@@ -97,7 +97,8 @@ const UserGroupsList = () => {
         <HStack justifyContent="space-between" w="100%" mb={5}>
           <Button
             onClick={() => router.push(`/suppliers/${router.query.supplierid}/usergroups/add`)}
-            variant="primaryButton"
+            variant="solid"
+            colorScheme="primary"
           >
             Create user group
           </Button>

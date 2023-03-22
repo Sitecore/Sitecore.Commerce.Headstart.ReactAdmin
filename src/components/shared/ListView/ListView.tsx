@@ -246,8 +246,7 @@ const ListView = <T extends IDefaultResource>({
     if (loading || (!loading && data)) {
       return (
         <Box mb={5}>
-          {viewMode === "grid" ? (
-            //GRID VIEW
+          <Box hidden={viewMode !== "grid"}>
             <DataGrid
               {...gridOptions}
               loading={loading}
@@ -257,8 +256,8 @@ const ListView = <T extends IDefaultResource>({
               selected={selected}
               onSelectChange={handleSelectChange}
             />
-          ) : (
-            //TABLE VIEW
+          </Box>
+          <Box hidden={viewMode !== "table"}>
             <DataTable
               {...tableOptions}
               loading={loading}
@@ -270,7 +269,7 @@ const ListView = <T extends IDefaultResource>({
               onSortChange={handleSortChange}
               currentSort={currentSort}
             />
-          )}
+          </Box>
           {data && data.Meta && data.Meta.TotalPages > 1 && (
             <Center>
               <Pagination page={currentPage} totalPages={data.Meta.TotalPages} onChange={handleUpdateQuery("p")} />

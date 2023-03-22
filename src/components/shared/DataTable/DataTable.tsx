@@ -4,6 +4,7 @@ import {
   Checkbox,
   Flex,
   Icon,
+  ResponsiveObject,
   Spinner,
   Table,
   TableContainer,
@@ -13,7 +14,7 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue
+  useBreakpointValue
 } from "@chakra-ui/react"
 import get from "lodash/get"
 import {ReactElement, useMemo} from "react"
@@ -22,6 +23,8 @@ import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
 
 export interface DataTableColumn<T> {
   header: string
+  width?: string
+  minWidth?: string
   accessor?: string
   align?: "left" | "center" | "right"
   cell?: ({row, value}: {row: {original: T}; value: any}) => ReactElement | string
@@ -30,14 +33,17 @@ export interface DataTableColumn<T> {
 
 export type DataTableRowActionsCallback<T> = (data: T) => ReactElement
 
+export type ColumnIndex = number
+
 export interface IDataTable<T> {
+  columns?: DataTableColumn<T>[]
+  responsive?: ResponsiveObject<DataTableColumn<T>[]>
   data: T[]
   loading?: boolean
-  selected?: string[]
   emptyDisplay?: ListViewTemplate
-  onSelectChange?: (changedIds: string[] | string, isSelected: boolean) => void
-  columns: DataTableColumn<T>[]
+  selected?: string[]
   currentSort?: string
+  onSelectChange?: (changedIds: string[] | string, isSelected: boolean) => void
   onSortChange: (sortKey: string, isSorted: boolean, isSortedDesc: boolean) => void
   rowActions?: (rowData: T) => ListViewTemplate
 }
@@ -50,6 +56,7 @@ const DEFAULT_DATA_TABLE_EMPTY_DISPLAY: ReactElement = (
 
 const DataTable = <T extends IDefaultResource>({
   columns,
+  responsive,
   data,
   loading,
   currentSort,
@@ -59,39 +66,45 @@ const DataTable = <T extends IDefaultResource>({
   onSelectChange,
   selected
 }: IDataTable<T>) => {
+  const responsiveColumns = useBreakpointValue(responsive)
+
+  //use responsive columns when available
+  const currentColumns = useMemo(() => {
+    if (responsiveColumns) return responsiveColumns
+    return columns
+  }, [responsiveColumns, columns])
+
   const headers = useMemo(() => {
-    return columns.map((column) => {
+    return currentColumns.map((column) => {
       const isSorted = currentSort?.length
         ? currentSort.includes(column.accessor) || currentSort.includes(`!${column.accessor}`)
         : false
       const isSortedDesc = currentSort?.length ? currentSort.includes(`!${column.accessor}`) : false
       return {
+        align: "left",
         ...column,
         isSorted,
         isSortedDesc
       }
     })
-  }, [currentSort, columns])
+  }, [currentSort, currentColumns])
 
   const rows = useMemo(() => {
     if (!data) return []
     return data.map((row) => ({
       data: row,
       isSelected: selected.includes(row["ID"]),
-      cells: columns.map((column) => {
+      cells: currentColumns.map((column) => {
         const value = get(row, column.accessor, null)
         return {
+          minWidth: column.minWidth,
+          width: column.width,
           align: column.align,
           value: column.cell?.({value, row: {original: row}}) || value
         }
       })
     }))
-  }, [data, columns, selected])
-
-  const tableHeaderBg = useColorModeValue("white.000", "gray.900")
-  const tableBg = useColorModeValue("brand.300", "brand.500")
-  const tableColor = useColorModeValue("textColor.900", "textColor.100")
-  const tableBorder = useColorModeValue("gray.400", "gray.400")
+  }, [data, currentColumns, selected])
 
   const indeterminateSelectAll = useMemo(() => {
     if (!data) return false
@@ -99,11 +112,11 @@ const DataTable = <T extends IDefaultResource>({
   }, [selected, data])
 
   const columnCount = useMemo(() => {
-    let result = columns.length
+    let result = currentColumns.length
     if (rowActions) result++
     if (onSelectChange) result++
     return result
-  }, [rowActions, onSelectChange, columns])
+  }, [rowActions, onSelectChange, currentColumns])
 
   const handleSelectAllChange = (isChecked) => {
     onSelectChange(
@@ -113,31 +126,29 @@ const DataTable = <T extends IDefaultResource>({
   }
 
   return (
-    <TableContainer position="relative" width={"full"} rounded={8} bg={tableHeaderBg} color={tableColor} minH={160}>
+    <TableContainer
+      whiteSpace="normal"
+      background="Background"
+      overflowX="hidden"
+      position="relative"
+      w="100%"
+      rounded={8}
+      minH={160}
+    >
       {loading && (
-        <Box
-          position="absolute"
-          zIndex={2}
-          left={0}
-          right={0}
-          top={0}
-          bottom={0}
-          pointerEvents="none"
-          bgColor="whiteAlpha.700"
-        >
+        <Box position="absolute" zIndex={2} left={0} right={0} top={0} bottom={0} pointerEvents="none">
           <Center h="100%" color="teal">
             <Spinner size="xl" />
           </Center>
         </Box>
       )}
-      <Table role="table" variant="simple">
+      <Table role="table" w="100%">
         <Thead>
           <Tr role="row">
             {onSelectChange && (
-              <Th colSpan={1} width="1%">
+              <Th color="inherit" w="1%">
                 <Checkbox
                   isIndeterminate={indeterminateSelectAll}
-                  colorScheme={indeterminateSelectAll ? "gray" : "blue"}
                   isChecked={data && data.length <= selected.length}
                   onChange={(e) => handleSelectAllChange(e.target.checked)}
                 />
@@ -145,9 +156,10 @@ const DataTable = <T extends IDefaultResource>({
             )}
             {headers.map((header, index) => (
               <Th
-                textAlign={header.align}
+                w={header.width}
+                minW={header.minWidth}
                 role="columnheader"
-                pe="0px"
+                pe={header.sortable && header.align === "left" ? "0px" : 6}
                 key={index}
                 style={{cursor: header.sortable ? "pointer" : "auto"}}
                 onClick={
@@ -157,14 +169,16 @@ const DataTable = <T extends IDefaultResource>({
                   })
                 }
               >
-                <Flex justify="space-between" align="center" fontSize={{sm: "10px", lg: "12px"}} color="gray.400">
+                <Flex
+                  justify={header.align === "right" ? "end" : header.align === "center" ? "center" : "space-between"}
+                  alignContent="end"
+                  align="center"
+                >
                   {header.header}
                   {header.sortable && (
                     <Icon
                       w={{sm: "10px", md: "14px"}}
                       h={{sm: "10px", md: "14px"}}
-                      color={header.isSorted ? "gray.500" : "gray.400"}
-                      float="right"
                       as={
                         header.isSorted ? (header.isSortedDesc ? TiArrowSortedDown : TiArrowSortedUp) : TiArrowUnsorted
                       }
@@ -173,7 +187,7 @@ const DataTable = <T extends IDefaultResource>({
                 </Flex>
               </Th>
             ))}
-            {rowActions && <Th />}
+            {rowActions && <Th w="1%" />}
           </Tr>
         </Thead>
 
@@ -181,7 +195,7 @@ const DataTable = <T extends IDefaultResource>({
           {rows.map((row, rowIndex) => (
             <Tr key={rowIndex} role="row">
               {onSelectChange && (
-                <Td colSpan={1}>
+                <Td w="1%">
                   <Checkbox
                     isChecked={selected.includes(row.data["ID"])}
                     onChange={(e) => onSelectChange(row.data["ID"], e.target.checked)}
@@ -189,11 +203,11 @@ const DataTable = <T extends IDefaultResource>({
                 </Td>
               )}
               {row.cells.map((cell, cellIndex) => (
-                <Td textAlign={cell.align} role="cell" key={cellIndex}>
+                <Td textAlign={cell.align} w={cell.width} minW={cell.minWidth} role="cell" key={cellIndex}>
                   {cell.value}
                 </Td>
               ))}
-              {rowActions && <Td width="1%">{rowActions(row.data)}</Td>}
+              {rowActions && <Td w="1%">{rowActions(row.data)}</Td>}
             </Tr>
           ))}
           {!loading && !rows.length && (

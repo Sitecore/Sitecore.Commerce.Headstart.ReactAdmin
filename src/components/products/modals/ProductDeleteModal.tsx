@@ -27,7 +27,7 @@ import {
 } from "@chakra-ui/react"
 import {FC, useEffect, useState, useCallback} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
-import ProductThumbnail from "../list/ProductThumbnail"
+import ProductThumbnail from "../list/ProductDefaultImage"
 
 interface IProductDeleteModal {
   products?: IProduct[]

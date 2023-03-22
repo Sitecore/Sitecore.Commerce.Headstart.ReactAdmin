@@ -35,11 +35,11 @@ const Layout = (props) => {
         gap="GlobalPadding"
       >
         <LeftNavigation />
-        <Container maxW="full">
+        <Box flexGrow={1} px={5} overflowX="hidden">
           <ContentHeader {...props} />
           {props.children}
           <ContentFooter />
-        </Container>
+        </Box>
       </Flex>
       <Footer />
     </Box>

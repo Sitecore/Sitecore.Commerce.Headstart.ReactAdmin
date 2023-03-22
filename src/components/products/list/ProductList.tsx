@@ -1,4 +1,4 @@
-import {Container, Image, Tag, useDisclosure} from "@chakra-ui/react"
+import {Box, Container, Image, Tag, Text, useColorMode, useColorModeValue, useDisclosure} from "@chakra-ui/react"
 import Link from "next/link"
 import {Products} from "ordercloud-javascript-sdk"
 import {useCallback, useState} from "react"
@@ -12,6 +12,8 @@ import ProductPromotionModal from "../modals/ProductPromotionModal"
 import ProductActionMenu from "./ProductActionMenu"
 import ProductCard from "./ProductCard"
 import ProductListToolbar from "./ProductListToolbar"
+import ProductThumbnail from "./ProductDefaultImage"
+import ProductDefaultImage from "./ProductDefaultImage"
 
 const ProductQueryMap = {
   s: "Search",
@@ -23,64 +25,85 @@ const ProductFilterMap = {
   active: "Active"
 }
 
-const ProductListTableColumns: DataTableColumn<IProduct>[] = [
-  {
-    header: "Product ID",
-    accessor: "ID",
-    cell: ({row, value}) => <Link href={`/products/${value}`}>{value}</Link>,
-    sortable: true
-  },
-  {
-    header: "Image",
-    accessor: "xp.Images",
-    align: "center",
-    cell: ({row, value}) => (
-      <Link href={"/products/" + row.original.ID}>
-        <Image
-          src={
-            value && value.length
-              ? value[0]?.ThumbnailUrl ?? value[0]?.Url
-              : "https://mss-p-006-delivery.stylelabs.cloud/api/public/content/4fc742feffd14e7686e4820e55dbfbaa"
-          }
-          alt="product image"
-          width="50px"
-        />
-      </Link>
-    )
-  },
-  {
-    header: "Product Name",
-    accessor: "Name",
-    cell: ({row, value}) => <Link href={`/products/${row.original.ID}`}>{value}</Link>,
-    sortable: true
-  },
-  {
-    header: "Description",
-    accessor: "Description",
-    cell: ({row, value}) =>
-      textHelper.stripHTML(value).length > 40
-        ? textHelper.stripHTML(value).substring(0, 40) + "..."
-        : textHelper.stripHTML(value)
-  },
-  {
-    header: "Status",
-    accessor: "Active",
-    cell: ({row, value}) => (
-      <Tag size="sm" colorScheme={value ? "green" : "red"}>
-        {value ? "Active" : "Inactive"}
-      </Tag>
-    ),
-    sortable: true
-  },
-  {
-    header: "Inventory",
-    accessor: "Inventory.QuantityAvailable",
-    align: "right"
-  }
-]
+const IdColumn: DataTableColumn<IProduct> = {
+  header: "Product ID",
+  accessor: "ID",
+  width: "15%",
+  cell: ({row, value}) => (
+    <Link href={`/products/${value}`}>
+      <Text as="a" noOfLines={2} title={value}>
+        {value}
+      </Text>
+    </Link>
+  ),
+  sortable: true
+}
+
+const ImageColumn: DataTableColumn<IProduct> = {
+  header: "Image",
+  accessor: "xp.Images",
+  align: "center",
+  width: "50px",
+  cell: ({row, value}) => (
+    <Link passHref href={"/products/" + row.original.ID}>
+      <Box as="a" display="inline-block">
+        <ProductDefaultImage rounded="lg" w="50px" product={row.original} />
+      </Box>
+    </Link>
+  )
+}
+
+const NameColumn: DataTableColumn<IProduct> = {
+  header: "Product Name",
+  accessor: "Name",
+  minWidth: "200px",
+  cell: ({row, value}) => (
+    <Link passHref href={`/products/${row.original.ID}`}>
+      <Text as="a" noOfLines={2} title={value}>
+        {value}
+      </Text>
+    </Link>
+  ),
+  sortable: true
+}
+
+const DescriptionColumn: DataTableColumn<IProduct> = {
+  header: "Description",
+  accessor: "Description",
+  cell: ({row, value}) => (
+    <Text w="100%" maxW="400px" noOfLines={2} fontSize="xs" title={value}>
+      {textHelper.stripHTML(value)}
+    </Text>
+  )
+}
+
+const StatusColumn: DataTableColumn<IProduct> = {
+  header: "Status",
+  accessor: "Active",
+  width: "1%",
+  align: "center",
+  cell: ({row, value}) => (
+    <Tag size="sm" colorScheme={value ? "green" : "red"}>
+      {value ? "Active" : "Inactive"}
+    </Tag>
+  ),
+  sortable: true
+}
+
+const InventoryColumn: DataTableColumn<IProduct> = {
+  header: "Inventory",
+  accessor: "Inventory.QuantityAvailable",
+  align: "right",
+  width: "1%"
+}
 
 const ProductTableOptions: ListViewTableOptions<IProduct> = {
-  columns: ProductListTableColumns
+  responsive: {
+    base: [IdColumn, NameColumn],
+    md: [IdColumn, NameColumn, StatusColumn],
+    lg: [IdColumn, ImageColumn, NameColumn, StatusColumn],
+    xl: [IdColumn, ImageColumn, NameColumn, DescriptionColumn, StatusColumn, InventoryColumn]
+  }
 }
 
 const ProductGridOptions: ListViewGridOptions<IProduct> = {

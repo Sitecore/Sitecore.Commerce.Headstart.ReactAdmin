@@ -1,6 +1,6 @@
 import {ChakraProvider, extendTheme, localStorageManager, theme, withDefaultColorScheme} from "@chakra-ui/react"
 import contextualColors from "styles/theme/contextualColors"
-import Card from "styles/theme/components/Card"
+import Card from "../styles/theme/components/Card"
 import {Input, Select, Textarea} from "../styles/theme/components/Controls"
 
 interface ChakraProps {

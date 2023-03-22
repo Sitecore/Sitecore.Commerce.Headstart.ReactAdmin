@@ -10,7 +10,7 @@ const ContentHeader = (props) => {
           <Breadcrumbs />
         </Box>
       )}
-      {props?.header?.title && <Heading as="h1">{props?.header?.title}</Heading>}
+      {/* {props?.header?.title && <Heading as="h1">{props?.header?.title}</Heading>} */}
       {props?.header?.metas?.hasBuyerContextSwitch && <BuyerContextSwitch />}
     </Container>
   ) : null

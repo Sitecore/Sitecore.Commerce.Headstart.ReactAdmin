@@ -21,16 +21,25 @@ export interface ListViewGridOptions<T>
 
 export type ListViewTemplate = ReactElement | ReactElement[] | string
 
+export type LocationSearchMap = {[key: string]: string}
+
+export type ServiceListOptions = {[key: string]: ServiceListOptions | string}
+
+export type ServiceOptions = {
+  parameters?: string[]
+  listOptions?: ServiceListOptions
+}
+
 interface IListView<T, F = any> {
   initialViewMode?: "grid" | "table"
-  defaultServiceOptions?: {parameters?: string[]; listOptions?: {[key: string]: string}}
+  defaultServiceOptions?: ServiceOptions
   service?: (...args) => Promise<T extends Product ? ListPageWithFacets<T, F> : ListPage<T>>
   itemActions?: (item: T) => ListViewTemplate
   tableOptions: ListViewTableOptions<T>
   gridOptions?: ListViewGridOptions<T>
-  paramMap?: {[key: string]: string}
-  queryMap?: {[key: string]: string}
-  filterMap?: {[key: string]: string}
+  paramMap?: LocationSearchMap
+  queryMap?: LocationSearchMap
+  filterMap?: LocationSearchMap
   children?: (props: ListViewChildrenProps) => ReactElement
   noResultsMessage?: ListViewTemplate
   noDataMessage?: ListViewTemplate
@@ -43,7 +52,7 @@ export interface ListViewChildrenProps {
   updateQuery: (queryKey: string, resetPage?: boolean) => (value: string | boolean | number) => void
   upsertItems: (items: any[]) => void
   removeItems: (itemIds: string[]) => void
-  routeParams: any
+  routeParams: LocationSearchMap
   queryParams: any
   filterParams: any
   selected: string[]

@@ -36,6 +36,7 @@ import {IPromotion} from "types/ordercloud/IPromotion"
 import PromotionXpCard from "./PromotionXpCard"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
+import {emptyStringToNull} from "utils"
 
 export {CreateUpdateForm}
 
@@ -96,7 +97,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
     EligibleExpression: Yup.string().max(400).required("Eligible Expression is required"),
     ValueExpression: Yup.string().max(400).required("Value Expression is required"),
     Description: Yup.string().max(100),
-    xp_MinReqValue: Yup.number()
+    xp_MinReqValue: Yup.number().transform(emptyStringToNull).nullable().typeError("You must specify a number")
   }
   const {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit} =
     useCreateUpdateForm<Promotion>(promotion, formShape, createPromotion, updatePromotion)

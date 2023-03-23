@@ -97,3 +97,17 @@ function wrapSchema(obj: any) {
   })
   return obj
 }
+
+/**
+ * Yup helper for allowing number types with a default value of empty string
+ * Chakra doesn't allow null for inputs, and undefined is considered uncontrolled input
+ * and we may not want to default a field to zero so this lets us define an "empty" field
+ * without yup validation yelling at us when it hasn't been filled in and luckily
+ * OrderCloud simply ignores empty strings
+ */
+export function emptyStringToNull(value, originalValue) {
+  if (typeof originalValue === "string" && originalValue === "") {
+    return null
+  }
+  return value
+}

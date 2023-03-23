@@ -1,3 +1,4 @@
+import {InfoIcon, InfoOutlineIcon} from "@chakra-ui/icons"
 import {
   FormControl as ChakraFormControl,
   FormControlProps,
@@ -42,7 +43,12 @@ export const FormControl: FC<BaseProps> = (props: BaseProps) => {
         label
       )}
       {children}
-      {error && <FormErrorMessage {...errorMessageProps}>{error}</FormErrorMessage>}
+      {error && (
+        <FormErrorMessage {...errorMessageProps}>
+          <InfoOutlineIcon marginRight={2} />
+          {error.message}
+        </FormErrorMessage>
+      )}
       {helperText && typeof helperText === "string" ? (
         <FormHelperText {...helperTextProps}>{helperText}</FormHelperText>
       ) : (

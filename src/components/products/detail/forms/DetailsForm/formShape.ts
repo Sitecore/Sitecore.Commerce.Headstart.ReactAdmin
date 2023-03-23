@@ -6,6 +6,6 @@ type FieldName = ValuesType<typeof fieldNames>
 
 export const formShape: Record<FieldName, any> = {
   [fieldNames.ACTIVE]: yup.bool(),
-  [fieldNames.NAME]: yup.string().max(100).required("Name is required"),
+  [fieldNames.NAME]: yup.string().max(100).required("Required"),
   [fieldNames.SKU]: yup.string().max(100)
 }

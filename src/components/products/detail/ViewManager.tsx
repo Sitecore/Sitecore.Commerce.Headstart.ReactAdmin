@@ -51,22 +51,22 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
             <PopoverCloseButton />
             <PopoverBody margin={10}>
               <SimpleGrid columns={2} spacing={3}>
-                <Checkbox value="details" isChecked={visibility.details} onChange={handleChange}>
+                <Checkbox value="details" isChecked={visibility.Details} onChange={handleChange}>
                   Details
                 </Checkbox>
-                <Checkbox value="pricing" isChecked={visibility.pricing} onChange={handleChange}>
+                <Checkbox value="pricing" isChecked={visibility.Pricing} onChange={handleChange}>
                   Pricing
                 </Checkbox>
-                <Checkbox value="variants" isChecked={visibility.variants} onChange={handleChange}>
+                <Checkbox value="variants" isChecked={visibility.Variants} onChange={handleChange}>
                   Variants
                 </Checkbox>
-                <Checkbox value="media" isChecked={visibility.media} onChange={handleChange}>
+                <Checkbox value="media" isChecked={visibility.Media} onChange={handleChange}>
                   Media
                 </Checkbox>
-                <Checkbox value="facets" isChecked={visibility.facets} onChange={handleChange}>
+                <Checkbox value="facets" isChecked={visibility.Facets} onChange={handleChange}>
                   Facets
                 </Checkbox>
-                <Checkbox value="seo" isChecked={visibility.seo} onChange={handleChange}>
+                <Checkbox value="seo" isChecked={visibility.SEO} onChange={handleChange}>
                   SEO
                 </Checkbox>
               </SimpleGrid>

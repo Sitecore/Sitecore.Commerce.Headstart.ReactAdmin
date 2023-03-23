@@ -2,7 +2,6 @@ import {
   Heading,
   Tabs,
   TabList,
-  Tab,
   TabPanel,
   TabPanels,
   Card,
@@ -19,9 +18,9 @@ import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
 import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
 import ImagePreview from "./ImagePreview"
 import {withDefaultValuesFallback, getObjectDiff, makeNestedObject} from "utils"
-import {cloneDeep, get, invert, isEmpty} from "lodash"
-import {Products} from "ordercloud-javascript-sdk"
-import {defaultValues, tabFieldNames, validationSchema} from "./forms/meta"
+import {cloneDeep, invert} from "lodash"
+import {PriceSchedules, Products} from "ordercloud-javascript-sdk"
+import {defaultValues, validationSchema} from "./forms/meta"
 import ProductDetailToolbar from "./ProductDetailToolbar"
 import PanelCard from "components/card/Card"
 import {useSuccessToast} from "hooks/useToast"
@@ -29,40 +28,53 @@ import {IProduct} from "types/ordercloud/IProduct"
 import {useRouter} from "hooks/useRouter"
 import {useState} from "react"
 import {yupResolver} from "@hookform/resolvers/yup"
-import {FieldErrors, useForm} from "react-hook-form"
+import {useForm} from "react-hook-form"
+import {PricingForm} from "./forms/PricingForm/PricingForm"
+import {ProductDetailTab} from "./ProductDetailTab"
+import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 
-export type ProductDetailTab = "details" | "pricing" | "variants" | "media" | "facets" | "seo"
+export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "SEO"
 
 const tabIndexMap: Record<ProductDetailTab, number> = {
-  details: 0,
-  pricing: 1,
-  variants: 2,
-  media: 3,
-  facets: 4,
-  seo: 5
+  Details: 0,
+  Pricing: 1,
+  Variants: 2,
+  Media: 3,
+  Facets: 4,
+  SEO: 5
 }
 const inverseTabIndexMap = invert(tabIndexMap)
 interface ProductDetailProps {
   showTabbedView?: boolean
+  initialTab: ProductDetailTab
   product?: IProduct
+  defaultPriceSchedule?: IPriceSchedule
 }
-export default function ProductDetail({showTabbedView, product}: ProductDetailProps) {
+export default function ProductDetail({
+  showTabbedView,
+  initialTab,
+  product,
+  defaultPriceSchedule = {} as IPriceSchedule
+}: ProductDetailProps) {
   const router = useRouter()
   const successToast = useSuccessToast()
-  const [tabIndex, setTabIndex] = useState(tabIndexMap[router.query.tab.toString()])
+  const [tabIndex, setTabIndex] = useState(tabIndexMap[initialTab])
   const isCreatingNew = !Boolean(product?.ID)
   const initialViewVisibility: Record<ProductDetailTab, boolean> = {
-    details: true,
-    pricing: true,
-    variants: true,
-    media: true,
-    facets: true,
-    seo: true
+    Details: true,
+    Pricing: true,
+    Variants: true,
+    Media: true,
+    Facets: true,
+    SEO: true
   }
   const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
 
   const initialValues = product
-    ? withDefaultValuesFallback({Product: cloneDeep(product)}, defaultValues)
+    ? withDefaultValuesFallback(
+        {Product: cloneDeep(product), DefaultPriceSchedule: cloneDeep(defaultPriceSchedule)},
+        defaultValues
+      )
     : makeNestedObject(defaultValues)
 
   const handleTabsChange = (index) => {
@@ -70,20 +82,40 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
     setTabIndex(index)
   }
 
-  const {
-    handleSubmit,
-    control,
-    formState: {isValid, errors, touchedFields},
-    reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues: initialValues})
+  const {handleSubmit, control, reset} = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+    mode: "onBlur" // when to validate errors
+  })
 
   const onSubmit = async (fields) => {
+    // create/update product
     if (isCreatingNew) {
-      product = await Products.Create<IProduct>(fields.Product)
+      product = await Products.Create<IProduct>({...fields.Product, DefaultPriceScheduleID: defaultPriceSchedule.ID})
     } else {
       const productDiff = getObjectDiff(product, fields.Product)
-      product = await Products.Patch<IProduct>(product.ID, productDiff)
+      product = await Products.Patch<IProduct>(product.ID, {
+        ...productDiff
+      })
     }
+
+    // create/update price schedule
+    if (isCreatingNew || !product.DefaultPriceScheduleID) {
+      defaultPriceSchedule = await PriceSchedules.Create<IPriceSchedule>({
+        ...fields.DefaultPriceSchedule,
+        ID: product.ID,
+        Name: product.ID
+      })
+    } else {
+      const priceScheduleDiff = getObjectDiff(defaultPriceSchedule, fields.defaultPriceSchedule)
+      defaultPriceSchedule = await PriceSchedules.Patch<IPriceSchedule>(
+        product.DefaultPriceScheduleID,
+        priceScheduleDiff
+      )
+    }
+
+    // patch product with default price schedule
+    product = await Products.Patch<IProduct>(product.ID, {DefaultPriceScheduleID: defaultPriceSchedule.ID})
 
     successToast({
       description: isCreatingNew ? "ProductCreated" : "Product updated"
@@ -96,25 +128,16 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
 
   const SimpleCard = (props: {title?: string; children: React.ReactElement}) => (
     <Card>
-      <CardHeader>
-        {props.title && <Heading size="md">{props.title}</Heading>}
-        <CardBody>{props.children}</CardBody>
-      </CardHeader>
+      <CardHeader>{props.title && <Heading size="md">{props.title}</Heading>}</CardHeader>
+      <CardBody>{props.children}</CardBody>
     </Card>
   )
-
-  const tabHasError = (tab: ProductDetailTab, errors: FieldErrors<any>, touched: Partial<Readonly<any>>): boolean => {
-    if (isEmpty(errors)) {
-      return false
-    }
-    return tabFieldNames[tab].some((fieldName) => get(errors, fieldName, null) && get(touched, fieldName, null))
-  }
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>
       <ProductDetailToolbar
         product={product}
-        isFormValid={isValid}
+        control={control}
         resetForm={reset}
         viewVisibility={viewVisibility}
         setViewVisibility={setViewVisibility}
@@ -122,18 +145,16 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
       {showTabbedView ? (
         <Tabs variant="soft-rounded" colorScheme="teal" index={tabIndex} onChange={handleTabsChange}>
           <TabList>
-            {viewVisibility.details && (
-              <Tab>Details {tabHasError("details", errors, touchedFields) && "Tab Error"}</Tab>
-            )}
-            {viewVisibility.pricing && <Tab>Pricing</Tab>}
-            {viewVisibility.variants && <Tab>Variants</Tab>}
-            {viewVisibility.media && <Tab>Media</Tab>}
-            {viewVisibility.facets && <Tab>Facets</Tab>}
-            {viewVisibility.seo && <Tab>SEO</Tab>}
+            {viewVisibility.Details && <ProductDetailTab tab="Details" control={control} />}
+            {viewVisibility.Pricing && <ProductDetailTab tab="Pricing" control={control} />}
+            {viewVisibility.Variants && <ProductDetailTab tab="Variants" control={control} />}
+            {viewVisibility.Media && <ProductDetailTab tab="Media" control={control} />}
+            {viewVisibility.Facets && <ProductDetailTab tab="Facets" control={control} />}
+            {viewVisibility.SEO && <ProductDetailTab tab="SEO" control={control} />}
           </TabList>
 
           <TabPanels>
-            {viewVisibility.details && (
+            {viewVisibility.Details && (
               <TabPanel>
                 {/* Details Tab */}
                 <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
@@ -162,11 +183,23 @@ export default function ProductDetail({showTabbedView, product}: ProductDetailPr
                 </Flex>
               </TabPanel>
             )}
+            {viewVisibility.Pricing && (
+              <TabPanel>
+                {/* Pricing */}
+                <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
+                  <Flex flexFlow="column" flexGrow="1" rowGap={7}>
+                    <SimpleCard title="Pricing">
+                      <PricingForm control={control} />
+                    </SimpleCard>
+                  </Flex>
+                </Flex>
+              </TabPanel>
+            )}
           </TabPanels>
         </Tabs>
       ) : (
         <Flex gap={3} flexDirection="column">
-          {viewVisibility.details && (
+          {viewVisibility.Details && (
             <PanelCard width={{base: "100%", xl: "50%"}} variant="primaryCard" closedText="Details">
               <Heading marginBottom={5}>Details</Heading>
               <DetailsForm control={control} />

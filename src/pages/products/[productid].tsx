@@ -19,13 +19,20 @@ export async function getServerSideProps() {
 }
 
 const ProductDetailPage = () => {
-  const {product, loading, showTabbedView} = useProductDetail()
+  const {product, defaultPriceSchedule, loading, showTabbedView, initialTab} = useProductDetail()
 
   if (loading || !product) {
     return <div>Loading...</div>
   }
 
-  return <ProductDetail showTabbedView={showTabbedView} product={product} />
+  return (
+    <ProductDetail
+      showTabbedView={showTabbedView}
+      initialTab={initialTab}
+      product={product}
+      defaultPriceSchedule={defaultPriceSchedule}
+    />
+  )
 }
 
 const ProtectedProductDetailPage = () => {

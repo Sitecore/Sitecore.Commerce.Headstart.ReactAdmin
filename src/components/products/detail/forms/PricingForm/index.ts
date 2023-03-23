@@ -1,4 +1,4 @@
 export * from "./defaultValues"
-export * from "./DetailsForm"
+export * as form from "./PricingForm"
 export * as fieldNames from "./fieldNames"
 export * from "./formShape"

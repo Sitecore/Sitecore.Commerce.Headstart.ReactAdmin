@@ -7,28 +7,29 @@ import {Box, Button, Stack} from "@chakra-ui/react"
 import {useRouter} from "hooks/useRouter"
 import {Products} from "ordercloud-javascript-sdk"
 import React, {useState} from "react"
-import {UseFormReset} from "react-hook-form"
+import {Control, FieldValues, UseFormReset, useFormState} from "react-hook-form"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ProductDetailTab} from "./ProductDetail"
 import ViewManager from "./ViewManager"
 
 interface ProductDetailToolbarProps {
-  product?: IProduct
-  isFormValid?: boolean
-  resetForm?: UseFormReset<any>
+  product: IProduct
+  control: Control<FieldValues, any>
+  resetForm: UseFormReset<any>
   viewVisibility: Record<ProductDetailTab, boolean>
   setViewVisibility: (update: Record<ProductDetailTab, boolean>) => void
 }
 
 export default function ProductDetailToolbar({
   product,
-  isFormValid,
+  control,
   resetForm,
   viewVisibility,
   setViewVisibility
 }: ProductDetailToolbarProps) {
   const router = useRouter()
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const {isDirty} = useFormState({control})
 
   const onDelete = async () => {
     try {
@@ -55,10 +56,10 @@ export default function ProductDetailToolbar({
       <ConfirmDelete deleteText="Delete Product" loading={deleteLoading} onDelete={onDelete} />
       <Box as="span" flexGrow="1"></Box>
 
-      <Button type="button" onClick={discardChanges}>
+      <Button type="button" onClick={discardChanges} isDisabled={!isDirty}>
         Discard Changes
       </Button>
-      <Button type="submit" variant="solid" colorScheme="primary" isDisabled={!isFormValid}>
+      <Button type="submit" variant="solid" colorScheme="primary">
         Save
       </Button>
     </Stack>

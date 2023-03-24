@@ -12,7 +12,7 @@ export const ResetButton: FC<ResetButtonProps> = (props: ResetButtonProps) => {
   const {isSubmitting, isDirty} = useFormState({control})
 
   return (
-    <Button type="reset" onClick={reset} isDisabled={isSubmitting || !isDirty} {...rest}>
+    <Button type="reset" onClick={() => reset()} isDisabled={isSubmitting || !isDirty} {...rest}>
       {children}
     </Button>
   )

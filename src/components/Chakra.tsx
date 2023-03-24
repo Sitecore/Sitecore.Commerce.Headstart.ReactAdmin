@@ -20,6 +20,10 @@ const customTheme = extendTheme(
       Input: Input(colors),
       Select: Select(colors),
       Textarea: Textarea(colors)
+    },
+    space: {
+      formInputSpacing: "1.25rem",
+      formSectionSpacing: "2.5rem"
     }
   },
   withDefaultColorScheme({

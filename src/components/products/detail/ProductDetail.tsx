@@ -159,7 +159,7 @@ export default function ProductDetail({
             {viewVisibility.Details && (
               <TabPanel>
                 <Flex flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
-                  <Flex flexFlow="column" flexGrow="1" rowGap={7} maxWidth="1000px">
+                  <Flex flexFlow="column" flexGrow="1" maxWidth="1000px">
                     <SimpleCard title="Details">
                       <DetailsForm control={control} />
                     </SimpleCard>
@@ -186,12 +186,14 @@ export default function ProductDetail({
             )}
             {viewVisibility.Pricing && (
               <TabPanel>
-                <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
-                  <Flex flexFlow="column" flexGrow="1" rowGap={7}>
-                    <SimpleCard title="Pricing">
-                      <PricingForm control={control} trigger={trigger} />
-                    </SimpleCard>
-                  </Flex>
+                <Flex flexFlow="column">
+                  <SimpleCard title="Pricing">
+                    <PricingForm
+                      control={control}
+                      trigger={trigger}
+                      priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
+                    />
+                  </SimpleCard>
                 </Flex>
               </TabPanel>
             )}
@@ -228,7 +230,11 @@ export default function ProductDetail({
                 <Heading>Pricing</Heading>
               </CardHeader>
               <CardBody>
-                <PricingForm control={control} trigger={trigger} />
+                <PricingForm
+                  control={control}
+                  trigger={trigger}
+                  priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
+                />
               </CardBody>
             </Card>
           )}

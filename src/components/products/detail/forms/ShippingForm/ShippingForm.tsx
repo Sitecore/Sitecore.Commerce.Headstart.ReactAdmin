@@ -52,7 +52,7 @@ export function ShippingForm({control}: ShippingFormProps) {
     <>
       <Grid
         templateColumns={{base: "1fr", lg: "repeat(4, minmax(0, 1fr))", xl: "repeat(7, minmax(0, 1fr))"}}
-        columnGap={15}
+        columnGap="formInputSpacing"
         justifyContent="space-between"
       >
         <GridItem>
@@ -120,8 +120,8 @@ export function ShippingForm({control}: ShippingFormProps) {
           </SelectControl>
         </GridItem>
       </Grid>
-      <Divider marginY={3} />
-      <Grid templateColumns={{base: "1fr", lg: "1fr 1fr 1fr"}} alignItems="center" columnGap={15}>
+      <Divider marginY="formInputSpacing" />
+      <Grid templateColumns={{base: "1fr", lg: "1fr 1fr 1fr"}} alignItems="center" columnGap="formInputSpacing">
         <GridItem>
           <SelectControl
             selectProps={{

@@ -1,4 +1,5 @@
 import {CheckboxControl, InputControl, SwitchControl} from "@/components/react-hook-form"
+import {Flex} from "@chakra-ui/react"
 import {Control, FieldValues, useWatch} from "react-hook-form"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
@@ -11,7 +12,7 @@ export function InventoryForm({control}: InventoryFormProps) {
   const watchedTrackQuantity = useWatch({name: fieldNames.TRACK_QUANTITY, control})
 
   return (
-    <>
+    <Flex flexDirection="column" gap="formInputSpacing">
       <SwitchControl
         label="Track Quantity"
         name={fieldNames.TRACK_QUANTITY}
@@ -42,6 +43,6 @@ export function InventoryForm({control}: InventoryFormProps) {
           />
         </>
       )}
-    </>
+    </Flex>
   )
 }

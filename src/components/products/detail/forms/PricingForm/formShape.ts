@@ -14,8 +14,13 @@ const priceBreakSchema = {
     .transform(emptyStringToNull)
     .nullable()
     .typeError("You must specify a number"),
-  Price: yup.number().min(0, "Price can not be negative").transform(emptyStringToNull).nullable(),
-  SalePrice: yup.number().min(1).transform(emptyStringToNull).nullable()
+  Price: yup
+    .number()
+    .min(0, "Price can not be negative")
+    .transform(emptyStringToNull)
+    .nullable()
+    .required("Price is required"),
+  SalePrice: yup.number().min(1).transform(emptyStringToNull).nullable().required("Sale price is required")
 }
 
 export const formShape: Record<FieldName, any> = {

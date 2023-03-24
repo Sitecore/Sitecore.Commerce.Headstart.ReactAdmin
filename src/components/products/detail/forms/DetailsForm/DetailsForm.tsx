@@ -1,6 +1,5 @@
 import {InputControl, SwitchControl} from "@/components/react-hook-form"
 import {Grid, GridItem} from "@chakra-ui/react"
-import {useEffect} from "react"
 import {Control, FieldValues} from "react-hook-form"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
@@ -13,7 +12,7 @@ export function DetailsForm({control}: DetailsFormProps) {
   return (
     <>
       <SwitchControl label="Active" name={fieldNames.ACTIVE} control={control} validationSchema={validationSchema} />
-      <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={4}>
+      <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap="formInputSpacing">
         <GridItem>
           <InputControl label="Name" name={fieldNames.NAME} control={control} validationSchema={validationSchema} />
         </GridItem>

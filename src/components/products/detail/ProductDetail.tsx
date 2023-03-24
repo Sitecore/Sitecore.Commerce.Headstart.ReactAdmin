@@ -32,7 +32,7 @@ import {PricingForm} from "./forms/PricingForm/PricingForm"
 import {ProductDetailTab} from "./ProductDetailTab"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 
-export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "SEO"
+export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization" | "SEO"
 
 const tabIndexMap: Record<ProductDetailTab, number> = {
   Details: 0,
@@ -40,7 +40,8 @@ const tabIndexMap: Record<ProductDetailTab, number> = {
   Variants: 2,
   Media: 3,
   Facets: 4,
-  SEO: 5
+  Customization: 5,
+  SEO: 6
 }
 const inverseTabIndexMap = invert(tabIndexMap)
 interface ProductDetailProps {
@@ -65,6 +66,7 @@ export default function ProductDetail({
     Variants: true,
     Media: true,
     Facets: true,
+    Customization: true,
     SEO: true
   }
   const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
@@ -149,13 +151,13 @@ export default function ProductDetail({
             {viewVisibility.Variants && <ProductDetailTab tab="Variants" control={control} />}
             {viewVisibility.Media && <ProductDetailTab tab="Media" control={control} />}
             {viewVisibility.Facets && <ProductDetailTab tab="Facets" control={control} />}
+            {viewVisibility.Customization && <ProductDetailTab tab="Customization" control={control} />}
             {viewVisibility.SEO && <ProductDetailTab tab="SEO" control={control} />}
           </TabList>
 
           <TabPanels>
             {viewVisibility.Details && (
               <TabPanel>
-                {/* Details Tab */}
                 <Flex flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
                   <Flex flexFlow="column" flexGrow="1" rowGap={7} maxWidth="1000px">
                     <SimpleCard title="Details">
@@ -184,7 +186,6 @@ export default function ProductDetail({
             )}
             {viewVisibility.Pricing && (
               <TabPanel>
-                {/* Pricing */}
                 <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
                   <Flex flexFlow="column" flexGrow="1" rowGap={7}>
                     <SimpleCard title="Pricing">
@@ -194,6 +195,11 @@ export default function ProductDetail({
                 </Flex>
               </TabPanel>
             )}
+            {viewVisibility.Variants && <TabPanel>Variants under construction</TabPanel>}
+            {viewVisibility.Media && <TabPanel>Media under construction</TabPanel>}
+            {viewVisibility.Facets && <TabPanel>Facets under construction</TabPanel>}
+            {viewVisibility.Customization && <TabPanel>Customization under construction</TabPanel>}
+            {viewVisibility.SEO && <TabPanel>SEO under construction</TabPanel>}
           </TabPanels>
         </Tabs>
       ) : (
@@ -224,6 +230,46 @@ export default function ProductDetail({
               <CardBody>
                 <PricingForm control={control} trigger={trigger} />
               </CardBody>
+            </Card>
+          )}
+          {viewVisibility.Variants && (
+            <Card width={{base: "100%", xl: "50%"}}>
+              <CardHeader>
+                <Heading>Variants</Heading>
+              </CardHeader>
+              <CardBody>Variants under construction</CardBody>
+            </Card>
+          )}
+          {viewVisibility.Media && (
+            <Card width={{base: "100%", xl: "50%"}}>
+              <CardHeader>
+                <Heading>Media</Heading>
+              </CardHeader>
+              <CardBody>Media under construction</CardBody>
+            </Card>
+          )}
+          {viewVisibility.Facets && (
+            <Card width={{base: "100%", xl: "50%"}}>
+              <CardHeader>
+                <Heading>Facets</Heading>
+              </CardHeader>
+              <CardBody>Facets under construction</CardBody>
+            </Card>
+          )}
+          {viewVisibility.Customization && (
+            <Card width={{base: "100%", xl: "50%"}}>
+              <CardHeader>
+                <Heading>Customization</Heading>
+              </CardHeader>
+              <CardBody>Customization under construction</CardBody>
+            </Card>
+          )}
+          {viewVisibility.SEO && (
+            <Card width={{base: "100%", xl: "50%"}}>
+              <CardHeader>
+                <Heading>SEO</Heading>
+              </CardHeader>
+              <CardBody>SEO under construction</CardBody>
             </Card>
           )}
         </Flex>

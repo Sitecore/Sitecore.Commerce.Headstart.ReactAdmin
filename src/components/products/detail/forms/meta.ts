@@ -41,5 +41,6 @@ export const tabFieldNames: Record<ProductDetailTab, any[]> = {
   Variants: [],
   Media: [],
   Facets: [],
+  Customization: [],
   SEO: []
 }

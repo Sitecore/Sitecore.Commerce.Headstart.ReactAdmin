@@ -1,10 +1,11 @@
 import {InputControl, NumberInputControl, SwitchControl} from "@/components/react-hook-form"
 import {ChevronDownIcon, ChevronRightIcon, InfoOutlineIcon} from "@chakra-ui/icons"
 import {Box, Button, Flex, FormControl, FormErrorMessage, Grid, GridItem, Text} from "@chakra-ui/react"
+import {useErrorToast} from "hooks/useToast"
 import {get} from "lodash"
 import {PriceBreak} from "ordercloud-javascript-sdk"
-import {useState} from "react"
-import {Control, FieldValues, useFieldArray, useFormState} from "react-hook-form"
+import {useEffect, useState} from "react"
+import {Control, FieldValues, useFieldArray, useFormState, UseFormTrigger, useWatch} from "react-hook-form"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
 
@@ -13,22 +14,33 @@ const sectionGap = 10
 
 interface PriceBreakTableProps {
   control: Control<FieldValues, any>
+  trigger: UseFormTrigger<any>
 }
-const PriceBreakTable = ({control}: PriceBreakTableProps) => {
+const PriceBreakTable = ({control, trigger}: PriceBreakTableProps) => {
   const {fields, append, remove} = useFieldArray({
     control,
     name: fieldNames.PRICE_BREAKS
   })
   const {errors} = useFormState({control})
+  const watchFields = useWatch({control, name: fieldNames.PRICE_BREAKS})
   const error = get(errors, fieldNames.PRICE_BREAKS, "") as any
+  const errorToast = useErrorToast()
+
+  useEffect(() => {
+    trigger(fieldNames.PRICE_BREAKS)
+  }, [watchFields, trigger])
 
   const handleDeletePriceBreak = (index: number) => {
     remove(index)
   }
 
   const handleAddPriceBreak = () => {
-    const lastPriceBreak = fields[fields.length - 1] as PriceBreak
-    append({Quantity: lastPriceBreak.Quantity + 1, Price: "", SalePrice: ""})
+    if (error?.message) {
+      errorToast({description: error.message})
+      return
+    }
+    const lastPriceBreak = watchFields[watchFields.length - 1] as PriceBreak
+    append({Quantity: Number(lastPriceBreak.Quantity) + 1, Price: "", SalePrice: ""})
   }
 
   return (
@@ -68,11 +80,11 @@ const PriceBreakTable = ({control}: PriceBreakTableProps) => {
           )}
         </Flex>
       ))}
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" marginTop={2}>
         <Text fontWeight="medium" color="brand.400" maxWidth="max-content" onClick={handleAddPriceBreak}>
           Add price break
         </Text>
-        <FormControl isInvalid={error} maxWidth="max-content">
+        <FormControl isInvalid={error?.message} maxWidth="max-content">
           <FormErrorMessage display="inline-block">
             <InfoOutlineIcon mr={2} /> {error.message}
           </FormErrorMessage>
@@ -84,8 +96,9 @@ const PriceBreakTable = ({control}: PriceBreakTableProps) => {
 
 interface PricingFormProps {
   control: Control<FieldValues, any>
+  trigger: UseFormTrigger<any>
 }
-export function PricingForm({control}: PricingFormProps) {
+export function PricingForm({control, trigger}: PricingFormProps) {
   const [showAdvancedPricing, setShowAdvancedPricing] = useState(false)
 
   return (
@@ -154,7 +167,7 @@ export function PricingForm({control}: PricingFormProps) {
                 Require customers to order only in quantities specified in the volume pricing table
               </Text>
             </Box>
-            <PriceBreakTable control={control} />
+            <PriceBreakTable control={control} trigger={trigger} />
             <Box>
               <Text fontWeight="medium" marginBottom={3}>
                 Order Limitations

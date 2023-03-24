@@ -20,9 +20,6 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
     control
   })
   const isRequired = isRequiredField(props.validationSchema, field.name)
-  useEffect(() => {
-    console.log(JSON.stringify(errors))
-  }, [errors])
   return (
     <FormControl name={name} control={control} label={label} {...rest} isRequired={isRequired}>
       <InputGroup>

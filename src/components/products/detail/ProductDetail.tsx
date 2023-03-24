@@ -81,7 +81,7 @@ export default function ProductDetail({
     setTabIndex(index)
   }
 
-  const {handleSubmit, control, reset} = useForm({
+  const {handleSubmit, control, reset, trigger} = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
     mode: "onBlur"
@@ -156,8 +156,8 @@ export default function ProductDetail({
             {viewVisibility.Details && (
               <TabPanel>
                 {/* Details Tab */}
-                <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
-                  <Flex flexFlow="column" flexGrow="1" rowGap={7}>
+                <Flex flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
+                  <Flex flexFlow="column" flexGrow="1" rowGap={7} maxWidth="1000px">
                     <SimpleCard title="Details">
                       <DetailsForm control={control} />
                     </SimpleCard>
@@ -188,7 +188,7 @@ export default function ProductDetail({
                 <Flex justifyContent="space-between" flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
                   <Flex flexFlow="column" flexGrow="1" rowGap={7}>
                     <SimpleCard title="Pricing">
-                      <PricingForm control={control} />
+                      <PricingForm control={control} trigger={trigger} />
                     </SimpleCard>
                   </Flex>
                 </Flex>
@@ -222,7 +222,7 @@ export default function ProductDetail({
                 <Heading>Pricing</Heading>
               </CardHeader>
               <CardBody>
-                <PricingForm control={control} />
+                <PricingForm control={control} trigger={trigger} />
               </CardBody>
             </Card>
           )}

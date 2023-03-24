@@ -85,7 +85,7 @@ export default function ProductDetail({
   const {handleSubmit, control, reset} = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
-    mode: "onBlur" // when to validate errors
+    mode: "onBlur"
   })
 
   const onSubmit = async (fields) => {

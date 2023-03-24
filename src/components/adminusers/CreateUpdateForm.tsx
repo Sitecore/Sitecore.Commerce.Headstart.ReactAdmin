@@ -26,6 +26,8 @@ import {IAdminUser} from "types/ordercloud/IAdminUser"
 import AdminUserXpCard from "./AdminUserXpCard"
 import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
+import SubmitButton from "../react-hook-form/submit-button"
+import ResetButton from "../react-hook-form/reset-button"
 
 interface PermissionTableProps {
   assignedPermissions?: string[]
@@ -104,9 +106,9 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
   const {
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   async function createUser(fields: User) {
     const createdUser = await AdminUsers.Create<IAdminUser>(fields)
@@ -159,18 +161,12 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
                 assignedPermissions={assignedPermissions || []}
               />
               <ButtonGroup>
-                <Button
-                  variant="solid"
-                  colorScheme="primary"
-                  type="submit"
-                  isLoading={isSubmitting}
-                  isDisabled={!isValid || !isDirty}
-                >
+                <SubmitButton control={control} variant="solid" colorScheme="primary">
                   Save
-                </Button>
-                <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
-                  Reset
-                </Button>
+                </SubmitButton>
+                <ResetButton control={control} reset={reset} variant="outline">
+                  Discard Changes
+                </ResetButton>
                 <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting}>
                   Cancel
                 </Button>

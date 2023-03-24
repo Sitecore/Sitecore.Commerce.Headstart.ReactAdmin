@@ -9,6 +9,9 @@ import CategoryXpCard from "./CategoryXpCard"
 import Card from "../card/Card"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
+import SubmitButton from "../react-hook-form/submit-button"
+import {isValid} from "date-fns"
+import ResetButton from "../react-hook-form/reset-button"
 
 export {CreateUpdateForm}
 
@@ -31,9 +34,9 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
   const {
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   async function createCategory(fields: Category) {
     fields.ParentID = parentId
@@ -105,19 +108,12 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
               <ButtonGroup>
                 <HStack justifyContent="space-between" w="100%" mb={5}>
                   <Box>
-                    <Button
-                      variant="solid"
-                      colorScheme="primary"
-                      type="submit"
-                      isLoading={isSubmitting}
-                      mr="15px"
-                      isDisabled={!isValid || !isDirty}
-                    >
+                    <SubmitButton control={control} variant="solid" colorScheme="primary" mr="15px">
                       Save
-                    </Button>
-                    <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting} mr="15px">
-                      Reset
-                    </Button>
+                    </SubmitButton>
+                    <ResetButton control={control} reset={reset} variant="outline">
+                      Discard Changes
+                    </ResetButton>
                     <Button
                       onClick={() =>
                         router.push(`/buyers/${router.query.buyerid}/catalogs/${router.query.catalogid}/categories`)

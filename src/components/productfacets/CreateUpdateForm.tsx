@@ -11,6 +11,8 @@ import {xpHelper} from "utils"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
 
 export {CreateUpdateForm}
 
@@ -33,9 +35,9 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
   const {
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   const [inputValue, setInputValue] = useState("")
   const [facetOptions, setFacetOptions] = useState([])
@@ -178,19 +180,12 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
             <ButtonGroup>
               <HStack justifyContent="space-between" w="100%" mb={5}>
                 <Box>
-                  <Button
-                    variant="solid"
-                    colorScheme="primary"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    mr="15px"
-                    isDisabled={!isValid || !isDirty}
-                  >
+                  <SubmitButton control={control} variant="solid" colorScheme="primary" mr="15px">
                     Save
-                  </Button>
-                  <Button onClick={resetForm} type="reset" variant="outline" isLoading={isSubmitting} mr="15px">
-                    Reset
-                  </Button>
+                  </SubmitButton>
+                  <ResetButton control={control} reset={reset} variant="outline">
+                    Discard Changes
+                  </ResetButton>
                   <Button
                     onClick={() => router.push("/settings/productfacets")}
                     variant="outline"

@@ -7,10 +7,12 @@ import {Box, Button, Stack} from "@chakra-ui/react"
 import {useRouter} from "hooks/useRouter"
 import {Products} from "ordercloud-javascript-sdk"
 import React, {useState} from "react"
-import {Control, FieldValues, UseFormReset, useFormState} from "react-hook-form"
+import {Control, FieldValues, UseFormReset} from "react-hook-form"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ProductDetailTab} from "./ProductDetail"
 import ViewManager from "./ViewManager"
+import SubmitButton from "@/components/react-hook-form/submit-button"
+import ResetButton from "@/components/react-hook-form/reset-button"
 
 interface ProductDetailToolbarProps {
   product: IProduct
@@ -29,7 +31,6 @@ export default function ProductDetailToolbar({
 }: ProductDetailToolbarProps) {
   const router = useRouter()
   const [deleteLoading, setDeleteLoading] = useState(false)
-  const {isDirty} = useFormState({control})
 
   const onDelete = async () => {
     try {
@@ -38,10 +39,6 @@ export default function ProductDetailToolbar({
     } finally {
       setDeleteLoading(true)
     }
-  }
-
-  const discardChanges = () => {
-    resetForm()
   }
 
   return (
@@ -56,12 +53,12 @@ export default function ProductDetailToolbar({
       <ConfirmDelete deleteText="Delete Product" loading={deleteLoading} onDelete={onDelete} />
       <Box as="span" flexGrow="1"></Box>
 
-      <Button type="button" onClick={discardChanges} isDisabled={!isDirty}>
+      <ResetButton control={control} reset={resetForm}>
         Discard Changes
-      </Button>
-      <Button type="submit" variant="solid" colorScheme="primary">
+      </ResetButton>
+      <SubmitButton control={control} variant="solid" colorScheme="primary">
         Save
-      </Button>
+      </SubmitButton>
     </Stack>
   )
 }

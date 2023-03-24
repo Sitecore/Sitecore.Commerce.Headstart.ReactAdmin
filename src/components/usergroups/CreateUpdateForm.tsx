@@ -6,6 +6,8 @@ import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
 
 export {CreateUpdateForm}
 
@@ -29,9 +31,9 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
   const {
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   let parentId
   if (router.query.buyerid !== undefined) parentId = router.query.buyerid
@@ -62,18 +64,12 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
               <InputControl name="Name" label="User Group Name" control={control} isRequired />
               <TextareaControl name="Description" label="Description" control={control} />
               <ButtonGroup>
-                <Button
-                  variant="solid"
-                  colorScheme="primary"
-                  type="submit"
-                  isLoading={isSubmitting}
-                  isDisabled={!isValid || !isDirty}
-                >
+                <SubmitButton control={control} variant="solid" colorScheme="primary">
                   Save
-                </Button>
-                <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
-                  Reset
-                </Button>
+                </SubmitButton>
+                <ResetButton control={control} reset={reset} variant="outline">
+                  Discard Changes
+                </ResetButton>
                 <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting}>
                   Cancel
                 </Button>

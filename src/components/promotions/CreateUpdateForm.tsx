@@ -37,6 +37,8 @@ import PromotionXpCard from "./PromotionXpCard"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import {emptyStringToNull} from "utils"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
 
 export {CreateUpdateForm}
 
@@ -106,9 +108,9 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
     watch,
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   // TODO: this is not very performant, do we really need the values displayed?
   const values = watch() as any
@@ -323,18 +325,12 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
             <GridItem pl="2" area={"footer"}>
               <Divider mt="15" mb="15" />
               <ButtonGroup>
-                <Button
-                  variant="solid"
-                  colorScheme="primary"
-                  type="submit"
-                  isLoading={isSubmitting}
-                  isDisabled={!isValid || !isDirty}
-                >
+                <SubmitButton control={control} variant="solid" colorScheme="primary">
                   Save
-                </Button>
-                <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
-                  Reset
-                </Button>
+                </SubmitButton>
+                <ResetButton control={control} reset={reset} variant="outline">
+                  Discard Changes
+                </ResetButton>
                 <Button onClick={() => router.push(`/promotions`)} variant="outline" isLoading={isSubmitting}>
                   Cancel
                 </Button>

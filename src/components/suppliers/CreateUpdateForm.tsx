@@ -8,6 +8,8 @@ import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {ISupplier} from "types/ordercloud/ISupplier"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
 
 export {CreateUpdateForm}
 
@@ -32,9 +34,9 @@ function CreateUpdateForm({supplier}: CreateUpdateFormProps) {
   const {
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   async function createSupplier(fields: Supplier) {
     await Suppliers.Create<ISupplier>(fields)
@@ -63,18 +65,12 @@ function CreateUpdateForm({supplier}: CreateUpdateFormProps) {
               <SwitchControl name="AllBuyersCanOrder" label="All Buyers Can Order" control={control} />
               {!isCreating && <InputControl name="DateCreated" label="Date created" isReadOnly control={control} />}
               <ButtonGroup>
-                <Button
-                  variant="solid"
-                  colorScheme="primary"
-                  type="submit"
-                  isLoading={isSubmitting}
-                  isDisabled={!isValid || !isDirty}
-                >
+                <SubmitButton control={control} variant="solid" colorScheme="primary">
                   Save
-                </Button>
-                <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
-                  Reset
-                </Button>
+                </SubmitButton>
+                <ResetButton control={control} reset={reset} variant="outline">
+                  Discard Changes
+                </ResetButton>
                 <Button onClick={() => router.push("/suppliers")} variant="outline" isLoading={isSubmitting}>
                   Cancel
                 </Button>

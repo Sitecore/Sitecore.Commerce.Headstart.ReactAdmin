@@ -10,6 +10,8 @@ import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import UserXpCard from "./UserXpCard"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
 
 export {CreateUpdateForm}
 interface CreateUpdateFormProps {
@@ -36,9 +38,9 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
     watch,
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   const [show, setShow] = useState(false)
   const handleClick = () => setShow(!show)
@@ -75,18 +77,12 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
               <InputControl name="Phone" label="Phone" control={control} />
               <SwitchControl name="Active" label="Active" control={control} />
               <ButtonGroup>
-                <Button
-                  variant="solid"
-                  colorScheme="primary"
-                  type="submit"
-                  isLoading={isSubmitting}
-                  isDisabled={!isValid || !isDirty}
-                >
+                <SubmitButton control={control} variant="solid" colorScheme="primary">
                   Save
-                </Button>
-                <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
-                  Reset
-                </Button>
+                </SubmitButton>
+                <ResetButton control={control} reset={reset} variant="outline">
+                  Discard Changes
+                </ResetButton>
                 <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting}>
                   Cancel
                 </Button>

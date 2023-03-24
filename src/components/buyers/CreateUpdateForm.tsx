@@ -10,6 +10,8 @@ import {ICatalog} from "types/ordercloud/ICatalog"
 import {IBuyer} from "types/ordercloud/IBuyer"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
+import SubmitButton from "../react-hook-form/submit-button"
+import ResetButton from "../react-hook-form/reset-button"
 
 export {CreateUpdateForm}
 
@@ -33,9 +35,9 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
   const {
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   const [catalogs, setCatalogs] = useState([] as Catalog[])
 
@@ -88,18 +90,12 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
 
             {!isCreating && <InputControl name="DateCreated" label="Date created" control={control} isReadOnly />}
             <ButtonGroup>
-              <Button
-                variant="solid"
-                colorScheme="primary"
-                type="submit"
-                isLoading={isSubmitting}
-                isDisabled={!isValid || !isDirty}
-              >
+              <SubmitButton control={control} variant="solid" colorScheme="primary">
                 Save
-              </Button>
-              <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
-                Reset
-              </Button>
+              </SubmitButton>
+              <ResetButton control={control} reset={reset} variant="outline">
+                Discard Changes
+              </ResetButton>
               <Button onClick={() => router.push("/buyers")} variant="outline" isLoading={isSubmitting}>
                 Cancel
               </Button>

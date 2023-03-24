@@ -9,6 +9,8 @@ import {ICatalog} from "types/ordercloud/ICatalog"
 import CatalogXpCard from "./CatalogXpCard"
 import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
+import SubmitButton from "../react-hook-form/submit-button"
+import ResetButton from "../react-hook-form/reset-button"
 
 export {CreateUpdateForm}
 
@@ -27,9 +29,9 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
   const {
     handleSubmit,
     control,
-    formState: {isSubmitting, isValid, isDirty},
+    formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   async function createCatalog(fields: Catalog) {
     const createdCatalog = await Catalogs.Create<ICatalog>(fields)
@@ -59,18 +61,12 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
               <TextareaControl name="Description" label="Description" control={control} />
               <SwitchControl name="Active" label="Active" control={control} />
               <ButtonGroup>
-                <Button
-                  variant="solid"
-                  colorScheme="primary"
-                  type="submit"
-                  isLoading={isSubmitting}
-                  isDisabled={!isValid || !isDirty}
-                >
+                <SubmitButton control={control} variant="solid" colorScheme="primary">
                   Save
-                </Button>
-                <Button onClick={reset} type="reset" variant="outline" isLoading={isSubmitting}>
-                  Reset
-                </Button>
+                </SubmitButton>
+                <ResetButton control={control} reset={reset} variant="outline">
+                  Discard Changes
+                </ResetButton>
                 <Button
                   onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
                   variant="outline"

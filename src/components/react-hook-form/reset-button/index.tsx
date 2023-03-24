@@ -8,8 +8,8 @@ export type ResetButtonProps = ButtonProps & {
 }
 
 export const ResetButton: FC<ResetButtonProps> = (props: ResetButtonProps) => {
-  const {children, reset, ...rest} = props
-  const {isSubmitting, isDirty} = useFormState()
+  const {children, control, reset, ...rest} = props
+  const {isSubmitting, isDirty} = useFormState({control})
 
   return (
     <Button type="reset" onClick={reset} isDisabled={isSubmitting || !isDirty} {...rest}>

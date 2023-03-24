@@ -22,7 +22,6 @@ import {cloneDeep, invert} from "lodash"
 import {PriceSchedules, Products} from "ordercloud-javascript-sdk"
 import {defaultValues, validationSchema} from "./forms/meta"
 import ProductDetailToolbar from "./ProductDetailToolbar"
-import PanelCard from "components/card/Card"
 import {useSuccessToast} from "hooks/useToast"
 import {IProduct} from "types/ordercloud/IProduct"
 import {useRouter} from "hooks/useRouter"
@@ -198,20 +197,34 @@ export default function ProductDetail({
           </TabPanels>
         </Tabs>
       ) : (
-        <Flex gap={3} flexDirection="column">
+        <Flex flexWrap="wrap">
           {viewVisibility.Details && (
-            <PanelCard width={{base: "100%", xl: "50%"}} variant="primaryCard" closedText="Details">
-              <Heading marginBottom={5}>Details</Heading>
-              <DetailsForm control={control} />
-              <Divider marginY={5} />
-              <DescriptionForm control={control} />
-              <Divider marginY={5} />
-              <UnitOfMeasureForm control={control} />
-              <Divider marginY={5} />
-              <InventoryForm control={control} />
-              <Divider marginY={5} />
-              <ShippingForm control={control} />
-            </PanelCard>
+            <Card width={{base: "100%", xl: "50%"}}>
+              <CardHeader>
+                <Heading>Details</Heading>
+              </CardHeader>
+              <CardBody>
+                <DetailsForm control={control} />
+                <Divider marginY={5} />
+                <DescriptionForm control={control} />
+                <Divider marginY={5} />
+                <UnitOfMeasureForm control={control} />
+                <Divider marginY={5} />
+                <InventoryForm control={control} />
+                <Divider marginY={5} />
+                <ShippingForm control={control} />
+              </CardBody>
+            </Card>
+          )}
+          {viewVisibility.Pricing && (
+            <Card width={{base: "100%", xl: "50%"}}>
+              <CardHeader>
+                <Heading>Pricing</Heading>
+              </CardHeader>
+              <CardBody>
+                <PricingForm control={control} />
+              </CardBody>
+            </Card>
           )}
         </Flex>
       )}

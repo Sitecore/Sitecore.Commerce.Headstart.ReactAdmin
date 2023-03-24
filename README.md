@@ -28,11 +28,15 @@ A **simple**, **powerful** and **flexible** Commerce Seller Application built on
 * Create, read, update, delete user groups and users
 * Read, Update Orders
 
-## Requirement
-Create an OrderCloud Marketplace instance (https://portal.ordercloud.io)
+## Requirements
+An OrderCloud Marketplace instance (https://portal.ordercloud.io) with the following (minimum):
+  - An admin api client *without* client secret defined
+  - An admin user with the [correct permissions](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/blob/main/src/constants/app-permissions.config.ts#L12-L20) (or FullAccess)
+ 
+ Don't have a marketplace? Check out the [section on seeding](#seeding-a-new-marketplace) to create a new marketplace based on the play shop product set
 
 ## How do I get started? 
-Using the Deploy Button below, you'll deploy on Vercel the Next.js project as well as connect it to your Sitecore Commerce OrderCloud sandbox.
+Using the Deploy Button below, you'll deploy on Vercel the Next.js project as well as connect it to your OrderCloud Marketplace.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin&env=NEXT_PUBLIC_APP_NAME,NEXT_PUBLIC_OC_CLIENT_ID,NEXT_PUBLIC_OC_API_URL,NEXT_PUBLIC_OC_MARKETPLACE_ID,NEXT_PUBLIC_OC_MARKETPLACE_NAME,NEXT_PUBLIC_OC_USELIVEANALYTICSDATA&envDescription=Environment%20Variables%20Description&envLink=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%23working-locally&project-name=sitecore-commerce-headstart-reactadmin&repository-name=Sitecore.Commerce.Headstart.ReactAdmin&demo-title=Sitecore%20Commerce%20Headstart%20ReactAdmin&demo-description=This%20is%20a%20basic%20implementation%20of%20Sitecore%20Commerce%20using%20the%20OrderCloud%20Javascript%20SDK.%20You%20can%20use%20it%20as%20a%20starting%20point%20to%20discover%2C%20understand%2C%20and%20learn%20more%20about%20the%20Sitecore%20Commerce%20OrderCloud%20capabilities.&demo-url=sitecore-commerce-headstart-react-admin.vercel.app&demo-image=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%2Fblob%2Fmain%2Fpublic%2Fimages%2Fdemo-image.png)
 

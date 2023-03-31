@@ -96,11 +96,12 @@ const DataTable = <T extends IDefaultResource>({
       isSelected: selected.includes(row["ID"]),
       cells: currentColumns.map((column) => {
         const value = get(row, column.accessor, null)
+        const formattedValue = Array.isArray(value) ? value.join(", ") : value
         return {
           minWidth: column.minWidth,
           width: column.width,
           align: column.align,
-          value: column.cell?.({value, row: {original: row}}) || value
+          value: column.cell?.({value: formattedValue, row: {original: row}}) || formattedValue
         }
       })
     }))

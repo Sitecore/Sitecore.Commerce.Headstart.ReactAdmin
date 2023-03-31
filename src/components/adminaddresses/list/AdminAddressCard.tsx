@@ -38,17 +38,17 @@ const AdminAddressCard = (props: AdminAddressCardProps) => {
                 {adminAddress.AddressName}
               </Text>
             </Tooltip>
-            <Text fontSize="sm" noOfLines={1} pt={2} fontWeight="light">
-              {adminAddress.Street1} {adminAddress.Street2}
-            </Text>
-            <Text fontSize="sm" noOfLines={1} fontWeight="light">
-              {adminAddress.City}, {adminAddress.State} {adminAddress.Zip}
-            </Text>
-            <Text fontSize="sm" noOfLines={1} fontWeight="light">
-              {adminAddress.Country}
-            </Text>
           </Heading>
         </Link>
+        <Text fontSize="sm" noOfLines={1}>
+          {adminAddress.Street1} {adminAddress.Street2}
+        </Text>
+        <Text fontSize="sm" noOfLines={1}>
+          {adminAddress.City}, {adminAddress.State} {adminAddress.Zip}
+        </Text>
+        <Text fontSize="sm" noOfLines={1}>
+          {adminAddress.Country}
+        </Text>
       </VStack>
     </VStack>
   )

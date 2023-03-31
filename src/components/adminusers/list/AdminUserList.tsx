@@ -130,7 +130,7 @@ const AdminUserList = () => {
               actionAdminUser
                 ? [actionAdminUser]
                 : items
-                ? items.filter((p) => listViewChildProps.selected.includes(p.ID))
+                ? items.filter((adminUser) => listViewChildProps.selected.includes(adminUser.ID))
                 : []
             }
             disclosure={deleteDisclosure}

@@ -1,4 +1,4 @@
-import {Box, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
+import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
 import Link from "next/link"
 import {AdminAddresses} from "ordercloud-javascript-sdk"
 import {useCallback, useState} from "react"
@@ -186,7 +186,7 @@ const AdminAddressList = () => {
               actionAdminAddress
                 ? [actionAdminAddress]
                 : items
-                ? items.filter((p) => listViewChildProps.selected.includes(p.ID))
+                ? items.filter((adminAddress) => listViewChildProps.selected.includes(adminAddress.ID))
                 : []
             }
             disclosure={deleteDisclosure}

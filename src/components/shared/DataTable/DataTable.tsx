@@ -101,7 +101,7 @@ const DataTable = <T extends IDefaultResource>({
           minWidth: column.minWidth,
           width: column.width,
           align: column.align,
-          value: column.cell?.({value: formattedValue, row: {original: row}}) || formattedValue
+          value: column.cell?.({value, row: {original: row}}) || formattedValue
         }
       })
     }))

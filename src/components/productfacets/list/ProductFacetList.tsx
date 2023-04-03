@@ -48,14 +48,7 @@ const OptionsColumn: DataTableColumn<IProductFacet> = {
   header: "Facet Options",
   accessor: "xp.Options",
   width: "60%",
-  cell: ({row, value}) => (
-    <Link href={"/settings/productfacets/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
-  ),
-  sortable: true
+  sortable: false
 }
 
 const ProductFacetTableOptions: ListViewTableOptions<IProductFacet> = {

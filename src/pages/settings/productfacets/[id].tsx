@@ -12,7 +12,7 @@ export async function getServerSideProps() {
   return {
     props: {
       header: {
-        title: "Update product facet",
+        title: "Edit product facet",
         metas: {
           hasBreadcrumbs: true,
           hasBuyerContextSwitch: false

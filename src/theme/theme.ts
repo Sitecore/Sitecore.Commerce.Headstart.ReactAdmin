@@ -8,7 +8,7 @@ import semanticTokens from "./semantic-tokens"
 const schraTheme = extendTheme({
   config: {
     useSystemColorMode: true,
-    cssVarPrefix: "sitecore"
+    cssVarPrefix: "schra"
   },
   ...foundations,
   components,

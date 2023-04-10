@@ -34,10 +34,10 @@ const DesktopSideBarMenu = () => {
 
   const links = data.map((item) => (
     <ProtectedContent hasAccess={item.permisshies} key={item.label}>
-      <Button isActive={"/" + item.label === router?.pathname} textDecoration={"none"} borderRadius="0" fontWeight="normal" p={3} h={"unset"} as={Link} href={`/${item.label}`} variant="ghost" w={"100%"} justifyContent="flex-start" leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}>
+      <Button isActive={"/" + item.label === router?.pathname} textDecoration={"none"} borderRadius="0" fontWeight="normal" p={3} _hover={{ textDecoration: "none", backgroundColor: "blackAlpha.100" }} style={{ marginTop: 0 }} h={"unset"} as={Link} href={`/${item.label}`} variant="ghost" w={"100%"} justifyContent="flex-start" leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}>
         {item.label}
       </Button>
-    </ProtectedContent>
+    </ProtectedContent >
   ))
 
   return (

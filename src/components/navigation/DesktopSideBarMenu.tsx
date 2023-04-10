@@ -1,5 +1,5 @@
-import {Button, Flex, Icon, IconButton, Image, Link as ChakraLink, Text, useColorModeValue} from "@chakra-ui/react"
-import {FiSettings, FiStar} from "react-icons/fi"
+import { Button, Flex, Icon, IconButton, Image, Link as ChakraLink, Text, useColorModeValue, VStack } from "@chakra-ui/react"
+import { FiSettings, FiStar } from "react-icons/fi"
 import {
   HiChevronDoubleLeft,
   HiOutlineChartBar,
@@ -8,228 +8,51 @@ import {
   HiOutlineUser,
   HiOutlineUserGroup
 } from "react-icons/hi"
-import React, {useState} from "react"
-import {TbBuildingWarehouse, TbShoppingCartDiscount, TbShoppingCartPlus, TbTruckReturn} from "react-icons/tb"
+import React, { useState } from "react"
+import { TbBuildingWarehouse, TbLayout, TbReceipt2, TbShoppingCartDiscount, TbShoppingCartPlus, TbTruckReturn, TbUserCheck, TbUsers } from "react-icons/tb"
 import ProtectedContent from "../auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
-import {Link} from "./Link"
+import { appPermissions } from "constants/app-permissions.config"
+import { Link } from "./Link"
+import schraTheme from "theme/theme"
+import { useRouter } from "next/router"
 
 const DesktopSideBarMenu = () => {
   const [navSize, changeNavSize] = useState("large")
-  const sidebarBg = useColorModeValue("brand.500", "brand.600")
-  const color = useColorModeValue("textColor.900", "textColor.100")
+  let router = useRouter()
+
+  const data = [
+    { label: "dashboard", icon: TbLayout, permisshies: appPermissions.ProductManager },
+    { label: "products", icon: TbShoppingCartPlus, permisshies: appPermissions.ProductManager },
+    { label: "promotions", icon: TbShoppingCartDiscount, permisshies: appPermissions.OrderManager },
+    { label: "orders", icon: TbReceipt2, permisshies: appPermissions.OrderManager },
+    { label: "returns", icon: TbTruckReturn, permisshies: appPermissions.BuyerManager },
+    { label: "buyers", icon: TbUserCheck, permisshies: appPermissions.BuyerManager },
+    { label: "suppliers", icon: TbBuildingWarehouse, permisshies: appPermissions.SupplierManager },
+    { label: "settings", icon: TbBuildingWarehouse, permisshies: appPermissions.SettingsManager }
+  ]
+
+
+  const links = data.map((item) => (
+    <ProtectedContent hasAccess={item.permisshies} key={item.label}>
+      <Button isActive={"/" + item.label === router?.pathname} textDecoration={"none"} borderRadius="0" fontWeight="normal" p={3} h={"unset"} as={Link} href={`/${item.label}`} variant="ghost" w={"100%"} justifyContent="flex-start" leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}>
+        {item.label}
+      </Button>
+    </ProtectedContent>
+  ))
 
   return (
-    <>
-      <Flex>
-        <Flex
-          left="0"
-          boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-          borderRadius={navSize == "small" ? "15px" : "30px"}
-          w={navSize == "small" ? "75px" : "250px"}
-          ml={navSize == "small" ? "0" : "20px"}
-          mt={navSize == "small" ? "10px" : "20px"}
-          flexDir="column"
-          justifyContent="flex-start"
-          background={sidebarBg}
-          color={color}
-        >
-          <Flex p="5%" flexDir="column" w="100%" alignItems={navSize == "small" ? "center" : "flex-start"} as="nav">
-            <Link
-              href="/"
-              pl="2"
-              pr="2"
-              pb="15px"
-              pt="15px"
-              verticalAlign="middle"
-              display="flex"
-              color="white"
-              _hover={{color: "gray.300"}}
-            >
-              <>
-                <Icon as={HiOutlineChartBar} fontSize={navSize == "small" ? "30px" : "35px"} title="Dashboard"></Icon>
-                <Text
-                  as="span"
-                  pl="GlobalPadding"
-                  hidden={navSize == "small" ? true : false}
-                  fontSize={navSize == "small" ? "16px" : "21px"}
-                  pt="2px"
-                >
-                  Dashboard
-                </Text>
-              </>
-            </Link>
-            <ProtectedContent hasAccess={appPermissions.ProductManager}>
-              <Link
-                href="/products"
-                pl="2"
-                pr="2"
-                pb="15px"
-                verticalAlign="middle"
-                display="flex"
-                color="white"
-                _hover={{color: "gray.300"}}
-              >
-                <Icon as={HiOutlineQrcode} fontSize={navSize == "small" ? "30px" : "35px"} title="Products"></Icon>
-                <Text
-                  as="span"
-                  pl="GlobalPadding"
-                  hidden={navSize == "small" ? true : false}
-                  fontSize={navSize == "small" ? "16px" : "21px"}
-                  pt="2px"
-                >
-                  Products
-                </Text>
-              </Link>
-            </ProtectedContent>
-            <ProtectedContent hasAccess={appPermissions.ProductManager}>
-              <Link
-                href="/promotions"
-                pl="2"
-                pr="2"
-                pb="15px"
-                verticalAlign="middle"
-                display="flex"
-                color="white"
-                _hover={{color: "gray.300"}}
-              >
-                <Icon
-                  as={TbShoppingCartDiscount}
-                  fontSize={navSize == "small" ? "30px" : "35px"}
-                  title="Promotions"
-                ></Icon>
-                <Text
-                  as="span"
-                  pl="GlobalPadding"
-                  hidden={navSize == "small" ? true : false}
-                  fontSize={navSize == "small" ? "16px" : "21px"}
-                  pt="2px"
-                >
-                  Promotions
-                </Text>
-              </Link>
-            </ProtectedContent>
-            <ProtectedContent hasAccess={appPermissions.OrderManager}>
-              <Link
-                href="/orders"
-                pl="2"
-                pr="2"
-                pb="15px"
-                verticalAlign="middle"
-                display="flex"
-                color="white"
-                _hover={{color: "gray.300"}}
-              >
-                <Icon as={TbShoppingCartPlus} fontSize={navSize == "small" ? "30px" : "35px"} title="Orders"></Icon>
-                <Text
-                  as="span"
-                  pl="GlobalPadding"
-                  hidden={navSize == "small" ? true : false}
-                  fontSize={navSize == "small" ? "16px" : "21px"}
-                  pt="2px"
-                >
-                  Orders
-                </Text>
-              </Link>
-            </ProtectedContent>
-            <ProtectedContent hasAccess={appPermissions.OrderManager}>
-              <Link
-                href="/returns"
-                pl="2"
-                pr="2"
-                pb="15px"
-                verticalAlign="middle"
-                display="flex"
-                color="white"
-                _hover={{color: "gray.300"}}
-              >
-                <Icon as={TbTruckReturn} fontSize={navSize == "small" ? "30px" : "35px"} title="Returns"></Icon>
-                <Text
-                  as="span"
-                  pl="GlobalPadding"
-                  hidden={navSize == "small" ? true : false}
-                  fontSize={navSize == "small" ? "16px" : "21px"}
-                  pt="2px"
-                >
-                  Returns
-                </Text>
-              </Link>
-            </ProtectedContent>
-            <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-              <Link
-                href="/buyers"
-                pl="2"
-                pr="2"
-                pb="15px"
-                verticalAlign="middle"
-                display="flex"
-                color="white"
-                _hover={{color: "gray.300"}}
-              >
-                <Icon as={HiOutlineUserGroup} fontSize={navSize == "small" ? "30px" : "35px"}></Icon>
-                <Text
-                  as="span"
-                  pl="GlobalPadding"
-                  hidden={navSize == "small" ? true : false}
-                  title="Buyers"
-                  fontSize={navSize == "small" ? "16px" : "21px"}
-                  pt="2px"
-                >
-                  Buyers
-                </Text>
-              </Link>
-            </ProtectedContent>
-            <ProtectedContent hasAccess={appPermissions.SupplierManager}>
-              <Link
-                href="/suppliers"
-                pl="2"
-                pr="2"
-                pb="15px"
-                verticalAlign="middle"
-                display="flex"
-                color="white"
-                _hover={{color: "gray.300"}}
-              >
-                <Icon as={TbBuildingWarehouse} fontSize={navSize == "small" ? "30px" : "35px"}></Icon>
-                <Text
-                  as="span"
-                  pl="GlobalPadding"
-                  hidden={navSize == "small" ? true : false}
-                  title="Suppliers"
-                  fontSize={navSize == "small" ? "16px" : "21px"}
-                  pt="2px"
-                >
-                  Suppliers
-                </Text>
-              </Link>
-            </ProtectedContent>
-            <ProtectedContent hasAccess={appPermissions.SettingsManager}>
-              <Link
-                href="/settings"
-                pl="2"
-                pr="2"
-                pb="15px"
-                verticalAlign="middle"
-                display="flex"
-                color="white"
-                _hover={{color: "gray.300"}}
-              >
-                <Icon as={FiSettings} fontSize={navSize == "small" ? "30px" : "35px"} title="Settings"></Icon>
-                <Text
-                  as="span"
-                  pl="GlobalPadding"
-                  hidden={navSize == "small" ? true : false}
-                  fontSize={navSize == "small" ? "16px" : "21px"}
-                  pt="2px"
-                >
-                  Settings
-                </Text>
-              </Link>
-            </ProtectedContent>
-          </Flex>
-        </Flex>{" "}
-      </Flex>
-    </>
+    <Flex
+      w={navSize == "small" ? "75px" : "250px"}
+      background={useColorModeValue("blackAlpha.50", "whiteAlpha.200")}
+      borderRight={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}
+      minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight})`}
+      h="100%"
+    >
+      <VStack alignItems={"flex-start"} position="sticky" w="100%"
+        top="headerHeight" maxH={`calc(80vh - ${schraTheme?.sizes?.headerHeight})`} h="max-content">
+        {links}
+      </VStack>
+    </Flex>
   )
 }
 

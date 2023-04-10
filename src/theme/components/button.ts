@@ -1,10 +1,6 @@
-import {
-  defineStyle,
-  defineStyleConfig,
-  StyleFunctionProps,
-} from "@chakra-ui/styled-system";
-import { mode, transparentize } from "@chakra-ui/theme-tools";
-import { runIfFn } from "@chakra-ui/utils";
+import {defineStyle, defineStyleConfig, StyleFunctionProps} from "@chakra-ui/styled-system"
+import {mode, transparentize} from "@chakra-ui/theme-tools"
+import {runIfFn} from "@chakra-ui/utils"
 
 const baseStyle = defineStyle({
   lineHeight: "1.2",
@@ -12,134 +8,127 @@ const baseStyle = defineStyle({
   transitionProperty: "common",
   transitionDuration: "normal",
   _focusVisible: {
-    boxShadow: "outline",
+    boxShadow: "outline"
   },
   _disabled: {
     opacity: 0.4,
     cursor: "not-allowed",
-    boxShadow: "none",
+    boxShadow: "none"
   },
   _hover: {
     _disabled: {
-      bg: "initial",
-    },
-  },
-});
+      bg: "initial"
+    }
+  }
+})
 
 const variantGhost = defineStyle((props) => {
-  const { colorScheme: c, theme } = props;
+  const {colorScheme: c, theme} = props
 
   if (c === "gray") {
     return {
       color: mode(`inherit`, `whiteAlpha.900`)(props),
-      borderRadius: "full",
+      borderRadius: "md",
       _hover: {
-        bg: mode(`blackAlpha.100`, `whiteAlpha.200`)(props),
+        bg: mode(`blackAlpha.100`, `whiteAlpha.200`)(props)
       },
-      _active: { bg: mode(`blackAlpha.200`, `whiteAlpha.300`)(props) },
-    };
+      _active: {bg: mode(`blackAlpha.200`, `whiteAlpha.300`)(props)}
+    }
   }
 
-  const darkHoverBg = transparentize(`${c}.200`, 0.12)(theme);
-  const darkActiveBg = transparentize(`${c}.200`, 0.24)(theme);
+  const darkHoverBg = transparentize(`${c}.200`, 0.12)(theme)
+  const darkActiveBg = transparentize(`${c}.200`, 0.24)(theme)
 
   return {
     color: mode(`${c}.600`, `${c}.200`)(props),
-    borderRadius: "full",
+    borderRadius: "md",
     bg: "transparent",
     _hover: {
-      bg: mode(`${c}.100`, darkHoverBg)(props),
+      bg: mode(`${c}.100`, darkHoverBg)(props)
     },
     _active: {
-      bg: mode(`${c}.200`, darkActiveBg)(props),
-    },
-  };
-});
+      bg: mode(`${c}.200`, darkActiveBg)(props)
+    }
+  }
+})
 
 const variantOutline = defineStyle((props) => {
-  const { colorScheme: c } = props;
-  const borderColor = mode(`blackAlpha.200`, `whiteAlpha.300`)(props);
+  const {colorScheme: c} = props
+  const borderColor = mode(`blackAlpha.200`, `whiteAlpha.300`)(props)
   return {
     border: "1px solid",
     textDecoration: "none",
-    borderRadius: "full",
+    borderRadius: "md",
     "&:hover": {
-      textDecoration: "none !important",
+      textDecoration: "none !important"
     },
     borderColor: c === "gray" ? borderColor : "currentColor",
-    ".chakra-button__group[data-attached][data-orientation=horizontal] > &:not(:last-of-type)":
-      { marginEnd: "-1px" },
-    ".chakra-button__group[data-attached][data-orientation=vertical] > &:not(:last-of-type)":
-      { marginBottom: "-1px" },
-    ...runIfFn(variantGhost, props),
-  };
-});
+    ".chakra-button__group[data-attached][data-orientation=horizontal] > &:not(:last-of-type)": {marginEnd: "-1px"},
+    ".chakra-button__group[data-attached][data-orientation=vertical] > &:not(:last-of-type)": {marginBottom: "-1px"},
+    ...runIfFn(variantGhost, props)
+  }
+})
 
 type AccessibleColor = {
-  bg?: string;
-  color?: string;
-  hoverBg?: string;
-  activeBg?: string;
-};
+  bg?: string
+  color?: string
+  hoverBg?: string
+  activeBg?: string
+}
 
 /** Accessible color overrides for less accessible colors. */
-const accessibleColorMap: { [key: string]: AccessibleColor } = {
+const accessibleColorMap: {[key: string]: AccessibleColor} = {
   yellow: {
     bg: "yellow.400",
     color: "black",
     hoverBg: "yellow.500",
-    activeBg: "yellow.600",
+    activeBg: "yellow.600"
   },
   cyan: {
     bg: "cyan.400",
     color: "black",
     hoverBg: "cyan.500",
-    activeBg: "cyan.600",
-  },
-};
+    activeBg: "cyan.600"
+  }
+}
 
 const variantSolid = defineStyle((props) => {
-  const { colorScheme: c } = props;
+  const {colorScheme: c} = props
 
   if (c === "gray") {
-    const bg = "primary.500";
+    const bg = "primary.500"
 
     return {
       bg,
       color: "white",
-      borderRadius: "full",
+      borderRadius: "md",
       _hover: {
         bg: "primary.600",
         _disabled: {
-          bg: mode(`primary.300`, `primary.400`)(props),
-        },
+          bg: mode(`primary.300`, `primary.400`)(props)
+        }
       },
-      _active: { bg: mode(`primary.300`, `primary.400`)(props) },
-    };
+      _active: {bg: mode(`primary.300`, `primary.400`)(props)}
+    }
   }
 
-  const {
-    bg = `${c}.500`,
-    color = "white",
-    hoverBg = `${c}.600`,
-    activeBg = `${c}.700`,
-  } = accessibleColorMap[c] ?? {};
+  const {bg = `${c}.500`, color = "white", hoverBg = `${c}.600`, activeBg = `${c}.700`} = accessibleColorMap[c] ?? {}
 
-  const background = mode(bg, `${c}.200`)(props);
+  const background = mode(bg, `${c}.200`)(props)
 
   return {
     bg: background,
-    borderRadius: "full",
+    borderRadius: "md",
     color: mode(color, `gray.800`)(props),
     _hover: {
       bg: mode(hoverBg, `${c}.300`)(props),
       _disabled: {
-        bg: background,
-      },
+        bg: background
+      }
     },
-    _active: { bg: mode(activeBg, `${c}.400`)(props) },
-  };
-});
+    _active: {bg: mode(activeBg, `${c}.400`)(props)}
+  }
+})
 
 const variants = {
   ghost: variantGhost,
@@ -155,11 +144,11 @@ const variants = {
       bg: "transparent",
       borderBottomWidth: 2,
       borderBottomColor: mode("primary.500", "primary.200")(props),
-      color: mode("primary.500", "primary.200")(props),
+      color: mode("primary.500", "primary.200")(props)
     },
     _active: {
-      bg: "blackAlpha.200",
-    },
+      bg: "blackAlpha.200"
+    }
   }),
   navHorizontalActive: {
     size: "sm",
@@ -168,8 +157,8 @@ const variants = {
     rounded: "md",
     bg: "primary.100",
     _active: {
-      bg: "primary.200",
-    },
+      bg: "primary.200"
+    }
   },
   navVertical: {
     px: "3",
@@ -183,13 +172,13 @@ const variants = {
     borderRightColor: "transparent",
     transitionDelay: ".025s",
     _hover: {
-      borderRightColor: "primary.100",
+      borderRightColor: "primary.100"
     },
     _active: {
       bg: "blackAlpha.100",
       color: "primary.500",
-      borderRightColor: "primary.400",
-    },
+      borderRightColor: "primary.400"
+    }
   },
   navVerticalRight: {
     px: "3",
@@ -206,13 +195,13 @@ const variants = {
     textDecoration: "none",
     _hover: {
       borderLeftColor: "primary.100",
-      textDecoration: "none",
+      textDecoration: "none"
     },
     _active: {
       bg: "blackAlpha.100",
       color: "primary.500",
-      borderLeftColor: "primary.400",
-    },
+      borderLeftColor: "primary.400"
+    }
   },
   navVerticalActive: {
     px: "3",
@@ -221,18 +210,18 @@ const variants = {
     rounded: "md",
     bg: "primary.100",
     _active: {
-      bg: "primary.200",
-    },
-  },
-};
+      bg: "primary.200"
+    }
+  }
+}
 
 const buttonTheme = defineStyleConfig({
   baseStyle,
-  variants,
-});
+  variants
+})
 
 const Button = {
-  ...buttonTheme,
-};
+  ...buttonTheme
+}
 
-export default Button;
+export default Button

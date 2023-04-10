@@ -67,7 +67,6 @@ const MobileNavigation = () => {
   }
   return (
     <HStack alignItems="center">
-
       <Menu>
         <MenuButton>
           <Icon as={TbInbox} strokeWidth="1.5" fontSize="2xl" />

@@ -1,5 +1,5 @@
 const sizes = {
-  headerHeight: "6.5rem"
-};
+  headerHeight: "5rem"
+}
 
-export default sizes;
+export default sizes

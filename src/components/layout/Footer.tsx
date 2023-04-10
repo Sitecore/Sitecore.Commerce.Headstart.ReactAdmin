@@ -1,14 +1,14 @@
-import {Flex, Box, Text, useColorMode, useColorModeValue} from "@chakra-ui/react"
+import { Flex, Box, Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import FooterLogo from "components/branding/FooterLogo"
 
 const Footer = () => {
-  const {colorMode, toggleColorMode} = useColorMode()
+  const { colorMode, toggleColorMode } = useColorMode()
   const bg = useColorModeValue("footerBg.400", "footerBg.600")
   const color = useColorModeValue("textColor.900", "textColor.100")
 
   return (
-    <Box bg={bg} color={color} as="footer">
-      <Box py={10}>
+    <Box bg={"red.500"} color={color} as="footer">
+      {/* <Box>
         <Flex
           align={"center"}
           _before={{
@@ -27,11 +27,10 @@ const Footer = () => {
           }}
         >
           <FooterLogo />
-        </Flex>
-        <Text pt={6} fontSize={"sm"} textAlign={"center"} data-testid="copyright">
-          Copyright © {new Date().getFullYear()} Sitecore.com All Rights Reserved.
-        </Text>
-      </Box>
+        </Flex> */}
+      <Text pt={6} fontSize={"sm"} textAlign={"center"} data-testid="copyright">
+        Copyright © {new Date().getFullYear()} Sitecore.com All Rights Reserved.
+      </Text>
     </Box>
   )
 }

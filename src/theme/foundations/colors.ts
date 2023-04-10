@@ -108,18 +108,18 @@ const basePalette = {
       800: "#625704",
       900: "#312C02"
     },
-    gray: {
-      50: "#F4F2F1",
-      100: "#E0DBD7",
-      200: "#CCC4BD",
-      300: "#B8ADA3",
-      400: "#A49689",
-      500: "#90806F",
-      600: "#736659",
-      700: "#564D43",
-      800: "#39332D",
-      900: "#1D1A16"
-    },
+    // gray: {
+    //   50: "#C1C2C5",
+    //   100: "#A6A7AB",
+    //   200: "#909296",
+    //   300: "#5c5f66",
+    //   400: "#373A40",
+    //   500: "#2C2E33",
+    //   600: "#25262b",
+    //   700: "#1A1B1E",
+    //   800: "#141517",
+    //   900: "#101113"
+    // },
     blackAlpha: {
       50: "rgba(0,0,0,0.02)",
       100: "rgba(0,0,0,0.04)",
@@ -151,7 +151,7 @@ const basePalette = {
 const colors = {
   brand: basePalette.colors.teal,
   primary: basePalette.colors.teal,
-  secondary: basePalette.colors.gray,
+  secondary: basePalette.colors.blackAlpha,
 
   info: basePalette.colors.cyan,
   warning: basePalette.colors.yellow,

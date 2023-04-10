@@ -26,7 +26,7 @@ import Input from "./input"
 // import Kbd from "./kbd"
 import Link from "./link"
 // import List from "./list"
-// import Menu from "./menu"
+import {Menu} from "./menu"
 import Modal from "./modal"
 import NumberInput from "./number-input"
 // import PinInput from "./pin-input"
@@ -69,7 +69,7 @@ const components = {
   // Kbd,
   Link,
   // List,
-  // Menu,
+  Menu,
   Modal,
   NumberInput,
   // PinInput,

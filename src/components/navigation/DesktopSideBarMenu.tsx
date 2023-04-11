@@ -20,6 +20,10 @@ const DesktopSideBarMenu = () => {
   const [navSize, changeNavSize] = useState("large")
   let router = useRouter()
 
+  // TODO: avoid component-specific one-off styles like this. Try to refactor these into a system of semantic-tokens.
+  const btnActiveColor = useColorModeValue("inherit", "whiteAlpha.800")
+  const btnActiveBgColor = useColorModeValue("white", "whiteAlpha.200")
+
   const data = [
     { label: "dashboard", icon: TbLayout, permisshies: appPermissions.ProductManager },
     { label: "products", icon: TbShoppingCartPlus, permisshies: appPermissions.ProductManager },
@@ -34,11 +38,12 @@ const DesktopSideBarMenu = () => {
 
   const links = data.map((item) => (
     <ProtectedContent hasAccess={item.permisshies} key={item.label}>
+      {/* TODO: This is excessive. Consider refactoring these styles into a button variant. */}
       <Button as={Link} href={`/${item.label}`} variant="ghost"
         leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}
         isActive={"/" + item.label === router?.pathname}
-        _active={{ backgroundColor: "white", boxShadow: "sm", border: `.5px solid ${schraTheme.colors.blackAlpha[300]}` }}
-        _hover={{ textDecoration: "none", backgroundColor: "whiteAlpha.300", boxShadow: "md" }}
+        _active={{ backgroundColor: btnActiveBgColor, color: btnActiveColor, boxShadow: "sm", borderColor: "blackAlpha.300" }}
+        _hover={{ textDecoration: "none", backgroundColor: btnActiveBgColor, boxShadow: "md" }}
         border={".5px solid transparent"} textDecoration={"none"} style={{ marginTop: 0 }}
         fontWeight="normal" p={3} transition={"all .25s cubic-bezier(0.55, 0, 1, 0.45)"}
         h={"unset"} w={"100%"} justifyContent="flex-start">

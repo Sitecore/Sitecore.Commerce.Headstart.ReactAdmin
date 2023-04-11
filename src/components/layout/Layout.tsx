@@ -7,6 +7,7 @@ import Footer from "./Footer"
 import Header from "./Header"
 import LeftNavigation from "components/navigation/SideNavigation"
 import { useAuth } from "hooks/useAuth"
+import DesktopSideBarMenu from "../navigation/DesktopSideBarMenu"
 
 const Layout = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -25,7 +26,7 @@ const Layout = (props) => {
     <>
       <Header />
       <Grid as="main" gridTemplateColumns={["75px auto", "250px auto"]} flexGrow="1">
-        <LeftNavigation />
+        <DesktopSideBarMenu />
         <Box flexGrow={1} overflowX="hidden">
           <ContentHeader {...props} />
           {props.children}

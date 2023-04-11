@@ -5,7 +5,6 @@ import MobileSideBarMenu from "./MobileSideBarMenu"
 import DesktopSideBarMenu from "./DesktopSideBarMenu"
 
 const SideNavigation = () => {
-  const [isMobile] = useMediaQuery("(max-width: 768px)")
   return (
     <DesktopSideBarMenu />
     // TODO: I'd prefer to just use one sidebar component, and make it responsive.

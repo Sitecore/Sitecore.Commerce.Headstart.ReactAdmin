@@ -1,17 +1,17 @@
-import {Box, Button, Checkbox, FormControl, FormLabel, HStack, Heading, Input, Text, VStack} from "@chakra-ui/react"
-import {ChangeEvent, FormEvent, FunctionComponent, useCallback, useState} from "react"
+import { Box, Button, chakra, Checkbox, Flex, FormControl, FormLabel, Grid, Heading, Hide, HStack, Input, VStack } from "@chakra-ui/react"
+import { ChangeEvent, FormEvent, FunctionComponent, useCallback, useState } from "react"
 
-import Card from "../card/Card"
+import { useAuth } from "hooks/useAuth"
+import schraTheme from "theme/theme"
 import HeaderLogo from "../branding/HeaderLogo"
-import {useAuth} from "hooks/useAuth"
 
 interface OcLoginFormProps {
   title?: string
   onLoggedIn: () => void
 }
 
-const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({title = "Sign into your account", onLoggedIn}) => {
-  const {Login, isAuthenticated} = useAuth()
+const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({ title = "Sign into your account", onLoggedIn }) => {
+  const { Login, isAuthenticated } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [formValues, setFormValues] = useState({
     identifier: "",
@@ -20,11 +20,11 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({title = "Sign into yo
   })
 
   const handleInputChange = (fieldKey: string) => (e: ChangeEvent<HTMLInputElement>) => {
-    setFormValues((v) => ({...v, [fieldKey]: e.target.value}))
+    setFormValues((v) => ({ ...v, [fieldKey]: e.target.value }))
   }
 
   const handleCheckboxChange = (fieldKey: string) => (e: ChangeEvent<HTMLInputElement>) => {
-    setFormValues((v) => ({...v, [fieldKey]: !!e.target.checked}))
+    setFormValues((v) => ({ ...v, [fieldKey]: !!e.target.checked }))
   }
 
   const handleSubmit = useCallback(
@@ -43,69 +43,73 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({title = "Sign into yo
 
   return (
     !isAuthenticated && (
-      <form name="ocLoginForm" onSubmit={handleSubmit}>
-        <Card variant="primaryCard" showclosebutton="false">
-          <VStack width="full" p={10}>
-            <HeaderLogo />
-            <Heading as="h1" py={6}>
-              {title}
-            </Heading>
-
-            {/* TODO Get Errors on Login */}
-            {/* {error && (
+      <Grid gridTemplateColumns={["auto", "auto 50vw"]} h={"100%"} w={"100%"} overflowX={"hidden"}>
+        <Hide below="lg">
+          <Box bgImg={"url(https://source.unsplash.com/random/?commerce)"} bgSize={"cover"} bgRepeat={"no-repeat"} bgColor={"blackAlpha.700"} bgBlendMode={"overlay"} />
+        </Hide>
+        <Flex flexDirection={"column"} alignItems={["center", "flex-start"]} justifyContent="center" borderLeft={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}>
+          <chakra.form pl={[0, 12]} name="ocLoginForm" onSubmit={handleSubmit}>
+            <VStack width="full" alignItems={"flex-start"} gap={4}>
+              <HeaderLogo />
+              <Heading as="h1" fontSize={"4xl"} fontWeight={"thin"} color={"blackAlpha.400"}>
+                {title}
+              </Heading>
+              {/* TODO Get Errors on Login */}
+              {/* {error && (
               <Alert status="error" variant="solid">
                 <AlertIcon />
                 {error.message}{" "}
               </Alert>
             )} */}
-            <FormControl>
-              <Box width="full">
-                <FormLabel>Username</FormLabel>
-                <Input
-                  type="text"
-                  id="identifier"
-                  name="identifier"
-                  placeholder="Enter username"
-                  value={formValues.identifier}
-                  onChange={handleInputChange("identifier")}
-                  required
-                />
-              </Box>
-              <Box width="full">
-                <FormLabel>Password</FormLabel>
-                <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Enter password"
-                  value={formValues.password}
-                  onChange={handleInputChange("password")}
-                  required
-                />
-              </Box>
-
-              <Box width="full">
-                <HStack>
-                  <Checkbox
-                    id="remember"
-                    name="remember"
-                    checked={formValues.remember}
-                    onChange={handleCheckboxChange("remember")}
-                    size="lg"
-                    mx={1}
-                    py={2}
+              <FormControl display={"flex"} flexFlow={"column nowrap"} gap={4} minW={"sm"}>
+                <Box>
+                  <FormLabel htmlFor="identifier">Username</FormLabel>
+                  <Input
+                    type="text"
+                    variant="filled"
+                    id="identifier"
+                    name="identifier"
+                    placeholder="Enter username"
+                    value={formValues.identifier}
+                    onChange={handleInputChange("identifier")}
+                    required
                   />
-                  <Text>Keep me logged in</Text>
-                </HStack>
-              </Box>
-
-              <Button disabled={isLoading} type="submit" width="full" onClick={handleSubmit}>
-                Sign in
-              </Button>
-            </FormControl>
-          </VStack>
-        </Card>
-      </form>
+                </Box>
+                <Box>
+                  <FormLabel htmlFor="password">Password</FormLabel>
+                  <Input variant="filled"
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter password"
+                    value={formValues.password}
+                    onChange={handleInputChange("password")}
+                    required
+                  />
+                </Box>
+                <Box>
+                  <HStack>
+                    <Checkbox
+                      id="remember"
+                      name="remember"
+                      colorScheme={"primary"}
+                      checked={formValues.remember}
+                      onChange={handleCheckboxChange("remember")}
+                      size="lg"
+                      mx={1}
+                      py={2}
+                    />
+                    <FormLabel htmlFor="remember" fontSize="sm">Keep me logged in</FormLabel>
+                  </HStack>
+                </Box>
+                <Button variant="solid" disabled={isLoading} type="submit" width="full" onClick={handleSubmit}>
+                  Sign in
+                </Button>
+              </FormControl>
+            </VStack>
+          </chakra.form>
+        </Flex>
+      </Grid>
     )
   )
 }

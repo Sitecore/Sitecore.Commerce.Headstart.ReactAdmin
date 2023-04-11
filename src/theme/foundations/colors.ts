@@ -150,7 +150,7 @@ const basePalette = {
 
 const colors = {
   brand: basePalette.colors.teal,
-  primary: basePalette.colors.teal,
+  primary: basePalette.colors.orange,
   secondary: basePalette.colors.blackAlpha,
 
   info: basePalette.colors.cyan,

@@ -8,7 +8,7 @@ const SideNavigation = () => {
   const [isMobile] = useMediaQuery("(max-width: 768px)")
   return (
     <DesktopSideBarMenu />
-    // I'd prefer to just use one sidebar component, and make it responsive.
+    // TODO: I'd prefer to just use one sidebar component, and make it responsive.
     // <>
     //   {isMobile ? <MobileSideBarMenu /> : <DesktopSideBarMenu />}
     // </>

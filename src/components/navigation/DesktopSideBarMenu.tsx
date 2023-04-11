@@ -1,4 +1,4 @@
-import { Button, Flex, Icon, IconButton, Image, Link as ChakraLink, Text, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Button, Flex, Hide, Icon, IconButton, Image, Link as ChakraLink, Text, useColorModeValue, VStack } from "@chakra-ui/react"
 import { FiSettings, FiStar } from "react-icons/fi"
 import {
   HiChevronDoubleLeft,
@@ -9,7 +9,7 @@ import {
   HiOutlineUserGroup
 } from "react-icons/hi"
 import React, { useState } from "react"
-import { TbBuildingWarehouse, TbLayout, TbReceipt2, TbShoppingCartDiscount, TbShoppingCartPlus, TbTruckReturn, TbUserCheck, TbUsers } from "react-icons/tb"
+import { TbBuildingWarehouse, TbLayout, TbReceipt2, TbSettings, TbSettings2, TbShoppingCartDiscount, TbShoppingCartPlus, TbTruckReturn, TbUserCheck, TbUsers } from "react-icons/tb"
 import ProtectedContent from "../auth/ProtectedContent"
 import { appPermissions } from "constants/app-permissions.config"
 import { Link } from "./Link"
@@ -28,27 +28,36 @@ const DesktopSideBarMenu = () => {
     { label: "returns", icon: TbTruckReturn, permisshies: appPermissions.BuyerManager },
     { label: "buyers", icon: TbUserCheck, permisshies: appPermissions.BuyerManager },
     { label: "suppliers", icon: TbBuildingWarehouse, permisshies: appPermissions.SupplierManager },
-    { label: "settings", icon: TbBuildingWarehouse, permisshies: appPermissions.SettingsManager }
+    { label: "settings", icon: TbSettings2, permisshies: appPermissions.SettingsManager }
   ]
 
 
   const links = data.map((item) => (
     <ProtectedContent hasAccess={item.permisshies} key={item.label}>
-      <Button isActive={"/" + item.label === router?.pathname} textDecoration={"none"} borderRadius="0" fontWeight="normal" p={3} _hover={{ textDecoration: "none", backgroundColor: "blackAlpha.100" }} style={{ marginTop: 0 }} h={"unset"} as={Link} href={`/${item.label}`} variant="ghost" w={"100%"} justifyContent="flex-start" leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}>
-        {item.label}
+      <Button as={Link} href={`/${item.label}`} variant="ghost"
+        leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}
+        isActive={"/" + item.label === router?.pathname}
+        _active={{ backgroundColor: "white", boxShadow: "sm", border: `.5px solid ${schraTheme.colors.blackAlpha[300]}` }}
+        _hover={{ textDecoration: "none", backgroundColor: "whiteAlpha.300", boxShadow: "md" }}
+        border={".5px solid transparent"} textDecoration={"none"} style={{ marginTop: 0 }}
+        fontWeight="normal" p={3} transition={"all .25s cubic-bezier(0.55, 0, 1, 0.45)"}
+        h={"unset"} w={"100%"} justifyContent="flex-start">
+        <Hide below="md">
+          {item.label}
+        </Hide>
       </Button>
     </ProtectedContent >
   ))
 
   return (
     <Flex
-      w={navSize == "small" ? "75px" : "250px"}
+      w={["75px", "250px"]}
       background={useColorModeValue("blackAlpha.50", "whiteAlpha.200")}
       borderRight={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}
       minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight})`}
       h="100%"
     >
-      <VStack alignItems={"flex-start"} position="sticky" w="100%"
+      <VStack alignItems={"flex-start"} position="sticky" w="100%" p={3} gap={2}
         top="headerHeight" maxH={`calc(80vh - ${schraTheme?.sizes?.headerHeight})`} h="max-content">
         {links}
       </VStack>

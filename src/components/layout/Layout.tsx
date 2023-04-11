@@ -24,7 +24,7 @@ const Layout = (props) => {
   return (
     <>
       <Header />
-      <Grid as="main" gridTemplateColumns="1fr auto" flexGrow="1">
+      <Grid as="main" gridTemplateColumns={["75px auto", "250px auto"]} flexGrow="1">
         <LeftNavigation />
         <Box flexGrow={1} overflowX="hidden">
           <ContentHeader {...props} />

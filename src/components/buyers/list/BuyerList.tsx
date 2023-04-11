@@ -1,74 +1,60 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Container,
-  Icon,
-  Image,
-  Stack,
-  Tag,
-  Text,
-  useColorMode,
-  useColorModeValue,
-  useDisclosure
-} from "@chakra-ui/react"
+import {Box, Button, ButtonGroup, Container, Icon, Text, useDisclosure} from "@chakra-ui/react"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
 import Link from "next/link"
-import {Buyer, Buyers, Catalogs, ListPage, UserGroups, Users} from "ordercloud-javascript-sdk"
-import {FC, useCallback, useEffect, useState} from "react"
+import {Buyers, Catalogs, RequiredDeep, UserGroups, Users} from "ordercloud-javascript-sdk"
+import {FC, useCallback, useState} from "react"
 import {IBuyer} from "types/ordercloud/IBuyer"
 import {MdCheck} from "react-icons/md"
 import {IoMdClose} from "react-icons/io"
 import {dateHelper} from "utils"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
-import {useRouter} from "next/router"
-import {useSuccessToast} from "hooks/useToast"
-import {OrderCloudTableFilters} from "@/components/ordercloud-table"
-import DebouncedSearchInput from "@/components/shared/DebouncedSearchInput/DebouncedSearchInput"
-import ListViewMetaInfo from "@/components/shared/ListViewMetaInfo/ListViewMetaInfo"
+import BuyerListToolbar from "./BuyerListToolBar"
+import BuyerActionMenu from "./BuyerActionMenu"
+import BuyerDeleteModal from "../modals/BuyerDeleteModal"
 
-const BuyerList: FC = () => {
-  let router = useRouter()
-  const [buyersMeta, setBuyersMeta] = useState({})
-  const [showList, setShowList] = useState(false)
-  const successToast = useSuccessToast()
+interface IBuyerListItem extends RequiredDeep<IBuyer> {
+  userGroupsCount: number
+  usersCount: number
+  catalogsCount: number
+}
 
-  const fetchData = useCallback(async (filters: OrderCloudTableFilters) => {
-    let _buyerListMeta = {}
-    const buyersList = await Buyers.List<IBuyer>(filters)
-    const requests = buyersList.Items.map(async (buyer) => {
-      const [userGroupsList, usersList, catalogsList] = await Promise.all([
+const buyerListCall = async (listOptions: any) => {
+  const response = await Buyers.List(listOptions)
+  const queue = []
+  const decoratedBuyerItems = []
+  response.Items.forEach((buyer) => {
+    queue.push(
+      Promise.all([
         UserGroups.List<IBuyerUserGroup>(buyer.ID),
         Users.List<IBuyerUser>(buyer.ID),
         Catalogs.ListAssignments({buyerID: buyer.ID})
-      ])
-      _buyerListMeta[buyer.ID] = {}
-      _buyerListMeta[buyer.ID]["userGroupsCount"] = userGroupsList.Meta.TotalCount
-      _buyerListMeta[buyer.ID]["usersCount"] = usersList.Meta.TotalCount
-      _buyerListMeta[buyer.ID]["catalogsCount"] = catalogsList.Meta.TotalCount
-    })
-    await Promise.all(requests)
-    setBuyersMeta(_buyerListMeta)
-    setShowList(true)
-  }, [])
-
-  useEffect(() => {
-    fetchData({})
-  }, [fetchData])
-
-  const deleteBuyer = useCallback(
-    async (userId: string) => {
-      await Buyers.Delete(userId)
-      fetchData({})
-      successToast({
-        description: "Buyer deleted successfully."
+      ]).then((responses) => {
+        const decoratedBuyer: IBuyerListItem = {
+          ...buyer,
+          userGroupsCount: responses[0].Meta.TotalCount,
+          usersCount: responses[1].Meta.TotalCount,
+          catalogsCount: responses[2].Meta.TotalCount
+        }
+        decoratedBuyerItems.push(decoratedBuyer)
       })
-    },
-    [fetchData, successToast]
-  )
+    )
+  })
+  await Promise.all(queue)
+  return {Meta: response.Meta, Items: decoratedBuyerItems}
+}
 
+const BuyerList: FC = () => {
+  const [actionBuyer, setActionBuyer] = useState<IBuyerListItem>()
+  const deleteDisclosure = useDisclosure()
+
+  const renderBuyerActionMenu = useCallback(
+    (buyer: IBuyerListItem) => {
+      return <BuyerActionMenu buyer={buyer} onOpen={() => setActionBuyer(buyer)} onDelete={deleteDisclosure.onOpen} />
+    },
+    [deleteDisclosure.onOpen]
+  )
   const paramMap = {
     d: "Direction"
   }
@@ -79,7 +65,11 @@ const BuyerList: FC = () => {
     p: "Page"
   }
 
-  const IdColumn: DataTableColumn<IBuyer> = {
+  const BuyerFilterMap = {
+    active: "Active"
+  }
+
+  const IdColumn: DataTableColumn<IBuyerListItem> = {
     header: "Buyer ID",
     accessor: "ID",
     cell: ({row, value}) => (
@@ -91,7 +81,7 @@ const BuyerList: FC = () => {
     )
   }
 
-  const NameColumn: DataTableColumn<IBuyer> = {
+  const NameColumn: DataTableColumn<IBuyerListItem> = {
     header: "NAME",
     accessor: "Name",
     cell: ({row, value}) => (
@@ -108,7 +98,7 @@ const BuyerList: FC = () => {
     accessor: "DefaultCatalogID"
   }
 
-  const StatusColumn: DataTableColumn<IBuyer> = {
+  const StatusColumn: DataTableColumn<IBuyerListItem> = {
     header: "STATUS",
     accessor: "Active",
     cell: ({row}) => (
@@ -124,50 +114,40 @@ const BuyerList: FC = () => {
     )
   }
 
-  const CreatedDateColumn: DataTableColumn<IBuyer> = {
+  const CreatedDateColumn: DataTableColumn<IBuyerListItem> = {
     header: "CREATED DATE",
     accessor: "DateCreated",
     cell: ({value}) => dateHelper.formatDate(value)
   }
 
-  const UserGroupColumn: DataTableColumn<IBuyer> = {
-    header: "USER GROUPS / USERS",
+  const UserGroupColumn: DataTableColumn<IBuyerListItem> = {
+    header: "USER GROUPS",
     cell: ({row}) => (
-      <ButtonGroup>
-        <Button onClick={() => router.push(`/buyers/${row.original.ID}/usergroups`)} variant="outline">
-          User Groups ({buyersMeta[row.original.ID]["userGroupsCount"]})
-        </Button>
-        <Button onClick={() => router.push(`/buyers/${row.original.ID}/users`)} variant="outline">
-          Users ({buyersMeta[row.original.ID]["usersCount"]})
-        </Button>
-      </ButtonGroup>
-    )
-  }
-
-  const CatalogColumn: DataTableColumn<IBuyer> = {
-    header: "CATALOGS",
-    cell: ({row}) => (
-      <Link href={`/buyers/${row.original.ID}/catalogs`}>
-        <Button variant="outline">Catalogs ({buyersMeta[row.original.ID]["catalogsCount"]})</Button>
+      <Link passHref href={`/buyers/${row.original.ID}/usergroups`}>
+        <Button variant="outline">User Groups ({row.original.userGroupsCount})</Button>
       </Link>
     )
   }
 
-  const ActionsColumn: DataTableColumn<IBuyer> = {
-    header: "ACTIONS",
+  const BuyerUsersColumn: DataTableColumn<IBuyerListItem> = {
+    header: "USERS",
     cell: ({row}) => (
-      <ButtonGroup>
-        <Button variant="outline" onClick={() => router.push(`/buyers/${row.original.ID}/`)}>
-          Edit
-        </Button>
-        <Button variant="outline" onClick={() => deleteBuyer(row.original.ID)}>
-          Delete
-        </Button>
-      </ButtonGroup>
+      <Link passHref href={`/buyers/${row.original.ID}/users`}>
+        <Button variant="outline">Users ({row.original.usersCount})</Button>
+      </Link>
     )
   }
 
-  const BuyerTableOptions: ListViewTableOptions<IBuyer> = {
+  const CatalogColumn: DataTableColumn<IBuyerListItem> = {
+    header: "CATALOGS",
+    cell: ({row}) => (
+      <Link href={`/buyers/${row.original.ID}/catalogs`}>
+        <Button variant="outline">Catalogs ({row.original.catalogsCount})</Button>
+      </Link>
+    )
+  }
+
+  const BuyerTableOptions: ListViewTableOptions<IBuyerListItem> = {
     responsive: {
       base: [IdColumn, NameColumn],
       md: [IdColumn, NameColumn],
@@ -179,53 +159,41 @@ const BuyerList: FC = () => {
         StatusColumn,
         CreatedDateColumn,
         UserGroupColumn,
-        CatalogColumn,
-        ActionsColumn
+        BuyerUsersColumn,
+        CatalogColumn
       ]
     }
   }
 
   return (
-    showList && (
-      <ListView<IBuyer>
-        service={Buyers.List}
-        tableOptions={BuyerTableOptions}
-        paramMap={paramMap}
-        queryMap={BuyerQueryMap}
-      >
-        {({renderContent, meta, updateQuery, queryParams, viewModeToggle, ...listViewChildProps}) => (
-          <Container maxW="100%">
-            <Box>
-              <Stack direction="row" mb={5}>
-                <Stack direction={["column", "column", "column", "row"]}>
-                  <DebouncedSearchInput
-                    label="Search buyers"
-                    value={queryParams["Search"]}
-                    onSearch={updateQuery("s", true)}
-                  />
-                </Stack>
-                <Box as="span" flexGrow="1"></Box>
-                <Stack direction={["column", "column", "column", "row"]}>
-                  <Stack direction="row" order={[1, 1, 1, 0]}>
-                    {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
-                    <Box as="span" width="2"></Box>
-                    {viewModeToggle}
-                  </Stack>
-                  <Box order={[0, 0, 0, 1]} mt={0}>
-                    <Link passHref href="/buyers/add">
-                      <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                        Create Buyer
-                      </Button>
-                    </Link>
-                  </Box>
-                </Stack>
-              </Stack>
-            </Box>
-            {renderContent}
-          </Container>
-        )}
-      </ListView>
-    )
+    <ListView<IBuyerListItem>
+      service={buyerListCall}
+      tableOptions={BuyerTableOptions}
+      paramMap={paramMap}
+      queryMap={BuyerQueryMap}
+      filterMap={BuyerFilterMap}
+      itemActions={renderBuyerActionMenu}
+    >
+      {({renderContent, items, ...listViewChildProps}) => (
+        <Container maxW="100%">
+          <Box>
+            <BuyerListToolbar {...listViewChildProps} />
+          </Box>
+          {renderContent}
+          <BuyerDeleteModal
+            onComplete={listViewChildProps.removeItems}
+            buyers={
+              actionBuyer
+                ? [actionBuyer]
+                : items
+                ? items.filter((buyer) => listViewChildProps.selected.includes(buyer.ID))
+                : []
+            }
+            disclosure={deleteDisclosure}
+          />
+        </Container>
+      )}
+    </ListView>
   )
 }
 

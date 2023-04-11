@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Button,
   Drawer,
   DrawerBody,
@@ -27,8 +26,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 import { BsMoonStarsFill, BsSun } from "react-icons/bs"
-import { TbDoor, TbDoorExit, TbInbox, TbMoon, TbPalette, TbSettings, TbSun, TbUserCircle } from "react-icons/tb";
-// import { HiOutlineBell, HiOutlineCog } from "react-icons/hi"
+import { TbDoorExit, TbInbox, TbMoon, TbPalette, TbSun, TbUserCircle } from "react-icons/tb";
 import React, { useState } from "react"
 import { ChevronDownIcon } from "@chakra-ui/icons"
 import Cookies from "universal-cookie"
@@ -37,7 +35,6 @@ import ProtectedContent from "../auth/ProtectedContent"
 import { appPermissions } from "constants/app-permissions.config"
 import { useAuth } from "hooks/useAuth"
 import { Link } from "./Link"
-import NextLink from "next/link"
 
 const MobileNavigation = () => {
   const { Logout } = useAuth()

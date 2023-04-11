@@ -149,8 +149,8 @@ const basePalette = {
 }
 
 const colors = {
-  brand: basePalette.colors.teal,
-  primary: basePalette.colors.orange,
+  brand: basePalette.colors.orange,
+  primary: basePalette.colors.purple,
   secondary: basePalette.colors.blackAlpha,
 
   info: basePalette.colors.cyan,

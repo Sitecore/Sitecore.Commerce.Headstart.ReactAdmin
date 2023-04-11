@@ -4,7 +4,7 @@
 
 //-------------------------------------------------------------------------------
 
-import Card from "../../styles/theme/components/Card" // this is temporary
+import deprecatedCard from "../../styles/theme/components/Card" // this is temporary
 // import Accordion from "./accordion"
 import Alert from "./alert"
 // import Avatar from "./avatar"
@@ -14,6 +14,7 @@ import Button from "./button"
 import Checkbox from "./checkbox"
 import CloseButton from "./close-button"
 import Code from "./code"
+import {Card} from "./card"
 // import Container from "./container"
 import Divider from "./divider"
 // import Drawer from "./drawer"
@@ -53,6 +54,7 @@ const components = {
   Badge,
   Breadcrumb,
   Button,
+  deprecatedCard,
   Card,
   Checkbox,
   CloseButton,

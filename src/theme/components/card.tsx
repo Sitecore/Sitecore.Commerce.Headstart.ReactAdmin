@@ -1,11 +1,17 @@
 import { cardAnatomy } from '@chakra-ui/anatomy'
 import { createMultiStyleConfigHelpers } from '@chakra-ui/react'
-
+import { mode } from "@chakra-ui/theme-tools"
 const { definePartsStyle, defineMultiStyleConfig } =
     createMultiStyleConfigHelpers(cardAnatomy.keys)
 
+const baseStyle = (props) => definePartsStyle({
+    container: {
+        backgroundColor: mode("white", "whiteAlpha.100")(props),
+    },
+})
+
 const variants = {
-    levitating: definePartsStyle({
+    levitating: (props) => definePartsStyle({
         header: {
             textTransform: "capitalize",
         },
@@ -13,14 +19,16 @@ const variants = {
             transition: "all .25s ease-in-out",
             boxShadow: "md",
             textDecoration: "none",
+            border: `11px solid transparent`,
             _hover: {
+                // borderColor: mode("red.500", "whiteAlpha.300")(props),
+                borderColor: "st.borderColor",
                 boxShadow: "lg",
                 transform: "translateY(-1px)",
                 textDecoration: "none",
-                borderColor: "primary.300"
             }
         }
     })
 };
 
-export const Card = defineMultiStyleConfig({ variants });
+export const Card = defineMultiStyleConfig({ baseStyle, variants });

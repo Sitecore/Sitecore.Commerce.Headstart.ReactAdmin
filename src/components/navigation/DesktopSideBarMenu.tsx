@@ -42,12 +42,12 @@ const DesktopSideBarMenu = () => {
       <Button as={Link} href={`/${item.label}`} variant="ghost"
         leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}
         isActive={"/" + item.label === router?.pathname}
-        _active={{ backgroundColor: btnActiveBgColor, color: btnActiveColor, boxShadow: "sm", borderColor: "blackAlpha.300" }}
+        _active={{ backgroundColor: btnActiveBgColor, color: btnActiveColor, boxShadow: "sm", borderColor: "st.borderColor" }}
         _hover={{ textDecoration: "none", backgroundColor: btnActiveBgColor, boxShadow: "md" }}
         border={".5px solid transparent"} textDecoration={"none"} style={{ marginTop: 0 }}
         fontWeight="normal" p={3} transition={"all .25s cubic-bezier(0.55, 0, 1, 0.45)"}
         h={"unset"} w={"100%"} justifyContent="flex-start">
-        <Hide below="md">
+        <Hide below="lg">
           {item.label}
         </Hide>
       </Button>
@@ -56,13 +56,13 @@ const DesktopSideBarMenu = () => {
 
   return (
     <Flex
-      w={["75px", "250px"]}
-      background={useColorModeValue("blackAlpha.50", "whiteAlpha.200")}
+      w={["75px", "75px", "75px", "250px"]}
+      background={useColorModeValue("blackAlpha.50", "whiteAlpha.100")}
       borderRight={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}
       minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight})`}
       h="100%"
     >
-      <VStack alignItems={"flex-start"} position="sticky" w="100%" p={3} gap={2}
+      <VStack alignItems={"flex-start"} position="sticky" w="100%" px={4} py={[4, 6, 8]} gap={2}
         top="headerHeight" maxH={`calc(80vh - ${schraTheme?.sizes?.headerHeight})`} h="max-content">
         {links}
       </VStack>

@@ -1,50 +1,40 @@
-import { Flex, Text, Box, Icon, useColorModeValue } from "@chakra-ui/react"
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons"
+import { Flex, Card, Text, Box, Icon, useColorModeValue, CardHeader, CardBody, Heading, IconButton } from "@chakra-ui/react"
 import React from "react"
-import Card from "../card/Card"
+import { TbArrowsDiagonal, TbArrowsDiagonal2, TbLayoutNavbarExpand, TbLayoutSidebarLeftExpand } from "react-icons/tb"
+import schraTheme from "theme/theme"
 
 export default function PercentChangeTitle(prop) {
-  const color = useColorModeValue("textColor.900", "textColor.100")
-  const bgColor = useColorModeValue("boxBgColor.100", "boxBgColor.600")
-  const headingColor = useColorModeValue("boxTextColor.400", "boxTextColor.300")
+  const color = useColorModeValue("blackAlpha.500", "whiteAlpha.500")
+  const labelColor = useColorModeValue("blackAlpha.400", "whiteAlpha.500")
+  const borderColorPos = useColorModeValue("green.300", "green.700")
+  const borderColorNeg = useColorModeValue("red.100", "red.800")
+
   return (
-    <Card bg={bgColor} showclosebutton="false" h="full">
-      <Flex direction="column" alignSelf="flex-start">
-        <Text fontSize="lg" mb="6px" textTransform="uppercase" color={headingColor}>
-          {prop.title}
-        </Text>
-        <Text fontSize="lg" fontWeight="bold" color={color}>
+    <Card w="full" border=".5px solid" borderColor={prop.percentchangetype === "pos" ? borderColorPos : borderColorNeg}>
+      <CardBody display="flex" flexFlow="column nowrap" pos={"relative"}>
+        <Text fontSize="5xl" fontWeight="light" color={color} lineHeight={"initial"} display="inline-flex" alignItems="center">
           {prop.totalamount}
         </Text>
-        <Text fontSize="sm" fontWeight="medium" color={color} pt="30px">
+        <Heading fontSize="lg" mb="6px" textTransform="capitalize" mt={"auto"}>
+          {prop.title}
+        </Heading>
+        <Text as="span" fontSize="xs" fontWeight="normal" color={labelColor} casing="uppercase" display="inline-flex" alignItems="center" gap={1}>
           {prop.percentchangetype === "pos" ? (
-            <Text as="span" color="green.400" fontWeight="bold" pr="15px">
-              + {prop.percentchange}%
+            <Text as="span" color="green.400" fontWeight="bold" display="inline-flex" alignItems="center" gap={1}>
+              <TriangleUpIcon /> {prop.percentchange}%
             </Text>
           ) : (
-            <Text as="span" color="red.400" fontWeight="bold" pr="15px">
+            <Text as="span" color="red.400" fontWeight="bold" display="inline-flex" alignItems="center" gap={1}>
+              <TriangleDownIcon />
               {prop.percentchange}%
             </Text>
           )}
+          {" "}
           {prop.percentlabel}
         </Text>
-      </Flex>
-      <Box
-        maxH="50px"
-        maxW="50px"
-        width="100%"
-        height="100%"
-        position="absolute"
-        right="10px"
-        top="10px"
-        borderRadius="50%"
-        background="blue.500"
-        fontSize="28px"
-        color="white"
-      >
-        <Box position="absolute" left="11px" top="8px">
-          {prop.icon}
-        </Box>
-      </Box>
+        {/* {prop.icon} */}
+      </CardBody>
     </Card>
   )
 }

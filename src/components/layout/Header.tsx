@@ -5,7 +5,7 @@ import schraTheme from "theme/theme"
 
 const Header = () => {
   return (
-    <Container as="header" backgroundColor={useColorModeValue("white", "gray.800")} boxShadow="sm" maxW="full" position="sticky" top="0px" zIndex="10" borderBottom={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}>
+    <Container as="header" backgroundColor={useColorModeValue("white", "whiteAlpha.100")} boxShadow="sm" maxW="full" position="sticky" top="0px" zIndex="10" borderBottom={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}>
       <HStack justifyContent="space-between" alignItems={"center"} h="headerHeight">
         <HeaderLogo />
         <AcountNavigation />

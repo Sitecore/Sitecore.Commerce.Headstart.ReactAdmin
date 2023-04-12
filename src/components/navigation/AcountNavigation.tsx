@@ -36,6 +36,10 @@ import ProtectedContent from "../auth/ProtectedContent"
 import { appPermissions } from "constants/app-permissions.config"
 import { useAuth } from "hooks/useAuth"
 import { Link } from "./Link"
+import { ColorPicker } from "../branding/ColorPicker";
+import { LogoUploader } from "../branding/LogoUploader";
+import { FontUploader } from "../branding/FontUploader";
+import { ThemeDrawer } from "./ThemeDrawer";
 
 const MobileNavigation = () => {
   const { Logout } = useAuth()
@@ -45,6 +49,7 @@ const MobileNavigation = () => {
   const btnRef = React.useRef()
   const { colorMode, toggleColorMode } = useColorMode()
   const color = useColorModeValue("textColor.900", "textColor.100")
+  const borderColor = useColorModeValue("white", "gray.700")
   const [selectedOption, setSelectedOption] = useState<String>()
   // This function is triggered when the select changes
   const selectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -68,7 +73,7 @@ const MobileNavigation = () => {
       <Menu>
         <MenuButton pos={"relative"}>
           <Icon as={TbInbox} strokeWidth="1.5" fontSize="2xl" />
-          <Badge display={"flex"} alignItems="center" justifyContent={"center"} border={"2px solid white"} color="white" h={"1em"} w={"1em"} borderRadius={"full"} pos={"absolute"} bgColor="red.500" fontSize={"xxs"} p={2} top={"-9px"} left="12px">3</Badge>
+          <Badge display={"flex"} alignItems="center" justifyContent={"center"} border={"2px solid"} borderColor={borderColor} color="white" h={"1em"} w={"1em"} borderRadius={"full"} pos={"absolute"} bgColor="red.500" fontSize={"xxs"} p={2} top={"-9px"} left="12px">3</Badge>
         </MenuButton>
         <MenuList borderRadius="lg" p={3} display="flex" flexDirection="column" gap={1}>
           <MenuItem borderRadius="lg">
@@ -150,47 +155,7 @@ const MobileNavigation = () => {
         </MenuList>
       </Menu>
       <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader color={color}>Application Settings</DrawerHeader>
-
-          <DrawerBody color={color}>
-            <Tooltip label={colorMode === "dark" ? "Set Light Model" : "Set Dark Model"}>
-              <Button
-                aria-label="Toggle Color Mode"
-                onClick={toggleColorMode}
-                _focus={{ boxShadow: "none" }}
-                size={"md"}
-                w="fit-content"
-              >
-                {colorMode === "light" ? <BsMoonStarsFill /> : <BsSun />}
-              </Button>
-            </Tooltip>
-            <Text mt="10">Change Theme:</Text>
-            <Select id="ThemeDropdown" onChange={selectChange} placeholder="Select a theme" value={currenttheme}>
-              <option value="styles/theme/sitecorecommerce/">Sitecore Commerce</option>
-              <option value="styles/theme/playsummit/">Play Summit</option>
-              <option value="styles/theme/industrial/">Industrial</option>
-            </Select>
-
-            <Flex justify="center" direction="column" align="center" w="100%" width="full" pb="10px" pt="90px">
-              <Image src="/images/SidebarHelpImage.png" w="90px" alt="" />
-              <Flex direction="column" align="center" textAlign="center" mb="12px" me="12px" w="100%" width="full">
-                <Text fontSize="14px" fontWeight="bold">
-                  Need help?
-                </Text>
-                <Text fontSize="10px">Please check our docs.</Text>
-              </Flex>
-              <Link href="/docs">
-                <Button colorScheme="secondary" size="sm" fontWeight="bold" minW="185px" m="0" fontSize="10px">
-                  Documentation
-                </Button>
-              </Link>
-            </Flex>
-          </DrawerBody>
-          <DrawerFooter></DrawerFooter>
-        </DrawerContent>
+        <ThemeDrawer />
       </Drawer>
     </HStack>
   )

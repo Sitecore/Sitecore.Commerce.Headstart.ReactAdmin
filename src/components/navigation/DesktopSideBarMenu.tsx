@@ -57,9 +57,9 @@ const DesktopSideBarMenu = () => {
   return (
     <Flex
       w={["75px", "75px", "75px", "250px"]}
-      background={useColorModeValue("blackAlpha.50", "whiteAlpha.100")}
-      borderRight={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}
-      minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight})`}
+      background={useColorModeValue("gray.50", "gray.800")}
+      borderRight={`.5px solid`} borderColor="st.borderColor"
+      minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight} * 2)`}
       h="100%"
     >
       <VStack alignItems={"flex-start"} position="sticky" w="100%" px={4} py={[4, 6, 8]} gap={2}

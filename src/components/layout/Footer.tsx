@@ -1,37 +1,26 @@
-import { Flex, Box, Text, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { Flex, Box, Text, useColorMode, useColorModeValue, ButtonGroup, Button, HStack, Container } from "@chakra-ui/react"
 import FooterLogo from "components/branding/FooterLogo"
+import { Link } from "../navigation/Link"
 
 const Footer = () => {
   const { colorMode, toggleColorMode } = useColorMode()
   const bg = useColorModeValue("footerBg.400", "footerBg.600")
-  const color = useColorModeValue("textColor.900", "textColor.100")
+  const color = useColorModeValue("blackAlpha.400", "whiteAlpha.400")
 
   return (
-    <Box bg={"red.500"} color={color} as="footer">
-      {/* <Box>
-        <Flex
-          align={"center"}
-          _before={{
-            content: '""',
-            borderBottom: "1px solid",
-            borderColor: useColorModeValue("gray.200", "gray.700"),
-            flexGrow: 1,
-            mr: 8
-          }}
-          _after={{
-            content: '""',
-            borderBottom: "1px solid",
-            borderColor: useColorModeValue("gray.200", "gray.700"),
-            flexGrow: 1,
-            ml: 8
-          }}
-        >
-          <FooterLogo />
-        </Flex> */}
-      <Text pt={6} fontSize={"sm"} textAlign={"center"} data-testid="copyright">
-        Copyright © {new Date().getFullYear()} Sitecore.com All Rights Reserved.
+    <Container as="footer" maxW={"full"} h={"headerHeight"} display="flex" flexFlow={"row nowrap"} justifyContent={"space-between"} alignItems={"center"}
+      bg={useColorModeValue("white", "blackAlpha.600")} color={color} p={4}>
+      <Text fontSize={"sm"} textAlign={"center"} data-testid="copyright">
+        Copyright © {new Date().getFullYear()} Sitecore All Rights Reserved.
       </Text>
-    </Box>
+      <HStack alignItems="center" m={0} gap={2}>
+        <Button fontSize="xs" color={color} as={Link} variant="link" target={"_blank"} rel="noreferrer" href="https://www.sitecore.com/trust">
+          Trust Center</Button>
+        <Button fontSize="xs" as={Link} color={color} variant="link" target={"_blank"} rel="noreferrer" href="https://www.sitecore.com/trust/privacy-policy">Privacy</Button>
+        <Button fontSize="xs" as={Link} color={color} variant="link" target={"_blank"} rel="noreferrer" href="https://www.sitecore.com/legal">
+          Legal</Button>
+      </HStack>
+    </Container>
   )
 }
 

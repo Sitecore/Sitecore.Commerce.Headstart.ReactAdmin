@@ -200,7 +200,7 @@ const Dashboard = () => {
     <>
       <NextSeo title="Dashboard" />
       <VStack flexGrow={1} gap={4} p={[4, 6, 8]}
-        h="100%" w="100%" bg={"blackAlpha.50"}>
+        h="100%" w="100%" bg={"st.mainBackgroundColor"}>
 
         <Flex w="100%" gap={4} direction={above2xl ? "row" : "column-reverse"}>
           <SimpleGrid w="100%" gap={4} templateRows={above2xl && "1fr 1fr"} templateColumns={{

@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Button,
   Drawer,
   DrawerBody,
@@ -65,8 +66,9 @@ const MobileNavigation = () => {
   return (
     <HStack alignItems="center">
       <Menu>
-        <MenuButton>
+        <MenuButton pos={"relative"}>
           <Icon as={TbInbox} strokeWidth="1.5" fontSize="2xl" />
+          <Badge display={"flex"} alignItems="center" justifyContent={"center"} border={"2px solid white"} color="white" h={"1em"} w={"1em"} borderRadius={"full"} pos={"absolute"} bgColor="red.500" fontSize={"xxs"} p={2} top={"-9px"} left="12px">3</Badge>
         </MenuButton>
         <MenuList borderRadius="lg" p={3} display="flex" flexDirection="column" gap={1}>
           <MenuItem borderRadius="lg">

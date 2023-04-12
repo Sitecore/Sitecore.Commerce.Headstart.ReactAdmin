@@ -59,7 +59,7 @@ const DesktopSideBarMenu = () => {
       w={["75px", "75px", "75px", "250px"]}
       background={useColorModeValue("gray.50", "gray.800")}
       borderRight={`.5px solid`} borderColor="st.borderColor"
-      minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight} * 2)`}
+      minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight} * 2.5)`} // this prevents uneeded scrollbars: full viewport height - header and footer heights...plus a .5 saftey net
       h="100%"
     >
       <VStack alignItems={"flex-start"} position="sticky" w="100%" px={4} py={[4, 6, 8]} gap={2}

@@ -1,5 +1,4 @@
-import { FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Text, VStack } from "@chakra-ui/react"
-import { useContext, useState } from "react"
+import { FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Text, useColorModeValue, VStack } from "@chakra-ui/react"
 import { brandContext } from "../Chakra";
 
 export const ColorPicker = ({ colors, onChange }) => {
@@ -14,7 +13,7 @@ export const ColorPicker = ({ colors, onChange }) => {
             <FormControl>
                 <FormLabel fontSize="xs" htmlFor="colorInput">Brand</FormLabel>
                 <InputGroup size="sm">
-                    <InputLeftAddon bgColor={colors.brand} style={{ aspectRatio: 1 / 1 }}></InputLeftAddon>
+                    <InputLeftAddon bgColor={colors.brand} borderColor={useColorModeValue("gray.300", "inherit")} style={{ aspectRatio: 1 / 1 }} />
                     <Input
                         id="colorInput"
                         placeholder="Select a color"
@@ -26,7 +25,7 @@ export const ColorPicker = ({ colors, onChange }) => {
             <FormControl>
                 <FormLabel fontSize="xs" htmlFor="colorInput">Primary</FormLabel>
                 <InputGroup size="sm">
-                    <InputLeftAddon bgColor={colors.primary} style={{ aspectRatio: 1 / 1 }}></InputLeftAddon>
+                    <InputLeftAddon bgColor={colors.primary} borderColor={useColorModeValue("gray.300", "inherit")} style={{ aspectRatio: 1 / 1 }} />
                     <Input
                         id="colorInput"
                         placeholder="Select a color"
@@ -37,9 +36,9 @@ export const ColorPicker = ({ colors, onChange }) => {
                 </InputGroup>
             </FormControl>
             <FormControl>
-                <FormLabel fontSize="xs" htmlFor="colorInput">Secondary Color</FormLabel>
+                <FormLabel fontSize="xs" htmlFor="colorInput">Secondary</FormLabel>
                 <InputGroup size="sm">
-                    <InputLeftAddon bgColor={colors.secondary} style={{ aspectRatio: 1 / 1 }}></InputLeftAddon>
+                    <InputLeftAddon bgColor={colors.secondary} borderColor={useColorModeValue("gray.300", "inherit")} style={{ aspectRatio: 1 / 1 }} />
                     <Input
                         id="colorInput"
                         placeholder="Select a color"

@@ -24,6 +24,7 @@ export const ThemeDrawer = () => {
         setSelectedColors((c) => ({ ...c, [colorID]: newValue }))
     }
 
+
     const handleApplyTheme = () => {
         setColors(selectedColors)
     }
@@ -42,8 +43,8 @@ export const ThemeDrawer = () => {
                 <DrawerHeader color={color}>Theming</DrawerHeader>
                 <DrawerBody color={color} display="flex" flexFlow="column nowrap" gap={6}>
                     <ColorPicker colors={selectedColors} onChange={handleColorChange} />
-                    <LogoUploader />
-                    <FontUploader />
+                    {/* <LogoUploader />
+                    <FontUploader /> */}
                 </DrawerBody>
                 <DrawerFooter gap={4} justifyContent="center" alignItems={"center"}>
                     <Button flexGrow="1" variant="solid" size="sm" colorScheme="primary" onClick={handleApplyTheme}>Apply Theming</Button>

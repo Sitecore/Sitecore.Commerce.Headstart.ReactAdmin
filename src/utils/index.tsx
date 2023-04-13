@@ -1,4 +1,5 @@
 export * from "./address.utils"
+export * from "./palette.utils"
 export * from "./date.utils"
 export * from "./form.utils"
 export * from "./object.utils"

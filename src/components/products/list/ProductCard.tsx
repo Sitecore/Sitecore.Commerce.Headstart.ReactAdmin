@@ -1,6 +1,6 @@
-import {Badge, Checkbox, Flex, Heading, Image, Spacer, Text, Tooltip, useColorModeValue, VStack} from "@chakra-ui/react"
-import {Product} from "ordercloud-javascript-sdk"
-import {textHelper} from "utils/text.utils"
+import { Badge, Checkbox, Flex, Heading, Image, Spacer, Text, Tooltip, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Product } from "ordercloud-javascript-sdk"
+import { textHelper } from "utils/text.utils"
 import Link from "next/link"
 
 interface ProductCardProps {
@@ -10,7 +10,7 @@ interface ProductCardProps {
   renderProductActions?: (product: Product) => React.ReactElement | React.ReactElement[] | string
 }
 const ProductCard = (props: ProductCardProps) => {
-  const {product, renderProductActions} = props
+  const { product, renderProductActions } = props
   const okColor = useColorModeValue("okColor.800", "okColor.200")
   const errorColor = useColorModeValue("errorColor.800", "errorColor.200")
 
@@ -19,7 +19,7 @@ const ProductCard = (props: ProductCardProps) => {
       h="full"
       justifyContent="space-between"
       p={4}
-      backgroundColor="Background"
+      backgroundColor="st.cardBackgroundColor"
       border="1px solid"
       borderColor="blackAlpha.200"
       borderRadius="lg"
@@ -48,7 +48,7 @@ const ProductCard = (props: ProductCardProps) => {
         {/* <Heading fontSize="xx-small" fontWeight='normal' color='gray.300' >NEW ARRIVALS</Heading>  */}
         {/* <HStack> */}
         <Badge colorScheme={product.Active ? "success" : "danger"}>{product.Active ? "Active" : "Inactive"}</Badge>
-        <Link passHref style={{cursor: "pointer"}} href={"/products/" + product.ID}>
+        <Link passHref style={{ cursor: "pointer" }} href={"/products/" + product.ID}>
           <Heading as="a" fontSize="lg">
             <Tooltip label={product.Name} placement="top">
               <Text as="span" noOfLines={1}>
@@ -58,7 +58,7 @@ const ProductCard = (props: ProductCardProps) => {
           </Heading>
         </Link>
         {/* </HStack> */}
-        <Link passHref style={{cursor: "pointer"}} href={"/products/" + product.ID}>
+        <Link passHref style={{ cursor: "pointer" }} href={"/products/" + product.ID}>
           <Text as="a" noOfLines={2} fontSize="small">
             {textHelper.stripHTML(product.Description)}
           </Text>

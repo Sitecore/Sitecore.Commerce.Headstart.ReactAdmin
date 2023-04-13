@@ -115,7 +115,7 @@ const MobileNavigation = () => {
               borderRadius="50%"
               mr="0"
               ml="15px"
-              size="md"
+              size="sm"
               border=".5px solid #ccc"
             />
             <Show above="md">

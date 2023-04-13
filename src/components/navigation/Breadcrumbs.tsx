@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useRouter } from "hooks/useRouter"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, useColorModeValue } from "@chakra-ui/react"
 import NextLink from "next/link"
 import { ChevronRightIcon } from "@chakra-ui/icons"
 import { TbDashboard, TbHome, TbLayout } from "react-icons/tb"
@@ -18,6 +18,7 @@ export interface Breadcrumb {
 export const Breadcrumbs = () => {
   const router = useRouter()
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([])
+  const activeBreadcrumbColor = useColorModeValue("primary.500", "primary.50")
 
   const getTextFromPath = (path: string) => {
     const text = path.split(/[?#]/)[0] // removes query params and hash params
@@ -62,7 +63,7 @@ export const Breadcrumbs = () => {
                 fontSize="sm"
                 as={Link}
                 href={breadcrumb.href}
-                color={isLastBreadcrumb && "primary.500"}
+                color={isLastBreadcrumb && activeBreadcrumbColor}
                 pointerEvents={isLastBreadcrumb ? "none" : "initial"}
                 isCurrentPage={isLastBreadcrumb}
               >

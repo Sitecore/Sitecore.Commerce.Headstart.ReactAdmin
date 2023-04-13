@@ -1,7 +1,7 @@
-import {CloseIcon} from "@chakra-ui/icons"
-import {IconButton, Input, InputGroup, InputRightElement} from "@chakra-ui/react"
+import { CloseIcon } from "@chakra-ui/icons"
+import { IconButton, Input, InputGroup, InputRightElement } from "@chakra-ui/react"
 import useDebounce from "hooks/useDebounce"
-import {FC, useCallback, useEffect, useState} from "react"
+import { FC, useCallback, useEffect, useState } from "react"
 
 interface IDebouncedSearchInputProps {
   value: string
@@ -36,9 +36,10 @@ const DebouncedSearchInput: FC<IDebouncedSearchInputProps> = ({
   }, [])
 
   return (
-    <InputGroup colorScheme="brand" maxW="300px">
-      <Input
+    <InputGroup colorScheme="brand" maxW={"sm"}>
+      <Input size="sm"
         marginBottom="0 !important"
+        borderRadius={"md"}
         aria-label={label}
         placeholder={`${placeholder || label}...`}
         value={searchTerm}

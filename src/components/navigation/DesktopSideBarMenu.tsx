@@ -46,7 +46,7 @@ const DesktopSideBarMenu = () => {
         _hover={{ textDecoration: "none", backgroundColor: btnActiveBgColor, boxShadow: "md" }}
         border={".5px solid transparent"} textDecoration={"none"} style={{ marginTop: 0 }}
         fontWeight="normal" p={3} transition={"all .25s cubic-bezier(0.55, 0, 1, 0.45)"}
-        h={"unset"} w={"100%"} justifyContent="flex-start">
+        h={"unset"} w={"100%"} justifyContent="flex-start" textTransform="capitalize">
         <Hide below="lg">
           {item.label}
         </Hide>

@@ -34,7 +34,7 @@ export const Chakra = ({ children }: ChakraProps) => {
     if (colors == DEFAULT_THEME_COLORS) {
       return schraTheme
     }
-    return extendTheme({ colors: { brand: generatePalette(colors.brand), primary: generatePalette(colors.primary), secondary: generatePalette(colors.secondary) } }, schraTheme)
+    return extendTheme({ colors: { brand: generatePalette(colors?.brand), primary: generatePalette(colors?.primary), secondary: generatePalette(colors?.secondary) } }, schraTheme)
   }, [colors])
 
   return (

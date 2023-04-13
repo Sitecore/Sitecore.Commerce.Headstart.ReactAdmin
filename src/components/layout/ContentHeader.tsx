@@ -4,7 +4,7 @@ import { Breadcrumbs } from "../navigation/Breadcrumbs"
 
 const ContentHeader = (props) => {
   return props.header ? (
-    <Container px={[4, 6, 8]} py="3" bgColor="blackAlpha.200" maxW="100%">
+    <Container px={[4, 6, 8]} pt={[6, 8, 10]} bg={"st.mainBackgroundColor"} maxW="100%">
       {props?.header?.metas?.hasBreadcrumbs && (
         <Breadcrumbs />
       )}

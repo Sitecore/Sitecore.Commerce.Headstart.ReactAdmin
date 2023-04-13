@@ -7,7 +7,7 @@ interface IListViewMetaInfo {
 }
 
 const ListViewMetaInfo: FC<IListViewMetaInfo> = ({ range, total }) => {
-  return <Text alignSelf="center" flexShrink={0} fontWeight="semibold" size="sm">{`${range[0]} - ${range[1]} of ${total}`}</Text>
+  return <Text alignSelf="center" flexShrink={0} fontSize="sm" fontWeight="semibold" size="sm">{`${range[0]} - ${range[1]} of ${total}`}</Text>
 }
 
 export default ListViewMetaInfo

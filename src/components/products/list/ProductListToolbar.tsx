@@ -1,4 +1,4 @@
-import { Box, Button, chakra, Stack, Text } from "@chakra-ui/react"
+import { Box, Button, chakra, Flex, HStack, Stack, Text } from "@chakra-ui/react"
 import { Link } from "../../navigation/Link"
 import { FC } from "react"
 import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"
@@ -22,25 +22,25 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
   queryParams,
   selected
 }) => {
-  const cfProductListActions = chakra(ProductListActions)
+
   return (
     <>
-      <Stack wrap="nowrap" w="100%" direction={["column", "column", "column", "row"]} id="product-list-toolbar" mt={2}>
+      <Flex wrap="nowrap" w="100%" direction={["column", "column", "column", "row"]} id="product-list-toolbar" mb={4} gap={2}>
         <DebouncedSearchInput
           label="Search products"
           value={queryParams["Search"]}
           onSearch={updateQuery("s", true)}
         />
         <ProductStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
-        <cfProductListActions selected={selected} onBulkPromote={onBulkPromote} onBulkEdit={onBulkEdit} />
-        {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
-        {viewModeToggle}
-        {/* <Box order={[0, 0, 0, 1]} mt={0}> */}
-        <Button variant="solid" colorScheme="primary" mb={3} as={Link} href="/products/new">
-          Create Product
-        </Button>
-        {/* </Box> */}
-      </Stack>
+        <ProductListActions selected={selected} onBulkPromote={onBulkPromote} onBulkEdit={onBulkEdit} />
+        <HStack ml="auto">
+          {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
+          {viewModeToggle}
+          <Button variant="solid" size="sm" colorScheme="primary" as={Link} href="/products/new">
+            Create Product
+          </Button>
+        </HStack>
+      </Flex>
     </>
   )
 }

@@ -16,6 +16,7 @@ const baseStyle = defineStyle({
     boxShadow: "none"
   },
   _hover: {
+    textDecoration: "none",
     _disabled: {
       bg: "initial"
     }

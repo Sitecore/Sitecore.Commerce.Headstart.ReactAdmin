@@ -1,4 +1,4 @@
-import { Box, Button, chakra, Checkbox, Flex, FormControl, FormLabel, Grid, Heading, Hide, HStack, Input, VStack } from "@chakra-ui/react"
+import { Box, Button, chakra, Checkbox, Flex, FormControl, FormLabel, Grid, Heading, Hide, HStack, Input, useColorModeValue, VStack } from "@chakra-ui/react"
 import { ChangeEvent, FormEvent, FunctionComponent, useCallback, useState } from "react"
 
 import { useAuth } from "hooks/useAuth"
@@ -18,6 +18,8 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({ title = "Sign into y
     password: "",
     remember: false
   })
+
+  const loginHeaderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.600")
 
   const handleInputChange = (fieldKey: string) => (e: ChangeEvent<HTMLInputElement>) => {
     setFormValues((v) => ({ ...v, [fieldKey]: e.target.value }))
@@ -51,7 +53,7 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({ title = "Sign into y
           <chakra.form pl={[0, 12]} name="ocLoginForm" onSubmit={handleSubmit}>
             <VStack width="full" alignItems={"flex-start"} gap={4}>
               <HeaderLogo />
-              <Heading as="h1" fontSize={"4xl"} fontWeight={"thin"} color={"blackAlpha.400"}>
+              <Heading as="h1" fontSize={"4xl"} fontWeight={"thin"} color={loginHeaderColor}>
                 {title}
               </Heading>
               {/* TODO Get Errors on Login */}

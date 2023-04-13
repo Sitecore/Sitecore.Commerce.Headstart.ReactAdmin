@@ -148,10 +148,14 @@ const basePalette = {
   }
 }
 
+export const DEFAULT_THEME_BRAND = basePalette.colors.orange
+export const DEFAULT_THEME_PRIMARY = basePalette.colors.purple
+export const DEFAULT_THEME_SECONDARY = basePalette.colors.blackAlpha
+
 const colors = {
-  brand: basePalette.colors.orange,
-  primary: basePalette.colors.purple,
-  secondary: basePalette.colors.blackAlpha,
+  brand: DEFAULT_THEME_BRAND,
+  primary: DEFAULT_THEME_PRIMARY,
+  secondary: DEFAULT_THEME_SECONDARY,
 
   info: basePalette.colors.cyan,
   warning: basePalette.colors.yellow,

@@ -143,8 +143,8 @@ const ProductList = () => {
       gridOptions={ProductGridOptions}
     >
       {({ renderContent, items, ...listViewChildProps }) => (
-        <Container maxW="100%" bgColor="st.mainBackgroundColor"
-          flexGrow={1} gap={4} p={[4, 6, 8]}>
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1}
+          p={[4, 6, 8]}>
           <ProductListToolbar
             {...listViewChildProps}
             onBulkEdit={editDisclosure.onOpen}

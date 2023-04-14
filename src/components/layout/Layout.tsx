@@ -27,11 +27,11 @@ const Layout = (props) => {
       <Header />
       <Grid as="main" gridTemplateColumns={["75px auto", "75px auto", "75px auto", "250px auto"]} flexGrow="1">
         <DesktopSideBarMenu />
-        <Box flexGrow={1} overflowX="hidden">
+        <Flex flexFlow={"column nowrap"} overflowX="hidden">
           <ContentHeader {...props} />
           {props.children}
           <ContentFooter />
-        </Box>
+        </Flex>
       </Grid>
       <Footer />
     </>

@@ -245,7 +245,7 @@ const ListView = <T extends IDefaultResource>({
   const renderContent = useMemo(() => {
     if (loading || (!loading && data)) {
       return (
-        <Box mb={5}>
+        <Box>
           <Box hidden={viewMode !== "grid"}>
             <DataGrid
               {...gridOptions}

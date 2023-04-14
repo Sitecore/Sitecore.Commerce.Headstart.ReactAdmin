@@ -32,7 +32,7 @@ export interface IDataGrid<T extends IDefaultResource> {
   ) => ReactElement
 }
 const DEFAULT_DATA_GRID__COLUMNS = { base: 1, md: 2, lg: 3, xl: 4 }
-const DEFAULT_DATA_GRID__GRID_GAP = { base: 4, md: null, lg: 6, xl: 6 }
+// const DEFAULT_DATA_GRID__GRID_GAP = { base: 4, md: null, lg: 6, xl: 6 }
 const DEFAULT_DATA_GRID__RENDER_GRID_ITEM = (o: IDefaultResource, i: number) => (
   <VStack
     h="full"
@@ -61,7 +61,7 @@ const DataGrid = <T extends IDefaultResource>({
   loading,
   emptyDisplay = DEFAULT_DATA_GRID__EMPTY_DISPLAY,
   columns = DEFAULT_DATA_GRID__COLUMNS,
-  gap = DEFAULT_DATA_GRID__GRID_GAP,
+  // gap = DEFAULT_DATA_GRID__GRID_GAP,
   gridItemActions,
   renderGridItem = DEFAULT_DATA_GRID__RENDER_GRID_ITEM,
   selected,
@@ -72,7 +72,7 @@ const DataGrid = <T extends IDefaultResource>({
     <SimpleGrid
       position="relative"
       as="section"
-      gap={gap}
+      gap={{ base: 4, md: null, lg: 6, xl: 6 }}
       gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))"
       // templateColumns={`repeat(${currentColumns}, 1fr)`}
       w="full"

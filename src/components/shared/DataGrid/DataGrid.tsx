@@ -5,13 +5,14 @@ import {
   GridItem,
   Heading,
   ResponsiveObject,
+  SimpleGrid,
   Spinner,
   Text,
   useBreakpointValue,
   VStack
 } from "@chakra-ui/react"
-import {ReactElement} from "react"
-import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
+import { ReactElement } from "react"
+import { IDefaultResource, ListViewTemplate } from "../ListView/ListView"
 
 export interface IDataGrid<T extends IDefaultResource> {
   data: T[]
@@ -30,8 +31,8 @@ export interface IDataGrid<T extends IDefaultResource> {
     onSelectChange?: (id: string, isSelected: boolean) => void
   ) => ReactElement
 }
-const DEFAULT_DATA_GRID__COLUMNS = {base: 1, md: 2, lg: 3, xl: 4}
-const DEFAULT_DATA_GRID__GRID_GAP = 2
+const DEFAULT_DATA_GRID__COLUMNS = { base: 1, md: 2, lg: 3, xl: 4 }
+const DEFAULT_DATA_GRID__GRID_GAP = { base: 4, md: null, lg: 6, xl: 6 }
 const DEFAULT_DATA_GRID__RENDER_GRID_ITEM = (o: IDefaultResource, i: number) => (
   <VStack
     h="full"
@@ -66,13 +67,14 @@ const DataGrid = <T extends IDefaultResource>({
   selected,
   onSelectChange
 }: IDataGrid<T>) => {
-  const currentColumns = useBreakpointValue(columns)
+
   return (
-    <Grid
+    <SimpleGrid
       position="relative"
       as="section"
       gap={gap}
-      templateColumns={`repeat(${currentColumns}, 1fr)`}
+      gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))"
+      // templateColumns={`repeat(${currentColumns}, 1fr)`}
       w="full"
       width="100%"
       minH={100}
@@ -123,7 +125,7 @@ const DataGrid = <T extends IDefaultResource>({
           {emptyDisplay}
         </GridItem>
       )}
-    </Grid>
+    </SimpleGrid>
   )
 }
 

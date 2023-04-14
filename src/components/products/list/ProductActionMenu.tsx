@@ -1,9 +1,9 @@
-import {DeleteIcon, EditIcon, SettingsIcon} from "@chakra-ui/icons"
-import {Icon, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList} from "@chakra-ui/react"
+import { DeleteIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons"
+import { Icon, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from "@chakra-ui/react"
 import Link from "next/link"
-import {FC} from "react"
-import {TbDotsVertical} from "react-icons/tb"
-import {IProduct} from "types/ordercloud/IProduct"
+import { FC } from "react"
+import { TbDotsVertical } from "react-icons/tb"
+import { IProduct } from "types/ordercloud/IProduct"
 
 interface IProductActionMenu {
   product: IProduct
@@ -13,7 +13,7 @@ interface IProductActionMenu {
   onPromote: () => void
 }
 
-const ProductActionMenu: FC<IProductActionMenu> = ({product, onOpen, onClose, onDelete, onPromote}) => {
+const ProductActionMenu: FC<IProductActionMenu> = ({ product, onOpen, onClose, onDelete, onPromote }) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
       <MenuButton

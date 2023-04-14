@@ -19,9 +19,8 @@ const variants = {
             transition: "all .25s ease-in-out",
             boxShadow: "md",
             textDecoration: "none",
-            border: `11px solid transparent`,
+            border: `.5px solid transparent`,
             _hover: {
-                // borderColor: mode("red.500", "whiteAlpha.300")(props),
                 borderColor: "st.borderColor",
                 boxShadow: "lg",
                 transform: "translateY(-1px)",

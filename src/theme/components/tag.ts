@@ -1,7 +1,16 @@
-import type {ComponentMultiStyleConfig} from "@chakra-ui/theme"
+import {tagAnatomy as parts} from "@chakra-ui/anatomy"
+import {createMultiStyleConfigHelpers, defineStyle} from "@chakra-ui/styled-system"
 
-const Tag: ComponentMultiStyleConfig = {
-  parts: []
-}
+const {defineMultiStyleConfig, definePartsStyle} = createMultiStyleConfigHelpers(parts.keys)
 
-export default Tag
+const baseStyleContainer = defineStyle({
+  borderRadius: "sm"
+})
+
+const baseStyle = definePartsStyle({
+  container: baseStyleContainer
+})
+
+export const Tag = defineMultiStyleConfig({
+  baseStyle
+})

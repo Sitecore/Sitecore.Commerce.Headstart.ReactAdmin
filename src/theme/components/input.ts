@@ -3,7 +3,7 @@ import {createMultiStyleConfigHelpers} from "@chakra-ui/styled-system"
 
 const {defineMultiStyleConfig} = createMultiStyleConfigHelpers(parts.keys)
 
-export const input = defineMultiStyleConfig({
+export const Input = defineMultiStyleConfig({
   defaultProps: {
     size: "sm"
   }

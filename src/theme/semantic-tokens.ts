@@ -23,10 +23,18 @@ const semanticTokens = {
       _dark: "gray.900"
     },
     "st.cardBackgroundColor": {
-      default: "blackAlpha.100",
+      default: "whiteAlpha.100",
       _dark: "gray.900"
     },
     "st.CardBackgroundColor": {
+      default: "whiteAlpha.100",
+      _dark: "gray.900"
+    },
+    "st.tableStripeBackground": {
+      default: "blackAlpha.100",
+      _dark: "gray.900"
+    },
+    "st.TableStripeBackground": {
       default: "whiteAlpha.100",
       _dark: "gray.900"
     }

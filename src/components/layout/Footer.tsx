@@ -1,5 +1,4 @@
-import { Flex, Box, Text, useColorMode, useColorModeValue, ButtonGroup, Button, HStack, Container } from "@chakra-ui/react"
-import FooterLogo from "components/branding/FooterLogo"
+import { Text, useColorMode, useColorModeValue, Button, HStack, Container } from "@chakra-ui/react"
 import { Link } from "../navigation/Link"
 
 const Footer = () => {
@@ -9,7 +8,7 @@ const Footer = () => {
 
   return (
     <Container as="footer" maxW={"full"} h={"headerHeight"} display="flex" flexFlow={"row nowrap"} justifyContent={"space-between"} alignItems={"center"}
-      bg={useColorModeValue("white", "blackAlpha.600")} color={color} p={4}>
+      bg={useColorModeValue("white", "blackAlpha.600")} color={color} px={8}>
       <Text fontSize={"sm"} textAlign={"center"} data-testid="copyright">
         Copyright © {new Date().getFullYear()} Sitecore All Rights Reserved.
       </Text>

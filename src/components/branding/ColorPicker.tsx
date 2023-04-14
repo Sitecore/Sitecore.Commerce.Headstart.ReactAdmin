@@ -1,5 +1,4 @@
 import { FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Text, useColorModeValue, VStack } from "@chakra-ui/react"
-import { brandContext } from "../Chakra";
 
 export const ColorPicker = ({ colors, onChange }) => {
 

@@ -5,7 +5,6 @@ const Badge = {
     borderradius: "sm"
   }
   // defaultProps: {
-  //   colorScheme: "blackAlpha",
   // },
 }
 

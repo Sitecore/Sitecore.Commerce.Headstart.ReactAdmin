@@ -26,7 +26,9 @@ const variants = {
                 boxShadow: "lg",
                 transform: "translateY(-1px)",
                 textDecoration: "none",
-            }
+            },
+            _focusWithin: { zIndex: 1 }
+
         }
     })
 };

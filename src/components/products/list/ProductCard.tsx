@@ -15,9 +15,9 @@ const ProductCard = (props: ProductCardProps) => {
   return (
 
     <Card variant={"levitating"} h="100%">
-      <CardHeader bg="white" display="flex" flexFlow="row nowrap" alignItems={"start"} pos="relative">
+      <CardHeader bg="white" display="flex" flexFlow="row nowrap" alignItems={"start"} pos="relative" borderTopRadius={"md"}>
         <Checkbox colorScheme={"primary"} isChecked={props.selected} onChange={(e) => props.onProductSelected(product.ID, e.target.checked)} />
-        <Image mx="auto" minH={"150px"}
+        <Image mx="auto" minH={"150px"} fontSize={0}
           src={
             typeof product?.xp?.Images != "undefined" && product?.xp?.Images?.length > 0
               ? product?.xp?.Images[0]?.ThumbnailUrl || product?.xp?.Images[0]?.Url || product?.xp?.Images[0]?.url
@@ -44,7 +44,7 @@ const ProductCard = (props: ProductCardProps) => {
         </Text>
       </CardBody>
       <CardFooter w="100%" pt="0">
-        <Button as={Link} size="sm" w="full" bgColor="primary.400" href={"/products/" + product.ID}>View Product</Button>
+        <Button as={Link} w="full" variant="outline" colorScheme="yellow" href={"/products/" + product.ID}>View Product</Button>
       </CardFooter>
     </Card>
   )

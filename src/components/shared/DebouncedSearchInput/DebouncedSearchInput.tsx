@@ -36,10 +36,8 @@ const DebouncedSearchInput: FC<IDebouncedSearchInputProps> = ({
   }, [])
 
   return (
-    <InputGroup colorScheme="brand" maxW={"sm"}>
-      <Input size="sm"
-        marginBottom="0 !important"
-        borderRadius={"md"}
+    <InputGroup colorScheme="brand" maxW={{ xl: "sm" }} size="sm" >
+      <Input
         aria-label={label}
         placeholder={`${placeholder || label}...`}
         value={searchTerm}

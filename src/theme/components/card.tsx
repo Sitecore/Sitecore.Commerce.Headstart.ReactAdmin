@@ -6,6 +6,7 @@ const { definePartsStyle, defineMultiStyleConfig } =
 
 const baseStyle = (props) => definePartsStyle({
     container: {
+        borderRadius: "sm",
         backgroundColor: mode("white", "whiteAlpha.100")(props),
     },
 })

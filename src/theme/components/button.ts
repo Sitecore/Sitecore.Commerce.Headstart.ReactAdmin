@@ -7,6 +7,7 @@ const baseStyle = defineStyle({
   fontWeight: "semibold",
   transitionProperty: "common",
   transitionDuration: "normal",
+  borderRadius: "sm",
   _focusVisible: {
     boxShadow: "outline"
   },
@@ -29,7 +30,7 @@ const variantGhost = defineStyle((props) => {
   if (c === "gray") {
     return {
       color: mode(`inherit`, `whiteAlpha.900`)(props),
-      borderRadius: "md",
+
       _hover: {
         bg: mode(`blackAlpha.100`, `whiteAlpha.200`)(props)
       },
@@ -42,7 +43,7 @@ const variantGhost = defineStyle((props) => {
 
   return {
     color: mode(`${c}.600`, `${c}.200`)(props),
-    borderRadius: "md",
+
     bg: "transparent",
     _hover: {
       bg: mode(`${c}.100`, darkHoverBg)(props)
@@ -59,7 +60,7 @@ const variantOutline = defineStyle((props) => {
   return {
     border: "1px solid",
     textDecoration: "none",
-    borderRadius: "md",
+
     "&:hover": {
       textDecoration: "none !important"
     },
@@ -102,7 +103,7 @@ const variantSolid = defineStyle((props) => {
     return {
       bg,
       color: "white",
-      borderRadius: "md",
+
       _hover: {
         bg: "primary.600",
         _disabled: {
@@ -119,7 +120,7 @@ const variantSolid = defineStyle((props) => {
 
   return {
     bg: background,
-    borderRadius: "md",
+
     color: mode(color, `gray.800`)(props),
     _hover: {
       bg: mode(hoverBg, `${c}.300`)(props),
@@ -218,7 +219,10 @@ const variants = {
 
 const buttonTheme = defineStyleConfig({
   baseStyle,
-  variants
+  variants,
+  defaultProps: {
+    size: "sm"
+  }
 })
 
 const Button = {

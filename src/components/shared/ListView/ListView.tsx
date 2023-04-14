@@ -1,11 +1,11 @@
-import {Box, ButtonGroup, Center, IconButton, Text} from "@chakra-ui/react"
-import {invert, union, without} from "lodash"
-import {useRouter} from "next/router"
-import {ListPage, ListPageWithFacets, Meta, Product} from "ordercloud-javascript-sdk"
-import {ReactElement, useCallback, useEffect, useMemo, useState} from "react"
-import {HiOutlineViewGrid, HiOutlineViewList} from "react-icons/hi"
-import DataGrid, {IDataGrid} from "../DataGrid/DataGrid"
-import DataTable, {IDataTable} from "../DataTable/DataTable"
+import { Box, ButtonGroup, Center, IconButton, Text } from "@chakra-ui/react"
+import { invert, union, without } from "lodash"
+import { useRouter } from "next/router"
+import { ListPage, ListPageWithFacets, Meta, Product } from "ordercloud-javascript-sdk"
+import { ReactElement, useCallback, useEffect, useMemo, useState } from "react"
+import { HiOutlineViewGrid, HiOutlineViewList } from "react-icons/hi"
+import DataGrid, { IDataGrid } from "../DataGrid/DataGrid"
+import DataTable, { IDataTable } from "../DataTable/DataTable"
 import Pagination from "../Pagination/Pagination"
 
 export interface IDefaultResource {
@@ -14,16 +14,16 @@ export interface IDefaultResource {
 }
 
 export interface ListViewTableOptions<T>
-  extends Omit<IDataTable<T>, "data" | "selected" | "handleSelectionChange" | "rowActions" | "onSortChange"> {}
+  extends Omit<IDataTable<T>, "data" | "selected" | "handleSelectionChange" | "rowActions" | "onSortChange"> { }
 
 export interface ListViewGridOptions<T>
-  extends Omit<IDataGrid<T>, "data" | "selected" | "handleSelectionChange" | "gridItemActions"> {}
+  extends Omit<IDataGrid<T>, "data" | "selected" | "handleSelectionChange" | "gridItemActions"> { }
 
 export type ListViewTemplate = ReactElement | ReactElement[] | string
 
-export type LocationSearchMap = {[key: string]: string}
+export type LocationSearchMap = { [key: string]: string }
 
-export type ServiceListOptions = {[key: string]: ServiceListOptions | string}
+export type ServiceListOptions = { [key: string]: ServiceListOptions | string }
 
 export type ServiceOptions = {
   parameters?: string[]
@@ -97,10 +97,10 @@ const ListView = <T extends IDefaultResource>({
     setSelected((s) => (isSelected ? union(s, changedIds) : without(s, ...changedIds)))
   }, [])
 
-  const {push, pathname, isReady, query} = useRouter()
+  const { push, pathname, isReady, query } = useRouter()
 
   const mapRouterQuery = useCallback(
-    (map?: {[key: string]: string}) => {
+    (map?: { [key: string]: string }) => {
       let result = {}
       if (!isReady) return result
       if (!map) return result
@@ -125,7 +125,7 @@ const ListView = <T extends IDefaultResource>({
   const fetchData = useCallback(async () => {
     let response
     setLoading(true)
-    const {parameters: defaultParameters = [], listOptions: defaultListOptions = {}} = defaultServiceOptions || {}
+    const { parameters: defaultParameters = [], listOptions: defaultListOptions = {} } = defaultServiceOptions || {}
     const listOptions = {
       ...defaultListOptions,
       ...params.queryParams,
@@ -149,26 +149,26 @@ const ListView = <T extends IDefaultResource>({
   const handleUpsertItems = useCallback((items: T[]) => {
     setData(
       (d) =>
-        ({
-          Meta: d.Meta,
-          Items: d.Items.map((item) => {
-            const newItem = items.find((i) => i.ID === item.ID)
-            if (newItem) {
-              return newItem
-            }
-            return item
-          })
-        } as typeof d)
+      ({
+        Meta: d.Meta,
+        Items: d.Items.map((item) => {
+          const newItem = items.find((i) => i.ID === item.ID)
+          if (newItem) {
+            return newItem
+          }
+          return item
+        })
+      } as typeof d)
     )
   }, [])
 
   const handleRemoveItems = useCallback((itemIds: string[]) => {
-    setData((d) => ({Meta: d.Meta, Items: d.Items.filter((i) => !itemIds.includes(i.ID))} as typeof d))
+    setData((d) => ({ Meta: d.Meta, Items: d.Items.filter((i) => !itemIds.includes(i.ID)) } as typeof d))
   }, [])
 
   const viewModeToggle = useMemo(() => {
     return (
-      <ButtonGroup isAttached variant="outline">
+      <ButtonGroup isAttached variant="outline" size="sm">
         <IconButton
           aria-label="Grid View"
           isActive={viewMode === "grid"}
@@ -197,7 +197,7 @@ const ListView = <T extends IDefaultResource>({
           }
         },
         undefined,
-        {shallow: true}
+        { shallow: true }
       )
     },
     [push, pathname, query, invertedQueryMap]
@@ -245,7 +245,7 @@ const ListView = <T extends IDefaultResource>({
   const renderContent = useMemo(() => {
     if (loading || (!loading && data)) {
       return (
-        <Box mb={5}>
+        <Box>
           <Box hidden={viewMode !== "grid"}>
             <DataGrid
               {...gridOptions}

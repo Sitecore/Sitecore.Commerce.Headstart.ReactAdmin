@@ -3,5 +3,5 @@
     "workbench.editor.wrapTabs": true,
     "workbench.editor.scrollToSwitchTabs": true,
     "liveServer.settings.port": 5501,
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }

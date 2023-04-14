@@ -1,4 +1,4 @@
-import { Box, Button, chakra, Flex, HStack, Stack, Text } from "@chakra-ui/react"
+import { Box, Button, chakra, Flex, Hide, HStack, Show, SimpleGrid, Stack, Text } from "@chakra-ui/react"
 import { Link } from "../../navigation/Link"
 import { FC } from "react"
 import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"
@@ -25,18 +25,20 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
 
   return (
     <>
-      <Flex wrap="nowrap" w="100%" direction={["column", "column", "column", "row"]} id="product-list-toolbar" mb={4} gap={2}>
+      <Flex wrap="wrap" w="100%" direction={["column", "column", "column", "row"]} id="product-list-toolbar" mb={4} gap={2}>
         <DebouncedSearchInput
           label="Search products"
           value={queryParams["Search"]}
           onSearch={updateQuery("s", true)}
         />
-        <ProductStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
-        <ProductListActions selected={selected} onBulkPromote={onBulkPromote} onBulkEdit={onBulkEdit} />
+        <SimpleGrid gridTemplateColumns={"1fr 1fr"} gap={3} alignItems={"stretch"}>
+          <ProductStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
+          <ProductListActions selected={selected} onBulkPromote={onBulkPromote} onBulkEdit={onBulkEdit} />
+        </SimpleGrid>
         <HStack ml="auto">
           {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
           {viewModeToggle}
-          <Button variant="solid" size="sm" colorScheme="primary" as={Link} href="/products/new">
+          <Button as={Link} href="/products/new">
             Create Product
           </Button>
         </HStack>

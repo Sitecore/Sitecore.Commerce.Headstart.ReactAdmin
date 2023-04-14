@@ -144,12 +144,12 @@ const DataTable = <T extends IDefaultResource>({
           </Center>
         </Box>
       )}
-      <Table role="table" w="100%" variant="striped">
+      <Table role="table" w="100%" variant="striped" bg={"st.tableStripeBackground"}>
         <Thead>
           <Tr role="row">
             {onSelectChange && (
               <Th color="inherit" w="1%">
-                <Checkbox
+                <Checkbox borderColor={"gray.400"}
                   isIndeterminate={indeterminateSelectAll}
                   isChecked={data && data.length <= selected.length}
                   onChange={(e) => handleSelectAllChange(e.target.checked)}

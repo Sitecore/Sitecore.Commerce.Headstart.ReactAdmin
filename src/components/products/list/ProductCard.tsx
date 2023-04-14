@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Heading, Image, Text, Tooltip } from "@chakra-ui/react"
+import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Heading, Image, Text } from "@chakra-ui/react"
 import { Product } from "ordercloud-javascript-sdk"
 import { textHelper } from "utils/text.utils"
 import { Link } from '../../navigation/Link'
@@ -16,7 +16,7 @@ const ProductCard = (props: ProductCardProps) => {
 
     <Card variant={"levitating"} h="100%">
       <CardHeader bg="white" display="flex" flexFlow="row nowrap" alignItems={"start"} pos="relative" borderTopRadius={"md"}>
-        <Checkbox colorScheme={"primary"} isChecked={props.selected} onChange={(e) => props.onProductSelected(product.ID, e.target.checked)} />
+        <Checkbox borderColor={"blackAlpha.300"} isChecked={props.selected} onChange={(e) => props.onProductSelected(product.ID, e.target.checked)} />
         <Image mx="auto" minH={"150px"} fontSize={0}
           src={
             typeof product?.xp?.Images != "undefined" && product?.xp?.Images?.length > 0
@@ -33,11 +33,9 @@ const ProductCard = (props: ProductCardProps) => {
       </CardHeader>
       <CardBody>
         <Heading as="h3" fontSize="lg">
-          <Tooltip label={product.Name} placement="top">
-            <Text as="span" noOfLines={1}>
-              {product.Name}
-            </Text>
-          </Tooltip>
+          <Text as="span" noOfLines={1}>
+            {product.Name}
+          </Text>
         </Heading>
         <Text as="a" noOfLines={2} fontSize="small" fontWeight={"normal"}>
           {textHelper.stripHTML(product.Description)}
@@ -46,7 +44,7 @@ const ProductCard = (props: ProductCardProps) => {
       <CardFooter w="100%" pt="0">
         <Button as={Link} w="full" variant="outline" colorScheme="yellow" href={"/products/" + product.ID}>View Product</Button>
       </CardFooter>
-    </Card>
+    </Card >
   )
 }
 

@@ -1,14 +1,12 @@
 import {
   Box,
   Center,
-  Grid,
   GridItem,
   Heading,
   ResponsiveObject,
   SimpleGrid,
   Spinner,
   Text,
-  useBreakpointValue,
   VStack
 } from "@chakra-ui/react"
 import { ReactElement } from "react"
@@ -74,7 +72,6 @@ const DataGrid = <T extends IDefaultResource>({
       as="section"
       gap={{ base: 4, md: null, lg: 6, xl: 6 }}
       gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))"
-      // templateColumns={`repeat(${currentColumns}, 1fr)`}
       w="full"
       width="100%"
       minH={100}
@@ -97,19 +94,9 @@ const DataGrid = <T extends IDefaultResource>({
       )}
       {data &&
         data.map((o, i) => (
-          <GridItem
-            colSpan={1}
-            rowSpan={1}
-            bg="gridCellBg"
-            w="full"
-            width="100%"
-            rounded="lg"
-            overflow="h"
-            key={i}
-            borderStyle="none"
-          >
+          <>
             {renderGridItem(o, i, gridItemActions, selected.includes(o.ID), onSelectChange)}
-          </GridItem>
+          </>
         ))}
       {!loading && !data.length && (
         <GridItem

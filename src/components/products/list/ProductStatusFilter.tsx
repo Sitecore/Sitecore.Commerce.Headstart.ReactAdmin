@@ -10,10 +10,10 @@ interface IProductStatusFilter {
 const ProductStatusFilter: FC<IProductStatusFilter> = ({ value, onChange }) => {
   return (
     <Menu>
-      <MenuButton as={Button} variant="outline" size="sm">
+      <MenuButton as={Button} variant="outline">
         <HStack alignContent="center" h="100%">
           <Text>Status</Text>
-          <Tag colorScheme={value && value.length ? (value === "true" ? "success" : "danger") : "secondary"}>
+          <Tag size="sm" fontFamily={"monospace"} colorScheme={value && value.length ? (value === "true" ? "success" : "danger") : "gray"}>
             {value && value.length ? (value === "true" ? "Active" : "Inactive") : "Any"}
           </Tag>
           <ChevronDownIcon />

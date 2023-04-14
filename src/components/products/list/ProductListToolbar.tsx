@@ -1,4 +1,4 @@
-import { Box, Button, chakra, Flex, Hide, HStack, Show, SimpleGrid, Stack, Text } from "@chakra-ui/react"
+import { Button, Flex, HStack, SimpleGrid } from "@chakra-ui/react"
 import { Link } from "../../navigation/Link"
 import { FC } from "react"
 import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"

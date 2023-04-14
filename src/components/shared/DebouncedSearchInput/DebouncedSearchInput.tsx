@@ -45,7 +45,7 @@ const DebouncedSearchInput: FC<IDebouncedSearchInputProps> = ({
       ></Input>
       {searchTerm && (
         <InputRightElement>
-          <IconButton size="xs" aria-label="Clear search" h="1.75rem" onClick={() => setSearchTerm("")}>
+          <IconButton size="xs" fontSize="xxs" variant="ghost" aria-label="Clear search" h="1.5rem" onClick={() => setSearchTerm("")}>
             <CloseIcon />
           </IconButton>
         </InputRightElement>

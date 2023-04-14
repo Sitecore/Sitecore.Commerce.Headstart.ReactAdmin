@@ -148,7 +148,7 @@ const basePalette = {
   }
 }
 
-export const DEFAULT_THEME_BRAND = basePalette.colors.orange
+export const DEFAULT_THEME_BRAND = basePalette.colors.yellow
 export const DEFAULT_THEME_PRIMARY = basePalette.colors.purple
 export const DEFAULT_THEME_SECONDARY = basePalette.colors.blackAlpha
 

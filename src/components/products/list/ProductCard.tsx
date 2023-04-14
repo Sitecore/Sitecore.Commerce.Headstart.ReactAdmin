@@ -42,7 +42,7 @@ const ProductCard = (props: ProductCardProps) => {
         </Text>
       </CardBody>
       <CardFooter w="100%" pt="0">
-        <Button as={Link} w="full" variant="outline" colorScheme="yellow" href={"/products/" + product.ID}>View Product</Button>
+        <Button as={Link} w="full" variant="outline" colorScheme="brand" href={"/products/" + product.ID}>View Product</Button>
       </CardFooter>
     </Card >
   )

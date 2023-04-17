@@ -146,7 +146,7 @@ const OrderList: FC = () => {
       defaultServiceOptions={{parameters: ["Incoming"]}}
     >
       {({renderContent, items, ...listViewChildProps}) => (
-        <Container maxW="100%">
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Box>
             <OrderListToolbar {...listViewChildProps} onBulkEdit={editDisclosure.onOpen} />
           </Box>

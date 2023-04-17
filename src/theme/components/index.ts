@@ -10,7 +10,7 @@ import Alert from "./alert"
 // import Avatar from "./avatar"
 import Badge from "./badge"
 import Breadcrumb from "./breadcrumb"
-import Button from "./button"
+// import Button from "./button"
 import {Checkbox} from "./checkbox"
 import CloseButton from "./close-button"
 import Code from "./code"
@@ -19,7 +19,7 @@ import {Card} from "./card"
 import Divider from "./divider"
 // import Drawer from "./drawer"
 // import Editable from "./editable"
-import Form from "./form"
+// import Form from "./form"
 // import FormError from "./form-error"
 // import FormLabel from "./form-label"
 import Heading from "./heading"
@@ -29,22 +29,22 @@ import Link from "./link"
 // import List from "./list"
 import {Menu} from "./menu"
 import Modal from "./modal"
-import NumberInput from "./number-input"
+// import NumberInput from "./number-input"
 // import PinInput from "./pin-input"
 // import Popover from "./popover"
 // import Progress from "./progress"
-import Radio from "./radio"
-import Select from "./select"
+// import Radio from "./radio"
+// import Select from "./select"
 import Skeleton from "./skeleton"
 // import SkipLink from "./skip-link"
-import Slider from "./slider"
+// import Slider from "./slider"
 import Spinner from "./spinner"
 // import Stat from "./stat"
-import Switch from "./switch"
-import Table from "./table"
+// import Switch from "./switch"
+// import Table from "./table"
 import Tabs from "./tabs"
-import {Tag} from "./tag"
-import Textarea from "./textarea"
+// import {Tag} from "./tag"
+// import Textarea from "./textarea"
 // import Tooltip from "./tooltip"
 
 const components = {
@@ -53,7 +53,7 @@ const components = {
   // Avatar,
   Badge,
   Breadcrumb,
-  Button,
+  // Button,
   deprecatedCard,
   Card,
   Checkbox,
@@ -63,32 +63,32 @@ const components = {
   Divider,
   // Drawer,
   // Editable,
-  Form,
+  // Form,
   // FormError,
   // FormLabel,
   Heading,
-  Input,
+  // Input,
   // Kbd,
   Link,
   // List,
   Menu,
   Modal,
-  NumberInput,
+  // NumberInput,
   // PinInput,
   // Popover,
   // Progress,
-  Radio,
-  Select,
+  // Radio,
+  // Select,
   Skeleton,
   // SkipLink,
-  Slider,
+  // Slider,
   Spinner,
   // Stat,
-  Switch,
-  Table,
-  Tabs,
-  Tag,
-  Textarea
+  // Switch,
+  // Table,
+  Tabs
+  // Tag,
+  // Textarea
   // Tooltip,
 }
 

@@ -13,7 +13,7 @@ const AdminUserStatusFilter: FC<IAdminUserStatusFilter> = ({value, onChange}) =>
       <MenuButton as={Button} py={0} variant="outline">
         <HStack alignContent="center" h="100%">
           <Text>Status</Text>
-          <Tag colorScheme={value && value.length ? (value === "true" ? "success" : "danger") : "secondary"}>
+          <Tag colorScheme={value && value.length ? (value === "true" ? "success" : "danger") : "default"}>
             {value && value.length ? (value === "true" ? "Active" : "Inactive") : "Any"}
           </Tag>
           <ChevronDownIcon />

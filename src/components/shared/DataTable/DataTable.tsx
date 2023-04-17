@@ -17,9 +17,9 @@ import {
   useBreakpointValue
 } from "@chakra-ui/react"
 import get from "lodash/get"
-import { ReactElement, useMemo } from "react"
-import { TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted } from "react-icons/ti"
-import { IDefaultResource, ListViewTemplate } from "../ListView/ListView"
+import {ReactElement, useMemo} from "react"
+import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from "react-icons/ti"
+import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
 
 export interface DataTableColumn<T> {
   header: string
@@ -27,7 +27,7 @@ export interface DataTableColumn<T> {
   minWidth?: string
   accessor?: string
   align?: "left" | "center" | "right"
-  cell?: ({ row, value }: { row: { original: T }; value: any }) => ReactElement | string
+  cell?: ({row, value}: {row: {original: T}; value: any}) => ReactElement | string
   sortable?: boolean
 }
 
@@ -101,7 +101,7 @@ const DataTable = <T extends IDefaultResource>({
           minWidth: column.minWidth,
           width: column.width,
           align: column.align,
-          value: column.cell?.({ value, row: { original: row } }) || formattedValue
+          value: column.cell?.({value, row: {original: row}}) || formattedValue
         }
       })
     }))
@@ -135,7 +135,7 @@ const DataTable = <T extends IDefaultResource>({
       overflowX="hidden"
       w="100%"
       minH={100}
-      rounded="sm"
+      rounded="md"
     >
       {loading && (
         <Box position="absolute" zIndex={2} left={0} right={0} top={0} bottom={0} pointerEvents="none">
@@ -149,7 +149,8 @@ const DataTable = <T extends IDefaultResource>({
           <Tr role="row">
             {onSelectChange && (
               <Th color="inherit" w="1%">
-                <Checkbox borderColor={"gray.400"}
+                <Checkbox
+                  borderColor={"gray.400"}
                   isIndeterminate={indeterminateSelectAll}
                   isChecked={data && data.length <= selected.length}
                   onChange={(e) => handleSelectAllChange(e.target.checked)}
@@ -163,7 +164,7 @@ const DataTable = <T extends IDefaultResource>({
                 role="columnheader"
                 pe={header.sortable && header.align === "left" ? "0px" : 6}
                 key={index}
-                style={{ cursor: header.sortable ? "pointer" : "auto" }}
+                style={{cursor: header.sortable ? "pointer" : "auto"}}
                 onClick={
                   header.sortable &&
                   (() => {
@@ -179,8 +180,8 @@ const DataTable = <T extends IDefaultResource>({
                   {header.header}
                   {header.sortable && (
                     <Icon
-                      w={{ sm: "10px", md: "14px" }}
-                      h={{ sm: "10px", md: "14px" }}
+                      w={{sm: "10px", md: "14px"}}
+                      h={{sm: "10px", md: "14px"}}
                       as={
                         header.isSorted ? (header.isSortedDesc ? TiArrowSortedDown : TiArrowSortedUp) : TiArrowUnsorted
                       }

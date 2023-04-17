@@ -1,11 +1,11 @@
-import { Box, Container, Tag, Text, useDisclosure } from "@chakra-ui/react"
+import {Box, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
 import Link from "next/link"
-import { Products } from "ordercloud-javascript-sdk"
-import { useCallback, useState } from "react"
-import { IProduct } from "types/ordercloud/IProduct"
-import { textHelper } from "utils"
-import { DataTableColumn } from "../../shared/DataTable/DataTable"
-import ListView, { ListViewGridOptions, ListViewTableOptions } from "../../shared/ListView/ListView"
+import {Products} from "ordercloud-javascript-sdk"
+import {useCallback, useState} from "react"
+import {IProduct} from "types/ordercloud/IProduct"
+import {textHelper} from "utils"
+import {DataTableColumn} from "../../shared/DataTable/DataTable"
+import ListView, {ListViewGridOptions, ListViewTableOptions} from "../../shared/ListView/ListView"
 import ProductBulkEditModal from "../modals/ProductBulkEditModal"
 import ProductDeleteModal from "../modals/ProductDeleteModal"
 import ProductPromotionModal from "../modals/ProductPromotionModal"
@@ -28,7 +28,7 @@ const IdColumn: DataTableColumn<IProduct> = {
   header: "Product ID",
   accessor: "ID",
   width: "15%",
-  cell: ({ row, value }) => (
+  cell: ({row, value}) => (
     <Link href={`/products/${value}`}>
       <Text as="a" noOfLines={2} title={value}>
         {value}
@@ -42,7 +42,7 @@ const ImageColumn: DataTableColumn<IProduct> = {
   header: "Image",
   accessor: "xp.Images",
   align: "center",
-  cell: ({ row, value }) => (
+  cell: ({row, value}) => (
     <Link passHref href={"/products/" + row.original.ID}>
       <Box as="a" width="50px" display="inline-block">
         <ProductDefaultImage product={row.original} fit="cover" rounded="6" />
@@ -55,7 +55,7 @@ const NameColumn: DataTableColumn<IProduct> = {
   header: "Product Name",
   accessor: "Name",
   minWidth: "200px",
-  cell: ({ row, value }) => (
+  cell: ({row, value}) => (
     <Link passHref href={`/products/${row.original.ID}`}>
       <Text as="a" noOfLines={2} title={value}>
         {value}
@@ -68,7 +68,7 @@ const NameColumn: DataTableColumn<IProduct> = {
 const DescriptionColumn: DataTableColumn<IProduct> = {
   header: "Description",
   accessor: "Description",
-  cell: ({ row, value }) => (
+  cell: ({row, value}) => (
     <Text w="100%" maxW="400px" noOfLines={2} fontSize="xs" title={value}>
       {textHelper.stripHTML(value)}
     </Text>
@@ -80,7 +80,7 @@ const StatusColumn: DataTableColumn<IProduct> = {
   accessor: "Active",
   width: "1%",
   align: "center",
-  cell: ({ row, value }) => <Tag colorScheme={value ? "success" : "danger"}>{value ? "Active" : "Inactive"}</Tag>,
+  cell: ({row, value}) => <Tag colorScheme={value ? "success" : "danger"}>{value ? "Active" : "Inactive"}</Tag>,
   sortable: true
 }
 
@@ -142,9 +142,8 @@ const ProductList = () => {
       tableOptions={ProductTableOptions}
       gridOptions={ProductGridOptions}
     >
-      {({ renderContent, items, ...listViewChildProps }) => (
-        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1}
-          p={[4, 6, 8]}>
+      {({renderContent, items, ...listViewChildProps}) => (
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <ProductListToolbar
             {...listViewChildProps}
             onBulkEdit={editDisclosure.onOpen}
@@ -165,8 +164,8 @@ const ProductList = () => {
               actionProduct
                 ? [actionProduct]
                 : items
-                  ? items.filter((p) => listViewChildProps.selected.includes(p.ID))
-                  : []
+                ? items.filter((p) => listViewChildProps.selected.includes(p.ID))
+                : []
             }
             disclosure={deleteDisclosure}
           />
@@ -175,8 +174,8 @@ const ProductList = () => {
               actionProduct
                 ? [actionProduct]
                 : items
-                  ? items.filter((p) => listViewChildProps.selected.includes(p.ID))
-                  : []
+                ? items.filter((p) => listViewChildProps.selected.includes(p.ID))
+                : []
             }
             disclosure={promoteDisclosure}
           />

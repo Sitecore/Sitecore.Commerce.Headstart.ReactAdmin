@@ -90,9 +90,12 @@ const LineItemLevelColumn: DataTableColumn<IPromotion> = {
 const StartDateColumn: DataTableColumn<IPromotion> = {
   header: "Start Date",
   accessor: "StartDate",
+  width: "15%",
   cell: ({row, value}) => (
-    <Link passHref href={`/promoitons/${row.original.ID}`}>
-      <Text as="a">{dateHelper.formatDate(value)}</Text>
+    <Link passHref href={`/promotions/${row.original.ID}`}>
+      <Text as="a" fontSize="sm">
+        {dateHelper.formatDate(value)}
+      </Text>
     </Link>
   ),
   sortable: true
@@ -100,9 +103,12 @@ const StartDateColumn: DataTableColumn<IPromotion> = {
 const ExpirationDateColumn: DataTableColumn<IPromotion> = {
   header: "Expiration Date",
   accessor: "ExpirationDate",
+  width: "15%",
   cell: ({row, value}) => (
-    <Link passHref href={`/promoitons/${row.original.ID}`}>
-      <Text as="a">{value ? dateHelper.formatDate(value) : "N/A"}</Text>
+    <Link passHref href={`/promotions/${row.original.ID}`}>
+      <Text as="a" fontSize="sm">
+        {value ? dateHelper.formatDate(value) : "N/A"}
+      </Text>
     </Link>
   ),
   sortable: true
@@ -175,7 +181,7 @@ const PromotionList = () => {
       gridOptions={PromotionGridOptions}
     >
       {({renderContent, items, ...listViewChildProps}) => (
-        <Container maxW="100%">
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Box>
             <PromotionListToolbar {...listViewChildProps} />
           </Box>

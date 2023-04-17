@@ -1,8 +1,8 @@
-import { Button, Flex, HStack, SimpleGrid } from "@chakra-ui/react"
-import { Link } from "../../navigation/Link"
-import { FC } from "react"
+import {Button, Flex, HStack, SimpleGrid} from "@chakra-ui/react"
+import Link from "next/link"
+import {FC} from "react"
 import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"
-import { ListViewChildrenProps } from "../../shared/ListView/ListView"
+import {ListViewChildrenProps} from "../../shared/ListView/ListView"
 import ListViewMetaInfo from "../../shared/ListViewMetaInfo/ListViewMetaInfo"
 import ProductListActions from "./ProductListActions"
 import ProductStatusFilter from "./ProductStatusFilter"
@@ -22,25 +22,29 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
   queryParams,
   selected
 }) => {
-
   return (
     <>
-      <Flex wrap="wrap" w="100%" direction={["column", "column", "column", "row"]} id="product-list-toolbar" mb={4} gap={2}>
-        <DebouncedSearchInput
-          label="Search products"
-          value={queryParams["Search"]}
-          onSearch={updateQuery("s", true)}
-        />
-        <SimpleGrid gridTemplateColumns={"1fr 1fr"} gap={3} alignItems={"stretch"}>
+      <Flex
+        wrap="wrap"
+        w="100%"
+        direction={["column", "column", "column", "row"]}
+        id="product-list-toolbar"
+        mb={4}
+        gap={2}
+      >
+        <DebouncedSearchInput label="Search products" value={queryParams["Search"]} onSearch={updateQuery("s", true)} />
+        <SimpleGrid gridTemplateColumns={"1fr 1fr"} gap={2} alignItems={"stretch"}>
           <ProductStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
           <ProductListActions selected={selected} onBulkPromote={onBulkPromote} onBulkEdit={onBulkEdit} />
         </SimpleGrid>
         <HStack ml="auto">
           {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
           {viewModeToggle}
-          <Button as={Link} href="/products/new">
-            Create Product
-          </Button>
+          <Link passHref href="/products/new">
+            <Button as="a" variant="solid" colorScheme="primary">
+              Create Product
+            </Button>
+          </Link>
         </HStack>
       </Flex>
     </>

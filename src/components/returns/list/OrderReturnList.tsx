@@ -140,7 +140,7 @@ const OrderReturnList: FC = () => {
       tableOptions={OrderReturnTableOptions}
     >
       {({renderContent, items, ...listViewChildProps}) => (
-        <Container maxW="100%">
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Box>
             <OrderReturnListToolbar {...listViewChildProps} onBulkEdit={editDisclosure.onOpen} />
           </Box>

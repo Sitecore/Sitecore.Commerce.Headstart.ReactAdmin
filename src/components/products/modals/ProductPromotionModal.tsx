@@ -123,8 +123,8 @@ const ProductPromotionModal: FC<IProductPromotionModal> = ({products, disclosure
             </Button>
           </ButtonGroup>
         </ModalBody>
-        <ModalFooter as={HStack}>
-          <Button variant="ghost" fontSize="sm" onClick={onClose}>
+        <ModalFooter as={HStack} justifyContent="space-between">
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
           <Button variant="solid" colorScheme="primary" onClick={handleSubmit}>

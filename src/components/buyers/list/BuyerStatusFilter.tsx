@@ -2,18 +2,18 @@ import {ChevronDownIcon} from "@chakra-ui/icons"
 import {Button, HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Tag, Text} from "@chakra-ui/react"
 import {FC} from "react"
 
-interface IProductStatusFilter {
+interface IBuyerStatusFilter {
   value: any
   onChange: (newValue: any) => void
 }
 
-const ProductStatusFilter: FC<IProductStatusFilter> = ({value, onChange}) => {
+const BuyerStatusFilter: FC<IBuyerStatusFilter> = ({value, onChange}) => {
   return (
     <Menu>
-      <MenuButton as={Button} variant="outline">
+      <MenuButton as={Button} py={0} variant="outline">
         <HStack alignContent="center" h="100%">
           <Text>Status</Text>
-          <Tag colorScheme={value && value.length ? (value === "true" ? "success" : "danger") : "gray"}>
+          <Tag colorScheme={value && value.length ? (value === "true" ? "success" : "danger") : "default"}>
             {value && value.length ? (value === "true" ? "Active" : "Inactive") : "Any"}
           </Tag>
           <ChevronDownIcon />
@@ -30,4 +30,4 @@ const ProductStatusFilter: FC<IProductStatusFilter> = ({value, onChange}) => {
   )
 }
 
-export default ProductStatusFilter
+export default BuyerStatusFilter

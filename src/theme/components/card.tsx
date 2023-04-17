@@ -1,36 +1,36 @@
-import { cardAnatomy } from '@chakra-ui/anatomy'
-import { createMultiStyleConfigHelpers } from '@chakra-ui/react'
-import { mode } from "@chakra-ui/theme-tools"
-const { definePartsStyle, defineMultiStyleConfig } =
-    createMultiStyleConfigHelpers(cardAnatomy.keys)
+import {cardAnatomy} from "@chakra-ui/anatomy"
+import {createMultiStyleConfigHelpers} from "@chakra-ui/react"
+import {mode} from "@chakra-ui/theme-tools"
+const {definePartsStyle, defineMultiStyleConfig} = createMultiStyleConfigHelpers(cardAnatomy.keys)
 
-const baseStyle = (props) => definePartsStyle({
+const baseStyle = (props) =>
+  definePartsStyle({
     container: {
-        borderRadius: "sm",
-        backgroundColor: mode("white", "whiteAlpha.100")(props),
-    },
-})
+      borderRadius: "md",
+      backgroundColor: mode("white", "whiteAlpha.100")(props)
+    }
+  })
 
 const variants = {
-    levitating: (props) => definePartsStyle({
-        header: {
-            textTransform: "capitalize",
+  levitating: (props) =>
+    definePartsStyle({
+      header: {
+        textTransform: "capitalize"
+      },
+      container: {
+        transition: "all .25s ease-in-out",
+        boxShadow: "md",
+        textDecoration: "none",
+        border: `.5px solid transparent`,
+        _hover: {
+          borderColor: "st.borderColor",
+          boxShadow: "lg",
+          transform: "translateY(-1px)",
+          textDecoration: "none"
         },
-        container: {
-            transition: "all .25s ease-in-out",
-            boxShadow: "md",
-            textDecoration: "none",
-            border: `.5px solid transparent`,
-            _hover: {
-                borderColor: "st.borderColor",
-                boxShadow: "lg",
-                transform: "translateY(-1px)",
-                textDecoration: "none",
-            },
-            _focusWithin: { zIndex: 1 }
-
-        }
+        _focusWithin: {zIndex: 1}
+      }
     })
-};
+}
 
-export const Card = defineMultiStyleConfig({ baseStyle, variants });
+export const Card = defineMultiStyleConfig({baseStyle, variants})

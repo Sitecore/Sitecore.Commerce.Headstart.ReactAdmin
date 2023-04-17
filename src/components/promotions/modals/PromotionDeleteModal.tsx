@@ -21,35 +21,38 @@ import {
   UseDisclosureProps,
   VStack
 } from "@chakra-ui/react"
+import {Promotions} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useEffect, useState} from "react"
-import {IProduct} from "types/ordercloud/IProduct"
-import ProductDefaultImage from "../list/ProductDefaultImage"
+import {IPromotion} from "types/ordercloud/IPromotion"
 
-interface IProductDeleteModal {
-  products?: IProduct[]
+interface IPromotionDeleteModal {
+  promotions?: IPromotion[]
   disclosure: UseDisclosureProps
   onComplete: (idsToRemove: string[]) => void
 }
 
-const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onComplete}) => {
+const PromotionDeleteModal: FC<IPromotionDeleteModal> = ({promotions, disclosure, onComplete}) => {
   const {isOpen, onClose} = disclosure
-  const [showProducts, setShowProducts] = useState(false)
+  const [showPromotions, setShowPromotions] = useState(false)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!isOpen) {
       setLoading(false)
-      setShowProducts(false)
+      setShowPromotions(false)
     }
   }, [isOpen])
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     setLoading(true)
-    setTimeout(() => {
-      onComplete(products.map((p) => p.ID))
+    try {
+      await Promise.all(promotions.map((promotion) => Promotions.Delete(promotion?.ID)))
+      onComplete(promotions.map((promotion) => promotion.ID))
       onClose()
-    }, 2000)
-  }, [onComplete, products, onClose])
+    } finally {
+      setLoading(false)
+    }
+  }, [promotions, onComplete, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -74,41 +77,42 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
         <ModalBody>
           <HStack justifyContent="space-between" mb={5}>
             <Heading size="sm" as="h5">
-              {`Deleting ${products.length} Selected Product${products.length === 1 ? "" : "s"}`}
+              {`Deleting ${promotions.length} Selected Promotion${promotions.length === 1 ? "" : "s"}`}
             </Heading>
-            <Button variant="link" onClick={() => setShowProducts((s) => !s)}>
-              {showProducts ? "Hide" : "Show"}
+            <Button variant="link" onClick={() => setShowPromotions((s) => !s)}>
+              {showPromotions ? "Hide" : "Show"}
             </Button>
           </HStack>
-          <Collapse in={showProducts}>
+          <Collapse in={showPromotions}>
             <List mb={5}>
-              {products.map((p, i) => (
+              {promotions.map((promotion, i) => (
                 <>
-                  <ListItem key={p.ID} as={HStack}>
-                    <ProductDefaultImage product={p} w="50px" h="50px" fit="cover" mr={2} rounded="6" />
+                  <ListItem key={promotion.ID} as={HStack}>
                     <HStack flexGrow={1} justifyContent="space-between">
                       <VStack alignItems="start">
-                        <Badge>{p.ID}</Badge>
-                        <Text>{p.Name}</Text>
+                        <Badge>{promotion.ID}</Badge>
+                        <Text>{promotion.Name}</Text>
                       </VStack>
-                      <Tag colorScheme={p.Active ? "green" : "red"}>{p.Active ? "Active" : "Inactive"}</Tag>
+                      <Tag colorScheme={promotion.Active ? "green" : "red"}>
+                        {promotion.Active ? "Active" : "Inactive"}
+                      </Tag>
                     </HStack>
                   </ListItem>
-                  {i < products.length - 1 && <Divider my={3} />}
+                  {i < promotions.length - 1 && <Divider my={3} />}
                 </>
               ))}
             </List>
           </Collapse>
           <Text>
-            This is an irreversible, destructive action. Please make sure that you have selected the right product.
+            This is an irreversible, destructive action. Please make sure that you have selected the right promotion.
           </Text>
         </ModalBody>
-        <ModalFooter as={HStack} justifyContent="space-between">
-          <Button variant="outline" onClick={onClose}>
+        <ModalFooter as={HStack}>
+          <Button variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="danger" onClick={handleSubmit}>
-            Delete Product
+          <Button colorScheme="red" onClick={handleSubmit}>
+            {`Delete Promotion${promotions.length === 1 ? "" : "s"}`}
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -116,4 +120,4 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
   )
 }
 
-export default ProductDeleteModal
+export default PromotionDeleteModal

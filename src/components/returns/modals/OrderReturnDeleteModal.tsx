@@ -1,3 +1,4 @@
+import {OrderStatusColorSchemeMap} from "@/components/orders/list/OrderList"
 import {
   Badge,
   Button,
@@ -22,34 +23,34 @@ import {
   VStack
 } from "@chakra-ui/react"
 import {FC, useCallback, useEffect, useState} from "react"
-import {IProduct} from "types/ordercloud/IProduct"
-import ProductDefaultImage from "../list/ProductDefaultImage"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
+import {priceHelper} from "utils"
 
-interface IProductDeleteModal {
-  products?: IProduct[]
+interface IOrderReturnDeleteModal {
+  orderReturns?: IOrderReturn[]
   disclosure: UseDisclosureProps
   onComplete: (idsToRemove: string[]) => void
 }
 
-const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onComplete}) => {
+const OrderReturnDeleteModal: FC<IOrderReturnDeleteModal> = ({orderReturns, disclosure, onComplete}) => {
   const {isOpen, onClose} = disclosure
-  const [showProducts, setShowProducts] = useState(false)
+  const [showOrderReturns, setShowOrderReturns] = useState(false)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!isOpen) {
       setLoading(false)
-      setShowProducts(false)
+      setShowOrderReturns(false)
     }
   }, [isOpen])
 
   const handleSubmit = useCallback(() => {
     setLoading(true)
     setTimeout(() => {
-      onComplete(products.map((p) => p.ID))
+      onComplete(orderReturns.map((or) => or.ID))
       onClose()
     }, 2000)
-  }, [onComplete, products, onClose])
+  }, [onComplete, orderReturns, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -74,41 +75,41 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
         <ModalBody>
           <HStack justifyContent="space-between" mb={5}>
             <Heading size="sm" as="h5">
-              {`Deleting ${products.length} Selected Product${products.length === 1 ? "" : "s"}`}
+              {`Deleting ${orderReturns.length} Selected Order Return${orderReturns.length === 1 ? "" : "s"}`}
             </Heading>
-            <Button variant="link" onClick={() => setShowProducts((s) => !s)}>
-              {showProducts ? "Hide" : "Show"}
+            <Button variant="link" onClick={() => setShowOrderReturns((s) => !s)}>
+              {showOrderReturns ? "Hide" : "Show"}
             </Button>
           </HStack>
-          <Collapse in={showProducts}>
+          <Collapse in={showOrderReturns}>
             <List mb={5}>
-              {products.map((p, i) => (
+              {orderReturns.map((or, i) => (
                 <>
-                  <ListItem key={p.ID} as={HStack}>
-                    <ProductDefaultImage product={p} w="50px" h="50px" fit="cover" mr={2} rounded="6" />
+                  <ListItem key={or.ID} as={HStack}>
                     <HStack flexGrow={1} justifyContent="space-between">
                       <VStack alignItems="start">
-                        <Badge>{p.ID}</Badge>
-                        <Text>{p.Name}</Text>
+                        <Badge>{or.ID}</Badge>
+                        <Text fontSize="sm">{`Refund Amount: ${priceHelper.formatPrice(or.RefundAmount)}`}</Text>
                       </VStack>
-                      <Tag colorScheme={p.Active ? "green" : "red"}>{p.Active ? "Active" : "Inactive"}</Tag>
+                      <Tag colorScheme={OrderStatusColorSchemeMap[or.Status] || "default"}>{or.Status}</Tag>
                     </HStack>
                   </ListItem>
-                  {i < products.length - 1 && <Divider my={3} />}
+                  {i < orderReturns.length - 1 && <Divider my={3} />}
                 </>
               ))}
             </List>
           </Collapse>
           <Text>
-            This is an irreversible, destructive action. Please make sure that you have selected the right product.
+            This is an irreversible, destructive action. Please make sure that you have selected the right order
+            returns.
           </Text>
         </ModalBody>
-        <ModalFooter as={HStack} justifyContent="space-between">
-          <Button variant="outline" onClick={onClose}>
+        <ModalFooter as={HStack}>
+          <Button variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="danger" onClick={handleSubmit}>
-            Delete Product
+          <Button colorScheme="red" onClick={handleSubmit}>
+            {`Delete Order Return${orderReturns.length === 1 ? "" : "s"}`}
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -116,4 +117,4 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
   )
 }
 
-export default ProductDeleteModal
+export default OrderReturnDeleteModal

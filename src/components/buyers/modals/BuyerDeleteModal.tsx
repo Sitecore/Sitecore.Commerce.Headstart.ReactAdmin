@@ -21,35 +21,38 @@ import {
   UseDisclosureProps,
   VStack
 } from "@chakra-ui/react"
+import {Buyers} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useEffect, useState} from "react"
-import {IProduct} from "types/ordercloud/IProduct"
-import ProductDefaultImage from "../list/ProductDefaultImage"
+import {IBuyer} from "types/ordercloud/IBuyer"
 
-interface IProductDeleteModal {
-  products?: IProduct[]
+interface IBuyerDeleteModal {
+  buyers?: IBuyer[]
   disclosure: UseDisclosureProps
   onComplete: (idsToRemove: string[]) => void
 }
 
-const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onComplete}) => {
+const BuyerDeleteModal: FC<IBuyerDeleteModal> = ({buyers, disclosure, onComplete}) => {
   const {isOpen, onClose} = disclosure
-  const [showProducts, setShowProducts] = useState(false)
+  const [showbuyers, setShowbuyers] = useState(false)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!isOpen) {
       setLoading(false)
-      setShowProducts(false)
+      setShowbuyers(false)
     }
   }, [isOpen])
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     setLoading(true)
-    setTimeout(() => {
-      onComplete(products.map((p) => p.ID))
+    try {
+      await Promise.all(buyers.map((buyer) => Buyers.Delete(buyer?.ID)))
+      onComplete(buyers.map((buyer) => buyer.ID))
       onClose()
-    }, 2000)
-  }, [onComplete, products, onClose])
+    } finally {
+      setLoading(false)
+    }
+  }, [buyers, onComplete, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -74,41 +77,40 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
         <ModalBody>
           <HStack justifyContent="space-between" mb={5}>
             <Heading size="sm" as="h5">
-              {`Deleting ${products.length} Selected Product${products.length === 1 ? "" : "s"}`}
+              {`Deleting ${buyers.length} Selected Buyer${buyers.length === 1 ? "" : "s"}`}
             </Heading>
-            <Button variant="link" onClick={() => setShowProducts((s) => !s)}>
-              {showProducts ? "Hide" : "Show"}
+            <Button variant="link" onClick={() => setShowbuyers((s) => !s)}>
+              {showbuyers ? "Hide" : "Show"}
             </Button>
           </HStack>
-          <Collapse in={showProducts}>
+          <Collapse in={showbuyers}>
             <List mb={5}>
-              {products.map((p, i) => (
+              {buyers.map((buyer, i) => (
                 <>
-                  <ListItem key={p.ID} as={HStack}>
-                    <ProductDefaultImage product={p} w="50px" h="50px" fit="cover" mr={2} rounded="6" />
+                  <ListItem key={buyer.ID} as={HStack}>
                     <HStack flexGrow={1} justifyContent="space-between">
                       <VStack alignItems="start">
-                        <Badge>{p.ID}</Badge>
-                        <Text>{p.Name}</Text>
+                        <Badge>{buyer.ID}</Badge>
+                        <Text>{buyer.Name}</Text>
                       </VStack>
-                      <Tag colorScheme={p.Active ? "green" : "red"}>{p.Active ? "Active" : "Inactive"}</Tag>
+                      <Tag colorScheme={buyer.Active ? "green" : "red"}>{buyer.Active ? "Active" : "Inactive"}</Tag>
                     </HStack>
                   </ListItem>
-                  {i < products.length - 1 && <Divider my={3} />}
+                  {i < buyers.length - 1 && <Divider my={3} />}
                 </>
               ))}
             </List>
           </Collapse>
           <Text>
-            This is an irreversible, destructive action. Please make sure that you have selected the right product.
+            This is an irreversible, destructive action. Please make sure that you have selected the right buyer.
           </Text>
         </ModalBody>
-        <ModalFooter as={HStack} justifyContent="space-between">
-          <Button variant="outline" onClick={onClose}>
+        <ModalFooter as={HStack}>
+          <Button variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="danger" onClick={handleSubmit}>
-            Delete Product
+          <Button colorScheme="red" onClick={handleSubmit}>
+            Delete Buyer
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -116,4 +118,4 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
   )
 }
 
-export default ProductDeleteModal
+export default BuyerDeleteModal

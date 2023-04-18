@@ -6,13 +6,14 @@ import {TbDotsVertical} from "react-icons/tb"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 
 interface IBuyerUserGroupActionMenu {
+  buyerid: string
   usergroup: IBuyerUserGroup
   onOpen?: () => void
   onClose?: () => void
   onDelete: () => void
 }
 
-const BuyerUserGroupActionMenu: FC<IBuyerUserGroupActionMenu> = ({usergroup, onOpen, onClose, onDelete}) => {
+const BuyerUserGroupActionMenu: FC<IBuyerUserGroupActionMenu> = ({buyerid, usergroup, onOpen, onClose, onDelete}) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
       <MenuButton
@@ -24,7 +25,7 @@ const BuyerUserGroupActionMenu: FC<IBuyerUserGroupActionMenu> = ({usergroup, onO
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>
       <MenuList>
-        <Link passHref href={`path/${usergroup.ID}`}>
+        <Link passHref href={`/buyers/${buyerid}/usergroups/${usergroup.ID}`}>
           <MenuItem as="a" justifyContent="space-between">
             Edit <EditIcon />
           </MenuItem>

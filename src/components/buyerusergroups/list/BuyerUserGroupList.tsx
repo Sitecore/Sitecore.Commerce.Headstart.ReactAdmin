@@ -49,6 +49,7 @@ const BuyerUserGroupList: FC<IBuyerUserGroupList> = ({buyerid}) => {
     (usergroup: IBuyerUserGroup) => {
       return (
         <BuyerUserGroupActionMenu
+          buyerid={buyerid}
           usergroup={usergroup}
           onOpen={() => setActionBuyerUserGroup(usergroup)}
           onDelete={deleteDisclosure.onOpen}

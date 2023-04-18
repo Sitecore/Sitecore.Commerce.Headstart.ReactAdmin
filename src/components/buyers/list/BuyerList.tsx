@@ -1,4 +1,4 @@
-import {Box, Button, ButtonGroup, Container, Icon, Text, useDisclosure} from "@chakra-ui/react"
+import {Box, Button, ButtonGroup, Container, Icon, Tag, Text, useDisclosure} from "@chakra-ui/react"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
 import Link from "next/link"
@@ -13,6 +13,12 @@ import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 import BuyerListToolbar from "./BuyerListToolBar"
 import BuyerActionMenu from "./BuyerActionMenu"
 import BuyerDeleteModal from "../modals/BuyerDeleteModal"
+
+export const BuyerColorSchemeMap = {
+  "": "gray",
+  true: "success",
+  false: "danger"
+}
 
 interface IBuyerListItem extends RequiredDeep<IBuyer> {
   userGroupsCount: number
@@ -101,16 +107,10 @@ const BuyerList: FC = () => {
   const StatusColumn: DataTableColumn<IBuyerListItem> = {
     header: "STATUS",
     accessor: "Active",
-    cell: ({row}) => (
-      <>
-        <Icon
-          as={row.original.Active === true ? MdCheck : IoMdClose}
-          color={row.original.Active === true ? "green.400" : "red.400"}
-          w="20px"
-          h="20px"
-        />
+    cell: ({row, value}) => (
+      <Tag as="a" colorScheme={BuyerColorSchemeMap[value] || "default"}>
         <Text>{row.original.Active ? "Active" : "Non active"}</Text>
-      </>
+      </Tag>
     )
   }
 

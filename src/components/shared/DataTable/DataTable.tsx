@@ -196,7 +196,7 @@ const DataTable = <T extends IDefaultResource>({
 
         <Tbody role="rowgroup" position="relative" minH={100}>
           {rows.map((row, rowIndex) => (
-            <Tr key={rowIndex} role="row">
+            <Tr key={rowIndex} role="row" cursor="pointer"> 
               {onSelectChange && (
                 <Td w="1%">
                   <Checkbox

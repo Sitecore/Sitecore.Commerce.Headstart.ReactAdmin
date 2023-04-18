@@ -11,7 +11,9 @@ import {
   GridItem,
   HStack,
   Heading,
-  Spacer
+  Spacer,
+  Skeleton,
+  VStack
 } from "@chakra-ui/react"
 import {FunctionComponent, useEffect, useState} from "react"
 import {OrderReturn, OrderReturns, Payment, Payments} from "ordercloud-javascript-sdk"
@@ -94,10 +96,22 @@ const OrderReturnDetailPage: FunctionComponent = () => {
 
   if (!orderReturn.ID) {
     return (
-      <>
+      <Flex flexGrow="1" id="skeleton-loader--return">
         <NextSeo title="Order Return Detail" />
-        Loading...
-      </>
+        <Container
+          display="flex"
+          flexFlow="column nowrap"
+          maxW="100%"
+          bgColor="st.mainBackgroundColor"
+          flexGrow={1}
+          p={[4, 6, 8]}
+        >
+          <HStack mb={6}>
+            <Skeleton borderRadius="md" w="100%" h="40px" />
+          </HStack>
+          <Skeleton borderRadius="md" w="100%" h={"70%"} />
+        </Container>
+      </Flex>
     )
   }
   return (

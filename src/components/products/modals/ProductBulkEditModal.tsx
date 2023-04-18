@@ -120,14 +120,13 @@ const ProductBulkEditModal: FC<IProductBulkEditModal> = ({products, disclosure, 
             </RadioGroup>
           </FormControl>
         </ModalBody>
-        <ModalFooter as={HStack}>
-          <Button variant="ghost" fontSize="sm" onClick={onClose}>
+        <ModalFooter as={HStack} justifyContent="space-between">
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
           <Button
             variant="solid"
-            fontSize="sm"
-            colorScheme="teal"
+            colorScheme="primary"
             isDisabled={typeof value === "undefined"}
             onClick={handleUpdateProducts}
           >

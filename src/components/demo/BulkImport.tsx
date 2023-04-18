@@ -1,4 +1,3 @@
-import {ViewIcon} from "@chakra-ui/icons"
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,15 +8,17 @@ import {
   Button,
   HStack,
   MenuItem,
+  Icon,
   Spinner,
   Text
 } from "@chakra-ui/react"
-import {useEffect, useRef, useState} from "react"
+import { useEffect, useRef, useState } from "react"
+import { TbTableImport } from "react-icons/tb"
 
 interface BulkImportProps {
   variant?: "button" | "menuitem"
 }
-export default function BulkImport({variant = "button"}: BulkImportProps) {
+export default function BulkImport({ variant = "button" }: BulkImportProps) {
   const [loading, setLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const cancelRef = useRef()
@@ -37,7 +38,7 @@ export default function BulkImport({variant = "button"}: BulkImportProps) {
           Bulk Import
         </Button>
       ) : (
-        <MenuItem onClick={() => setIsOpen(true)}>Bulk Import</MenuItem>
+        <MenuItem onClick={() => setIsOpen(true)}>Bulk Import <Icon ml="auto" as={TbTableImport} fontSize="1.15em" stroke-width="1.7" /></MenuItem>
       )}
       <AlertDialog isOpen={isOpen} onClose={() => setIsOpen(false)} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>

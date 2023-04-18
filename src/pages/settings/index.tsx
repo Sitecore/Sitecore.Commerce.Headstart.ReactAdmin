@@ -27,7 +27,7 @@ const SettingsPage = () => {
   const boxBgColor = useColorModeValue("boxBgColor.100", "boxBgColor.600")
 
   return (
-    <Container maxW="full">
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <NextSeo title="Settings" />
       <Grid gridTemplateColumns="repeat(auto-fit, 225px)" gridGap="1rem">
         <GridItem>

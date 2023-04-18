@@ -18,6 +18,7 @@ import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
 import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
+import SupplierList from "@/components/suppliers/list/SupplierList"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -140,22 +141,9 @@ const SuppliersList = () => {
 }
 
 const ProtectedSuppliersList = () => {
-  let router = useRouter()
   return (
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
-      <Box padding="GlobalPadding">
-        <HStack justifyContent="space-between" w="100%" mb={5}>
-          <Button onClick={() => router.push(`/suppliers/add`)} variant="solid" colorScheme="primary">
-            Create supplier
-          </Button>
-          <HStack>
-            <ExportToCsv />
-          </HStack>
-        </HStack>
-        <Card variant="primaryCard">
-          <SuppliersList />
-        </Card>
-      </Box>
+      <SupplierList />
     </ProtectedContent>
   )
 }

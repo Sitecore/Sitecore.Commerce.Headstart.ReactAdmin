@@ -1,19 +1,12 @@
-import {HStack, useColorModeValue, Heading, Flex, Show, Container} from "@chakra-ui/react"
+import { HStack, useColorModeValue, Container } from "@chakra-ui/react"
 import HeaderLogo from "components/branding/HeaderLogo"
 import AcountNavigation from "components/navigation/AcountNavigation"
 
 const Header = () => {
   return (
-    <Container as="header" maxWidth="100%" background="Background" position="sticky" top="0px" zIndex="10" shadow="md">
-      <HStack justifyContent="space-between" h="80px">
-        <HStack>
-          <HeaderLogo />
-          <Show breakpoint="(min-width: 900px)">
-            <Heading as="h4" color="gray.500" fontSize="large" pl="10" fontWeight="normal">
-              Seller Administration
-            </Heading>
-          </Show>
-        </HStack>
+    <Container as="header" backgroundColor={useColorModeValue("white", "gray.800")} boxShadow="sm" maxW="full" position="sticky" top="0px" zIndex="10" borderBottom={".5px solid"} borderColor="st.borderColor">
+      <HStack justifyContent="space-between" alignItems={"center"} h="headerHeight" px={4}>
+        <HeaderLogo />
         <AcountNavigation />
       </HStack>
     </Container>

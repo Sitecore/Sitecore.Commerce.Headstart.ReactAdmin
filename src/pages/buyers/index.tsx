@@ -1,10 +1,6 @@
-import {Box, Button, HStack} from "@chakra-ui/react"
-import ExportToCsv from "components/demo/ExportToCsv"
-import ProtectedContent from "components/auth/ProtectedContent"
-import React from "react"
-import {appPermissions} from "constants/app-permissions.config"
-import {useRouter} from "hooks/useRouter"
 import BuyerList from "@/components/buyers/list/BuyerList"
+import ProtectedContent from "components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -22,12 +18,9 @@ export async function getStaticProps() {
 }
 
 const ProtectedBuyersList = () => {
-  let router = useRouter()
   return (
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <Box padding="GlobalPadding">
-        <BuyerList />
-      </Box>
+      <BuyerList />
     </ProtectedContent>
   )
 }

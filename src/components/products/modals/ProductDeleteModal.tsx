@@ -103,11 +103,11 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
             This is an irreversible, destructive action. Please make sure that you have selected the right product.
           </Text>
         </ModalBody>
-        <ModalFooter as={HStack}>
-          <Button variant="ghost" onClick={onClose}>
+        <ModalFooter as={HStack} justifyContent="space-between">
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="red" onClick={handleSubmit}>
+          <Button colorScheme="danger" onClick={handleSubmit}>
             Delete Product
           </Button>
         </ModalFooter>

@@ -1,4 +1,3 @@
-import {ViewIcon} from "@chakra-ui/icons"
 import {
   AlertDialog,
   AlertDialogBody,
@@ -8,16 +7,18 @@ import {
   AlertDialogOverlay,
   Button,
   HStack,
+  Icon,
   MenuItem,
   Spinner,
   Text
 } from "@chakra-ui/react"
-import {useEffect, useRef, useState} from "react"
+import { useEffect, useRef, useState } from "react"
+import { TbTableExport } from "react-icons/tb"
 
 interface ExportToCsvProps {
   variant?: "button" | "menuitem"
 }
-export default function ExportToCsv({variant = "button"}: ExportToCsvProps) {
+export default function ExportToCsv({ variant = "button" }: ExportToCsvProps) {
   const [loading, setLoading] = useState(false)
   const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
   const cancelRef = useRef()
@@ -37,7 +38,7 @@ export default function ExportToCsv({variant = "button"}: ExportToCsvProps) {
           Export to CSV
         </Button>
       ) : (
-        <MenuItem onClick={() => setExportCSVDialogOpen(true)}>Export to CSV</MenuItem>
+        <MenuItem onClick={() => setExportCSVDialogOpen(true)}>Export to CSV <Icon ml="auto" as={TbTableExport} fontSize="1.15em" stroke-width="1.7" /></MenuItem>
       )}
       <AlertDialog
         isOpen={isExportCSVDialogOpen}

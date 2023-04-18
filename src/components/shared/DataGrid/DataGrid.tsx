@@ -1,17 +1,16 @@
 import {
   Box,
   Center,
-  Grid,
   GridItem,
   Heading,
   ResponsiveObject,
+  SimpleGrid,
   Spinner,
   Text,
-  useBreakpointValue,
   VStack
 } from "@chakra-ui/react"
-import {ReactElement} from "react"
-import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
+import { ReactElement } from "react"
+import { IDefaultResource, ListViewTemplate } from "../ListView/ListView"
 
 export interface IDataGrid<T extends IDefaultResource> {
   data: T[]
@@ -30,8 +29,8 @@ export interface IDataGrid<T extends IDefaultResource> {
     onSelectChange?: (id: string, isSelected: boolean) => void
   ) => ReactElement
 }
-const DEFAULT_DATA_GRID__COLUMNS = {base: 1, md: 2, lg: 3, xl: 4}
-const DEFAULT_DATA_GRID__GRID_GAP = 2
+const DEFAULT_DATA_GRID__COLUMNS = { base: 1, md: 2, lg: 3, xl: 4 }
+// const DEFAULT_DATA_GRID__GRID_GAP = { base: 4, md: null, lg: 6, xl: 6 }
 const DEFAULT_DATA_GRID__RENDER_GRID_ITEM = (o: IDefaultResource, i: number) => (
   <VStack
     h="full"
@@ -60,19 +59,19 @@ const DataGrid = <T extends IDefaultResource>({
   loading,
   emptyDisplay = DEFAULT_DATA_GRID__EMPTY_DISPLAY,
   columns = DEFAULT_DATA_GRID__COLUMNS,
-  gap = DEFAULT_DATA_GRID__GRID_GAP,
+  // gap = DEFAULT_DATA_GRID__GRID_GAP,
   gridItemActions,
   renderGridItem = DEFAULT_DATA_GRID__RENDER_GRID_ITEM,
   selected,
   onSelectChange
 }: IDataGrid<T>) => {
-  const currentColumns = useBreakpointValue(columns)
+
   return (
-    <Grid
+    <SimpleGrid
       position="relative"
       as="section"
-      gap={gap}
-      templateColumns={`repeat(${currentColumns}, 1fr)`}
+      gap={{ base: 4, md: null, lg: 6, xl: 6 }}
+      gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))"
       w="full"
       width="100%"
       minH={100}
@@ -95,19 +94,9 @@ const DataGrid = <T extends IDefaultResource>({
       )}
       {data &&
         data.map((o, i) => (
-          <GridItem
-            colSpan={1}
-            rowSpan={1}
-            bg="gridCellBg"
-            w="full"
-            width="100%"
-            rounded="lg"
-            overflow="h"
-            key={i}
-            borderStyle="none"
-          >
+          <>
             {renderGridItem(o, i, gridItemActions, selected.includes(o.ID), onSelectChange)}
-          </GridItem>
+          </>
         ))}
       {!loading && !data.length && (
         <GridItem
@@ -123,7 +112,7 @@ const DataGrid = <T extends IDefaultResource>({
           {emptyDisplay}
         </GridItem>
       )}
-    </Grid>
+    </SimpleGrid>
   )
 }
 

@@ -47,6 +47,7 @@
     "react-icons": "^4.4.0",
     "react-querybuilder": "^5.4.0",
     "react-table": "^7.8.0",
+    "tinycolor2": "^1.6.0",
     "universal-cookie": "^4.0.4",
     "yup": "^0.32.11"
   },

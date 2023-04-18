@@ -1,4 +1,4 @@
-import {Box, Container, Image, Tag, Text, useColorMode, useColorModeValue, useDisclosure} from "@chakra-ui/react"
+import {Box, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
 import Link from "next/link"
 import {Products} from "ordercloud-javascript-sdk"
 import {useCallback, useState} from "react"
@@ -45,7 +45,7 @@ const ImageColumn: DataTableColumn<IProduct> = {
   cell: ({row, value}) => (
     <Link passHref href={"/products/" + row.original.ID}>
       <Box as="a" width="50px" display="inline-block">
-        <ProductDefaultImage product={row.original} w="50px" h="50px" fit="cover" rounded="6" />
+        <ProductDefaultImage product={row.original} fit="cover" rounded="6" />
       </Box>
     </Link>
   )
@@ -143,17 +143,15 @@ const ProductList = () => {
       gridOptions={ProductGridOptions}
     >
       {({renderContent, items, ...listViewChildProps}) => (
-        <Container maxW="100%">
-          <Box>
-            <ProductListToolbar
-              {...listViewChildProps}
-              onBulkEdit={editDisclosure.onOpen}
-              onBulkPromote={() => {
-                setActionProduct(undefined)
-                promoteDisclosure.onOpen()
-              }}
-            />
-          </Box>
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+          <ProductListToolbar
+            {...listViewChildProps}
+            onBulkEdit={editDisclosure.onOpen}
+            onBulkPromote={() => {
+              setActionProduct(undefined)
+              promoteDisclosure.onOpen()
+            }}
+          />
           {renderContent}
           <ProductBulkEditModal
             onComplete={listViewChildProps.upsertItems}

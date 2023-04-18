@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Card,
   Container,
   Divider,
   Flex,
@@ -15,8 +16,6 @@ import {
 import {FunctionComponent, useEffect, useState} from "react"
 import {OrderReturn, OrderReturns, Payment, Payments} from "ordercloud-javascript-sdk"
 import {dateHelper, priceHelper} from "utils"
-
-import Card from "components/card/Card"
 import ExportToCsv from "components/demo/ExportToCsv"
 import ExportToPdf from "components/demo/ExportToPdf"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
@@ -103,7 +102,7 @@ const OrderReturnDetailPage: FunctionComponent = () => {
   }
   return (
     <>
-      <Container maxW="full" marginTop={30} marginBottom={30}>
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
         <NextSeo title="Order Return Detail" />
         <HStack justifyContent="space-between" w="100%" mb={5}>
           <HStack>
@@ -112,13 +111,13 @@ const OrderReturnDetailPage: FunctionComponent = () => {
             <ExportToPdf />
           </HStack>
         </HStack>
-        <Card variant="primaryCard">
+        <Card p={6}>
           <Box>
-            <Badge variant="outline" color={getStatusColor()}>
+            <Badge fontSize="lg" colorScheme={getStatusColor()}>
               {/* Space before capital letters */}
               {orderReturn.Status.replace(/[A-Z]/g, " $&").trim()}
             </Badge>
-            <Divider m="3" />
+            <Divider my={6} />
             <Flex minWidth="max-content" alignItems="center" gap="2" mb="4">
               <Box>
                 <Heading size="md">Refund Amount: {priceHelper.formatPrice(orderReturn.RefundAmount)}</Heading>
@@ -177,11 +176,11 @@ const OrderReturnDetailPage: FunctionComponent = () => {
               )}
             </Grid>
           </Box>
-          <Box mt="6">
-            <Heading as="h3" size="lg">
+          <Box mt={10}>
+            <Heading as="h3" size="md">
               Return Items
             </Heading>
-            <Divider m="3" />
+            <Divider my={6} />
             <OcOrderReturnItemList itemsToReturn={itemsToReturn} />
           </Box>
         </Card>

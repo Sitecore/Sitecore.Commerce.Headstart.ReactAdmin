@@ -191,16 +191,14 @@ export default function ProductDetail({
                 </TabPanel>
               )}
               {viewVisibility.Pricing && (
-                <TabPanel p={0} mt={6}>
-                  <Flex flexFlow="column">
-                    <SimpleCard title="Pricing">
-                      <PricingForm
-                        control={control}
-                        trigger={trigger}
-                        priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
-                      />
-                    </SimpleCard>
-                  </Flex>
+                <TabPanel p={0} mt={6} maxW="container.xl">
+                  <SimpleCard title="Pricing">
+                    <PricingForm
+                      control={control}
+                      trigger={trigger}
+                      priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
+                    />
+                  </SimpleCard>
                 </TabPanel>
               )}
               {viewVisibility.Variants && (

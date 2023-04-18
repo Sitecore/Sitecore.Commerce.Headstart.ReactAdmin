@@ -6,11 +6,18 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Hide,
   HStack,
+  Menu,
+  MenuItem,
+  Show,
   Text,
-  useDisclosure
+  theme,
+  useDisclosure,
+  useMediaQuery
 } from "@chakra-ui/react"
 import {useRef} from "react"
+import {TbShoppingCartPlus} from "react-icons/tb"
 
 interface ViewProductProps {}
 export default function ViewProduct({}: ViewProductProps) {
@@ -24,9 +31,26 @@ export default function ViewProduct({}: ViewProductProps) {
 
   return (
     <>
-      <Button variant="outline" onClick={onOpen}>
-        View Product
-      </Button>
+      <Hide below="md">
+        <Button variant="outline" onClick={onOpen}>
+          View Product
+        </Button>
+      </Hide>
+      <Hide above="md">
+        <Button
+          variant="unstyled"
+          px={3}
+          _hover={{backgroundColor: "gray.100"}}
+          w="full"
+          textAlign="left"
+          borderRadius="0"
+          fontWeight="normal"
+          leftIcon={<TbShoppingCartPlus size="1rem" />}
+          onClick={onOpen}
+        >
+          View Product
+        </Button>
+      </Hide>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>

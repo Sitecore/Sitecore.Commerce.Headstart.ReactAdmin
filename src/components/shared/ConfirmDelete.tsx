@@ -6,18 +6,20 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Hide,
   HStack,
   MenuItem,
   useDisclosure
 } from "@chakra-ui/react"
 import {useRef} from "react"
+import {TbTableExport, TbTrash} from "react-icons/tb"
 import BrandedSpinner from "../branding/BrandedSpinner"
 
 interface ConfirmDeleteDialogProps {
   onDelete: () => Promise<void>
   loading: boolean
-  variant?: "button" | "menuitem"
   deleteText?: string
+  deletingText?: string
   alertHeaderText?: string
   alertBodyText?: string
   alertCancelButtonText?: string
@@ -26,8 +28,8 @@ interface ConfirmDeleteDialogProps {
 export default function ConfirmDelete({
   onDelete,
   loading,
-  variant = "button",
   deleteText = "Delete",
+  deletingText = "Deleting",
   alertHeaderText = "Are you sure you want to delete this?",
   alertBodyText = "This action can not be undone",
   alertCancelButtonText = "No, do not delete",
@@ -38,15 +40,30 @@ export default function ConfirmDelete({
 
   return (
     <>
-      {variant === "button" ? (
+      <Hide below="md">
         <Button variant="outline" onClick={onOpen} disabled={loading}>
-          {loading ? <BrandedSpinner /> : deleteText}
+          {loading ? deletingText : deleteText}
         </Button>
-      ) : (
-        <MenuItem color="red.500" onClick={onOpen}>
-          {loading ? <BrandedSpinner /> : deleteText}
-        </MenuItem>
-      )}
+      </Hide>
+      <Hide above="md">
+        <Button
+          disabled={loading}
+          display="flex"
+          justifyContent={"flex-start"}
+          variant="unstyled"
+          color="danger.500"
+          px={3}
+          _hover={{backgroundColor: "gray.100"}}
+          w="full"
+          textAlign="left"
+          borderRadius="0"
+          fontWeight="normal"
+          leftIcon={<TbTrash size="1rem" />}
+          onClick={onOpen}
+        >
+          {loading ? deletingText : deleteText}
+        </Button>
+      </Hide>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>

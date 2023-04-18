@@ -6,12 +6,14 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Hide,
   HStack,
   Select,
   Text,
   useDisclosure
 } from "@chakra-ui/react"
 import {useRef} from "react"
+import {TbLanguage, TbTableExport} from "react-icons/tb"
 
 interface LanguageSelectorProps {}
 export default function LanguageSelector({}: LanguageSelectorProps) {
@@ -25,9 +27,28 @@ export default function LanguageSelector({}: LanguageSelectorProps) {
 
   return (
     <>
-      <Button variant="outline" onClick={onOpen}>
-        Switch Language
-      </Button>
+      <Hide below="md">
+        <Button variant="outline" onClick={onOpen}>
+          Switch Language
+        </Button>
+      </Hide>
+      <Hide above="md">
+        <Button
+          display="flex"
+          justifyContent={"flex-start"}
+          variant="unstyled"
+          px={3}
+          _hover={{backgroundColor: "gray.100"}}
+          w="full"
+          textAlign="left"
+          borderRadius="0"
+          fontWeight="normal"
+          leftIcon={<TbLanguage size="1rem" />}
+          onClick={onOpen}
+        >
+          Switch Language
+        </Button>
+      </Hide>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>

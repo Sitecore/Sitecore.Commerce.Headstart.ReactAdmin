@@ -6,19 +6,21 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Hide,
   HStack,
   Icon,
   MenuItem,
+  Show,
   Spinner,
   Text
 } from "@chakra-ui/react"
-import { useEffect, useRef, useState } from "react"
-import { TbTableExport } from "react-icons/tb"
+import {useEffect, useRef, useState} from "react"
+import {TbShoppingCartPlus, TbTableExport} from "react-icons/tb"
 
 interface ExportToCsvProps {
   variant?: "button" | "menuitem"
 }
-export default function ExportToCsv({ variant = "button" }: ExportToCsvProps) {
+export default function ExportToCsv({variant = "button"}: ExportToCsvProps) {
   const [loading, setLoading] = useState(false)
   const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
   const cancelRef = useRef()
@@ -33,13 +35,28 @@ export default function ExportToCsv({ variant = "button" }: ExportToCsvProps) {
 
   return (
     <>
-      {variant === "button" ? (
+      <Hide below="md">
         <Button variant="outline" onClick={() => setExportCSVDialogOpen(true)}>
           Export to CSV
         </Button>
-      ) : (
-        <MenuItem onClick={() => setExportCSVDialogOpen(true)}>Export to CSV <Icon ml="auto" as={TbTableExport} fontSize="1.15em" stroke-width="1.7" /></MenuItem>
-      )}
+      </Hide>
+      <Hide above="md">
+        <Button
+          display="flex"
+          justifyContent={"flex-start"}
+          variant="unstyled"
+          px={3}
+          _hover={{backgroundColor: "gray.100"}}
+          w="full"
+          textAlign="left"
+          borderRadius="0"
+          fontWeight="normal"
+          leftIcon={<TbTableExport size="1rem" />}
+          onClick={() => setExportCSVDialogOpen(true)}
+        >
+          Export to CSV
+        </Button>
+      </Hide>
       <AlertDialog
         isOpen={isExportCSVDialogOpen}
         onClose={() => setExportCSVDialogOpen(false)}

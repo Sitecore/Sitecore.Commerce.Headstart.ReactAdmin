@@ -129,7 +129,7 @@ export default function ProductDetail({
   }
 
   const SimpleCard = (props: {title?: string; children: React.ReactElement}) => (
-    <Card mb={5}>
+    <Card>
       <CardHeader>{props.title && <Heading size="md">{props.title}</Heading>}</CardHeader>
       <CardBody>{props.children}</CardBody>
     </Card>
@@ -146,8 +146,8 @@ export default function ProductDetail({
           setViewVisibility={setViewVisibility}
         />
         {showTabbedView ? (
-          <Tabs variant="soft-rounded" colorScheme="teal" index={tabIndex} onChange={handleTabsChange}>
-            <TabList>
+          <Tabs colorScheme="brand" index={tabIndex} onChange={handleTabsChange}>
+            <TabList flexWrap="wrap">
               {viewVisibility.Details && <ProductDetailTab tab="Details" control={control} />}
               {viewVisibility.Pricing && <ProductDetailTab tab="Pricing" control={control} />}
               {viewVisibility.Variants && <ProductDetailTab tab="Variants" control={control} />}
@@ -159,9 +159,9 @@ export default function ProductDetail({
 
             <TabPanels>
               {viewVisibility.Details && (
-                <TabPanel>
-                  <Flex flexWrap={{base: "wrap", xl: "nowrap"}} gap={7}>
-                    <Flex flexFlow="column" flexGrow="1" maxWidth="1000px">
+                <TabPanel p={0} mt={6} id="tab-panel">
+                  <Flex gap={6} flexFlow={{base: "column", xl: "row nowrap"}}>
+                    <Flex flexFlow="column" flexGrow="1" gap={6} flexWrap="wrap">
                       <SimpleCard title="Details">
                         <DetailsForm control={control} />
                       </SimpleCard>

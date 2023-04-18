@@ -10,7 +10,10 @@ import {
   Box,
   Flex,
   Divider,
-  Container
+  Container,
+  Center,
+  VStack,
+  Icon
 } from "@chakra-ui/react"
 import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
 import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
@@ -32,6 +35,7 @@ import {useForm} from "react-hook-form"
 import {PricingForm} from "./forms/PricingForm/PricingForm"
 import {ProductDetailTab} from "./ProductDetailTab"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
+import {TbBarrierBlock} from "react-icons/tb"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization" | "SEO"
 
@@ -159,7 +163,7 @@ export default function ProductDetail({
 
             <TabPanels>
               {viewVisibility.Details && (
-                <TabPanel p={0} mt={6} id="tab-panel">
+                <TabPanel p={0} mt={6}>
                   <Flex gap={6} flexFlow={{base: "column", xl: "row nowrap"}}>
                     <Flex flexFlow="column" flexGrow="1" gap={6} flexWrap="wrap">
                       <SimpleCard title="Details">
@@ -187,7 +191,7 @@ export default function ProductDetail({
                 </TabPanel>
               )}
               {viewVisibility.Pricing && (
-                <TabPanel>
+                <TabPanel p={0} mt={6}>
                   <Flex flexFlow="column">
                     <SimpleCard title="Pricing">
                       <PricingForm
@@ -199,11 +203,56 @@ export default function ProductDetail({
                   </Flex>
                 </TabPanel>
               )}
-              {viewVisibility.Variants && <TabPanel>Variants under construction</TabPanel>}
-              {viewVisibility.Media && <TabPanel>Media under construction</TabPanel>}
-              {viewVisibility.Facets && <TabPanel>Facets under construction</TabPanel>}
-              {viewVisibility.Customization && <TabPanel>Customization under construction</TabPanel>}
-              {viewVisibility.SEO && <TabPanel>SEO under construction</TabPanel>}
+              {viewVisibility.Variants && (
+                <TabPanel p={0} mt={6}>
+                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
+                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
+                    <Heading as="h1" fontSize="2xl" textAlign="center">
+                      Variants under construction
+                    </Heading>
+                  </VStack>
+                </TabPanel>
+              )}
+              {viewVisibility.Media && (
+                <TabPanel p={0} mt={6}>
+                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
+                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
+                    <Heading as="h1" fontSize="2xl" textAlign="center">
+                      Media under construction
+                    </Heading>
+                  </VStack>
+                </TabPanel>
+              )}
+              {viewVisibility.Facets && (
+                <TabPanel p={0} mt={6}>
+                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
+                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
+                    <Heading as="h1" fontSize="2xl" textAlign="center">
+                      Facets under construction
+                    </Heading>
+                  </VStack>
+                </TabPanel>
+              )}
+              {viewVisibility.Customization && (
+                <TabPanel p={0} mt={6}>
+                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
+                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
+                    <Heading as="h1" fontSize="2xl" textAlign="center">
+                      Customization under construction
+                    </Heading>
+                  </VStack>
+                </TabPanel>
+              )}
+              {viewVisibility.SEO && (
+                <TabPanel p={0} mt={6}>
+                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
+                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
+                    <Heading as="h1" fontSize="2xl" textAlign="center">
+                      SEO under construction
+                    </Heading>
+                  </VStack>
+                </TabPanel>
+              )}
             </TabPanels>
           </Tabs>
         ) : (

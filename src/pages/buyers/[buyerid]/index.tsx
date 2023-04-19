@@ -1,7 +1,7 @@
 import {Buyer, Buyers} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 
-import {Box} from "@chakra-ui/react"
+import {Box, Container, Skeleton} from "@chakra-ui/react"
 import {CreateUpdateForm} from "components/buyers"
 import {IBuyer} from "types/ordercloud/IBuyer"
 import ProtectedContent from "components/auth/ProtectedContent"
@@ -33,15 +33,23 @@ const BuyerListItem = () => {
       Buyers?.Get<IBuyer>(router?.query?.buyerid as string).then((buyer) => setBuyer(buyer))
     }
   }, [router.query.buyerid])
-  return <>{buyer?.ID ? <CreateUpdateForm buyer={buyer} /> : <div> Loading</div>}</>
+  return (
+    <>
+      {buyer?.ID ? (
+        <CreateUpdateForm buyer={buyer} />
+      ) : (
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+          <Skeleton w="100%" h="544px" borderRadius="md" />
+        </Container>
+      )}
+    </>
+  )
 }
 
 const ProtectedBuyerListItem = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <Box padding="GlobalPadding">
-        <BuyerListItem />
-      </Box>
+      <BuyerListItem />
     </ProtectedContent>
   )
 }

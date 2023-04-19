@@ -1,7 +1,7 @@
 import {User, Users} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 
-import {Box} from "@chakra-ui/react"
+import {Box, Container, Skeleton} from "@chakra-ui/react"
 import {CreateUpdateForm} from "../../../../components/users/CreateUpdateForm"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 import ProtectedContent from "components/auth/ProtectedContent"
@@ -36,7 +36,17 @@ const UserListItem = () => {
       getUser()
     }
   }, [router.query.buyerid, router.query.userid])
-  return <>{user?.ID ? <CreateUpdateForm user={user} ocService={Users} /> : <div> Loading</div>}</>
+  return (
+    <>
+      {user?.ID ? (
+        <CreateUpdateForm user={user} ocService={Users} />
+      ) : (
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+          <Skeleton w="100%" h="544px" borderRadius="md" />
+        </Container>
+      )}
+    </>
+  )
 }
 
 const ProtectedBuyerListItem = () => {

@@ -100,7 +100,7 @@ const BuyerList: FC = () => {
     header: "STATUS",
     accessor: "Active",
     cell: ({row}) => (
-      <Tag colorScheme={row.original.Active === true ? "green" : "red"}>
+      <Tag colorScheme={row.original.Active === true ? "success" : "danger"}>
         {row.original.Active ? "Active" : "Inactive"}
       </Tag>
     )

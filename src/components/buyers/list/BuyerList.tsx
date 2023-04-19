@@ -1,12 +1,10 @@
-import {Badge, Box, Button, ButtonGroup, Container, Icon, Tag, Text, useDisclosure} from "@chakra-ui/react"
+import {Box, Button, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
 import Link from "next/link"
 import {Buyers, Catalogs, RequiredDeep, UserGroups, Users} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
 import {IBuyer} from "types/ordercloud/IBuyer"
-import {MdCheck} from "react-icons/md"
-import {IoMdClose} from "react-icons/io"
 import {dateHelper} from "utils"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
@@ -102,14 +100,9 @@ const BuyerList: FC = () => {
     header: "STATUS",
     accessor: "Active",
     cell: ({row}) => (
-      <>
-        <Tag colorScheme={row.original.Active === true ? "green" : "red"}>
-          {row.original.Active ? "Active" : "Inactive"}
-        </Tag>
-        {/* <Badge variant="subtle" colorScheme={row.original.Active === true ? "green" : "red"}>
-          {row.original.Active ? "Active" : "Inactive"}
-        </Badge> */}
-      </>
+      <Tag colorScheme={row.original.Active === true ? "green" : "red"}>
+        {row.original.Active ? "Active" : "Inactive"}
+      </Tag>
     )
   }
 

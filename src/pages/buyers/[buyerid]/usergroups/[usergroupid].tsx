@@ -1,7 +1,7 @@
 import {UserGroup, UserGroups} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 
-import {Box} from "@chakra-ui/react"
+import {Box, Container, Skeleton} from "@chakra-ui/react"
 import {CreateUpdateForm} from "../../../../components/usergroups/CreateUpdateForm"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 import ProtectedContent from "components/auth/ProtectedContent"
@@ -39,7 +39,17 @@ const UserGroupListItem = () => {
       getUserGroup()
     }
   }, [router.query.buyerid, router.query.usergroupid])
-  return <>{userGroup?.ID ? <CreateUpdateForm userGroup={userGroup} ocService={UserGroups} /> : <div> Loading</div>}</>
+  return (
+    <>
+      {userGroup?.ID ? (
+        <CreateUpdateForm userGroup={userGroup} ocService={UserGroups} />
+      ) : (
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+          <Skeleton w="100%" h="544px" borderRadius="md" />
+        </Container>
+      )}
+    </>
+  )
 }
 const ProtectedUserGroupListItem = () => {
   return (

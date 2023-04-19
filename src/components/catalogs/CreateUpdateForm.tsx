@@ -1,16 +1,16 @@
-import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
-import {InputControl, SwitchControl, TextareaControl} from "components/react-hook-form"
-import Card from "../card/Card"
-import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
-import {useRouter} from "hooks/useRouter"
-import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
-import {ICatalog} from "types/ordercloud/ICatalog"
-import CatalogXpCard from "./CatalogXpCard"
-import {useForm} from "react-hook-form"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
 import {yupResolver} from "@hookform/resolvers/yup"
-import SubmitButton from "../react-hook-form/submit-button"
+import {InputControl, SwitchControl, TextareaControl} from "components/react-hook-form"
+import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {useRouter} from "hooks/useRouter"
+import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
+import {useForm} from "react-hook-form"
+import {TbChevronLeft} from "react-icons/tb"
+import {ICatalog} from "types/ordercloud/ICatalog"
+import * as Yup from "yup"
 import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
+import CatalogXpCard from "./CatalogXpCard"
 
 export {CreateUpdateForm}
 
@@ -53,36 +53,43 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
 
   return (
     <>
-      <Card variant="primaryCard">
-        <Flex flexDirection="column" p="10">
-          <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-            <Stack spacing={5}>
-              <InputControl name="Name" label="Catalog Name" isRequired control={control} />
-              <TextareaControl name="Description" label="Description" control={control} />
-              <SwitchControl name="Active" label="Active" control={control} />
-              <ButtonGroup>
-                <SubmitButton control={control} variant="solid" colorScheme="primary">
-                  Save
-                </SubmitButton>
-                <ResetButton control={control} reset={reset} variant="outline">
-                  Discard Changes
-                </ResetButton>
-                <Button
-                  onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
-                  variant="outline"
-                  isLoading={isSubmitting}
-                >
-                  Cancel
-                </Button>
-              </ButtonGroup>
-            </Stack>
-          </Box>
-        </Flex>
-      </Card>
-
-      <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">
-        <CatalogXpCard catalog={catalog} />
-      </Card>
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+        <Card>
+          <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+            <Button
+              onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
+              variant="outline"
+              isLoading={isSubmitting}
+              leftIcon={<TbChevronLeft />}
+            >
+              Back
+            </Button>
+            <ButtonGroup>
+              <ResetButton control={control} reset={reset} variant="outline">
+                Discard Changes
+              </ResetButton>
+              <SubmitButton control={control} variant="solid" colorScheme="primary">
+                Save
+              </SubmitButton>
+            </ButtonGroup>
+          </CardHeader>
+          <CardBody
+            display="flex"
+            flexDirection={"column"}
+            as="form"
+            onSubmit={handleSubmit(onSubmit)}
+            gap={4}
+            maxW={{xl: "container.md"}}
+          >
+            <InputControl name="Name" label="Catalog Name" isRequired control={control} />
+            <TextareaControl name="Description" label="Description" control={control} />
+            <SwitchControl name="Active" label="Active" control={control} />
+          </CardBody>
+        </Card>
+        <Card mt={6}>
+          <CatalogXpCard catalog={catalog} />
+        </Card>
+      </Container>
     </>
   )
 }

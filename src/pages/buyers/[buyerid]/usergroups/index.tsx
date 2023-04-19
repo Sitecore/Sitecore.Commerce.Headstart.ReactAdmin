@@ -1,10 +1,8 @@
-import {Box, Button, ButtonGroup, HStack} from "@chakra-ui/react"
+import {Box, Button, ButtonGroup, Card, CardBody, CardHeader, Container, HStack} from "@chakra-ui/react"
 import {ListPage, UserGroup, UserGroups} from "ordercloud-javascript-sdk"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useState} from "react"
 import {useErrorToast, useSuccessToast} from "hooks/useToast"
-
-import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
@@ -94,25 +92,23 @@ const UserGroupsList = () => {
   )
 
   return (
-    <>
-      <Box padding="GlobalPadding">
-        <HStack justifyContent="space-between" w="100%" mb={5}>
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+      <Card>
+        <CardHeader display="flex" justifyContent="space-between">
+          <ExportToCsv />
           <Button
             onClick={() => router.push(`/buyers/${router.query.buyerid}/usergroups/add`)}
             variant="solid"
             colorScheme="primary"
           >
-            Create user group
+            Create User Group
           </Button>
-          <HStack>
-            <ExportToCsv />
-          </HStack>
-        </HStack>
-        <Card variant="primaryCard">
+        </CardHeader>
+        <CardBody>
           <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData} />
-        </Card>
-      </Box>
-    </>
+        </CardBody>
+      </Card>
+    </Container>
   )
 }
 

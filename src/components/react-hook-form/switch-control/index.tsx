@@ -21,40 +21,26 @@ export const SwitchControl: FC<SwitchControlProps> = (props: SwitchControlProps)
   const isRequired = isRequiredField(props.validationSchema, field.name)
 
   return (
-    <Box
-      css={css`
-        .chakra-form__label {
-          margin-bottom: 0;
-        }
-        .chakra-switch {
-          display: flex;
-          align-items: center;
-          margin-right: 0.75rem;
-        }
-        .chakra-form__error-message {
-          margin-top: 0;
-        }
-      `}
+    <FormControl
+      name={name}
+      control={control}
+      label={label}
+      isRequired={isRequired}
+      {...rest}
+      display="inline-flex"
+      alignItems="center"
+      gap={2}
     >
-      <FormControl
-        name={name}
-        control={control}
-        label={label}
-        as={Flex}
-        alignItems="center"
-        isRequired={isRequired}
-        {...rest}
-      >
-        <Switch
-          {...field}
-          id={name}
-          isInvalid={!!error && isTouched}
-          isChecked={field.value}
-          isDisabled={isSubmitting}
-          {...switchProps}
-        />
-      </FormControl>
-    </Box>
+      <Switch
+        colorScheme={"primary"}
+        {...field}
+        id={name}
+        isInvalid={!!error && isTouched}
+        isChecked={field.value}
+        isDisabled={isSubmitting}
+        {...switchProps}
+      />
+    </FormControl>
   )
 }
 

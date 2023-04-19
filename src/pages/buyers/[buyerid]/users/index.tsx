@@ -1,9 +1,7 @@
-import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
+import {Box, Button, ButtonGroup, Card, CardBody, CardHeader, Container, HStack, Icon, Text} from "@chakra-ui/react"
 import {ListPage, User, Users} from "ordercloud-javascript-sdk"
 import {OrderCloudTableColumn, OrderCloudTableFilters} from "components/ordercloud-table"
 import {useCallback, useEffect, useMemo, useState} from "react"
-
-import Card from "components/card/Card"
 import {DataTable} from "components/data-table/DataTable"
 import ExportToCsv from "components/demo/ExportToCsv"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
@@ -127,23 +125,23 @@ const UsersList = () => {
   )
 
   return (
-    <Box padding="GlobalPadding">
-      <HStack justifyContent="space-between" w="100%" mb={5}>
-        <Button
-          onClick={() => router.push(`/buyers/${router.query.buyerid}/users/add`)}
-          variant="solid"
-          colorScheme="primary"
-        >
-          Create user
-        </Button>
-        <HStack>
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+      <Card>
+        <CardHeader display="flex" justifyContent="space-between">
           <ExportToCsv />
-        </HStack>
-      </HStack>
-      <Card variant="primaryCard">
-        <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData} />
+          <Button
+            onClick={() => router.push(`/buyers/${router.query.buyerid}/users/add`)}
+            variant="solid"
+            colorScheme="primary"
+          >
+            Create User
+          </Button>
+        </CardHeader>
+        <CardBody>
+          <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData} />
+        </CardBody>
       </Card>
-    </Box>
+    </Container>
   )
 }
 

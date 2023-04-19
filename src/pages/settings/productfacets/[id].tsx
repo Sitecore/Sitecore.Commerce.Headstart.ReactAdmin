@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {Box} from "@chakra-ui/react"
+import {Box, Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
@@ -32,15 +32,23 @@ const ProductFacetsListItem = () => {
     }
   }, [productfacet?.ID, router.query.id])
 
-  return <>{productfacet?.ID ? <CreateUpdateForm productfacet={productfacet} /> : <div> Loading</div>}</>
+  return (
+    <>
+      {productfacet?.ID ? (
+        <CreateUpdateForm productfacet={productfacet} />
+      ) : (
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+          <Skeleton w="100%" h="544px" borderRadius="md" />
+        </Container>
+      )}
+    </>
+  )
 }
 
 const ProtectedProductFacetsListItem = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.ProductManager}>
-      <Box padding="GlobalPadding">
-        <ProductFacetsListItem />
-      </Box>
+      <ProductFacetsListItem />
     </ProtectedContent>
   )
 }

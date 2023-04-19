@@ -23,7 +23,7 @@ export const RadioGroupControl: FC<RadioGroupControlProps> = (props: RadioGroupC
 
   return (
     <FormControl name={name} control={control} label={label} isRequired={isRequired} {...rest}>
-      <RadioGroup {...field} isDisabled={isSubmitting} {...radioGroupProps}>
+      <RadioGroup colorScheme="primary" {...field} isDisabled={isSubmitting} {...radioGroupProps}>
         <Stack direction="row" {...stackProps}>
           {children}
         </Stack>

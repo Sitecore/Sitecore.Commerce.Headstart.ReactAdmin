@@ -1,4 +1,5 @@
 import {InputControl} from "@/components/react-hook-form"
+import {HStack} from "@chakra-ui/react"
 import {Control, FieldValues} from "react-hook-form"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
@@ -9,7 +10,7 @@ type UnitOfMeasureFormProps = {
 
 export function UnitOfMeasureForm({control}: UnitOfMeasureFormProps) {
   return (
-    <>
+    <HStack flexWrap={{base: "wrap", md: "nowrap"}} gap={6} mt={6}>
       <InputControl
         label="Quantity per unit"
         name={fieldNames.QUANTITY_PER_UNIT}
@@ -22,6 +23,6 @@ export function UnitOfMeasureForm({control}: UnitOfMeasureFormProps) {
         control={control}
         validationSchema={validationSchema}
       />
-    </>
+    </HStack>
   )
 }

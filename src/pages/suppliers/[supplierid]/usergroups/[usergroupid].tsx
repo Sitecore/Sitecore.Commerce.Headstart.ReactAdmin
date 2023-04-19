@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "../../../../components/usergroups/CreateUpdateForm"
-import {Box} from "@chakra-ui/react"
+import {Box, Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {SupplierUserGroups, UserGroup} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
@@ -40,16 +40,20 @@ const UserGroupListItem = () => {
   }, [router.query.supplierid, router.query.usergroupid])
   return (
     <>
-      {userGroup?.ID ? <CreateUpdateForm userGroup={userGroup} ocService={SupplierUserGroups} /> : <div> Loading</div>}
+      {userGroup?.ID ? (
+        <CreateUpdateForm userGroup={userGroup} ocService={SupplierUserGroups} />
+      ) : (
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+          <Skeleton w="100%" h="544px" borderRadius="md" />
+        </Container>
+      )}
     </>
   )
 }
 const ProtectedSupplierListItem = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
-      <Box padding="GlobalPadding">
-        <UserGroupListItem />
-      </Box>
+      <UserGroupListItem />
     </ProtectedContent>
   )
 }

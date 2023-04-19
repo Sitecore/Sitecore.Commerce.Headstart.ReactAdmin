@@ -283,7 +283,7 @@ export default function XpCard<T>({
   }
 
   return (
-    <Card>
+    <Card p={6}>
       <>
         <Heading size={{base: "sm", md: "md", lg: "md"}} mb={6}>
           Extended Properties

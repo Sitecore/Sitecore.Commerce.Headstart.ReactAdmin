@@ -7,9 +7,9 @@ import {MdCheck} from "react-icons/md"
 import {IoMdClose} from "react-icons/io"
 import {dateHelper} from "utils"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
-import BuyerUsersActionMenu from "./BuyerUsersActionMenu"
-import BuyerUsersListToolbar from "./BuyerUsersListToolBar"
-import BuyerUsersDeleteModal from "../modals/BuyerUsersDeleteModal"
+import BuyerUserActionMenu from "./BuyerUserActionMenu"
+import BuyerUserListToolbar from "./BuyerUserListToolBar"
+import BuyerUsersDeleteModal from "../modals/BuyerUserDeleteModal"
 import { Users } from "ordercloud-javascript-sdk"
 
 export const BuyerUserColorSchemeMap = {
@@ -72,14 +72,14 @@ const BuyerUserActiveColumn: DataTableColumn<IBuyerUser> = {
     )
   }
 
-const BuyerUsersList: FC<IBuyerUserList> = ({buyerid}) => {
+const BuyerUserList: FC<IBuyerUserList> = ({buyerid}) => {
   const [actionBuyerUsers, setActionBuyerUsers] = useState<IBuyerUser>()
   const deleteDisclosure = useDisclosure()
 
   const renderBuyerUsersActionMenu = useCallback(
     (buyeruser: IBuyerUser) => {
       return (
-        <BuyerUsersActionMenu
+        <BuyerUserActionMenu
           buyerid={buyerid}
           buyeruser={buyeruser}
           onOpen={() => setActionBuyerUsers(buyeruser)}
@@ -127,7 +127,7 @@ const BuyerUsersList: FC<IBuyerUserList> = ({buyerid}) => {
       {({renderContent, items, ...listViewChildProps}) => (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Box>
-            <BuyerUsersListToolbar buyerid={buyerid} {...listViewChildProps} />
+            <BuyerUserListToolbar buyerid={buyerid} {...listViewChildProps} />
           </Box>
           {renderContent}
           <BuyerUsersDeleteModal
@@ -148,4 +148,4 @@ const BuyerUsersList: FC<IBuyerUserList> = ({buyerid}) => {
   )
 }
 
-export default BuyerUsersList
+export default BuyerUserList

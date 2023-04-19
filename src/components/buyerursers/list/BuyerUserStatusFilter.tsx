@@ -7,7 +7,7 @@ interface IBuyerUsersStatusFilter {
   onChange: (newValue: any) => void
 }
 
-const BuyerUsersStatusFilter: FC<IBuyerUsersStatusFilter> = ({value, onChange}) => {
+const BuyerUserStatusFilter: FC<IBuyerUsersStatusFilter> = ({value, onChange}) => {
   return (
     <Menu>
       <MenuButton as={Button} py={0} variant="outline">
@@ -30,4 +30,4 @@ const BuyerUsersStatusFilter: FC<IBuyerUsersStatusFilter> = ({value, onChange}) 
   )
 }
 
-export default BuyerUsersStatusFilter
+export default BuyerUserStatusFilter

@@ -4,18 +4,18 @@ import ListViewMetaInfo from "@/components/shared/ListViewMetaInfo/ListViewMetaI
 import {Box, Button, Stack} from "@chakra-ui/react"
 import Link from "next/link"
 import {FC} from "react"
-import BuyerUsersListActions from "./BuyerUsersListActions"
-import BuyerUsersStatusFilter from "./BuyerUsersStatusFilter"
+import SupplierUserListActions from "./SupplierUserListActions"
+import SupplierUserStatusFilter from "./SupplierUserStatusFilter"
 
-interface BuyerUsersListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {
-  buyerid: string
+interface SupplierUserListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {
+  supplierid: string
 }
 
-const BuyerUsersListToolbar: FC<BuyerUsersListToolbarProps> = ({
+const SupplierUserListToolbar: FC<SupplierUserListToolbarProps> = ({
   meta,
   viewModeToggle,
   updateQuery,
-  buyerid,
+  supplierid,
   filterParams,
   queryParams
 }) => {
@@ -24,14 +24,14 @@ const BuyerUsersListToolbar: FC<BuyerUsersListToolbarProps> = ({
       <Stack direction="row" mb={5}>
         <Stack direction={["column", "column", "column", "row"]}>
           <DebouncedSearchInput
-            label="Search usergroup"
+            label="Search user"
             value={queryParams["Search"]}
             onSearch={updateQuery("s", true)}
           />
         </Stack>
         <Stack direction="row">
-          <BuyerUsersListActions />
-          <BuyerUsersStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
+          <SupplierUserListActions />
+          <SupplierUserStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
         </Stack>
         <Box as="span" flexGrow="1"></Box>
         <Stack direction={["column", "column", "column", "row"]}>
@@ -41,7 +41,7 @@ const BuyerUsersListToolbar: FC<BuyerUsersListToolbarProps> = ({
             {viewModeToggle}
           </Stack>
           <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/buyers/${buyerid}/users/add`}>
+            <Link passHref href={`/suppliers/${supplierid}/users/add`}>
               <Button variant="solid" colorScheme="primary" as="a" mb={3}>
                 Create User
               </Button>
@@ -53,4 +53,4 @@ const BuyerUsersListToolbar: FC<BuyerUsersListToolbarProps> = ({
   )
 }
 
-export default BuyerUsersListToolbar
+export default SupplierUserListToolbar

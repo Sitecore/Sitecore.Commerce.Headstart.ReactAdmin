@@ -3,7 +3,7 @@ import {ChevronDownIcon} from "@chakra-ui/icons"
 import {Button, HStack, Menu, MenuButton, MenuList, Text} from "@chakra-ui/react"
 import {FC} from "react"
 
-const BuyerUsersListActions: FC = () => {
+const BuyerUserListActions: FC = () => {
   return (
     <Menu>
       <MenuButton as={Button} variant="outline">
@@ -19,4 +19,4 @@ const BuyerUsersListActions: FC = () => {
   )
 }
 
-export default BuyerUsersListActions
+export default BuyerUserListActions

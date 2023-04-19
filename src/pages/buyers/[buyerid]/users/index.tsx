@@ -1,6 +1,6 @@
 import React from "react"
 import {useRouter} from "hooks/useRouter"
-import BuyerUsersList from "@/components/buyerursers/list/BuyerUsersList"
+import BuyerUserList from "@/components/buyerursers/list/BuyerUserList"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -22,7 +22,7 @@ const UsersList = () => {
   const router = useRouter()
   const buyerid = router.query.buyerid as string
 
-  return <BuyerUsersList buyerid={buyerid} />
+  return <BuyerUserList buyerid={buyerid} />
 }
 
 export default UsersList

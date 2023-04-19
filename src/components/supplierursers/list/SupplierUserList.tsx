@@ -7,9 +7,9 @@ import {MdCheck} from "react-icons/md"
 import {IoMdClose} from "react-icons/io"
 import {dateHelper} from "utils"
 import {ISupplierUser} from "types/ordercloud/ISupplierUser"
-import SupplierUsersActionMenu from "./SupplierUsersActionMenu"
-import SupplierUsersListToolbar from "./SupplierUsersListToolBar"
-import SupplierUsersDeleteModal from "../modals/SupplierUsersDeleteModal"
+import SupplierUserActionMenu from "./SupplierUserActionMenu"
+import SupplierUserListToolbar from "./SupplierUserListToolBar"
+import SupplierUsersDeleteModal from "../modals/SupplierUserDeleteModal"
 import { SupplierUsers } from "ordercloud-javascript-sdk"
 
 export const SupplierUserColorSchemeMap = {
@@ -72,14 +72,14 @@ const SupplierUserActiveColumn: DataTableColumn<ISupplierUser> = {
     )
   }
 
-const SupplierUsersList: FC<ISupplierUserList> = ({supplierid}) => {
+const SupplierUserList: FC<ISupplierUserList> = ({supplierid}) => {
   const [actionSupplierUsers, setActionSupplierUsers] = useState<ISupplierUser>()
   const deleteDisclosure = useDisclosure()
 
   const renderSupplierUsersActionMenu = useCallback(
     (supplieruser: ISupplierUser) => {
       return (
-        <SupplierUsersActionMenu
+        <SupplierUserActionMenu
           supplierid={supplierid}
           supplieruser={supplieruser}
           onOpen={() => setActionSupplierUsers(supplieruser)}
@@ -127,7 +127,7 @@ const SupplierUsersList: FC<ISupplierUserList> = ({supplierid}) => {
       {({renderContent, items, ...listViewChildProps}) => (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Box>
-            <SupplierUsersListToolbar supplierid={supplierid} {...listViewChildProps} />
+            <SupplierUserListToolbar supplierid={supplierid} {...listViewChildProps} />
           </Box>
           {renderContent}
           <SupplierUsersDeleteModal
@@ -148,4 +148,4 @@ const SupplierUsersList: FC<ISupplierUserList> = ({supplierid}) => {
   )
 }
 
-export default SupplierUsersList
+export default SupplierUserList

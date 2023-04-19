@@ -5,7 +5,7 @@ import {FC} from "react"
 import {TbDotsVertical} from "react-icons/tb"
 import {ISupplierUser} from "types/ordercloud/ISupplierUser"
 
-interface ISupplierUsersActionMenu {
+interface ISupplierUserActionMenu {
   supplierid: string
   supplieruser: ISupplierUser
   onOpen?: () => void
@@ -13,7 +13,7 @@ interface ISupplierUsersActionMenu {
   onDelete: () => void
 }
 
-const SupplierUsersActionMenu: FC<ISupplierUsersActionMenu> = ({supplierid, supplieruser: supplieruser, onOpen, onClose, onDelete}) => {
+const SupplierUserActionMenu: FC<ISupplierUserActionMenu> = ({supplierid, supplieruser: supplieruser, onOpen, onClose, onDelete}) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
       <MenuButton
@@ -39,4 +39,4 @@ const SupplierUsersActionMenu: FC<ISupplierUsersActionMenu> = ({supplierid, supp
   )
 }
 
-export default SupplierUsersActionMenu
+export default SupplierUserActionMenu

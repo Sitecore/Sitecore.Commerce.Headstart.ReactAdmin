@@ -131,7 +131,7 @@ const BuyerCatalogsList: FC<IBuyerCatalogList> = ({buyerid}) => {
       itemActions={renderBuyerCatalogsActionMenu}
     >
       {({renderContent, items, ...listViewChildProps}) => (
-        <Container maxW="100%">
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Box>
             <BuyerCatalogsListToolbar buyerid={buyerid} {...listViewChildProps} />
           </Box>

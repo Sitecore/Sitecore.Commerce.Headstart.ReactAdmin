@@ -235,7 +235,7 @@ export default function ProductDetail({
                         minH={"xs"}
                       >
                         <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
-                        <Heading color="secondary.500" fontSize="xl">
+                        <Heading colorScheme="secondary" fontSize="xl">
                           This product has no attributes
                         </Heading>
                       </Box>
@@ -257,9 +257,6 @@ export default function ProductDetail({
                 <TabPanel p={0} mt={6}>
                   <Card w="100%">
                     <CardHeader display="flex" alignItems={"center"}>
-                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-                        Media
-                      </Heading>
                       <Button variant="outline" colorScheme="brand" ml="auto">
                         Add From URL
                       </Button>
@@ -276,13 +273,14 @@ export default function ProductDetail({
                         justifyContent={"center"}
                         minH={"xs"}
                         bgColor={"blackAlpha.50"}
-                        m={6}
+                        my={6}
+                        mx="auto"
                         w="full"
                         maxW="container.xl"
                         gap={4}
                       >
                         <Icon as={TbFileUpload} fontSize={"5xl"} strokeWidth={"2px"} color="gray.300" />
-                        <Heading color="secondary.500" fontSize="xl">
+                        <Heading colorScheme="secondary" fontSize="xl">
                           Browser or drop files here
                         </Heading>
                         <Text color="gray.400" fontSize="sm">
@@ -297,9 +295,6 @@ export default function ProductDetail({
                 <TabPanel p={0} mt={6}>
                   <Card w="100%">
                     <CardHeader display="flex" alignItems={"center"}>
-                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-                        Facets
-                      </Heading>
                       <Button variant="outline" colorScheme="brand" ml="auto">
                         Add Facet
                       </Button>
@@ -314,7 +309,7 @@ export default function ProductDetail({
                         minH={"xs"}
                       >
                         <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
-                        <Heading color="secondary.500" fontSize="xl">
+                        <Heading colorScheme="secondary" fontSize="xl">
                           This product has no facets
                         </Heading>
                       </Box>
@@ -326,12 +321,9 @@ export default function ProductDetail({
                 <TabPanel p={0} mt={6}>
                   <Card w="100%">
                     <CardHeader display="flex" alignItems={"center"}>
-                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-                        Customizations
-                        <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                          Add options like shirt text and sign verbiage to enable further product customization.
-                        </Text>
-                      </Heading>
+                      <Text fontSize="sm" color="gray.400" fontWeight="normal">
+                        Add options like shirt text and sign verbiage to enable further product customization.
+                      </Text>
                       <Button variant="outline" colorScheme="brand" ml="auto">
                         Create option
                       </Button>
@@ -346,7 +338,7 @@ export default function ProductDetail({
                         minH={"xs"}
                       >
                         <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
-                        <Heading color="secondary.500" fontSize="xl">
+                        <Heading colorScheme="secondary" fontSize="xl">
                           Nothing created yet...
                         </Heading>
                       </Box>
@@ -357,11 +349,7 @@ export default function ProductDetail({
               {viewVisibility.SEO && (
                 <TabPanel p={0} mt={6}>
                   <Card w="100%">
-                    <CardHeader display="flex" alignItems={"center"}>
-                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-                        SEO
-                      </Heading>
-                    </CardHeader>
+                    <CardHeader display="flex" alignItems={"center"}></CardHeader>
                     <CardBody maxW="container.xl">
                       <SimpleGrid minChildWidth={"350px"} gap={6}>
                         <FormControl>

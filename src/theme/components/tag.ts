@@ -4,7 +4,9 @@ import {createMultiStyleConfigHelpers, defineStyle} from "@chakra-ui/styled-syst
 const {defineMultiStyleConfig, definePartsStyle} = createMultiStyleConfigHelpers(parts.keys)
 
 const baseStyleContainer = defineStyle({
-  borderRadius: "sm"
+  borderRadius: "sm",
+  fontFamily: "monospace",
+  textTransform: "upperCase"
 })
 
 const baseStyle = definePartsStyle({

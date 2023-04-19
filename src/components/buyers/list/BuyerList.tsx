@@ -1,4 +1,4 @@
-import {Box, Button, ButtonGroup, Container, Icon, Text, useDisclosure} from "@chakra-ui/react"
+import {Badge, Box, Button, ButtonGroup, Container, Icon, Tag, Text, useDisclosure} from "@chakra-ui/react"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
 import Link from "next/link"
@@ -103,13 +103,12 @@ const BuyerList: FC = () => {
     accessor: "Active",
     cell: ({row}) => (
       <>
-        <Icon
-          as={row.original.Active === true ? MdCheck : IoMdClose}
-          color={row.original.Active === true ? "green.400" : "red.400"}
-          w="20px"
-          h="20px"
-        />
-        <Text>{row.original.Active ? "Active" : "Non active"}</Text>
+        <Tag colorScheme={row.original.Active === true ? "green" : "red"}>
+          {row.original.Active ? "Active" : "Inactive"}
+        </Tag>
+        {/* <Badge variant="subtle" colorScheme={row.original.Active === true ? "green" : "red"}>
+          {row.original.Active ? "Active" : "Inactive"}
+        </Badge> */}
       </>
     )
   }

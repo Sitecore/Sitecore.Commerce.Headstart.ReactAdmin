@@ -307,13 +307,9 @@ export default function XpCard<T>({
         {isEditingBasicData /*&&
                   formValues?.images[formValues?.images?.length - 1]?.Url != ""*/ ? (
           <Tooltip label="Add new Extended Property">
-            <Box pt={4} mb={20}>
-              <Center>
-                <Button colorScheme="secondary" onClick={onOpenAddXP} minW="80px">
-                  Add XP
-                </Button>
-              </Center>
-            </Box>
+            <Button colorScheme="brand" alignSelf={"flex-start"} variant="ghost" onClick={onOpenAddXP} minW="80px">
+              Add XP
+            </Button>
           </Tooltip>
         ) : (
           <></>
@@ -333,13 +329,17 @@ export default function XpCard<T>({
           </Tooltip>
         </HStack>
       ) : (
-        <HStack float={"right"} position="relative" bottom="20px" mt={3}>
-          <Tooltip label="Edit">
-            <Button aria-label="Edit" mt={4} colorScheme="secondary" onClick={onEditClicked} minW="80px">
-              Edit
-            </Button>
-          </Tooltip>
-        </HStack>
+        <Button
+          aria-label="Edit"
+          mt={4}
+          alignSelf="flex-end"
+          colorScheme="brand"
+          variant="ghost"
+          onClick={onEditClicked}
+          minW="80px"
+        >
+          Edit
+        </Button>
       )}
 
       <Modal isOpen={isOpenAddXP} onClose={onNewProductXPClosed} size={"xl"}>

@@ -1,8 +1,24 @@
 import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Flex, FormLabel, HStack, Icon, Stack, Text} from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Flex,
+  FormLabel,
+  HStack,
+  Icon,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Stack,
+  Text
+} from "@chakra-ui/react"
 import {InputControl} from "components/react-hook-form"
 import {ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
-import Card from "../card/Card"
 import {useRouter} from "hooks/useRouter"
 import {useEffect, useState, KeyboardEvent} from "react"
 import {HiOutlineX} from "react-icons/hi"
@@ -13,6 +29,7 @@ import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
+import {TbChevronLeft, TbX} from "react-icons/tb"
 
 export {CreateUpdateForm}
 
@@ -111,103 +128,87 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
   }
 
   return (
-    <Card variant="primaryCard">
-      <Flex flexDirection="column" p="10">
-        <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={5}>
-            <InputControl name="Name" label="Product Facet Name" control={control} isRequired />
-            <FormLabel>
-              Facet Options :<Text fontSize="sm">Create options for this facet group?</Text>
-            </FormLabel>
-            <Box id="facetlist" mt="GlobalPadding" mb="40px">
-              <HStack className="facet-option-list">
-                {facetOptions.map((facetOption, index) => (
-                  <Box className="facet-option-container" key={index}>
-                    <div className="facet-option-name">
-                      {
-                        <>
-                          <Box
-                            border="1px"
-                            borderColor="lightGray"
-                            pt="10px"
-                            pb="10px"
-                            pr="10px"
-                            pl="30px"
-                            position="relative"
-                            borderRadius="md"
-                          >
-                            <Icon
-                              as={HiOutlineX}
-                              mr="10px"
-                              ml="10px"
-                              position="absolute"
-                              left="0px"
-                              top="14px"
-                              cursor="pointer"
-                              onClick={() => removeFacetOption(index)}
-                            />
-                            {facetOption}
-                          </Box>
-                        </>
-                      }
-                    </div>
-                  </Box>
-                ))}
-              </HStack>
-            </Box>
-            <Box position="relative" className="facet-input">
-              <div>
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(event) => setInputValue(event.target.value)}
-                  onKeyDown={handleKeyDown}
-                  className="add-facet-option-input"
-                  placeholder="Add a facet value..."
-                />
-              </div>
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+      <Card>
+        <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+          <Button
+            onClick={() => router.push("/settings/productfacets")}
+            variant="outline"
+            isLoading={isSubmitting}
+            leftIcon={<TbChevronLeft />}
+          >
+            Back
+          </Button>
+          <ButtonGroup>
+            <Button
+              onClick={() => deleteProductFacets()}
+              variant="outline"
+              colorScheme={"danger"}
+              isLoading={isSubmitting}
+              hidden={isCreating}
+            >
+              Delete
+            </Button>
+            <ResetButton control={control} reset={reset} variant="outline">
+              Discard Changes
+            </ResetButton>
+            <SubmitButton control={control} variant="solid" colorScheme="primary">
+              Save
+            </SubmitButton>
+          </ButtonGroup>
+        </CardHeader>
+        <CardBody
+          display="flex"
+          flexDirection={"column"}
+          as="form"
+          alignItems={"flex-start"}
+          justifyContent="space-between"
+          onSubmit={handleSubmit(onSubmit)}
+          gap={6}
+        >
+          <FormLabel>
+            Facet Options :
+            <Text color="gray.400" fontWeight={"light"} fontSize="sm">
+              Create options for this facet group
+            </Text>
+          </FormLabel>
+          <InputGroup maxW="sm">
+            <Input
+              type="text"
+              value={inputValue}
+              onChange={(event) => setInputValue(event.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Add a facet value..."
+            />
+            <InputRightElement right=".5rem">
               <Button
-                position="absolute"
-                right="0"
-                top="0"
+                isDisabled={!inputValue}
+                size="sm"
                 onClick={() => {
                   handleAddButtonClick()
                 }}
               >
                 Add
               </Button>
-            </Box>
-            <ButtonGroup>
-              <HStack justifyContent="space-between" w="100%" mb={5}>
-                <Box>
-                  <SubmitButton control={control} variant="solid" colorScheme="primary" mr="15px">
-                    Save
-                  </SubmitButton>
-                  <ResetButton control={control} reset={reset} variant="outline">
-                    Discard Changes
-                  </ResetButton>
-                  <Button
-                    onClick={() => router.push("/settings/productfacets")}
-                    variant="outline"
-                    isLoading={isSubmitting}
-                    mr="15px"
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-                <Button
-                  onClick={() => deleteProductFacets()}
-                  variant="outline"
-                  isLoading={isSubmitting}
-                  hidden={isCreating}
-                >
-                  Delete
-                </Button>
-              </HStack>
-            </ButtonGroup>
-          </Stack>
-        </Box>
-      </Flex>
-    </Card>
+            </InputRightElement>
+          </InputGroup>
+          <ButtonGroup display="flex" flexWrap="wrap" gap={2}>
+            {facetOptions.map((facetOption, index) => (
+              <Button
+                key={index}
+                leftIcon={<TbX />}
+                variant={"outline"}
+                fontWeight={"normal"}
+                borderRadius={"full"}
+                onClick={() => removeFacetOption(index)}
+                style={{margin: 0}}
+              >
+                {facetOption}
+              </Button>
+            ))}
+          </ButtonGroup>
+        </CardBody>
+      </Card>
+    </Container>
   )
 }

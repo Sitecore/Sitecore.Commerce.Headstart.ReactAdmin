@@ -1,7 +1,19 @@
 import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
-import {InputControl} from "components/react-hook-form"
-import Card from "../card/Card"
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Flex,
+  SimpleGrid,
+  Stack,
+  theme,
+  VStack
+} from "@chakra-ui/react"
+import {InputControl, SwitchControl} from "components/react-hook-form"
 import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
@@ -11,6 +23,8 @@ import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
 import SubmitButton from "../react-hook-form/submit-button"
 import ResetButton from "../react-hook-form/reset-button"
+import {TbChevronLeft} from "react-icons/tb"
+import AdminUserXpCard from "../adminusers/AdminUserXpCard"
 
 export {CreateUpdateForm}
 interface CreateUpdateFormProps {
@@ -64,35 +78,54 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
   }
 
   return (
-    <Card variant="primaryCard">
-      <Flex flexDirection="column" p="10">
-        <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={5}>
-            <InputControl name="AddressName" label="Address Name" control={control} />
-            <InputControl name="CompanyName" label="Company Name" control={control} />
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+      <Card>
+        <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+          <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting} leftIcon={<TbChevronLeft />}>
+            Back
+          </Button>
+          <ButtonGroup>
+            <ResetButton control={control} reset={reset} variant="outline">
+              Discard Changes
+            </ResetButton>
+            <SubmitButton control={control} variant="solid" colorScheme="primary">
+              Save
+            </SubmitButton>
+          </ButtonGroup>
+        </CardHeader>
+        <CardBody
+          display="flex"
+          flexDirection={"column"}
+          as="form"
+          alignItems={"flex-start"}
+          justifyContent="space-between"
+          onSubmit={handleSubmit(onSubmit)}
+          gap={6}
+          maxW="container.lg"
+        >
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
             <InputControl name="FirstName" label="First Name" control={control} />
             <InputControl name="LastName" label="Last Name" control={control} />
+          </SimpleGrid>
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+            <InputControl name="AddressName" label="Address Name" control={control} />
+            <InputControl name="CompanyName" label="Company Name" control={control} />
+          </SimpleGrid>
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
             <InputControl name="Street1" label="Street 1" control={control} isRequired />
             <InputControl name="Street2" label="Street 2" control={control} />
+          </SimpleGrid>
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr 1fr"}}>
             <InputControl name="City" label="City" control={control} isRequired />
             <InputControl name="State" label="State" control={control} isRequired />
             <InputControl name="Zip" label="Zip" control={control} isRequired />
+          </SimpleGrid>
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
             <InputControl name="Country" label="Country" control={control} isRequired />
             <InputControl name="Phone" label="Phone" control={control} />
-            <ButtonGroup>
-              <SubmitButton control={control} variant="solid" colorScheme="primary">
-                Save
-              </SubmitButton>
-              <ResetButton control={control} reset={reset} variant="outline">
-                Discard Changes
-              </ResetButton>
-              <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting}>
-                Cancel
-              </Button>
-            </ButtonGroup>
-          </Stack>
-        </Box>
-      </Flex>
-    </Card>
+          </SimpleGrid>
+        </CardBody>
+      </Card>
+    </Container>
   )
 }

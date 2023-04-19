@@ -23,7 +23,7 @@ import Divider from "./divider"
 // import FormError from "./form-error"
 // import FormLabel from "./form-label"
 import Heading from "./heading"
-import {Input} from "./input"
+// import {Input} from "./input"
 // import Kbd from "./kbd"
 import Link from "./link"
 // import List from "./list"
@@ -43,7 +43,7 @@ import Spinner from "./spinner"
 // import Switch from "./switch"
 // import Table from "./table"
 import Tabs from "./tabs"
-// import {Tag} from "./tag"
+import {Tag} from "./tag"
 // import Textarea from "./textarea"
 // import Tooltip from "./tooltip"
 
@@ -86,8 +86,8 @@ const components = {
   // Stat,
   // Switch,
   // Table,
-  Tabs
-  // Tag,
+  Tabs,
+  Tag,
   // Textarea
   // Tooltip,
 }

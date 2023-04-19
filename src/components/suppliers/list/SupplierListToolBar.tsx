@@ -1,3 +1,4 @@
+import ExportToCsv from "@/components/demo/ExportToCsv"
 import DebouncedSearchInput from "@/components/shared/DebouncedSearchInput/DebouncedSearchInput"
 import {ListViewChildrenProps} from "@/components/shared/ListView/ListView"
 import ListViewMetaInfo from "@/components/shared/ListViewMetaInfo/ListViewMetaInfo"
@@ -17,36 +18,21 @@ const SupplierListToolbar: FC<SupplierListToolbarProps> = ({
   queryParams
 }) => {
   return (
-    <>
-      <Stack direction="row" mb={5}>
-        <Stack direction={["column", "column", "column", "row"]}>
-          <DebouncedSearchInput
-            label="Search suppliers"
-            value={queryParams["Search"]}
-            onSearch={updateQuery("s", true)}
-          />
-        </Stack>
-        <Stack direction="row">
-          <SupplierStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
-          <SupplierListActions />
-        </Stack>
-        <Box as="span" flexGrow="1"></Box>
-        <Stack direction={["column", "column", "column", "row"]}>
-          <Stack direction="row" order={[1, 1, 1, 0]}>
-            {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
-            <Box as="span" width="2"></Box>
-            {viewModeToggle}
-          </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href="/suppliers/add">
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create Supplier
-              </Button>
-            </Link>
-          </Box>
-        </Stack>
+    <Stack direction="row" mb={5} w="full" wrap="wrap" gap={2}>
+      <DebouncedSearchInput label="Search suppliers" value={queryParams["Search"]} onSearch={updateQuery("s", true)} />
+      <SupplierStatusFilter value={filterParams["Active"]} onChange={updateQuery("active", true)} />
+      <ExportToCsv />
+      <Stack direction="row" alignItems="center" style={{marginLeft: "auto"}}>
+        {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
+        <Box as="span" width="2"></Box>
+        {viewModeToggle}
+        <Link passHref href="/suppliers/add">
+          <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+            Create Supplier
+          </Button>
+        </Link>
       </Stack>
-    </>
+    </Stack>
   )
 }
 

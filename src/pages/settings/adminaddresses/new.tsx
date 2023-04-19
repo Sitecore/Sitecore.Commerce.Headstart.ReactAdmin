@@ -21,9 +21,7 @@ export async function getStaticProps() {
 function ProtectedCreateUpdateForm() {
   return (
     <ProtectedContent hasAccess={appPermissions.SettingsManager}>
-      <Box pl="GlobalPadding">
-        <CreateUpdateForm />
-      </Box>
+      <CreateUpdateForm />
     </ProtectedContent>
   )
 }

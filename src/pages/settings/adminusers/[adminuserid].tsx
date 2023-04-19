@@ -53,9 +53,7 @@ const AdminUserListItem = () => {
 const ProtectedAdminUserListItem = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.SettingsManager}>
-      <Box padding="GlobalPadding">
-        <AdminUserListItem />
-      </Box>
+      <AdminUserListItem />
     </ProtectedContent>
   )
 }

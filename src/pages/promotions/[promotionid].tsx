@@ -52,9 +52,7 @@ const PromotionItem = (props) => {
 const ProtectedPromotionItem = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.OrderManager}>
-      <Box padding="GlobalPadding">
-        <PromotionItem />
-      </Box>
+      <PromotionItem />
     </ProtectedContent>
   )
 }

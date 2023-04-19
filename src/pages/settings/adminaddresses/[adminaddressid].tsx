@@ -50,9 +50,7 @@ const AdminAddressListItem = () => {
 const ProtectedAdminAddressListItem = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.SettingsManager}>
-      <Box padding="GlobalPadding">
-        <AdminAddressListItem />
-      </Box>
+      <AdminAddressListItem />
     </ProtectedContent>
   )
 }

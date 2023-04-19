@@ -48,9 +48,7 @@ const CategoryListItem = (props) => {
 const ProtectedCategoryListItem = (props) => {
   return (
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <Box padding="20px">
-        <CategoryListItem {...props} />
-      </Box>
+      <CategoryListItem {...props} />
     </ProtectedContent>
   )
 }

@@ -52,9 +52,7 @@ const UserListItem = () => {
 const ProtectedBuyerListItem = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <Box padding="GlobalPadding">
-        <UserListItem />
-      </Box>
+      <UserListItem />
     </ProtectedContent>
   )
 }

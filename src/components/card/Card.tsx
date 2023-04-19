@@ -26,14 +26,14 @@ function Card(props) {
     <Box
       bg="white"
       borderRadius="xl"
+      border="1px solid"
+      borderColor="blackAlpha.200"
       __css={styles}
       {...rest}
       pt="2"
       pb="2"
       mb="6"
       shadow="xl"
-      w="100%"
-      width="full"
       position="relative"
       _hover={{
         textDecoration: "none",
@@ -41,7 +41,11 @@ function Card(props) {
       }}
     >
       <IconButton
-        variant="closePanelButton"
+        ml={5}
+        mt={5}
+        colorScheme="secondary"
+        variant="solid"
+        rounded="full"
         aria-label="close panel"
         icon={isShownPanel ? <HiOutlineMinusSm /> : <HiOutlinePlusSm />}
         onClick={handlePanelClick}

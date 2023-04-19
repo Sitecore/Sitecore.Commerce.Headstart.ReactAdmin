@@ -1,5 +1,4 @@
-import {Container, Icon, Text, useColorModeValue, Grid, GridItem, Box} from "@chakra-ui/react"
-import Card from "components/card/Card"
+import {Card, Container, Icon, Text, useColorModeValue, Grid, GridItem, Box, CardBody} from "@chakra-ui/react"
 import {HiOutlineFilter, HiUsers} from "react-icons/hi"
 import {FaAddressBook} from "react-icons/fa"
 import {NextSeo} from "next-seo"
@@ -27,45 +26,62 @@ const SettingsPage = () => {
   const boxBgColor = useColorModeValue("boxBgColor.100", "boxBgColor.600")
 
   return (
-    <Container maxW="full">
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <NextSeo title="Settings" />
-      <Grid gridTemplateColumns="repeat(auto-fit, 225px)" gridGap="1rem">
-        <GridItem>
-          <Link href="/settings/adminusers/">
-            <Card showclosebutton="false" color={color} align="center">
-              <Box>
-                <Icon as={HiUsers} fontSize="80px" title="Settings" color="darkGray"></Icon>
-                <Text width="100%" w="full">
-                  Admin Users
-                </Text>
-              </Box>
-            </Card>
-          </Link>
-        </GridItem>
-        <GridItem>
-          <Link href="/settings/adminaddresses/">
-            <Card showclosebutton="false" color={color} align="center">
-              <Box>
-                <Icon as={FaAddressBook} fontSize="80px" title="Settings" color="darkGray"></Icon>
-                <Text width="100%" w="full">
-                  Admin Addresses
-                </Text>
-              </Box>
-            </Card>
-          </Link>
-        </GridItem>
-        <GridItem>
-          <Link href="/settings/productfacets/">
-            <Card showclosebutton="false" bg={boxBgColor} color={color} align="center">
-              <Box>
-                <Icon as={HiOutlineFilter} fontSize="80px" title="Settings" color="darkGray"></Icon>
-                <Text width="100%" w="full">
-                  Product Facets
-                </Text>
-              </Box>
-            </Card>
-          </Link>
-        </GridItem>
+      <Grid gridTemplateColumns="repeat(auto-fit, 225px)" gap={4}>
+        <Link href="/settings/adminusers/" _hover={{textDecoration: "none"}}>
+          <Card align="center" variant="levitating">
+            <CardBody
+              display="flex"
+              flexFlow="column nowrap"
+              gap={4}
+              alignItems="center"
+              h={"225px"}
+              justifyContent={"center"}
+            >
+              <Icon as={HiUsers} fontSize="5xl" title="Settings" color="darkGray"></Icon>
+              <Text width="100%" w="full">
+                Admin Users
+              </Text>
+            </CardBody>
+          </Card>
+        </Link>
+
+        <Link href="/settings/adminaddresses/" _hover={{textDecoration: "none"}}>
+          <Card align="center" variant="levitating">
+            <CardBody
+              display="flex"
+              flexFlow="column nowrap"
+              gap={4}
+              alignItems="center"
+              h={"225px"}
+              justifyContent={"center"}
+            >
+              <Icon as={FaAddressBook} fontSize="5xl" title="Settings" color="darkGray"></Icon>
+              <Text width="100%" w="full">
+                Admin Addresses
+              </Text>
+            </CardBody>
+          </Card>
+        </Link>
+
+        <Link href="/settings/productfacets/" _hover={{textDecoration: "none"}}>
+          <Card align="center" variant="levitating">
+            <CardBody
+              display="flex"
+              flexFlow="column nowrap"
+              gap={4}
+              alignItems="center"
+              h={"225px"}
+              justifyContent={"center"}
+            >
+              <Icon as={HiOutlineFilter} fontSize="5xl" title="Settings" color="darkGray"></Icon>
+              <Text width="100%" w="full">
+                Product Facets
+              </Text>
+            </CardBody>
+          </Card>
+        </Link>
       </Grid>
     </Container>
   )

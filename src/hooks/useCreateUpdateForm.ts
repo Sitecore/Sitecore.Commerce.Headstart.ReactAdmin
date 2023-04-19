@@ -22,21 +22,16 @@ export const useCreateUpdateForm = <ResourceType extends object>(
   const successToast = useSuccessToast()
   const errorToast = useErrorToast()
   const validationSchema = object().shape(objectShape)
-  const initialValues = isCreating ? {} : xpHelper.flattenXpObject(resource, "_")
+  const defaultValues = isCreating ? {} : xpHelper.flattenXpObject(resource, "_")
 
-  const onSubmit = (fields, {setStatus, setSubmitting}) => {
-    setStatus()
+  const onSubmit = async (fields) => {
     const resourceToUpdate = xpHelper.unflattenXpObject(fields, "_") as ResourceType
-    try {
-      if (isCreating) {
-        onCreate(resourceToUpdate)
-      } else {
-        onUpdate(resourceToUpdate)
-      }
-    } catch {
-      setSubmitting(false)
+    if (isCreating) {
+      await onCreate(resourceToUpdate)
+    } else {
+      await onUpdate(resourceToUpdate)
     }
   }
 
-  return {isCreating, successToast, errorToast, validationSchema, initialValues, onSubmit}
+  return {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit}
 }

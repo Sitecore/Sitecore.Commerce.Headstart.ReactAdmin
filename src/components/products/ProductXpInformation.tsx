@@ -293,7 +293,7 @@ export default function ProductXpInformation({composedProduct, setComposedProduc
             </Button>
           </Tooltip>
           <Tooltip label="Cancel">
-            <Button colorScheme="brandButtons" aria-label="Cancel" onClick={onAbortClicked} variant="secondaryButton">
+            <Button aria-label="Cancel" onClick={onAbortClicked} variant="outline">
               Cancel
             </Button>
           </Tooltip>
@@ -301,7 +301,7 @@ export default function ProductXpInformation({composedProduct, setComposedProduc
       ) : (
         <HStack float={"right"} position="absolute" bottom="20px">
           <Tooltip label="Edit">
-            <Button aria-label="Edit" onClick={onEditClicked} variant="tertiaryButton">
+            <Button aria-label="Edit" onClick={onEditClicked} colorScheme="secondary">
               Edit
             </Button>
           </Tooltip>

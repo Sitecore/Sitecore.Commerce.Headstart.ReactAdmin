@@ -109,10 +109,9 @@ export default function ProductInventoryRecords({composedProduct, setComposedPro
                             {" "}
                             <Tooltip label="Remove Inventory Record from Product">
                               <Button
-                                colorScheme="brandButtons"
                                 aria-label="Remove Inventory Record from Product"
                                 disabled={true}
-                                variant="tertiaryButton"
+                                colorScheme="secondary"
                                 // onClick={onRemoveSpecification}
                                 data-id={item.ID}
                               >
@@ -133,9 +132,8 @@ export default function ProductInventoryRecords({composedProduct, setComposedPro
       <HStack float={"right"} position="absolute" bottom="20px">
         <Tooltip label="Add Product Inventory">
           <Button
-            colorScheme="brandButtons"
             aria-label="Add Product Inventory"
-            variant="tertiaryButton"
+            colorScheme="secondary"
             disabled={true}
             // onClick={onOpen}
           >

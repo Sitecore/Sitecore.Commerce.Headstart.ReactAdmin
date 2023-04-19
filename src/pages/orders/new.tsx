@@ -1,8 +1,5 @@
 import {Button, Container, FormControl, FormLabel, HStack, Input} from "@chakra-ui/react"
-
 import Card from "components/card/Card"
-import {Form} from "formik"
-import {HiOutlineMinusSm} from "react-icons/hi"
 import {NextSeo} from "next-seo"
 import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
@@ -36,7 +33,7 @@ const NewOrdersPage = () => {
           </FormControl>
         </HStack>
         <HStack justifyContent="space-between" w="100%">
-          <Button variant="secondaryButton">Cancel</Button>
+          <Button variant="outline">Cancel</Button>
           <Button> Submit</Button>
         </HStack>
       </Card>

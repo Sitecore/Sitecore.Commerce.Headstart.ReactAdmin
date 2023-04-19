@@ -6,13 +6,21 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Hide,
   HStack,
+  Icon,
+  MenuItem,
+  Show,
   Spinner,
   Text
 } from "@chakra-ui/react"
 import {useEffect, useRef, useState} from "react"
+import {TbShoppingCartPlus, TbTableExport} from "react-icons/tb"
 
-export default function ExportToCsv() {
+interface ExportToCsvProps {
+  variant?: "button" | "menuitem"
+}
+export default function ExportToCsv({variant = "button"}: ExportToCsvProps) {
   const [loading, setLoading] = useState(false)
   const [isExportCSVDialogOpen, setExportCSVDialogOpen] = useState(false)
   const cancelRef = useRef()
@@ -27,9 +35,28 @@ export default function ExportToCsv() {
 
   return (
     <>
-      <Button variant="secondaryButton" onClick={() => setExportCSVDialogOpen(true)}>
-        Export to CSV
-      </Button>
+      <Hide below="md">
+        <Button variant="outline" onClick={() => setExportCSVDialogOpen(true)}>
+          Export to CSV
+        </Button>
+      </Hide>
+      <Hide above="md">
+        <Button
+          display="flex"
+          justifyContent={"flex-start"}
+          variant="unstyled"
+          px={3}
+          _hover={{backgroundColor: "gray.100"}}
+          w="full"
+          textAlign="left"
+          borderRadius="0"
+          fontWeight="normal"
+          leftIcon={<TbTableExport size="1rem" />}
+          onClick={() => setExportCSVDialogOpen(true)}
+        >
+          Export to CSV
+        </Button>
+      </Hide>
       <AlertDialog
         isOpen={isExportCSVDialogOpen}
         onClose={() => setExportCSVDialogOpen(false)}
@@ -53,11 +80,11 @@ export default function ExportToCsv() {
                   ref={cancelRef}
                   onClick={() => setExportCSVDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
-                <Button onClick={() => requestExportCSV()} disabled={loading}>
+                <Button variant="solid" colorScheme="primary" onClick={() => requestExportCSV()} disabled={loading}>
                   {loading ? <Spinner color="brand.500" /> : "Export items to CSV"}
                 </Button>
               </HStack>

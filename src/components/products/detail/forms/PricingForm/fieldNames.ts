@@ -1,0 +1,6 @@
+export const SALE_START = "DefaultPriceSchedule.SaleStart"
+export const SALE_END = "DefaultPriceSchedule.SaleEnd"
+export const RESTRICTED_QUANTITY = "DefaultPriceSchedule.RestrictedQuantity"
+export const PRICE_BREAKS = "DefaultPriceSchedule.PriceBreaks"
+export const MIN_QUANTITY = "DefaultPriceSchedule.MinQuantity"
+export const MAX_QUANTITY = "DefaultPriceSchedule.MaxQuantity"

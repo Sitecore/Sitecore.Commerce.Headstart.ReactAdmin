@@ -1,14 +1,17 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Flex, HStack, Stack} from "@chakra-ui/react"
 import {Categories, Category} from "ordercloud-javascript-sdk"
-import {InputControl, SwitchControl, TextareaControl} from "components/formik"
-import {Formik} from "formik"
+import {InputControl, SwitchControl, TextareaControl} from "components/react-hook-form"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {ICategory} from "types/ordercloud/ICategoryXp"
 import CategoryXpCard from "./CategoryXpCard"
 import Card from "../card/Card"
-import {useState} from "react"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {useForm} from "react-hook-form"
+import SubmitButton from "../react-hook-form/submit-button"
+import {isValid} from "date-fns"
+import ResetButton from "../react-hook-form/reset-button"
 
 export {CreateUpdateForm}
 
@@ -19,15 +22,21 @@ interface CreateUpdateFormProps {
   onSuccess?: (category: Category) => void
 }
 function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: CreateUpdateFormProps) {
-  console.log("parent id HERE?", parentId)
   const router = useRouter()
   const catalogID = router.query.catalogid as string
   const formShape = {
     Name: Yup.string().max(100).required("Name is required"),
     Description: Yup.string().max(100)
   }
-  const {isCreating, successToast, errorToast, validationSchema, initialValues, onSubmit} =
+  const {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit} =
     useCreateUpdateForm<Category>(category, formShape, createCategory, updateCategory)
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isSubmitting},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   async function createCategory(fields: Category) {
     fields.ParentID = parentId
@@ -91,76 +100,40 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
       >
         {headerComponent}
         <Flex flexDirection="column" p="10">
-          <Formik
-            enableReinitialize
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-          >
-            {({
-              // most of the useful available Formik props
-              values,
-              errors,
-              touched,
-              dirty,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isValid,
-              isSubmitting,
-              setFieldValue,
-              resetForm
-            }) => (
-              <Box as="form" onSubmit={handleSubmit as any}>
-                <Stack spacing={5}>
-                  <InputControl name="Name" label="Category Name" isRequired />
-                  <TextareaControl name="Description" label="Description" />
-                  <SwitchControl name="Active" label="Active" colorScheme="teal" size="lg" />
-                  <ButtonGroup>
-                    <HStack justifyContent="space-between" w="100%" mb={5}>
-                      <Box>
-                        <Button
-                          variant="primaryButton"
-                          type="submit"
-                          isLoading={isSubmitting}
-                          mr="15px"
-                          isDisabled={!isValid || !dirty}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            resetForm()
-                          }}
-                          type="reset"
-                          variant="secondaryButton"
-                          isLoading={isSubmitting}
-                          mr="15px"
-                        >
-                          Reset
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            router.push(`/buyers/${router.query.buyerid}/catalogs/${router.query.catalogid}/categories`)
-                          }
-                          variant="secondaryButton"
-                          isLoading={isSubmitting}
-                          mr="15px"
-                        >
-                          Cancel
-                        </Button>
-                      </Box>
-                      {!isCreating && (
-                        <Button variant="secondaryButton" onClick={() => deleteCategory(values.ID)}>
-                          Delete
-                        </Button>
-                      )}
-                    </HStack>
-                  </ButtonGroup>
-                </Stack>
-              </Box>
-            )}
-          </Formik>
+          <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={5}>
+              <InputControl name="Name" label="Category Name" isRequired control={control} />
+              <TextareaControl name="Description" label="Description" control={control} />
+              <SwitchControl name="Active" label="Active" colorScheme="teal" size="lg" control={control} />
+              <ButtonGroup>
+                <HStack justifyContent="space-between" w="100%" mb={5}>
+                  <Box>
+                    <SubmitButton control={control} variant="solid" colorScheme="primary" mr="15px">
+                      Save
+                    </SubmitButton>
+                    <ResetButton control={control} reset={reset} variant="outline">
+                      Discard Changes
+                    </ResetButton>
+                    <Button
+                      onClick={() =>
+                        router.push(`/buyers/${router.query.buyerid}/catalogs/${router.query.catalogid}/categories`)
+                      }
+                      variant="outline"
+                      isLoading={isSubmitting}
+                      mr="15px"
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                  {!isCreating && (
+                    <Button variant="outline" onClick={() => deleteCategory(category.ID)}>
+                      Delete
+                    </Button>
+                  )}
+                </HStack>
+              </ButtonGroup>
+            </Stack>
+          </Box>
           {!isCreating && (
             <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">
               <CategoryXpCard catalogID={catalogID} category={category} />

@@ -18,6 +18,7 @@ import {appPermissions} from "constants/app-permissions.config"
 import {dateHelper} from "utils/date.utils"
 import {useRouter} from "hooks/useRouter"
 import {useSuccessToast} from "hooks/useToast"
+import SupplierList from "@/components/suppliers/list/SupplierList"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -110,10 +111,10 @@ const SuppliersList = () => {
         Header: "USER GROUPS / USERS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button onClick={() => router.push(`/suppliers/${row.original.ID}/usergroups`)} variant="secondaryButton">
+            <Button onClick={() => router.push(`/suppliers/${row.original.ID}/usergroups`)} variant="outline">
               User Groups ({suppliersMeta[row.original.ID]["userGroupsCount"]})
             </Button>
-            <Button onClick={() => router.push(`/suppliers/${row.original.ID}/users`)} variant="secondaryButton">
+            <Button onClick={() => router.push(`/suppliers/${row.original.ID}/users`)} variant="outline">
               Users ({suppliersMeta[row.original.ID]["usersCount"]})
             </Button>
           </ButtonGroup>
@@ -123,39 +124,26 @@ const SuppliersList = () => {
         Header: "ACTIONS",
         Cell: ({row}) => (
           <ButtonGroup>
-            <Button variant="secondaryButton" onClick={() => router.push(`/suppliers/${row.original.ID}/`)}>
+            <Button variant="outline" onClick={() => router.push(`/suppliers/${row.original.ID}/`)}>
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteSupplier(row.original.ID)}>
+            <Button variant="outline" onClick={() => deleteSupplier(row.original.ID)}>
               Delete
             </Button>
           </ButtonGroup>
         )
       }
     ],
-    [deleteSupplier, suppliersMeta]
+    [deleteSupplier, suppliersMeta, router]
   )
 
   return <DataTable data={tableData} columns={columnsData} filters={filters} fetchData={fetchData} />
 }
 
 const ProtectedSuppliersList = () => {
-  let router = useRouter()
   return (
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
-      <Box padding="GlobalPadding">
-        <HStack justifyContent="space-between" w="100%" mb={5}>
-          <Button onClick={() => router.push(`/suppliers/add`)} variant="primaryButton">
-            Create supplier
-          </Button>
-          <HStack>
-            <ExportToCsv />
-          </HStack>
-        </HStack>
-        <Card variant="primaryCard">
-          <SuppliersList />
-        </Card>
-      </Box>
+      <SupplierList />
     </ProtectedContent>
   )
 }

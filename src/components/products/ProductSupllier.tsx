@@ -86,10 +86,9 @@ export default function ProductSuppliers({composedProduct, setComposedProduct}: 
                             {" "}
                             <Tooltip label="Remove Supplier from Product">
                               <Button
-                                colorScheme="brandButtons"
                                 aria-label="Remove Supplier from Product"
                                 disabled={true}
-                                variant="secondaryButton"
+                                variant="outline"
                                 // onClick={onRemoveSpecification}
                                 data-id={item.ID}
                               >
@@ -110,9 +109,8 @@ export default function ProductSuppliers({composedProduct, setComposedProduct}: 
       <HStack float={"right"} position="absolute" bottom="20px">
         <Tooltip label="Add Product Supplier">
           <Button
-            colorScheme="brandButtons"
             aria-label="Add Product Supplier"
-            variant="tertiaryButton"
+            colorScheme="secondary"
             disabled={true}
             // onClick={onOpen}
           >

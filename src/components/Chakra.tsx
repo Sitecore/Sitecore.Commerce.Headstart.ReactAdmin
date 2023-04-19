@@ -1,34 +1,47 @@
-import {ChakraProvider, localStorageManager} from "@chakra-ui/react"
-
-import sitecorecommerceTheme from "styles/theme/sitecorecommerce/"
-import playsummitTheme from "styles/theme/playsummit/"
-import industrialTheme from "styles/theme/industrial/"
-import Cookies from "universal-cookie"
+import generate from "@babel/generator"
+import { ChakraProvider, extendTheme, localStorageManager, theme, withDefaultColorScheme } from "@chakra-ui/react"
+import useLocalStorage from "hooks/useLocalStorage"
+import React, { useMemo, useState } from "react"
+import contextualColors from "styles/theme/contextualColors"
+import { DEFAULT_THEME_BRAND, DEFAULT_THEME_PRIMARY, DEFAULT_THEME_SECONDARY } from "theme/foundations/colors"
+import schraTheme from "theme/theme"
+import { generatePalette } from "utils"
 
 interface ChakraProps {
   children: React.ReactNode
 }
+interface IBrandContext {
+  colors?: {
+    brand: string;
+    primary: string;
+    secondary: string;
+  }
+  setColors?: (newColors: any) => void;
+}
 
-export const Chakra = ({children}: ChakraProps) => {
-  const cookies = new Cookies()
-  let currenttheme
-  if (cookies.get("currenttheme") === undefined) {
-    cookies.set("currenttheme", "styles/theme/sitecorecommerce/", {
-      path: "/"
-    })
-  }
-  if (cookies.get("currenttheme") === "styles/theme/sitecorecommerce/") {
-    currenttheme = sitecorecommerceTheme
-  }
-  if (cookies.get("currenttheme") === "styles/theme/playsummit/") {
-    currenttheme = playsummitTheme
-  }
-  if (cookies.get("currenttheme") === "styles/theme/industrial/") {
-    currenttheme = industrialTheme
-  }
+export const brandContext = React.createContext<IBrandContext>({})
+
+const DEFAULT_THEME_COLORS = {
+  brand: DEFAULT_THEME_BRAND[500],
+  primary: DEFAULT_THEME_PRIMARY[500],
+  secondary: DEFAULT_THEME_SECONDARY[500]
+}
+
+export const Chakra = ({ children }: ChakraProps) => {
+  const [colors, setColors] = useLocalStorage("themeColors", DEFAULT_THEME_COLORS)
+
+  const currentTheme = useMemo(() => {
+    if (colors == DEFAULT_THEME_COLORS) {
+      return schraTheme
+    }
+    return extendTheme({ colors: { brand: generatePalette(colors?.brand), primary: generatePalette(colors?.primary), secondary: generatePalette(colors?.secondary) } }, schraTheme)
+  }, [colors])
+
   return (
-    <ChakraProvider colorModeManager={localStorageManager} theme={currenttheme}>
-      {children}
-    </ChakraProvider>
+    <brandContext.Provider value={{ colors, setColors }}>
+      <ChakraProvider colorModeManager={localStorageManager} theme={currentTheme}>
+        {children}
+      </ChakraProvider>
+    </brandContext.Provider>
   )
 }

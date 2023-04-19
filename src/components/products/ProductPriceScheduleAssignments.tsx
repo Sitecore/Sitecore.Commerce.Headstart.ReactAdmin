@@ -343,9 +343,8 @@ export default function ProductPriceScheduleAssignments({composedProduct, setCom
                             {" "}
                             <Tooltip label="Remove Price Schedule from Product">
                               <Button
-                                colorScheme="brandButtons"
                                 aria-label="Remove Price Schedule from Product"
-                                variant="secondaryButton"
+                                variant="outline"
                                 data-buyerId={item.assignment.BuyerID}
                                 data-userGroupId={item.assignment.UserGroupID}
                                 onClick={onPriceScheduleAssignmentRemove}
@@ -366,12 +365,7 @@ export default function ProductPriceScheduleAssignments({composedProduct, setCom
       </>
       <HStack float={"right"} position="absolute" bottom="20px">
         <Tooltip label="Add Price Schedule to Product">
-          <Button
-            colorScheme="brandButtons"
-            aria-label="Add Price Schedule to Product"
-            variant="tertiaryButton"
-            onClick={onOpen}
-          >
+          <Button aria-label="Add Price Schedule to Product" colorScheme="secondary" onClick={onOpen}>
             Add Price Schedule
           </Button>
         </Tooltip>
@@ -521,16 +515,15 @@ export default function ProductPriceScheduleAssignments({composedProduct, setCom
                         Please optionally start entering an usergroup id and choose from the search if wanted
                       </Text>
                     )}
-                    <Button width={"45%"} size={"md"} variant="tertiaryButton" onClick={onClose}>
+                    <Button width={"45%"} size={"md"} colorScheme="secondary" onClick={onClose}>
                       Cancel
                     </Button>
                     <Button
                       float={"right"}
                       width={"45%"}
                       size={"md"}
-                      colorScheme="brandButtons"
                       onClick={onPriceScheduleLink}
-                      variant="tertiaryButton"
+                      colorScheme="secondary"
                       ml={3}
                       disabled={!isChosen.priceSchedule || !isChosen.buyerGroup}
                     >

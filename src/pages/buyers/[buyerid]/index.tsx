@@ -29,8 +29,8 @@ const BuyerListItem = () => {
   const router = useRouter()
   const [buyer, setBuyer] = useState({} as Buyer)
   useEffect(() => {
-    if (router.query.buyerid) {
-      Buyers.Get<IBuyer>(router.query.buyerid as string).then((buyer) => setBuyer(buyer))
+    if (router?.query?.buyerid) {
+      Buyers?.Get<IBuyer>(router?.query?.buyerid as string).then((buyer) => setBuyer(buyer))
     }
   }, [router.query.buyerid])
   return <>{buyer?.ID ? <CreateUpdateForm buyer={buyer} /> : <div> Loading</div>}</>

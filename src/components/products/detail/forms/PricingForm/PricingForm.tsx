@@ -8,6 +8,8 @@ import {
   AccordionPanel,
   Box,
   Button,
+  Card,
+  CardBody,
   Collapse,
   Divider,
   Flex,
@@ -142,105 +144,9 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
   const {isOpen, onToggle} = useDisclosure()
   return (
     <>
-      <Flex flexDirection="column" gap={4}>
-        <Grid templateColumns={{base: "1fr", xl: "1fr 1fr"}} gap={4}>
-          <InputControl
-            name={`${fieldNames.PRICE_BREAKS}.${0}.Price`}
-            label="Regular Price (per unit)"
-            control={control}
-            leftAddon="$"
-            validationSchema={validationSchema}
-          />
-
-          <InputControl
-            name={`${fieldNames.PRICE_BREAKS}.${0}.SalePrice`}
-            label="Sale Price (per unit)"
-            control={control}
-            leftAddon="$"
-            validationSchema={validationSchema}
-          />
-
-          <Grid gap={4} gridTemplateColumns={{base: "1fr", xl: "1fr 1fr"}}>
-            <InputControl
-              name={fieldNames.SALE_START}
-              label="Sale Start"
-              control={control}
-              inputProps={{type: "datetime-local"}}
-              validationSchema={validationSchema}
-            />
-
-            <InputControl
-              name={fieldNames.SALE_END}
-              label="Sale End"
-              control={control}
-              inputProps={{type: "datetime-local"}}
-              validationSchema={validationSchema}
-            />
-          </Grid>
-        </Grid>
-        <Text
-          fontWeight="medium"
-          maxWidth="max-content"
-          onClick={() => setShowAdvancedPricing(showAdvancedPricing ? false : true)}
-        >
-          {/* {showAdvancedPricing ? <ChevronDownIcon boxSize={6} /> : <ChevronRightIcon boxSize={6} />} Advanced Pricing */}
-        </Text>
-        {/* {showAdvancedPricing && ( */}
-
-        <Accordion borderColor={"transparent"} allowToggle>
-          <AccordionItem>
-            <AccordionButton px={0}>
-              <Heading fontSize="xl">Advanced Pricing</Heading>
-              <AccordionIcon ml="auto" />
-            </AccordionButton>
-            <AccordionPanel pb={4} px={0}>
-              <Divider />
-              <Flex flexDirection="column" gap={4} mt={4}>
-                <Box>
-                  <SwitchControl
-                    switchProps={{size: "md"}}
-                    name={fieldNames.RESTRICTED_QUANTITY}
-                    label="Restrict order quantity"
-                    control={control}
-                    validationSchema={validationSchema}
-                  />
-                  <Text fontSize="sm" color="gray">
-                    Require customers to order only in quantities specified in the volume pricing table
-                  </Text>
-                </Box>
-                <PriceBreakTable control={control} trigger={trigger} />
-                <Box>
-                  <Text fontSize="lg" fontWeight="bold" marginBottom={3}>
-                    Order Limitations
-                  </Text>
-                  <Flex gap={4} flexWrap={{base: "wrap", lg: "nowrap"}}>
-                    <InputControl
-                      name={fieldNames.MIN_QUANTITY}
-                      label="Minimum quantity"
-                      control={control}
-                      validationSchema={validationSchema}
-                    />
-                    <InputControl
-                      name={fieldNames.MAX_QUANTITY}
-                      label="Maximum quantity"
-                      control={control}
-                      validationSchema={validationSchema}
-                    />
-                  </Flex>
-                </Box>
-              </Flex>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-        {/* )} */}
-      </Flex>
-    </>
-  )
-}
-
-{
-  /* <Grid templateColumns={{base: "1fr", xl: "1fr 1fr"}} gap="formInputSpacing">
-          <GridItem>
+      <Card>
+        <CardBody flexDirection="column" gap={4}>
+          <Grid templateColumns={{base: "1fr", xl: "1fr 1fr"}} gap={4}>
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.Price`}
               label="Regular Price (per unit)"
@@ -248,8 +154,7 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
               leftAddon="$"
               validationSchema={validationSchema}
             />
-          
-          
+
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.SalePrice`}
               label="Sale Price (per unit)"
@@ -257,28 +162,81 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
               leftAddon="$"
               validationSchema={validationSchema}
             />
-          
-          
-            <Grid gap="formInputSpacing" gridTemplateColumns={{base: "1fr", xl: "1fr 1fr"}}>
-              <GridItem>
-                <InputControl
-                  name={fieldNames.SALE_START}
-                  label="Sale Start"
-                  control={control}
-                  inputProps={{type: "datetime-local"}}
-                  validationSchema={validationSchema}
-                />
-              
-              <GridItem>
-                <InputControl
-                  name={fieldNames.SALE_END}
-                  label="Sale End"
-                  control={control}
-                  inputProps={{type: "datetime-local"}}
-                  validationSchema={validationSchema}
-                />
-              
+
+            <Grid gap={4} gridTemplateColumns={{base: "1fr", xl: "1fr 1fr"}}>
+              <InputControl
+                name={fieldNames.SALE_START}
+                label="Sale Start"
+                control={control}
+                inputProps={{type: "datetime-local"}}
+                validationSchema={validationSchema}
+              />
+
+              <InputControl
+                name={fieldNames.SALE_END}
+                label="Sale End"
+                control={control}
+                inputProps={{type: "datetime-local"}}
+                validationSchema={validationSchema}
+              />
             </Grid>
-          
-        </Grid> */
+          </Grid>
+          <Text
+            fontWeight="medium"
+            maxWidth="max-content"
+            onClick={() => setShowAdvancedPricing(showAdvancedPricing ? false : true)}
+          ></Text>
+        </CardBody>
+      </Card>
+      <Card mt={6}>
+        <CardBody>
+          <Accordion borderColor={"transparent"} allowToggle>
+            <AccordionItem>
+              <AccordionButton px={0}>
+                <Heading fontSize="xl">Advanced Pricing</Heading>
+                <AccordionIcon ml="auto" />
+              </AccordionButton>
+              <AccordionPanel pb={4} px={0}>
+                <Divider />
+                <Flex flexDirection="column" gap={4} mt={4}>
+                  <Box>
+                    <SwitchControl
+                      switchProps={{size: "md"}}
+                      name={fieldNames.RESTRICTED_QUANTITY}
+                      label="Restrict order quantity"
+                      control={control}
+                      validationSchema={validationSchema}
+                    />
+                    <Text fontSize="sm" color="gray">
+                      Require customers to order only in quantities specified in the volume pricing table
+                    </Text>
+                  </Box>
+                  <PriceBreakTable control={control} trigger={trigger} />
+                  <Box>
+                    <Text fontSize="lg" fontWeight="bold" marginBottom={3}>
+                      Order Limitations
+                    </Text>
+                    <Flex gap={4} flexWrap={{base: "wrap", lg: "nowrap"}}>
+                      <InputControl
+                        name={fieldNames.MIN_QUANTITY}
+                        label="Minimum quantity"
+                        control={control}
+                        validationSchema={validationSchema}
+                      />
+                      <InputControl
+                        name={fieldNames.MAX_QUANTITY}
+                        label="Maximum quantity"
+                        control={control}
+                        validationSchema={validationSchema}
+                      />
+                    </Flex>
+                  </Box>
+                </Flex>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </CardBody>
+      </Card>
+    </>
+  )
 }

@@ -13,7 +13,16 @@ import {
   Container,
   Center,
   VStack,
-  Icon
+  Icon,
+  SimpleGrid,
+  Text,
+  Button,
+  theme,
+  InputGroup,
+  FormLabel,
+  Input,
+  FormControl,
+  Textarea
 } from "@chakra-ui/react"
 import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
 import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
@@ -35,7 +44,8 @@ import {useForm} from "react-hook-form"
 import {PricingForm} from "./forms/PricingForm/PricingForm"
 import {ProductDetailTab} from "./ProductDetailTab"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
-import {TbBarrierBlock} from "react-icons/tb"
+import {TbBarrierBlock, TbCactus, TbFileUpload} from "react-icons/tb"
+import schraTheme from "theme/theme"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization" | "SEO"
 
@@ -172,12 +182,14 @@ export default function ProductDetail({
                       <SimpleCard title="Description">
                         <DescriptionForm control={control} />
                       </SimpleCard>
-                      <SimpleCard title="Unit of Measure">
-                        <UnitOfMeasureForm control={control} />
-                      </SimpleCard>
-                      <SimpleCard title="Inventory">
-                        <InventoryForm control={control} />
-                      </SimpleCard>
+                      <SimpleGrid gridTemplateColumns={{md: "1fr 1fr"}} gap={6}>
+                        <SimpleCard title="Unit of Measure">
+                          <UnitOfMeasureForm control={control} />
+                        </SimpleCard>
+                        <SimpleCard title="Inventory">
+                          <InventoryForm control={control} />
+                        </SimpleCard>
+                      </SimpleGrid>
                       <SimpleCard title="Shipping">
                         <ShippingForm control={control} />
                       </SimpleCard>
@@ -192,63 +204,189 @@ export default function ProductDetail({
               )}
               {viewVisibility.Pricing && (
                 <TabPanel p={0} mt={6} maxW="container.xl">
-                  <SimpleCard title="Pricing">
-                    <PricingForm
-                      control={control}
-                      trigger={trigger}
-                      priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
-                    />
-                  </SimpleCard>
+                  <PricingForm
+                    control={control}
+                    trigger={trigger}
+                    priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
+                  />
                 </TabPanel>
               )}
               {viewVisibility.Variants && (
                 <TabPanel p={0} mt={6}>
-                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
-                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
-                    <Heading as="h1" fontSize="2xl" textAlign="center">
-                      Variants under construction
-                    </Heading>
-                  </VStack>
+                  <Card w="100%">
+                    <CardHeader display="flex" alignItems={"center"}>
+                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
+                        Attributes
+                        <Text fontSize="sm" color="gray.400" fontWeight="normal">
+                          Create attributes like size and color to generate variants for this product.
+                        </Text>
+                      </Heading>
+                      <Button variant="outline" colorScheme="brand" ml="auto">
+                        Create attributes
+                      </Button>
+                    </CardHeader>
+                    <CardBody>
+                      <Box
+                        p={6}
+                        display="flex"
+                        flexDirection={"column"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        minH={"xs"}
+                      >
+                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
+                        <Heading color="secondary.500" fontSize="xl">
+                          This product has no attributes
+                        </Heading>
+                      </Box>
+                    </CardBody>
+                  </Card>
+                  <Card w="100%" mt={6}>
+                    <CardHeader>
+                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
+                        Variants
+                      </Heading>
+                      <Text fontSize="sm" color="gray.400">
+                        Variants will be generated after creating or adding attributes
+                      </Text>
+                    </CardHeader>
+                  </Card>
                 </TabPanel>
               )}
               {viewVisibility.Media && (
                 <TabPanel p={0} mt={6}>
-                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
-                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
-                    <Heading as="h1" fontSize="2xl" textAlign="center">
-                      Media under construction
-                    </Heading>
-                  </VStack>
+                  <Card w="100%">
+                    <CardHeader display="flex" alignItems={"center"}>
+                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
+                        Media
+                      </Heading>
+                      <Button variant="outline" colorScheme="brand" ml="auto">
+                        Add From URL
+                      </Button>
+                    </CardHeader>
+                    <CardBody>
+                      <Box
+                        alignSelf={"center"}
+                        shadow="md"
+                        border={`1px dashed ${schraTheme.colors.gray[300]}`}
+                        borderRadius="md"
+                        display="flex"
+                        flexDirection={"column"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        minH={"xs"}
+                        bgColor={"blackAlpha.50"}
+                        m={6}
+                        w="full"
+                        maxW="container.xl"
+                        gap={4}
+                      >
+                        <Icon as={TbFileUpload} fontSize={"5xl"} strokeWidth={"2px"} color="gray.300" />
+                        <Heading color="secondary.500" fontSize="xl">
+                          Browser or drop files here
+                        </Heading>
+                        <Text color="gray.400" fontSize="sm">
+                          JPEG, PNG, GIF, MP4
+                        </Text>
+                      </Box>
+                    </CardBody>
+                  </Card>
                 </TabPanel>
               )}
               {viewVisibility.Facets && (
                 <TabPanel p={0} mt={6}>
-                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
-                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
-                    <Heading as="h1" fontSize="2xl" textAlign="center">
-                      Facets under construction
-                    </Heading>
-                  </VStack>
+                  <Card w="100%">
+                    <CardHeader display="flex" alignItems={"center"}>
+                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
+                        Facets
+                      </Heading>
+                      <Button variant="outline" colorScheme="brand" ml="auto">
+                        Add Facet
+                      </Button>
+                    </CardHeader>
+                    <CardBody>
+                      <Box
+                        p={6}
+                        display="flex"
+                        flexDirection={"column"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        minH={"xs"}
+                      >
+                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
+                        <Heading color="secondary.500" fontSize="xl">
+                          This product has no facets
+                        </Heading>
+                      </Box>
+                    </CardBody>
+                  </Card>
                 </TabPanel>
               )}
               {viewVisibility.Customization && (
                 <TabPanel p={0} mt={6}>
-                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
-                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
-                    <Heading as="h1" fontSize="2xl" textAlign="center">
-                      Customization under construction
-                    </Heading>
-                  </VStack>
+                  <Card w="100%">
+                    <CardHeader display="flex" alignItems={"center"}>
+                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
+                        Customizations
+                        <Text fontSize="sm" color="gray.400" fontWeight="normal">
+                          Add options like shirt text and sign verbiage to enable further product customization.
+                        </Text>
+                      </Heading>
+                      <Button variant="outline" colorScheme="brand" ml="auto">
+                        Create option
+                      </Button>
+                    </CardHeader>
+                    <CardBody>
+                      <Box
+                        p={6}
+                        display="flex"
+                        flexDirection={"column"}
+                        alignItems={"center"}
+                        justifyContent={"center"}
+                        minH={"xs"}
+                      >
+                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
+                        <Heading color="secondary.500" fontSize="xl">
+                          Nothing created yet...
+                        </Heading>
+                      </Box>
+                    </CardBody>
+                  </Card>
                 </TabPanel>
               )}
               {viewVisibility.SEO && (
                 <TabPanel p={0} mt={6}>
-                  <VStack color={"gray.500"} h={"100%"} mt={"15vh"}>
-                    <Icon as={TbBarrierBlock} fontSize={"6xl"} strokeWidth={"1.25px"} />
-                    <Heading as="h1" fontSize="2xl" textAlign="center">
-                      SEO under construction
-                    </Heading>
-                  </VStack>
+                  <Card w="100%">
+                    <CardHeader display="flex" alignItems={"center"}>
+                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
+                        SEO
+                      </Heading>
+                    </CardHeader>
+                    <CardBody maxW="container.xl">
+                      <SimpleGrid minChildWidth={"350px"} gap={6}>
+                        <FormControl>
+                          <FormLabel>Product Page Title</FormLabel>
+                          <Input placeholder="example" />
+                        </FormControl>
+                        <FormControl>
+                          <FormLabel>Meta Title</FormLabel>
+                          <Input placeholder="example" />
+                        </FormControl>
+                        <FormControl>
+                          <FormLabel>Set page URL</FormLabel>
+                          <Input placeholder="example" />
+                        </FormControl>
+                        <FormControl>
+                          <FormLabel>Product Page Description</FormLabel>
+                          <Textarea placeholder="example" />
+                        </FormControl>
+                        <FormControl>
+                          <FormLabel>Meta Description</FormLabel>
+                          <Textarea placeholder="example" />
+                        </FormControl>
+                      </SimpleGrid>
+                    </CardBody>
+                  </Card>
                 </TabPanel>
               )}
             </TabPanels>

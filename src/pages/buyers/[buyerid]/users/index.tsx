@@ -1,4 +1,3 @@
-import {Box, Button, ButtonGroup, HStack, Icon, Text} from "@chakra-ui/react"
 import React from "react"
 import {useRouter} from "hooks/useRouter"
 import BuyerUsersList from "@/components/buyerursers/list/BuyerUsersList"
@@ -23,11 +22,7 @@ const UsersList = () => {
   const router = useRouter()
   const buyerid = router.query.buyerid as string
 
-  return (
-    <Box padding="GlobalPadding">
-      <BuyerUsersList buyerid={buyerid}></BuyerUsersList>
-    </Box>
-  )
+  return <BuyerUsersList buyerid={buyerid} />
 }
 
 export default UsersList

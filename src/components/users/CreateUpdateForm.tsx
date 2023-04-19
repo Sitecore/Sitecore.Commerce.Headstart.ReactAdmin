@@ -1,7 +1,18 @@
 import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Flex, Heading, List, ListIcon, ListItem, Stack} from "@chakra-ui/react"
-import {InputControl, SwitchControl} from "components/react-hook-form"
-import Card from "../card/Card"
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Flex,
+  Heading,
+  HStack,
+  List,
+  ListIcon,
+  ListItem
+} from "@chakra-ui/react"
 import {MdCheckCircle} from "react-icons/md"
 import {User} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
@@ -10,6 +21,10 @@ import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import UserXpCard from "./UserXpCard"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
+import {DataTable} from "../data-table/DataTable"
+import ExportToCsv from "../demo/ExportToCsv"
+import {InputControl, SwitchControl} from "../react-hook-form"
+import {TbChevronLeft} from "react-icons/tb"
 import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
 
@@ -66,31 +81,43 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
 
   return (
     <>
-      <Card variant="primaryCard">
-        <Flex flexDirection="column" p="10">
-          <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-            <Stack spacing={5}>
-              <InputControl name="Username" label="Username" control={control} isRequired />
-              <InputControl name="FirstName" label="First name" control={control} isRequired />
-              <InputControl name="LastName" label="Last name" control={control} isRequired />
-              <InputControl name="Email" label="Email" control={control} isRequired />
-              <InputControl name="Phone" label="Phone" control={control} />
-              <SwitchControl name="Active" label="Active" control={control} />
-              <ButtonGroup>
-                <SubmitButton control={control} variant="solid" colorScheme="primary">
-                  Save
-                </SubmitButton>
-                <ResetButton control={control} reset={reset} variant="outline">
-                  Discard Changes
-                </ResetButton>
-                <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting}>
-                  Cancel
-                </Button>
-              </ButtonGroup>
-            </Stack>
-          </Box>
-        </Flex>
-      </Card>
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+        <Card>
+          <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+            <Button
+              onClick={() => router.back()}
+              variant="outline"
+              isLoading={isSubmitting}
+              leftIcon={<TbChevronLeft />}
+            >
+              Back
+            </Button>
+            <ButtonGroup>
+              <ResetButton control={control} reset={reset} variant="outline">
+                Discard Changes
+              </ResetButton>
+              <SubmitButton control={control} variant="solid" colorScheme="primary">
+                Save
+              </SubmitButton>
+            </ButtonGroup>
+          </CardHeader>
+          <CardBody
+            display="flex"
+            flexDirection={"column"}
+            as="form"
+            onSubmit={handleSubmit(onSubmit)}
+            gap={4}
+            maxW={{xl: "container.md"}}
+          >
+            <SwitchControl name="Active" label="Active" control={control} />
+            <InputControl name="Username" label="Username" control={control} isRequired />
+            <InputControl name="FirstName" label="First name" control={control} isRequired />
+            <InputControl name="LastName" label="Last name" control={control} isRequired />
+            <InputControl name="Email" label="Email" control={control} isRequired />
+            <InputControl name="Phone" label="Phone" control={control} />
+          </CardBody>
+        </Card>
+      </Container>
 
       {!isAddMode && user?.AvailableRoles && (
         <>
@@ -109,7 +136,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
               </List>
             </Flex>
           </Card>
-          <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">
+          <Card h={"100%"}>
             <UserXpCard organizationID={parentId} user={user} />
           </Card>
         </>

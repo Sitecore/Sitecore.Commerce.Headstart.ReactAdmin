@@ -1,4 +1,3 @@
-import {Box} from "@chakra-ui/react"
 import React from "react"
 import {useRouter} from "hooks/useRouter"
 import BuyerUserGroupList from "@/components/buyerusergroups/list/BuyerUserGroupList"
@@ -23,13 +22,7 @@ const UserGroupsList = () => {
   const router = useRouter()
   const buyerid = router.query.buyerid as string
 
-  return (
-    <>
-      <Box padding="GlobalPadding">
-        <BuyerUserGroupList buyerid={buyerid}></BuyerUserGroupList>
-      </Box>
-    </>
-  )
+  return <BuyerUserGroupList buyerid={buyerid} />
 }
 
 export default UserGroupsList

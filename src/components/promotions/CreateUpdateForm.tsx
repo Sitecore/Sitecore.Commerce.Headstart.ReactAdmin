@@ -20,13 +20,20 @@ import {
   Radio,
   Select,
   SimpleGrid,
-  UnorderedList
+  UnorderedList,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Flex,
+  FormControl,
+  VStack
 } from "@chakra-ui/react"
 import {DeleteIcon} from "@chakra-ui/icons"
 import {InputControl, RadioGroupControl, SwitchControl, TextareaControl} from "components/react-hook-form"
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react"
 import {useEffect, useState} from "react"
-import Card from "../card/Card"
+// import Card from "../card/Card"
 import DatePicker from "../datepicker/DatePicker"
 import {ExpressionBuilder} from "./ExpressionBuilder"
 import {Promotion, Promotions} from "ordercloud-javascript-sdk"
@@ -148,202 +155,194 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
     }
   }
 
+  const SimpleCard = (props: {title?: string; children: React.ReactElement}) => (
+    <Card>
+      <CardHeader>{props.title && <Heading size="md">{props.title}</Heading>}</CardHeader>
+      <CardBody>{props.children}</CardBody>
+    </Card>
+  )
+
   return (
     <>
-      <Card variant="primaryCard">
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
         <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-          <Grid
-            templateAreas={`"main nav"
-                  "main nav"
-                  "footer footer"`}
-            gridTemplateRows={"auto"}
-            gridTemplateColumns={"70% 1fr"}
-            h="auto"
-            gap="1"
-            color="blackAlpha.700"
-            fontWeight="bold"
-          >
-            <GridItem pl="2" area={"nav"}>
-              <Heading as="h2" noOfLines={1}>
-                Overview
-              </Heading>
-              <UnorderedList>
-                <ListItem>Name: {values.Name}</ListItem>
-                <ListItem>Description: {values.Description}</ListItem>
-                <Divider mt="15" mb="15" />
-                <ListItem>Code: {values.Code}</ListItem>
-                <Divider mt="15" mb="15" />
-                <ListItem>Start Date: {values.StartDate}</ListItem>
-                <ListItem>End Date: {values.ExpirationDate}</ListItem>
-                <Divider mt="15" mb="15" />
-                <ListItem>Can Combine: {values.CanCombine ? "Yes" : "No"}</ListItem>
-                <ListItem>Line Item Level: {values.LineItemLevel ? "Yes" : "No"}</ListItem>
-                <ListItem>Allow All Buyers: {values.AllowAllBuyers ? "Yes" : "No"}</ListItem>
-                <ListItem>Redemption Limit: {values.RedemptionLimit}</ListItem>
-                <ListItem>Redemption Limit Per User: {values.RedemptionLimitPerUser}</ListItem>
-                <Divider mt="15" mb="15" />
-                <ListItem>Fine Print: {values.FinePrint}</ListItem>
-                <Divider mt="15" mb="15" />
-                <ListItem>Eligible Expression: {values.EligibleExpression}</ListItem>
-                <ListItem>Value Expression: {values.ValueExpression}</ListItem>
-                <Divider mt="15" mb="15" />
-              </UnorderedList>
-            </GridItem>
-            <GridItem pl="2" area={"main"}>
-              <Tabs>
-                <TabList>
-                  {/* This tab contains all default Promotion API options (No extended propreties) */}
-                  <Tab>Default Options</Tab>
-                  {/* This tab contains some examples of how we can leverage XP (extended Propreties) */}
-                  <Tab>Advanced Rules</Tab>
-                  {/* This tab contains another examples to show the flexibility offered by EligibleExpressions and ValueExpression Fileds. */}
-                  <Tab>Expression Builder</Tab>
-                  {/* This tab contains a way to add any other extended properties. */}
-                  <Tab>Extended Properties (xp)</Tab>
-                </TabList>
+          <Box>
+            <ButtonGroup>
+              <SubmitButton control={control} variant="solid" colorScheme="primary">
+                Save
+              </SubmitButton>
+              <ResetButton control={control} reset={reset} variant="outline">
+                Discard Changes
+              </ResetButton>
+              <Button onClick={() => router.push(`/promotions`)} variant="outline" isLoading={isSubmitting}>
+                Cancel
+              </Button>
+              {!isCreating && (
+                <Button variant="outline" onClick={() => deletePromotion(values.ID)} leftIcon={<DeleteIcon />}>
+                  Delete
+                </Button>
+              )}
+            </ButtonGroup>
+            <Tabs mt={6} colorScheme="brand">
+              <TabList>
+                {/* This tab contains all default Promotion API options (No extended propreties) */}
+                <Tab>Default Options</Tab>
+                {/* This tab contains some examples of how we can leverage XP (extended Propreties) */}
+                <Tab>Advanced Rules</Tab>
+                {/* This tab contains another examples to show the flexibility offered by EligibleExpressions and ValueExpression Fileds. */}
+                <Tab>Expression Builder</Tab>
+                {/* This tab contains a way to add any other extended properties. */}
+                <Tab>Extended Properties (xp)</Tab>
+              </TabList>
+              <SimpleGrid gridTemplateColumns={"70% 1fr"} gap={6} mt={6}>
                 <TabPanels>
-                  <TabPanel>
-                    <SimpleGrid columns={2} spacing={10}>
-                      <Box>
-                        <InputControl name="Name" label="Promotion Name" helperText="" control={control} />
-                        <Divider mt="15" mb="15" />
-                        <TextareaControl name="Description" label="Description" control={control} />
-                        <Divider mt="15" mb="15" />
-                        <FormLabel>Start Date</FormLabel>
-                        <DatePicker selectedDate={startDate} onChange={setStartDate} />
-                        <input type="hidden" name="StartDate" value={startDate.toISOString()} />
-                        <Divider mt="15" mb="15" />
-                        <label htmlFor="RedemptionLimit">Redemption Limit</label>
-                        <NumberInput defaultValue={100} max={1000} clampValueOnBlur={false}>
-                          <NumberInputField name="RedemptionLimit" />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                        <Divider mt="15" mb="15" />
-                        <HStack spacing={6}>
-                          <SwitchControl name="Active" label="Active" control={control} />
-                          <SwitchControl name="AutoApply" label="Auto Apply" control={control} />
-                        </HStack>
-                        <Divider mt="15" mb="15" />
-                        <label htmlFor="Priority">Priority</label>
-                        <NumberInput defaultValue={1} max={10} clampValueOnBlur={false}>
-                          <NumberInputField name="Priority" />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </Box>
-                      <Box>
-                        <InputControl name="Code" label="Coupon Code" helperText="" control={control} isRequired />
-                        <Divider mt="15" mb="15" />
-                        <TextareaControl name="FinePrint" label="Fine Print" control={control} />
-                        <Divider mt="15" mb="15" />
-                        <FormLabel>End Date</FormLabel>
-                        <DatePicker selectedDate={endDate} onChange={setEndDate} />
-                        <input type="hidden" name="ExpirationDate" value={endDate.toISOString()} />
-                        <Divider mt="15" mb="15" />
-                        <label htmlFor="RedemptionLimitPerUser">Redemption Limit per user</label>
-                        <NumberInput defaultValue={1} max={10} clampValueOnBlur={false}>
-                          <NumberInputField name="RedemptionLimitPerUser" />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                        <Divider mt="15" mb="15" />
-                        <HStack spacing={6}>
-                          <SwitchControl name="LineItemLevel" label="Line Item Level" control={control} />
-                          <SwitchControl name="CanCombine" label="Can be combined" control={control} />
-                          <SwitchControl name="AllowAllBuyers" label="Allow all buyers" control={control} />
-                        </HStack>
-                      </Box>
-                    </SimpleGrid>
-                  </TabPanel>
-                  <TabPanel>
-                    <SimpleGrid columns={2} spacing={10}>
-                      <Box>
-                        <RadioGroupControl name="xp_MinimumReq" label="Minimum requirment" control={control}>
-                          <Radio value="none">None</Radio>
-                          <Radio value="min-amount">Minimum purchase amount</Radio>
-                          <Radio value="min-qty">Minimum quantity of items</Radio>
-                        </RadioGroupControl>
-                        <InputControl name="xp_MinReqValue" placeholder="Enter amount" control={control} />
-                        <Divider mt="15" mb="15" />
-                        <label htmlFor="xp_ScopeTo">Eligibility / Scope to</label>
-                        <Select name="xp_ScopeTo" placeholder="Select option">
-                          <option value="buyers">Buyers</option>
-                          <option value="buyersgroup">Buyers Group</option>
-                          <option value="suppliers">Suppliers</option>
-                          <option value="products">Products</option>
-                          <option value="categories">Categories</option>
-                        </Select>
-                      </Box>
-                      <Box>
-                        <RadioGroupControl name="xp_Type" label="Promotion Type" control={control}>
-                          <Radio value="Percentage">Percentage</Radio>
-                          <Radio value="Fixed">Fixed Amount</Radio>
-                          <Radio value="Free-shipping">Free Shipping</Radio>
-                          <Radio value="BOGO">BOGO</Radio>
-                        </RadioGroupControl>
+                  <TabPanel p={0}>
+                    <Card p={6}>
+                      <SimpleGrid columns={2} spacing={10}>
+                        <Flex flexFlow="column nowrap" gap={4}>
+                          <InputControl name="Name" label="Promotion Name" helperText="" control={control} />
+                          <TextareaControl name="Description" label="Description" control={control} />
+                          <FormControl>
+                            <FormLabel>Start Date</FormLabel>
+                            <DatePicker selectedDate={startDate} onChange={setStartDate} />
+                          </FormControl>
+                          <input type="hidden" name="StartDate" value={startDate.toISOString()} />
+                          <label htmlFor="RedemptionLimit">Redemption Limit</label>
+                          <NumberInput defaultValue={100} max={1000} clampValueOnBlur={false}>
+                            <NumberInputField name="RedemptionLimit" />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
 
-                        {values.xp_Type !== "Free-shipping" && values.xp_Type !== "BOGO" && (
-                          <InputGroup>
-                            <InputLeftElement pointerEvents="none" color="gray.300" fontSize="1.2em">
-                              {values.xp_Type === "Percentage" ? "%" : "$"}
-                            </InputLeftElement>
-                            <InputControl name="xp_Value" placeholder="Enter amount" control={control} />
-                          </InputGroup>
-                        )}
-                        <Divider mt="15" mb="15" />
-                      </Box>
-                    </SimpleGrid>
+                          <HStack spacing={6}>
+                            <SwitchControl name="Active" label="Active" control={control} />
+                            <SwitchControl name="AutoApply" label="Auto Apply" control={control} />
+                          </HStack>
+
+                          <label htmlFor="Priority">Priority</label>
+                          <NumberInput defaultValue={1} max={10} clampValueOnBlur={false}>
+                            <NumberInputField name="Priority" />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                        </Flex>
+                        <Box>
+                          <InputControl name="Code" label="Coupon Code" helperText="" control={control} isRequired />
+
+                          <TextareaControl name="FinePrint" label="Fine Print" control={control} />
+
+                          <FormLabel>End Date</FormLabel>
+                          <DatePicker selectedDate={endDate} onChange={setEndDate} />
+                          <input type="hidden" name="ExpirationDate" value={endDate.toISOString()} />
+
+                          <label htmlFor="RedemptionLimitPerUser">Redemption Limit per user</label>
+                          <NumberInput defaultValue={1} max={10} clampValueOnBlur={false}>
+                            <NumberInputField name="RedemptionLimitPerUser" />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+
+                          <VStack mt={6} spacing={6}>
+                            <SwitchControl name="LineItemLevel" label="Line Item Level" control={control} />
+                            <SwitchControl name="CanCombine" label="Can be combined" control={control} />
+                            <SwitchControl name="AllowAllBuyers" label="Allow all buyers" control={control} />
+                          </VStack>
+                        </Box>
+                      </SimpleGrid>
+                    </Card>
                   </TabPanel>
-                  <TabPanel>
-                    <SimpleGrid columns={2} spacing={10}>
-                      <Box>
+                  <TabPanel p={0}>
+                    <Card p={6}>
+                      <SimpleGrid columns={2} spacing={10}>
+                        <VStack>
+                          <RadioGroupControl name="xp_MinimumReq" label="Minimum requirment" control={control}>
+                            <VStack alignItems={"flex-start"}>
+                              <Radio value="none">None</Radio>
+                              <Radio value="min-amount">Minimum purchase amount</Radio>
+                              <Radio value="min-qty">Minimum quantity of items</Radio>
+                            </VStack>
+                          </RadioGroupControl>
+                          <InputControl name="xp_MinReqValue" placeholder="Enter amount" control={control} />
+                          <FormControl>
+                            <FormLabel htmlFor="xp_ScopeTo">Eligibility / Scope to</FormLabel>
+                            <Select name="xp_ScopeTo" id="xp_ScopeTo" placeholder="Select option">
+                              <option value="buyers">Buyers</option>
+                              <option value="buyersgroup">Buyers Group</option>
+                              <option value="suppliers">Suppliers</option>
+                              <option value="products">Products</option>
+                              <option value="categories">Categories</option>
+                            </Select>
+                          </FormControl>
+                        </VStack>
+                        <Box>
+                          <RadioGroupControl name="xp_Type" label="Promotion Type" control={control}>
+                            <Radio value="Percentage">Percentage</Radio>
+                            <Radio value="Fixed">Fixed Amount</Radio>
+                            <Radio value="Free-shipping">Free Shipping</Radio>
+                            <Radio value="BOGO">BOGO</Radio>
+                          </RadioGroupControl>
+
+                          {values.xp_Type !== "Free-shipping" && values.xp_Type !== "BOGO" && (
+                            <InputGroup>
+                              <InputLeftElement pointerEvents="none" color="gray.300" fontSize="1.2em">
+                                {values.xp_Type === "Percentage" ? "%" : "$"}
+                              </InputLeftElement>
+                              <InputControl name="xp_Value" placeholder="Enter amount" control={control} />
+                            </InputGroup>
+                          )}
+                        </Box>
+                      </SimpleGrid>
+                    </Card>
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    <Card p={6} gap={6}>
+                      <SimpleGrid columns={2} spacing={10}>
                         <EligibleExpressionField name="EligibleExpression" label="Eligible Expression" isRequired />
-                      </Box>
-                      <Box>
                         <TextareaControl name="ValueExpression" label="Value Expression" control={control} isRequired />
-                      </Box>
-                    </SimpleGrid>
-                    <ExpressionBuilder />
+                      </SimpleGrid>
+                      <ExpressionBuilder />
+                    </Card>
                   </TabPanel>
-                  <TabPanel>
-                    <SimpleGrid columns={2} spacing={10}>
-                      <Box>
-                        <PromotionXpCard promotion={promotion} />
-                      </Box>
-                    </SimpleGrid>
+                  <TabPanel p={0}>
+                    <PromotionXpCard promotion={promotion} />
+                    {/* <Card p={6}>
+                      <SimpleGrid columns={2} spacing={10}>
+                      </SimpleGrid>
+                    </Card> */}
                   </TabPanel>
                 </TabPanels>
-              </Tabs>
-            </GridItem>
-            <GridItem pl="2" area={"footer"}>
-              <Divider mt="15" mb="15" />
-              <ButtonGroup>
-                <SubmitButton control={control} variant="solid" colorScheme="primary">
-                  Save
-                </SubmitButton>
-                <ResetButton control={control} reset={reset} variant="outline">
-                  Discard Changes
-                </ResetButton>
-                <Button onClick={() => router.push(`/promotions`)} variant="outline" isLoading={isSubmitting}>
-                  Cancel
-                </Button>
-                {!isCreating && (
-                  <Button variant="outline" onClick={() => deletePromotion(values.ID)} leftIcon={<DeleteIcon />}>
-                    Delete
-                  </Button>
-                )}
-              </ButtonGroup>
-            </GridItem>
-          </Grid>
+                {/* OVERVIEW */}
+                <Card p={6}>
+                  <Heading as="h2" fontSize="2xl">
+                    Overview
+                  </Heading>
+                  <UnorderedList>
+                    <ListItem>Name: {values.Name}</ListItem>
+                    <ListItem>Description: {values.Description}</ListItem>
+                    <ListItem>Code: {values.Code}</ListItem>
+                    <ListItem>Start Date: {values.StartDate}</ListItem>
+                    <ListItem>End Date: {values.ExpirationDate}</ListItem>
+                    <ListItem>Can Combine: {values.CanCombine ? "Yes" : "No"}</ListItem>
+                    <ListItem>Line Item Level: {values.LineItemLevel ? "Yes" : "No"}</ListItem>
+                    <ListItem>Allow All Buyers: {values.AllowAllBuyers ? "Yes" : "No"}</ListItem>
+                    <ListItem>Redemption Limit: {values.RedemptionLimit}</ListItem>
+                    <ListItem>Redemption Limit Per User: {values.RedemptionLimitPerUser}</ListItem>
+                    <ListItem>Fine Print: {values.FinePrint}</ListItem>
+                    <ListItem>Eligible Expression: {values.EligibleExpression}</ListItem>
+                    <ListItem>Value Expression: {values.ValueExpression}</ListItem>
+                  </UnorderedList>
+                </Card>
+              </SimpleGrid>
+            </Tabs>
+          </Box>
         </Box>
-      </Card>
+      </Container>
     </>
   )
 }

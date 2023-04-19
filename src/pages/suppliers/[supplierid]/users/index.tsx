@@ -1,4 +1,3 @@
-import {Box} from "@chakra-ui/react"
 import React from "react"
 import {useRouter} from "hooks/useRouter"
 import SupplierUsersList from "@/components/supplierursers/list/SupplierUsersList"
@@ -23,13 +22,7 @@ const UsersList = () => {
   const router = useRouter()
   const supplierID = router.query.supplierid as string
 
-  return (
-    <>
-      <Box padding="GlobalPadding">
-        <SupplierUsersList supplierid={supplierID}></SupplierUsersList>
-      </Box>
-    </>
-  )
+  return <SupplierUsersList supplierid={supplierID} />
 }
 
 export default UsersList

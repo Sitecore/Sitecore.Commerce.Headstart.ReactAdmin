@@ -1,5 +1,5 @@
 import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Card, Flex, Stack} from "@chakra-ui/react"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
 import {InputControl, TextareaControl} from "components/react-hook-form"
 import {UserGroup} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
@@ -8,6 +8,7 @@ import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
+import {TbChevronLeft} from "react-icons/tb"
 
 export {CreateUpdateForm}
 
@@ -56,28 +57,33 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
   }
 
   return (
-    <>
-      <Card variant="primaryCard">
-        <Flex flexDirection="column" p="10">
-          <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-            <Stack spacing={5}>
-              <InputControl name="Name" label="User Group Name" control={control} isRequired />
-              <TextareaControl name="Description" label="Description" control={control} />
-              <ButtonGroup>
-                <SubmitButton control={control} variant="solid" colorScheme="primary">
-                  Save
-                </SubmitButton>
-                <ResetButton control={control} reset={reset} variant="outline">
-                  Discard Changes
-                </ResetButton>
-                <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting}>
-                  Cancel
-                </Button>
-              </ButtonGroup>
-            </Stack>
-          </Box>
-        </Flex>
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+      <Card>
+        <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+          <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting} leftIcon={<TbChevronLeft />}>
+            Back
+          </Button>
+          <ButtonGroup>
+            <ResetButton control={control} reset={reset} variant="outline">
+              Discard Changes
+            </ResetButton>
+            <SubmitButton control={control} variant="solid" colorScheme="primary">
+              Save
+            </SubmitButton>
+          </ButtonGroup>
+        </CardHeader>
+        <CardBody
+          display="flex"
+          flexDirection={"column"}
+          as="form"
+          onSubmit={handleSubmit(onSubmit)}
+          gap={4}
+          maxW={{xl: "container.md"}}
+        >
+          <InputControl name="Name" label="User Group Name" control={control} isRequired />
+          <TextareaControl name="Description" label="Description" control={control} />
+        </CardBody>
       </Card>
-    </>
+    </Container>
   )
 }

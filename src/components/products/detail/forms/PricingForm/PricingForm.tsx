@@ -1,6 +1,26 @@
 import {InputControl, NumberInputControl, SwitchControl} from "@/components/react-hook-form"
 import {ChevronDownIcon, ChevronRightIcon, InfoOutlineIcon} from "@chakra-ui/icons"
-import {Box, Button, Flex, FormControl, FormErrorMessage, Grid, GridItem, Text} from "@chakra-ui/react"
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Button,
+  Card,
+  CardBody,
+  Collapse,
+  Divider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Grid,
+  GridItem,
+  Heading,
+  Text,
+  useDisclosure
+} from "@chakra-ui/react"
 import {useErrorToast} from "hooks/useToast"
 import {compact, get} from "lodash"
 import {useEffect, useState} from "react"
@@ -66,7 +86,7 @@ const PriceBreakTable = ({control, trigger}: PriceBreakTableProps) => {
         Volume Pricing
       </Text>
       {fields.map((field, index) => (
-        <Flex key={field.id} gap="formInputSpacing" alignItems="end" flexWrap={{base: "wrap", lg: "nowrap"}}>
+        <Flex key={field.id} gap={4} alignItems="end" flexWrap={{base: "wrap", lg: "nowrap"}}>
           <NumberInputControl
             numberInputProps={{flexGrow: 1}}
             name={`${fieldNames.PRICE_BREAKS}.${index}.Quantity`}
@@ -121,12 +141,12 @@ interface PricingFormProps {
 }
 export function PricingForm({control, trigger, priceBreakCount}: PricingFormProps) {
   const [showAdvancedPricing, setShowAdvancedPricing] = useState(priceBreakCount > 1)
-
+  const {isOpen, onToggle} = useDisclosure()
   return (
     <>
-      <Flex flexDirection="column" gap="formSectionSpacing" maxWidth="container.lg">
-        <Grid templateColumns={{base: "1fr", xl: "1fr 1fr"}} gap="formInputSpacing">
-          <GridItem>
+      <Card>
+        <CardBody flexDirection="column" gap={4}>
+          <Grid templateColumns={{base: "1fr", xl: "1fr 1fr"}} gap={4}>
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.Price`}
               label="Regular Price (per unit)"
@@ -134,8 +154,7 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
               leftAddon="$"
               validationSchema={validationSchema}
             />
-          </GridItem>
-          <GridItem gridRowStart={{base: "unset", xl: 2}}>
+
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.SalePrice`}
               label="Sale Price (per unit)"
@@ -143,74 +162,81 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
               leftAddon="$"
               validationSchema={validationSchema}
             />
-          </GridItem>
-          <GridItem gridRowStart={{base: "unset", xl: 2}}>
-            <Grid gap="formInputSpacing" gridTemplateColumns={{base: "1fr", xl: "1fr 1fr"}}>
-              <GridItem>
-                <InputControl
-                  name={fieldNames.SALE_START}
-                  label="Sale Start"
-                  control={control}
-                  inputProps={{type: "datetime-local"}}
-                  validationSchema={validationSchema}
-                />
-              </GridItem>
-              <GridItem>
-                <InputControl
-                  name={fieldNames.SALE_END}
-                  label="Sale End"
-                  control={control}
-                  inputProps={{type: "datetime-local"}}
-                  validationSchema={validationSchema}
-                />
-              </GridItem>
-            </Grid>
-          </GridItem>
-        </Grid>
-        <Text
-          fontWeight="medium"
-          maxWidth="max-content"
-          onClick={() => setShowAdvancedPricing(showAdvancedPricing ? false : true)}
-        >
-          {showAdvancedPricing ? <ChevronDownIcon boxSize={6} /> : <ChevronRightIcon boxSize={6} />} Advanced Pricing
-        </Text>
-        {showAdvancedPricing && (
-          <Flex flexDirection="column" gap="formSectionSpacing">
-            <Box>
-              <SwitchControl
-                switchProps={{size: "md"}}
-                name={fieldNames.RESTRICTED_QUANTITY}
-                label="Restrict order quantity"
+
+            <Grid gap={4} gridTemplateColumns={{base: "1fr", xl: "1fr 1fr"}}>
+              <InputControl
+                name={fieldNames.SALE_START}
+                label="Sale Start"
                 control={control}
+                inputProps={{type: "datetime-local"}}
                 validationSchema={validationSchema}
               />
-              <Text fontSize="sm" color="gray">
-                Require customers to order only in quantities specified in the volume pricing table
-              </Text>
-            </Box>
-            <PriceBreakTable control={control} trigger={trigger} />
-            <Box>
-              <Text fontWeight="medium" marginBottom={3}>
-                Order Limitations
-              </Text>
-              <Flex gap="formInputSpacing" flexWrap={{base: "wrap", lg: "nowrap"}}>
-                <InputControl
-                  name={fieldNames.MIN_QUANTITY}
-                  label="Minimum quantity"
-                  control={control}
-                  validationSchema={validationSchema}
-                />
-                <InputControl
-                  name={fieldNames.MAX_QUANTITY}
-                  label="Maximum quantity"
-                  control={control}
-                  validationSchema={validationSchema}
-                />
-              </Flex>
-            </Box>
-          </Flex>
-        )}
-      </Flex>
+
+              <InputControl
+                name={fieldNames.SALE_END}
+                label="Sale End"
+                control={control}
+                inputProps={{type: "datetime-local"}}
+                validationSchema={validationSchema}
+              />
+            </Grid>
+          </Grid>
+          <Text
+            fontWeight="medium"
+            maxWidth="max-content"
+            onClick={() => setShowAdvancedPricing(showAdvancedPricing ? false : true)}
+          ></Text>
+        </CardBody>
+      </Card>
+      <Card mt={6}>
+        <CardBody>
+          <Accordion borderColor={"transparent"} allowToggle>
+            <AccordionItem>
+              <AccordionButton px={0}>
+                <Heading fontSize="xl">Advanced Pricing</Heading>
+                <AccordionIcon ml="auto" />
+              </AccordionButton>
+              <AccordionPanel pb={4} px={0}>
+                <Divider />
+                <Flex flexDirection="column" gap={4} mt={4}>
+                  <Box>
+                    <SwitchControl
+                      switchProps={{size: "md"}}
+                      name={fieldNames.RESTRICTED_QUANTITY}
+                      label="Restrict order quantity"
+                      control={control}
+                      validationSchema={validationSchema}
+                    />
+                    <Text fontSize="sm" color="gray">
+                      Require customers to order only in quantities specified in the volume pricing table
+                    </Text>
+                  </Box>
+                  <PriceBreakTable control={control} trigger={trigger} />
+                  <Box>
+                    <Text fontSize="lg" fontWeight="bold" marginBottom={3}>
+                      Order Limitations
+                    </Text>
+                    <Flex gap={4} flexWrap={{base: "wrap", lg: "nowrap"}}>
+                      <InputControl
+                        name={fieldNames.MIN_QUANTITY}
+                        label="Minimum quantity"
+                        control={control}
+                        validationSchema={validationSchema}
+                      />
+                      <InputControl
+                        name={fieldNames.MAX_QUANTITY}
+                        label="Maximum quantity"
+                        control={control}
+                        validationSchema={validationSchema}
+                      />
+                    </Flex>
+                  </Box>
+                </Flex>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </CardBody>
+      </Card>
     </>
   )
 }

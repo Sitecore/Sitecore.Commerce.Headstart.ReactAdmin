@@ -23,9 +23,7 @@ export async function getServerSideProps() {
 const ProtectedCreateUpdateForm = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <Box padding="GlobalPadding">
-        <CreateUpdateForm ocService={Users} />
-      </Box>
+      <CreateUpdateForm ocService={Users} />
     </ProtectedContent>
   )
 }

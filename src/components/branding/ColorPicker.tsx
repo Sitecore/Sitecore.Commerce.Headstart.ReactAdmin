@@ -11,7 +11,7 @@ export const ColorPicker = ({ colors, onChange }) => {
             <Text>Select a color or enter your hex code</Text>
             <FormControl>
                 <FormLabel fontSize="xs" htmlFor="colorInput">Brand</FormLabel>
-                <InputGroup size="sm">
+                <InputGroup>
                     <InputLeftAddon bgColor={colors.brand} borderColor={useColorModeValue("gray.300", "inherit")} style={{ aspectRatio: 1 / 1 }} />
                     <Input
                         id="colorInput"
@@ -23,7 +23,7 @@ export const ColorPicker = ({ colors, onChange }) => {
             </FormControl>
             <FormControl>
                 <FormLabel fontSize="xs" htmlFor="colorInput">Primary</FormLabel>
-                <InputGroup size="sm">
+                <InputGroup>
                     <InputLeftAddon bgColor={colors.primary} borderColor={useColorModeValue("gray.300", "inherit")} style={{ aspectRatio: 1 / 1 }} />
                     <Input
                         id="colorInput"
@@ -36,7 +36,7 @@ export const ColorPicker = ({ colors, onChange }) => {
             </FormControl>
             <FormControl>
                 <FormLabel fontSize="xs" htmlFor="colorInput">Secondary</FormLabel>
-                <InputGroup size="sm">
+                <InputGroup>
                     <InputLeftAddon bgColor={colors.secondary} borderColor={useColorModeValue("gray.300", "inherit")} style={{ aspectRatio: 1 / 1 }} />
                     <Input
                         id="colorInput"

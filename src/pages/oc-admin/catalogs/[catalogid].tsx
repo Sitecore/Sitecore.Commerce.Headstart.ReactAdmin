@@ -5,6 +5,7 @@ import {UserGroup, UserGroups} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
+import {Container, Skeleton} from "@chakra-ui/react"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -37,7 +38,17 @@ const UserGroupListItem = () => {
       getUserGroup()
     }
   }, [router.query.buyerid, router.query.usergroupid])
-  return <>{userGroup?.ID ? <CreateUpdateForm userGroup={userGroup} ocService={UserGroups} /> : <div> Loading</div>}</>
+  return (
+    <>
+      {userGroup?.ID ? (
+        <CreateUpdateForm userGroup={userGroup} ocService={UserGroups} />
+      ) : (
+        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+          <Skeleton w="100%" h="544px" borderRadius="md" />
+        </Container>
+      )}
+    </>
+  )
 }
 const ProtectedBuyerListItem = () => {
   return (

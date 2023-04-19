@@ -41,8 +41,7 @@ const DebouncedSearchInput: FC<IDebouncedSearchInputProps> = ({
         aria-label={label}
         placeholder={`${placeholder || label}...`}
         value={searchTerm}
-        onChange={handleInputChange}
-      ></Input>
+        onChange={handleInputChange} />
       {searchTerm && (
         <InputRightElement>
           <IconButton

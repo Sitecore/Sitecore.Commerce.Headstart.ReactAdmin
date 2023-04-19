@@ -47,11 +47,8 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <PopoverHeader>Manage Product Views</PopoverHeader>
-            <PopoverArrow />
-            <PopoverCloseButton />
-            <PopoverBody margin={10}>
-              <SimpleGrid columns={2} spacing={3}>
+            <PopoverBody>
+              <SimpleGrid columns={[1, 2]} spacing={2}>
                 <Checkbox value="Details" isChecked={visibility.Details} onChange={handleChange}>
                   Details
                 </Checkbox>
@@ -79,7 +76,7 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
               <Flex justifyContent="space-between">
                 <Button onClick={onClose}>Cancel</Button>
                 <Button variant="solid" colorScheme="primary" onClick={() => onSubmit(onClose)}>
-                  Save
+                  Apply
                 </Button>
               </Flex>
             </PopoverFooter>

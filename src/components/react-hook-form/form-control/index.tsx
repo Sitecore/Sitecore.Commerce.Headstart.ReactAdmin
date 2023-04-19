@@ -36,7 +36,7 @@ export const FormControl: FC<BaseProps> = (props: BaseProps) => {
   return (
     <ChakraFormControl isInvalid={!!error && isTouched} {...rest}>
       {label && typeof label === "string" ? (
-        <FormLabel htmlFor={name} {...labelProps}>
+        <FormLabel m={0} htmlFor={name} {...labelProps}>
           {label}
         </FormLabel>
       ) : (

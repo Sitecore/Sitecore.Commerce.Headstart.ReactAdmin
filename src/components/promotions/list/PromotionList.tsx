@@ -8,7 +8,6 @@ import {DataTableColumn} from "../../shared/DataTable/DataTable"
 import ListView, {ListViewGridOptions, ListViewTableOptions} from "../../shared/ListView/ListView"
 import PromotionDeleteModal from "../modals/PromotionDeleteModal"
 import PromotionActionMenu from "./PromotionActionMenu"
-import PromotionCard from "./PromotionCard"
 import PromotionListToolbar from "./PromotionListToolbar"
 
 const PromotionQueryMap = {
@@ -114,18 +113,6 @@ const PromotionTableOptions: ListViewTableOptions<IPromotion> = {
   }
 }
 
-const PromotionGridOptions: ListViewGridOptions<IPromotion> = {
-  renderGridItem: (promotion, index, renderActions, selected, onSelectChange) => (
-    <PromotionCard
-      key={index}
-      promotion={promotion}
-      selected={selected}
-      renderPromotionActions={renderActions}
-      onPromotionSelected={onSelectChange}
-    />
-  )
-}
-
 const PromotionList = () => {
   const [actionPromotion, setActionPromotion] = useState<IPromotion>()
   const deleteDisclosure = useDisclosure()
@@ -155,7 +142,6 @@ const PromotionList = () => {
       itemHrefResolver={resolvePromotionDetailHref}
       itemActions={renderPromotionActionsMenu}
       tableOptions={PromotionTableOptions}
-      gridOptions={PromotionGridOptions}
     >
       {({renderContent, items, ...listViewChildProps}) => (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>

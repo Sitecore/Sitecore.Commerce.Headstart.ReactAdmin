@@ -1,6 +1,7 @@
 import {Box, Center, GridItem, Heading, ResponsiveObject, SimpleGrid, Spinner, Text, VStack} from "@chakra-ui/react"
 import {ReactElement} from "react"
 import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
+import DefaultDataGridItemCard from "./DefaultDataGridItemCard"
 
 export interface IDataGrid<T extends IDefaultResource> {
   data: T[]
@@ -31,20 +32,14 @@ const DEFAULT_DATA_GRID__RENDER_GRID_ITEM = (
   onSelectChange,
   hrefResolver
 ) => (
-  <VStack
-    h="full"
-    justifyContent="space-between"
-    p={2}
-    backgroundColor="white"
-    border="1px solid"
-    borderColor="gray.200"
-    borderRadius="xl"
-    shadow="xl"
-  >
-    <Heading as="h3" fontSize="lg">
-      {o.Name}
-    </Heading>
-  </VStack>
+  <DefaultDataGridItemCard
+    o={o}
+    i={i}
+    actions={actions}
+    isSelected={isSelected}
+    onSelectChange={onSelectChange}
+    hrefResolver={hrefResolver}
+  />
 )
 
 const DEFAULT_DATA_GRID__EMPTY_DISPLAY: ReactElement = (

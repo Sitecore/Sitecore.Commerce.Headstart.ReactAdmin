@@ -11,6 +11,9 @@ import Pagination from "../Pagination/Pagination"
 export interface IDefaultResource {
   ID?: string
   Name?: string
+  Active?: boolean
+  FirstName?: string
+  LastName?: string
 }
 
 export interface ListViewTableOptions<T>

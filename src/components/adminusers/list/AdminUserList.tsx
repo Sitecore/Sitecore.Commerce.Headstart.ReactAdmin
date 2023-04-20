@@ -74,18 +74,6 @@ const AdminUserTableOptions: ListViewTableOptions<IAdminUser> = {
   }
 }
 
-const AdminUserGridOptions: ListViewGridOptions<IAdminUser> = {
-  renderGridItem: (adminUser, index, renderActions, selected, onSelectChange) => (
-    <AdminUserCard
-      key={index}
-      adminUser={adminUser}
-      selected={selected}
-      renderAdminUserActions={renderActions}
-      onAdminUserSelected={onSelectChange}
-    />
-  )
-}
-
 const AdminUserList = () => {
   const [actionAdminUser, setActionAdminUser] = useState<IAdminUser>()
   const deleteDisclosure = useDisclosure()
@@ -115,7 +103,6 @@ const AdminUserList = () => {
       itemHrefResolver={resolveAdminUserDetailHref}
       itemActions={renderAdminUserActionsMenu}
       tableOptions={AdminUserTableOptions}
-      gridOptions={AdminUserGridOptions}
     >
       {({renderContent, items, ...listViewChildProps}) => (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>

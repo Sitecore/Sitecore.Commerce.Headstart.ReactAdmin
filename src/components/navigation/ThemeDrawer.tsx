@@ -1,6 +1,5 @@
 import {
   Button,
-  ButtonGroup,
   Divider,
   DrawerBody,
   DrawerCloseButton,
@@ -10,27 +9,24 @@ import {
   DrawerOverlay,
   FormControl,
   FormLabel,
-  Icon,
-  MenuItem,
   Switch,
   useColorMode,
   useColorModeValue,
   useModalContext
 } from "@chakra-ui/react"
-import React, {useContext, useState} from "react"
-import Cookies from "universal-cookie"
-import {ColorPicker} from "../branding/ColorPicker"
-import {LogoUploader} from "../branding/LogoUploader"
-import {FontUploader} from "../branding/FontUploader"
-import {brandContext, DEFAULT_THEME_COLORS} from "../Chakra"
-import {DEFAULT_THEME_ACCENT, DEFAULT_THEME_PRIMARY, DEFAULT_THEME_SECONDARY} from "theme/foundations/colors"
 import {appPermissions} from "constants/app-permissions.config"
-import {TbSun, TbMoon} from "react-icons/tb"
+import {useContext, useState} from "react"
+import Cookies from "universal-cookie"
 import ProtectedContent from "../auth/ProtectedContent"
+import {ColorPicker} from "../branding/ColorPicker"
+import FontPicker from "../branding/FontPicker"
+import {brandContext, DEFAULT_THEME_COLORS} from "../Chakra"
 
 export const ThemeDrawer = () => {
-  const {colors, setColors} = useContext(brandContext)
+  const {colors, setColors, fonts, setFonts} = useContext(brandContext)
   const [selectedColors, setSelectedColors] = useState(colors)
+  const [selectedFonts, setSelectedFonts] = useState(fonts)
+
   const {colorMode, toggleColorMode} = useColorMode()
   const {onClose} = useModalContext()
   const handleColorChange = (colorID: string, newValue: any) => {
@@ -45,15 +41,19 @@ export const ThemeDrawer = () => {
       toggleColorMode()
     }, 100)
   }
+  const handleFontChange = (fontKey: string, newValue: any) => {
+    setSelectedFonts((f) => ({...f, [fontKey]: newValue}))
+  }
 
   const handleApplyTheme = () => {
     setColors(selectedColors)
+    setFonts(selectedFonts)
     onClose()
   }
 
   const handleResetTheme = () => {
-    localStorage.removeItem("themeColors")
     setColors(DEFAULT_THEME_COLORS)
+    setFonts(undefined)
     onClose()
   }
 
@@ -85,8 +85,7 @@ export const ThemeDrawer = () => {
           </ProtectedContent>
           <Divider />
           <ColorPicker colors={selectedColors} onChange={handleColorChange} />
-          {/* <LogoUploader />
-              <FontUploader /> */}
+          <FontPicker fonts={selectedFonts} onChange={handleFontChange} />
         </DrawerBody>
         <DrawerFooter gap={4} flexFlow="row wrap" justifyContent="center" alignItems={"center"}>
           <Button variant="solid" colorScheme="primary" onClick={handleApplyTheme} flexGrow={1}>

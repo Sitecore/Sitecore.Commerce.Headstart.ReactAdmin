@@ -1,13 +1,5 @@
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  Text,
-  useColorModeValue,
-  VStack
-} from "@chakra-ui/react"
+import {FormControl, FormLabel, Text, VStack} from "@chakra-ui/react"
+import ColorInput from "../shared/ColorInput/ColorInput"
 
 export const ColorPicker = ({colors, onChange}) => {
   const handleInputChange = (colorID: string) => (e) => {
@@ -21,55 +13,19 @@ export const ColorPicker = ({colors, onChange}) => {
         <FormLabel fontSize="xs" htmlFor="colorInput">
           Primary
         </FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            bgColor={colors.primary}
-            borderColor={useColorModeValue("gray.300", "inherit")}
-            style={{aspectRatio: 1 / 1}}
-          />
-          <Input
-            id="colorInput"
-            placeholder="Select a color"
-            value={colors.primary}
-            onChange={handleInputChange("primary")}
-          />
-        </InputGroup>
+        <ColorInput value={colors.primary} onChange={handleInputChange("primary")} />
       </FormControl>
       <FormControl>
         <FormLabel fontSize="xs" htmlFor="colorInput">
           Secondary
         </FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            bgColor={colors.secondary}
-            borderColor={useColorModeValue("gray.300", "inherit")}
-            style={{aspectRatio: 1 / 1}}
-          />
-          <Input
-            id="colorInput"
-            placeholder="Select a color"
-            value={colors.secondary}
-            onChange={handleInputChange("secondary")}
-          />
-        </InputGroup>
+        <ColorInput value={colors.secondary} onChange={handleInputChange("secondary")} />
       </FormControl>
       <FormControl>
         <FormLabel fontSize="xs" htmlFor="colorInput">
           Accent
         </FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            bgColor={colors.accent}
-            borderColor={useColorModeValue("gray.300", "inherit")}
-            style={{aspectRatio: 1 / 1}}
-          />
-          <Input
-            id="colorInput"
-            placeholder="Select a color"
-            value={colors.accent}
-            onChange={handleInputChange("accent")}
-          />
-        </InputGroup>
+        <ColorInput value={colors.accent} onChange={handleInputChange("accent")} />
       </FormControl>
     </VStack>
   )

@@ -12,7 +12,8 @@ import {
   IconButton,
   Flex,
   useMediaQuery,
-  theme
+  theme,
+  Heading
 } from "@chakra-ui/react"
 import {HiOutlineCurrencyDollar, HiOutlineFolderOpen, HiOutlineUserAdd, HiOutlineUserCircle} from "react-icons/hi"
 import {useEffect, useState} from "react"
@@ -211,9 +212,9 @@ const Dashboard = () => {
         )}
       </CardHeader>
       <CardBody pt={0}>
-        <Text fontSize="xl" casing="capitalize" fontWeight="semibold">
+        <Heading fontSize="lg" mb="6px" textTransform="capitalize" mt={"auto"}>
           {item.label}
-        </Text>
+        </Heading>
         <Text fontSize="xs" fontWeight="normal" color={labelColor} casing="uppercase">
           latest {item.label.toString()} update:
           <Text as={"span"} fontSize="xs" fontWeight={"semibold"}>

@@ -19,24 +19,6 @@ export const ColorPicker = ({colors, onChange}) => {
       <Text>Select a color or enter your hex code</Text>
       <FormControl>
         <FormLabel fontSize="xs" htmlFor="colorInput">
-          Brand
-        </FormLabel>
-        <InputGroup>
-          <InputLeftAddon
-            bgColor={colors.accent}
-            borderColor={useColorModeValue("gray.300", "inherit")}
-            style={{aspectRatio: 1 / 1}}
-          />
-          <Input
-            id="colorInput"
-            placeholder="Select a color"
-            value={colors.accent}
-            onChange={handleInputChange("accent")}
-          />
-        </InputGroup>
-      </FormControl>
-      <FormControl>
-        <FormLabel fontSize="xs" htmlFor="colorInput">
           Primary
         </FormLabel>
         <InputGroup>
@@ -68,6 +50,24 @@ export const ColorPicker = ({colors, onChange}) => {
             placeholder="Select a color"
             value={colors.secondary}
             onChange={handleInputChange("secondary")}
+          />
+        </InputGroup>
+      </FormControl>
+      <FormControl>
+        <FormLabel fontSize="xs" htmlFor="colorInput">
+          Accent
+        </FormLabel>
+        <InputGroup>
+          <InputLeftAddon
+            bgColor={colors.accent}
+            borderColor={useColorModeValue("gray.300", "inherit")}
+            style={{aspectRatio: 1 / 1}}
+          />
+          <Input
+            id="colorInput"
+            placeholder="Select a color"
+            value={colors.accent}
+            onChange={handleInputChange("accent")}
           />
         </InputGroup>
       </FormControl>

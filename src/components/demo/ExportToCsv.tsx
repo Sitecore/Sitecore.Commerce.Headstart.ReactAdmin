@@ -72,7 +72,7 @@ export default function ExportToCsv({variant = "button"}: ExportToCsvProps) {
                   Cancel
                 </Button>
                 <Button variant="solid" colorScheme="primary" onClick={() => requestExportCSV()} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Export items to CSV"}
+                  {loading ? <Spinner color="accent.500" /> : "Export items to CSV"}
                 </Button>
               </HStack>
             </AlertDialogFooter>

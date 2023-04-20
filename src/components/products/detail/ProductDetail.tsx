@@ -160,7 +160,7 @@ export default function ProductDetail({
           setViewVisibility={setViewVisibility}
         />
         {showTabbedView ? (
-          <Tabs colorScheme="brand" index={tabIndex} onChange={handleTabsChange}>
+          <Tabs colorScheme="accent" index={tabIndex} onChange={handleTabsChange}>
             <TabList flexWrap="wrap">
               {viewVisibility.Details && <ProductDetailTab tab="Details" control={control} />}
               {viewVisibility.Pricing && <ProductDetailTab tab="Pricing" control={control} />}
@@ -221,7 +221,7 @@ export default function ProductDetail({
                           Create attributes like size and color to generate variants for this product.
                         </Text>
                       </Heading>
-                      <Button variant="outline" colorScheme="brand" ml="auto">
+                      <Button variant="outline" colorScheme="accent" ml="auto">
                         Create attributes
                       </Button>
                     </CardHeader>
@@ -234,7 +234,7 @@ export default function ProductDetail({
                         justifyContent={"center"}
                         minH={"xs"}
                       >
-                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
+                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
                         <Heading colorScheme="secondary" fontSize="xl">
                           This product has no attributes
                         </Heading>
@@ -257,7 +257,7 @@ export default function ProductDetail({
                 <TabPanel p={0} mt={6}>
                   <Card w="100%">
                     <CardHeader display="flex" alignItems={"center"}>
-                      <Button variant="outline" colorScheme="brand" ml="auto">
+                      <Button variant="outline" colorScheme="accent" ml="auto">
                         Add From URL
                       </Button>
                     </CardHeader>
@@ -295,7 +295,7 @@ export default function ProductDetail({
                 <TabPanel p={0} mt={6}>
                   <Card w="100%">
                     <CardHeader display="flex" alignItems={"center"}>
-                      <Button variant="outline" colorScheme="brand" ml="auto">
+                      <Button variant="outline" colorScheme="accent" ml="auto">
                         Add Facet
                       </Button>
                     </CardHeader>
@@ -308,7 +308,7 @@ export default function ProductDetail({
                         justifyContent={"center"}
                         minH={"xs"}
                       >
-                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
+                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
                         <Heading colorScheme="secondary" fontSize="xl">
                           This product has no facets
                         </Heading>
@@ -324,7 +324,7 @@ export default function ProductDetail({
                       <Text fontSize="sm" color="gray.400" fontWeight="normal">
                         Add options like shirt text and sign verbiage to enable further product customization.
                       </Text>
-                      <Button variant="outline" colorScheme="brand" ml="auto">
+                      <Button variant="outline" colorScheme="accent" ml="auto">
                         Create option
                       </Button>
                     </CardHeader>
@@ -337,7 +337,7 @@ export default function ProductDetail({
                         justifyContent={"center"}
                         minH={"xs"}
                       >
-                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="brand.500" />
+                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
                         <Heading colorScheme="secondary" fontSize="xl">
                           Nothing created yet...
                         </Heading>

@@ -59,7 +59,7 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
   const [newCategory, setNewCategory] = useState("")
 
   const color = useColorModeValue("textColor.900", "textColor.100")
-  const bg = useColorModeValue("brand.500", "brand.500")
+  const bg = useColorModeValue("accent.500", "accent.500")
 
   useEffect(() => {
     async function GetAssignments() {

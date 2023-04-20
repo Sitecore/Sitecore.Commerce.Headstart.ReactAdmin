@@ -58,7 +58,7 @@ export default function PrintShippingLabel() {
                   Cancel
                 </Button>
                 <Button onClick={requestPrintLabel} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Print Labels"}
+                  {loading ? <Spinner color="accent.500" /> : "Print Labels"}
                 </Button>
               </HStack>
             </AlertDialogFooter>

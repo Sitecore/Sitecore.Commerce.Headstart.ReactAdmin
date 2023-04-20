@@ -183,7 +183,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                 </Button>
               )}
             </ButtonGroup>
-            <Tabs mt={6} colorScheme="brand">
+            <Tabs mt={6} colorScheme="accent">
               <TabList>
                 {/* This tab contains all default Promotion API options (No extended propreties) */}
                 <Tab>Default Options</Tab>

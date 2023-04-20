@@ -418,7 +418,7 @@ const ProductDetails = () => {
                     Cancel
                   </Button>
                   <Button onClick={requestViewProduct} disabled={loading}>
-                    {loading ? <Spinner color="brand.500" /> : "View Product"}
+                    {loading ? <Spinner color="accent.500" /> : "View Product"}
                   </Button>
                 </HStack>
               </AlertDialogFooter>
@@ -449,7 +449,7 @@ const ProductDetails = () => {
                     Cancel
                   </Button>
                   <Button onClick={requestDeleteProduct} disabled={loading}>
-                    {loading ? <Spinner color="brand.500" /> : "Confirm Delete Product"}
+                    {loading ? <Spinner color="accent.500" /> : "Confirm Delete Product"}
                   </Button>
                 </HStack>
               </AlertDialogFooter>
@@ -494,7 +494,7 @@ const ProductDetails = () => {
                     Cancel
                   </Button>
                   <Button onClick={requestLanguage} disabled={loading}>
-                    {loading ? <Spinner color="brand.500" /> : "Change Language"}
+                    {loading ? <Spinner color="accent.500" /> : "Change Language"}
                   </Button>
                 </HStack>
               </AlertDialogFooter>

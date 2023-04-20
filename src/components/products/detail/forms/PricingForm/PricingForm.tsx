@@ -121,7 +121,7 @@ const PriceBreakTable = ({control, trigger}: PriceBreakTableProps) => {
         </Flex>
       ))}
       <Flex justifyContent="space-between" marginTop={2}>
-        <Text fontWeight="medium" color="brand.400" maxWidth="max-content" onClick={handleAddPriceBreak}>
+        <Text fontWeight="medium" color="accent.400" maxWidth="max-content" onClick={handleAddPriceBreak}>
           Add price break
         </Text>
         <FormControl isInvalid={errorMessage} maxWidth="max-content">

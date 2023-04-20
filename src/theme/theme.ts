@@ -7,6 +7,7 @@ import semanticTokens from "./semantic-tokens"
 
 const schraTheme = extendTheme({
   config: {
+    initialColorMode: 'system',
     useSystemColorMode: true,
     cssVarPrefix: "schra"
   },

@@ -16,8 +16,8 @@ export function useProductDetail() {
   useEffect(() => {
     const getProduct = async () => {
       const _product = await Products.Get<IProduct>(query.productid.toString())
-      if (_product.DefaultPriceScheduleID) {
-        const _defaultPriceSchedule = await PriceSchedules.Get(_product.DefaultPriceScheduleID)
+      if (_product?.DefaultPriceScheduleID) {
+        const _defaultPriceSchedule = await PriceSchedules?.Get(_product?.DefaultPriceScheduleID)
         setDefaultPriceSchedule(_defaultPriceSchedule)
       }
       setProduct(_product)

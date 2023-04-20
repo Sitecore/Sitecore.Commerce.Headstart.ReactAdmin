@@ -20,7 +20,7 @@ const CategoryNavigation = () => {
         as={Button}
         rightIcon={<ChevronDownIcon />}
         leftIcon={<HiMenu />}
-        bg="brand.500"
+        bg="accent.500"
         color="textColor.100"
         fontSize="x-small"
         mr="4"

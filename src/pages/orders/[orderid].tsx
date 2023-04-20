@@ -347,7 +347,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
               <Text display="inline">
                 A return for this order will be requested and if approved will refund the balance of
               </Text>{" "}
-              <Text display="inline" color="brand.500" fontWeight="bold">
+              <Text display="inline" color="accent.500" fontWeight="bold">
                 {priceHelper.formatPrice(orderWorksheet.Order.Total)}
               </Text>
               <Textarea
@@ -362,7 +362,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
                 Cancel
               </Button>
               <Button onClick={requestRefund} disabled={loading}>
-                {loading ? <Spinner color="brand.500" /> : "Request Refund"}
+                {loading ? <Spinner color="accent.500" /> : "Request Refund"}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -396,7 +396,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   Cancel
                 </Button>
                 <Button onClick={requestExportCSV} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Export Orders CSV"}
+                  {loading ? <Spinner color="accent.500" /> : "Export Orders CSV"}
                 </Button>
               </HStack>
             </AlertDialogFooter>
@@ -432,7 +432,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   Cancel
                 </Button>
                 <Button onClick={requestExportPDF} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Export Orders PDF"}
+                  {loading ? <Spinner color="accent.500" /> : "Export Orders PDF"}
                 </Button>
               </HStack>
             </AlertDialogFooter>
@@ -468,7 +468,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   Cancel
                 </Button>
                 <Button onClick={requestPrintLabel} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Print Labels"}
+                  {loading ? <Spinner color="accent.500" /> : "Print Labels"}
                 </Button>
               </HStack>
             </AlertDialogFooter>

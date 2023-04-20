@@ -142,7 +142,8 @@ const Dashboard = () => {
     setUsers(usersList.Items)
   }
 
-  const gradient = colorMode === "light" ? "linear(to-t, brand.300, brand.400)" : "linear(to-t, brand.600, brand.500)"
+  const gradient =
+    colorMode === "light" ? "linear(to-t, accent.300, accent.400)" : "linear(to-t, accent.600, accent.500)"
   const color = useColorModeValue("blackAlpha.500", "whiteAlpha.500")
   const labelColor = useColorModeValue("blackAlpha.400", "whiteAlpha.500")
 
@@ -155,22 +156,22 @@ const Dashboard = () => {
     products
       ?.map((i) => i?.Inventory)
       ?.map((lu) => lu?.LastUpdated)
-      ?.reduce((a, b) => (a?.MeasureDate > b?.MeasureDate ? a : b), {})
+      ?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
   ).toLocaleDateString()
   const ordersLatestUpdated = new Date(
-    orders?.map((lu) => lu?.LastUpdated)?.reduce((a, b) => (a?.MeasureDate > b?.MeasureDate ? a : b), {})
+    orders?.map((lu) => lu?.LastUpdated)?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
   ).toLocaleDateString()
   const usersLatestUpdated = new Date(
     users
       ?.map((i) => i?.StartDate)
       ?.filter((wtf) => wtf)
-      ?.reduce((a, b) => (a?.MeasureDate > b?.MeasureDate ? a : b), {})
+      ?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
   ).toLocaleDateString()
   const promotionsLatestUpdated = new Date(
     promotions
       ?.map((i) => i?.StartDate)
       ?.filter((wtf) => wtf)
-      ?.reduce((a, b) => (a?.MeasureDate > b?.MeasureDate ? a : b), {})
+      ?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
   ).toLocaleDateString()
 
   console.log("promotions", promotionsLatestUpdated)

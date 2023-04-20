@@ -11,7 +11,7 @@ export default function LettersCard(props) {
       icon={<TbUser fontSize="1.5rem" />}
       size="md"
       name={`${firstnameletter} ${lastnameletter}}`}
-      bg="brand.500"
+      bg="accent.500"
     />
   )
 }

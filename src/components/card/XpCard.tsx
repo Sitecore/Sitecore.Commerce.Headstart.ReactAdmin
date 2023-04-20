@@ -307,7 +307,7 @@ export default function XpCard<T>({
         {isEditingBasicData /*&&
                   formValues?.images[formValues?.images?.length - 1]?.Url != ""*/ ? (
           <Tooltip label="Add new Extended Property">
-            <Button colorScheme="brand" alignSelf={"flex-start"} variant="ghost" onClick={onOpenAddXP} minW="80px">
+            <Button colorScheme="accent" alignSelf={"flex-start"} variant="ghost" onClick={onOpenAddXP} minW="80px">
               Add XP
             </Button>
           </Tooltip>
@@ -333,7 +333,7 @@ export default function XpCard<T>({
           aria-label="Edit"
           mt={4}
           alignSelf="flex-end"
-          colorScheme="brand"
+          colorScheme="accent"
           variant="ghost"
           onClick={onEditClicked}
           minW="80px"

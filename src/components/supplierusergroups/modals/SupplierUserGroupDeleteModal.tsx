@@ -32,7 +32,12 @@ interface ISupplierUserGroupDeleteModal {
   onComplete: (idsToRemove: string[]) => void
 }
 
-const SupplierUserGroupDeleteModal: FC<ISupplierUserGroupDeleteModal> = ({usergroups, disclosure, supplierID, onComplete}) => {
+const SupplierUserGroupDeleteModal: FC<ISupplierUserGroupDeleteModal> = ({
+  usergroups,
+  disclosure,
+  supplierID,
+  onComplete
+}) => {
   const {isOpen, onClose} = disclosure
   const [showusergroups, setShowusergroups] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -53,7 +58,7 @@ const SupplierUserGroupDeleteModal: FC<ISupplierUserGroupDeleteModal> = ({usergr
     } finally {
       setLoading(false)
     }
-  }, [usergroups, onComplete, onClose])
+  }, [supplierID, usergroups, onComplete, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

@@ -1,5 +1,18 @@
 const styles = {
   global: {
+    ".my-commerce-logo_accent": {
+      fill: "accent.400"
+    },
+    ".my-commerce-logo_primary": {
+      fill: "primary.400"
+    },
+    ".my-commerce-logo_primary-alt": {
+      fill: "primary.900"
+    },
+    ".my-commerce-logo_dark": {
+      fill: "st.logoBaseColor"
+    },
+
     body: {
       fontSize: "md",
       "& #__next": {

@@ -53,7 +53,7 @@ const BuyerUserGroupDeleteModal: FC<IBuyerUserGroupDeleteModal> = ({usergroups, 
     } finally {
       setLoading(false)
     }
-  }, [usergroups, onComplete, onClose])
+  }, [buyerID, usergroups, onComplete, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

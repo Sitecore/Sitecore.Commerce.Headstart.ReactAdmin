@@ -1,44 +1,28 @@
+import {ChevronDownIcon} from "@chakra-ui/icons"
 import {
   Avatar,
   Badge,
-  Button,
   Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  Flex,
   HStack,
   Icon,
-  Image,
   Menu,
   MenuButton,
   MenuDivider,
   MenuItem,
   MenuList,
-  Select,
   Show,
   Text,
-  Tooltip,
   useColorMode,
   useColorModeValue,
   useDisclosure
 } from "@chakra-ui/react"
-import {BsMoonStarsFill, BsSun} from "react-icons/bs"
-import {TbDoorExit, TbInbox, TbMoon, TbPalette, TbSun, TbUserCircle} from "react-icons/tb"
-import React, {useState} from "react"
-import {ChevronDownIcon} from "@chakra-ui/icons"
-import Cookies from "universal-cookie"
-import {ItemContent} from "../generic/ItemContent"
-import ProtectedContent from "../auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {useAuth} from "hooks/useAuth"
-import {Link} from "./Link"
-import {ColorPicker} from "../branding/ColorPicker"
-import {LogoUploader} from "../branding/LogoUploader"
-import {FontUploader} from "../branding/FontUploader"
+import React, {useState} from "react"
+import {TbDoorExit, TbInbox, TbPalette, TbUserCircle} from "react-icons/tb"
+import Cookies from "universal-cookie"
+import ProtectedContent from "../auth/ProtectedContent"
+import {ItemContent} from "../generic/ItemContent"
 import {ThemeDrawer} from "./ThemeDrawer"
 
 const MobileNavigation = () => {

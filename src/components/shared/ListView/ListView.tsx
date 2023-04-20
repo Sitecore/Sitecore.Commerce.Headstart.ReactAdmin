@@ -293,6 +293,7 @@ const ListView = <T extends IDefaultResource>({
     viewMode,
     loading,
     itemActions,
+    itemHrefResolver,
     tableOptions,
     gridOptions,
     isSearching,

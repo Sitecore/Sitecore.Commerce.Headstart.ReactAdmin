@@ -119,7 +119,7 @@ const LineItemCard: FunctionComponent<LineItemCardProps> = ({lineItem, editable}
                   Cancel
                 </Button>
                 <Button onClick={requestReturnItem} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Verify & Start Return"}
+                  {loading ? <Spinner color="accent.500" /> : "Verify & Start Return"}
                 </Button>
               </HStack>
             </AlertDialogFooter>

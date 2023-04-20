@@ -1,16 +1,47 @@
-import { Flex, Card, Text, Box, useColorModeValue, CardBody, CardHeader, Heading, theme, Icon, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel, useDisclosure, Collapse, Button, IconButton } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react"
+import {
+  Flex,
+  Card,
+  Text,
+  Box,
+  useColorModeValue,
+  CardBody,
+  CardHeader,
+  Heading,
+  theme,
+  Icon,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  useDisclosure,
+  Collapse,
+  Button,
+  IconButton
+} from "@chakra-ui/react"
+import React, {useEffect, useState} from "react"
 import LineChart from "../charts/LineChart"
-import { dashboardService } from "services/dashboard.service"
+import {dashboardService} from "services/dashboard.service"
 import schraTheme from "theme/theme"
-import { TbArrowBackUp, TbCaretUp, TbChevronUp, TbCircleCaretUp, TbSquareChevronUp, TbSquareRoundedChevronUpFilled, TbTriangle, TbTriangleFilled } from "react-icons/tb"
-import { ChevronDownIcon, ChevronUpIcon, TriangleUpIcon } from "@chakra-ui/icons"
+import {
+  TbArrowBackUp,
+  TbCaretUp,
+  TbChevronUp,
+  TbCircleCaretUp,
+  TbSquareChevronUp,
+  TbSquareRoundedChevronUpFilled,
+  TbTriangle,
+  TbTriangleFilled
+} from "react-icons/tb"
+import {ChevronDownIcon, ChevronUpIcon, TriangleUpIcon} from "@chakra-ui/icons"
 
 export default function AverageOrderAmount() {
   const headingColor = useColorModeValue("boxTextColor.400", "boxTextColor.300")
   const labelColor = useColorModeValue("blackAlpha.400", "whiteAlpha.500")
   const [totalSales, settotalSales] = useState([Number])
   const [totalPreviousYearSales, settotalPreviousYearSales] = useState([Number])
+  const graphColor1 = useColorModeValue(schraTheme.colors.primary[500], schraTheme.colors.primary[300])
+  const graphColor2 = useColorModeValue(schraTheme.colors.accent[500], schraTheme.colors.accent[300])
   //const [chartData, setchartData] = useState()
   let chartData = require("../../mockdata/dashboard_data.json")
   console.log(chartData)
@@ -34,10 +65,9 @@ export default function AverageOrderAmount() {
     }
   }
   const d = new Date()
-  const { isOpen, onToggle } = useDisclosure()
   let year = d.getFullYear()
   const options = {
-    colors: [schraTheme.colors.orange[500], schraTheme.colors.primary[600]],
+    colors: ["var(--schra-colors-primary-400)", "var(--schra-colors-accent-400)"],
     stroke: {
       lineCap: "round"
     },
@@ -100,8 +130,17 @@ export default function AverageOrderAmount() {
         <Heading fontSize="lg" mb="6px" textTransform="capitalize" color={headingColor}>
           {chartData.salesoverview.title}
         </Heading>
-        <Text as="span" fontSize="xs" fontWeight="normal" color={labelColor} casing="uppercase" display="inline-flex" alignItems={"center"} gap={1}>
-          <Text as="span" color="green.400" fontWeight="bold" display="inline-flex" alignItems={"center"} gap={.5}>
+        <Text
+          as="span"
+          fontSize="xs"
+          fontWeight="normal"
+          color={labelColor}
+          casing="uppercase"
+          display="inline-flex"
+          alignItems={"center"}
+          gap={1}
+        >
+          <Text as="span" color="green.400" fontWeight="bold" display="inline-flex" alignItems={"center"} gap={0.5}>
             <TriangleUpIcon />
             {chartData.salesoverview.percentchange}%
           </Text>

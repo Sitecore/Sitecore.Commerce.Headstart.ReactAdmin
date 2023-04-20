@@ -58,7 +58,7 @@ export default function ExportToPdf() {
                   Cancel
                 </Button>
                 <Button variant="solid" colorScheme="primary" onClick={requestExportPDF} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Export Orders PDF"}
+                  {loading ? <Spinner color="accent.500" /> : "Export Orders PDF"}
                 </Button>
               </HStack>
             </AlertDialogFooter>

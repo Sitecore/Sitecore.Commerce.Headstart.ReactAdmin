@@ -36,12 +36,13 @@ const DebouncedSearchInput: FC<IDebouncedSearchInputProps> = ({
   }, [])
 
   return (
-    <InputGroup colorScheme="brand" maxW={{xl: "sm"}}>
+    <InputGroup colorScheme="accent" maxW={{xl: "sm"}}>
       <Input
         aria-label={label}
         placeholder={`${placeholder || label}...`}
         value={searchTerm}
-        onChange={handleInputChange} />
+        onChange={handleInputChange}
+      />
       {searchTerm && (
         <InputRightElement>
           <IconButton

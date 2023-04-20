@@ -15,7 +15,7 @@ interface IProductActionMenu {
 
 const ProductActionMenu: FC<IProductActionMenu> = ({product, onOpen, onClose, onDelete, onPromote}) => {
   return (
-    <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed" boundary="clippingParents">
+    <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose}>
       <MenuButton as={IconButton} aria-label={`Product action menu for ${product.Name}`} variant="ghost">
         <Icon as={TbDotsVertical} mt={1} color="blackAlpha.400" />
       </MenuButton>

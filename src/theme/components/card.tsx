@@ -28,7 +28,8 @@ const variants = {
           transform: "translateY(-1px)",
           textDecoration: "none"
         },
-        _focusWithin: {zIndex: 1}
+        _focusWithin: {zIndex: 1, transform: "translateY(-1px)"},
+        _focusVisible: {zIndex: 1, transform: "translateY(-1px)"}
       }
     })
 }

@@ -37,7 +37,12 @@ const semanticTokens = {
     "st.TableStripeBackground": {
       default: "whiteAlpha.100",
       _dark: "gray.900"
-    }
+    },
+    // LOGO SPECIFIC SEMANTIC TOKENS
+    "st.logoBaseColor":{
+      default: "gray.900",
+      _dark: "gray.50"
+    },
   }
 }
 

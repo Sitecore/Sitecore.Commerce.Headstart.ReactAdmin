@@ -1,7 +1,19 @@
-import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Heading, Image, Text } from "@chakra-ui/react"
-import { Product } from "ordercloud-javascript-sdk"
-import { textHelper } from "utils/text.utils"
-import { Link } from '../../navigation/Link'
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Checkbox,
+  Heading,
+  Image,
+  Text
+} from "@chakra-ui/react"
+import {Product} from "ordercloud-javascript-sdk"
+import {textHelper} from "utils/text.utils"
+import {Link} from "../../navigation/Link"
 
 interface ProductCardProps {
   product: Product
@@ -10,14 +22,27 @@ interface ProductCardProps {
   renderProductActions?: (product: Product) => React.ReactElement | React.ReactElement[] | string
 }
 const ProductCard = (props: ProductCardProps) => {
-  const { product, renderProductActions } = props
+  const {product, renderProductActions} = props
 
   return (
-
     <Card variant={"levitating"} h="100%">
-      <CardHeader bg="white" display="flex" flexFlow="row nowrap" alignItems={"start"} pos="relative" borderTopRadius={"md"}>
-        <Checkbox borderColor={"blackAlpha.300"} isChecked={props.selected} onChange={(e) => props.onProductSelected(product.ID, e.target.checked)} />
-        <Image mx="auto" minH={"150px"} fontSize={0}
+      <CardHeader
+        bg="white"
+        display="flex"
+        flexFlow="row nowrap"
+        alignItems={"start"}
+        pos="relative"
+        borderTopRadius={"md"}
+      >
+        <Checkbox
+          borderColor={"blackAlpha.300"}
+          isChecked={props.selected}
+          onChange={(e) => props.onProductSelected(product.ID, e.target.checked)}
+        />
+        <Image
+          mx="auto"
+          minH={"150px"}
+          fontSize={0}
           src={
             typeof product?.xp?.Images != "undefined" && product?.xp?.Images?.length > 0
               ? product?.xp?.Images[0]?.ThumbnailUrl || product?.xp?.Images[0]?.Url || product?.xp?.Images[0]?.url
@@ -26,7 +51,16 @@ const ProductCard = (props: ProductCardProps) => {
           alt="product image"
           width="175px"
         />
-        <Badge pos="absolute" variant={"solid"} bottom={3} right={3} fontSize="xxs" colorScheme={product.Active ? "success" : "danger"}>{product.Active ? "Active" : "Inactive"}</Badge>
+        <Badge
+          pos="absolute"
+          variant={"solid"}
+          bottom={3}
+          right={3}
+          fontSize="xxs"
+          colorScheme={product.Active ? "success" : "danger"}
+        >
+          {product.Active ? "Active" : "Inactive"}
+        </Badge>
         <Box mt={-3} mr={-3} pl={3}>
           {renderProductActions && renderProductActions(product)}
         </Box>
@@ -42,9 +76,11 @@ const ProductCard = (props: ProductCardProps) => {
         </Text>
       </CardBody>
       <CardFooter w="100%" pt="0">
-        <Button as={Link} w="full" variant="outline" colorScheme="brand" href={"/products/" + product.ID}>View Product</Button>
+        <Button as={Link} w="full" variant="outline" colorScheme="accent" href={"/products/" + product.ID}>
+          View Product
+        </Button>
       </CardFooter>
-    </Card >
+    </Card>
   )
 }
 

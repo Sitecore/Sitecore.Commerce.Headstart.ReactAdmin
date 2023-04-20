@@ -12,13 +12,13 @@ import {
   Spinner,
   Text
 } from "@chakra-ui/react"
-import { useEffect, useRef, useState } from "react"
-import { TbTableImport } from "react-icons/tb"
+import {useEffect, useRef, useState} from "react"
+import {TbTableImport} from "react-icons/tb"
 
 interface BulkImportProps {
   variant?: "button" | "menuitem"
 }
-export default function BulkImport({ variant = "button" }: BulkImportProps) {
+export default function BulkImport({variant = "button"}: BulkImportProps) {
   const [loading, setLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const cancelRef = useRef()
@@ -38,7 +38,9 @@ export default function BulkImport({ variant = "button" }: BulkImportProps) {
           Bulk Import
         </Button>
       ) : (
-        <MenuItem onClick={() => setIsOpen(true)}>Bulk Import <Icon ml="auto" as={TbTableImport} fontSize="1.15em" stroke-width="1.7" /></MenuItem>
+        <MenuItem onClick={() => setIsOpen(true)}>
+          Bulk Import <Icon ml="auto" as={TbTableImport} fontSize="1.15em" stroke-width="1.7" />
+        </MenuItem>
       )}
       <AlertDialog isOpen={isOpen} onClose={() => setIsOpen(false)} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
@@ -55,7 +57,7 @@ export default function BulkImport({ variant = "button" }: BulkImportProps) {
                   Cancel
                 </Button>
                 <Button variant="solid" colorScheme="primary" onClick={() => requestBulkImport()} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Bulk Import"}
+                  {loading ? <Spinner color="accent.500" /> : "Bulk Import"}
                 </Button>
               </HStack>
             </AlertDialogFooter>

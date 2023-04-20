@@ -17,7 +17,7 @@ const InformationNavigation = () => {
           Shop{" "}
           <Tag
             size={"sm"}
-            bg={useColorModeValue("brand.500", "brand.700")}
+            bg={useColorModeValue("accent.500", "accent.700")}
             ml={2}
             color={useColorModeValue("textColor.900", "textColor.100")}
           >

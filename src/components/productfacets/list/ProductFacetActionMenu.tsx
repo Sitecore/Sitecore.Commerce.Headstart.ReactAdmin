@@ -15,12 +15,7 @@ interface IProductFacetActionMenu {
 const ProductFacetActionMenu: FC<IProductFacetActionMenu> = ({productFacet, onOpen, onClose, onDelete}) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
-      <MenuButton
-        as={IconButton}
-        aria-label={`Product facet action menu for ${productFacet.Name}`}
-        variant="ghost"
-        colorScheme="secondary"
-      >
+      <MenuButton as={IconButton} aria-label={`Product facet action menu for ${productFacet.Name}`} variant="ghost">
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>
       <MenuList>

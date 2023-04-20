@@ -20,7 +20,6 @@ const BuyerUserActionMenu: FC<IBuyerUserActionMenu> = ({buyerid, buyeruser: buye
         as={IconButton}
         aria-label={`Action menu for ${buyeruser.FirstName} ${buyeruser.LastName}`}
         variant="ghost"
-        colorScheme="secondary"
       >
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>

@@ -25,11 +25,9 @@ const FirstNameColumn: DataTableColumn<IAdminUser> = {
   accessor: "FirstName",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminusers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -39,11 +37,9 @@ const LastNameColumn: DataTableColumn<IAdminUser> = {
   accessor: "LastName",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminusers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -53,11 +49,9 @@ const EmailColumn: DataTableColumn<IAdminUser> = {
   accessor: "Email",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminusers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -80,18 +74,6 @@ const AdminUserTableOptions: ListViewTableOptions<IAdminUser> = {
   }
 }
 
-const AdminUserGridOptions: ListViewGridOptions<IAdminUser> = {
-  renderGridItem: (adminUser, index, renderActions, selected, onSelectChange) => (
-    <AdminUserCard
-      key={index}
-      adminUser={adminUser}
-      selected={selected}
-      renderAdminUserActions={renderActions}
-      onAdminUserSelected={onSelectChange}
-    />
-  )
-}
-
 const AdminUserList = () => {
   const [actionAdminUser, setActionAdminUser] = useState<IAdminUser>()
   const deleteDisclosure = useDisclosure()
@@ -109,14 +91,18 @@ const AdminUserList = () => {
     [deleteDisclosure.onOpen]
   )
 
+  const resolveAdminUserDetailHref = (user: IAdminUser) => {
+    return `/settings/adminuser/${user.ID}`
+  }
+
   return (
     <ListView<IAdminUser>
       service={AdminUsers.List}
       queryMap={AdminUserQueryMap}
       filterMap={AdminUserFilterMap}
+      itemHrefResolver={resolveAdminUserDetailHref}
       itemActions={renderAdminUserActionsMenu}
       tableOptions={AdminUserTableOptions}
-      gridOptions={AdminUserGridOptions}
     >
       {({renderContent, items, ...listViewChildProps}) => (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>

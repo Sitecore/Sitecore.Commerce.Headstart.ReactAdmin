@@ -1,22 +1,18 @@
-import {Box, Button, ButtonGroup, Container, Icon, Text, useDisclosure} from "@chakra-ui/react"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
-import Link from "next/link"
-import {FC, useCallback, useMemo, useState} from "react"
-import {MdCheck} from "react-icons/md"
-import {IoMdClose} from "react-icons/io"
-import {dateHelper} from "utils"
-import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
-import SupplierUserGroupActionMenu from "./SupplierUserGroupActionMenu"
+import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
 import {SupplierUserGroups} from "ordercloud-javascript-sdk"
-import SupplierUserGroupListToolbar from "./SupplierUserGroupListToolBar"
+import {FC, useCallback, useState} from "react"
+import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
 import SupplierUserGroupDeleteModal from "../modals/SupplierUserGroupDeleteModal"
+import SupplierUserGroupActionMenu from "./SupplierUserGroupActionMenu"
+import SupplierUserGroupListToolbar from "./SupplierUserGroupListToolBar"
 
 interface ISupplierUserGroupList {
   supplierid: string
 }
 
-const paramMap = {
+const SupplierUserGroupsParamMap = {
   d: "Direction",
   supplierid: "supplierID"
 }
@@ -27,6 +23,15 @@ const SupplierUserGroupQueryMap = {
   p: "Page"
 }
 
+const SupplierIdColumn: DataTableColumn<ISupplierUserGroup> = {
+  header: "Supplier UserGroup ID",
+  accessor: "ID",
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
+  )
+}
 const SupplierUserGroupNameColumn: DataTableColumn<ISupplierUserGroup> = {
   header: "USERS",
   accessor: "Name"
@@ -35,6 +40,15 @@ const SupplierUserGroupNameColumn: DataTableColumn<ISupplierUserGroup> = {
 const SupplierUserGroupDescriptionColumn: DataTableColumn<ISupplierUserGroup> = {
   header: "DESCRIPTION",
   accessor: "Description"
+}
+
+const SupplierUserGroupTableOptions: ListViewTableOptions<ISupplierUserGroup> = {
+  responsive: {
+    base: [SupplierIdColumn, SupplierUserGroupNameColumn],
+    md: [SupplierIdColumn, SupplierUserGroupNameColumn],
+    lg: [SupplierIdColumn, SupplierUserGroupNameColumn, SupplierUserGroupDescriptionColumn],
+    xl: [SupplierIdColumn, SupplierUserGroupNameColumn, SupplierUserGroupDescriptionColumn]
+  }
 }
 
 const SupplierUserGroupList: FC<ISupplierUserGroupList> = ({supplierid}) => {
@@ -52,40 +66,23 @@ const SupplierUserGroupList: FC<ISupplierUserGroupList> = ({supplierid}) => {
         />
       )
     },
-    [deleteDisclosure.onOpen]
+    [supplierid, deleteDisclosure.onOpen]
   )
 
-  const SupplierIdColumn: DataTableColumn<ISupplierUserGroup> = useMemo(() => {
-    return {
-      header: "Supplier UserGroup ID",
-      accessor: "ID",
-      cell: ({row, value}) => (
-        <Link href={`/suppliers/${supplierid}/usergroups/${row.original.ID}`}>
-          <Text as="a" noOfLines={2} title={value}>
-            {value}
-          </Text>
-        </Link>
-      )
-    }
-    }, [supplierid])
-
-  const SupplierUserGroupTableOptions: ListViewTableOptions<ISupplierUserGroup> = useMemo(() => {
-    return {
-    responsive: {
-      base: [SupplierIdColumn, SupplierUserGroupNameColumn],
-      md: [SupplierIdColumn, SupplierUserGroupNameColumn],
-      lg: [SupplierIdColumn, SupplierUserGroupNameColumn, SupplierUserGroupDescriptionColumn],
-      xl: [SupplierIdColumn, SupplierUserGroupNameColumn, SupplierUserGroupDescriptionColumn]
-    }
-  }
-  }, [SupplierIdColumn])
+  const resolveSupplierUserGroupDetailHref = useCallback(
+    (usergroup: ISupplierUserGroup) => {
+      return `/suppliers/${supplierid}/usergroups/${usergroup.ID}`
+    },
+    [supplierid]
+  )
 
   return (
     <ListView<ISupplierUserGroup>
       service={SupplierUserGroups.List}
       tableOptions={SupplierUserGroupTableOptions}
-      paramMap={paramMap}
+      paramMap={SupplierUserGroupsParamMap}
       queryMap={SupplierUserGroupQueryMap}
+      itemHrefResolver={resolveSupplierUserGroupDetailHref}
       itemActions={renderSupplierUserGroupActionMenu}
     >
       {({renderContent, items, ...listViewChildProps}) => (

@@ -29,11 +29,9 @@ const IdColumn: DataTableColumn<IProduct> = {
   accessor: "ID",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={`/products/${value}`}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -43,11 +41,9 @@ const ImageColumn: DataTableColumn<IProduct> = {
   accessor: "xp.Images",
   align: "center",
   cell: ({row, value}) => (
-    <Link passHref href={"/products/" + row.original.ID}>
-      <Box as="a" width="50px" display="inline-block">
-        <ProductDefaultImage product={row.original} fit="cover" rounded="6" />
-      </Box>
-    </Link>
+    <Box width="50px" display="inline-block">
+      <ProductDefaultImage product={row.original} fit="cover" rounded="6" />
+    </Box>
   )
 }
 
@@ -56,11 +52,9 @@ const NameColumn: DataTableColumn<IProduct> = {
   accessor: "Name",
   minWidth: "200px",
   cell: ({row, value}) => (
-    <Link passHref href={`/products/${row.original.ID}`}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -133,12 +127,17 @@ const ProductList = () => {
     [deleteDisclosure.onOpen, promoteDisclosure.onOpen]
   )
 
+  const resolveProductDetailHref = (product: IProduct) => {
+    return `/products/${product.ID}?tab=Details`
+  }
+
   return (
     <ListView<IProduct>
       service={Products.List}
       queryMap={ProductQueryMap}
       filterMap={ProductFilterMap}
       itemActions={renderProductActionsMenu}
+      itemHrefResolver={resolveProductDetailHref}
       tableOptions={ProductTableOptions}
       gridOptions={ProductGridOptions}
     >

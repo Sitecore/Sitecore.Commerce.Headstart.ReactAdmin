@@ -31,6 +31,16 @@ const BuyerUserGroupFilterMap = {
   active: "Active"
 }
 
+const IdColumn: DataTableColumn<IBuyerUserGroup> = {
+  header: "BuyerUserGroup ID",
+  accessor: "ID",
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
+  )
+}
+
 const UserGroupNameColumn: DataTableColumn<IBuyerUserGroup> = {
   header: "USERS",
   accessor: "Name"
@@ -39,6 +49,15 @@ const UserGroupNameColumn: DataTableColumn<IBuyerUserGroup> = {
 const UserGroupDescriptionColumn: DataTableColumn<IBuyerUserGroup> = {
   header: "DESCRIPTION",
   accessor: "Description"
+}
+
+const BuyerUserGroupTableOptions: ListViewTableOptions<IBuyerUserGroup> = {
+  responsive: {
+    base: [IdColumn, UserGroupNameColumn],
+    md: [IdColumn, UserGroupNameColumn],
+    lg: [IdColumn, UserGroupNameColumn, UserGroupDescriptionColumn],
+    xl: [IdColumn, UserGroupNameColumn, UserGroupDescriptionColumn]
+  }
 }
 
 const BuyerUserGroupList: FC<IBuyerUserGroupList> = ({buyerid}) => {
@@ -56,33 +75,15 @@ const BuyerUserGroupList: FC<IBuyerUserGroupList> = ({buyerid}) => {
         />
       )
     },
-    [deleteDisclosure.onOpen]
+    [deleteDisclosure.onOpen, buyerid]
   )
 
-  const IdColumn: DataTableColumn<IBuyerUserGroup> = useMemo(() => {
-    return {
-      header: "BuyerUserGroup ID",
-      accessor: "ID",
-      cell: ({row, value}) => (
-        <Link href={`/buyers/${buyerid}/usergroups/${row.original.ID}`}>
-          <Text as="a" noOfLines={2} title={value}>
-            {value}
-          </Text>
-        </Link>
-      )
-    }
-    }, [buyerid])
-
-  const BuyerUserGroupTableOptions: ListViewTableOptions<IBuyerUserGroup> = useMemo(() => {
-    return {
-    responsive: {
-      base: [IdColumn, UserGroupNameColumn],
-      md: [IdColumn, UserGroupNameColumn],
-      lg: [IdColumn, UserGroupNameColumn, UserGroupDescriptionColumn],
-      xl: [IdColumn, UserGroupNameColumn, UserGroupDescriptionColumn]
-    }
-  }
-  }, [IdColumn])
+  const resolveBuyerUserGroupDetailHref = useCallback(
+    (ug: IBuyerUserGroup) => {
+      return `/buyers/${buyerid}/usergroups/${ug.ID}`
+    },
+    [buyerid]
+  )
 
   return (
     <ListView<IBuyerUserGroup>
@@ -90,6 +91,7 @@ const BuyerUserGroupList: FC<IBuyerUserGroupList> = ({buyerid}) => {
       tableOptions={BuyerUserGroupTableOptions}
       paramMap={paramMap}
       queryMap={BuyerUserGroupQueryMap}
+      itemHrefResolver={resolveBuyerUserGroupDetailHref}
       itemActions={renderBuyerUserGroupActionMenu}
     >
       {({renderContent, items, ...listViewChildProps}) => (

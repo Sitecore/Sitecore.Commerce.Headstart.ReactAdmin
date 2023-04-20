@@ -32,14 +32,13 @@ const BuyerUserGroupListToolbar: FC<BuyerUserGroupListToolbarProps> = ({
         </Stack>
         <Box as="span" flexGrow="1"></Box>
         <Stack direction={["column", "column", "column", "row"]}>
-          <Stack direction="row" order={[1, 1, 1, 0]}>
+          <Stack direction="row" order={[1, 1, 1, 0]} alignItems="center">
             {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
-            <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
+          <Box order={[0, 0, 0, 1]}>
             <Link passHref href={`/buyers/${buyerid}/usergroups/add`}>
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+              <Button variant="solid" colorScheme="primary" as="a">
                 Create User Group
               </Button>
             </Link>

@@ -1,6 +1,6 @@
 import ExportToCsv from "@/components/demo/ExportToCsv"
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import {Button, HStack, Menu, MenuButton, MenuList, Text} from "@chakra-ui/react"
+import {Button, HStack, Menu, MenuButton, MenuItem, MenuList, Text} from "@chakra-ui/react"
 import {FC} from "react"
 
 const BuyerListActions: FC = () => {

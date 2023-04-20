@@ -15,12 +15,7 @@ interface IOrderActionMenu {
 const OrderActionMenu: FC<IOrderActionMenu> = ({order, onOpen, onClose, onDelete}) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
-      <MenuButton
-        as={IconButton}
-        aria-label={`Admin user action menu for Order Return ${order.ID}`}
-        variant="ghost"
-        colorScheme="secondary"
-      >
+      <MenuButton as={IconButton} aria-label={`Admin user action menu for Order Return ${order.ID}`} variant="ghost">
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>
       <MenuList>

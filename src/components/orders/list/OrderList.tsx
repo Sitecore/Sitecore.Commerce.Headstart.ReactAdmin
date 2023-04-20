@@ -34,16 +34,16 @@ const OrderFilterMap = {
   status: "Status"
 }
 
+const OrderDefaultServiceOptions = {parameters: ["Incoming"]}
+
 const IdColumn: DataTableColumn<IOrder> = {
   header: "ID",
   accessor: "ID",
   width: "15%",
-  cell: ({row, value}) => (
-    <Link href={`/orders/${value}`} passHref>
-      <Text as="a" noOfLines={1} wordBreak="break-all" title={value}>
-        {value}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={1} wordBreak="break-all" title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -52,24 +52,20 @@ const CustomerNameColumn: DataTableColumn<IOrder> = {
   header: "Customer Name",
   accessor: "FromUser",
   width: "20%",
-  cell: ({row, value}) => (
-    <Link href={`/orders/${row.original.ID}`} passHref>
-      <Text as="a" noOfLines={2} title={value}>
-        {`${value.FirstName} ${value.LastName}`}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {`${value.FirstName} ${value.LastName}`}
+    </Text>
   )
 }
 const CustomerEmailColumn: DataTableColumn<IOrder> = {
   header: "Customer Email",
   accessor: "FromUser.Email",
   width: "20%",
-  cell: ({row, value}) => (
-    <Link href={`/orders/${row.original.ID}`} passHref>
-      <Text as="a" noOfLines={2} title={value}>
-        {value || "N/A"}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {value || "N/A"}
+    </Text>
   ),
   sortable: true
 }
@@ -78,11 +74,7 @@ const DateSubmittedColumn: DataTableColumn<IOrder> = {
   header: "Submitted On",
   accessor: "DateSubmitted",
   width: "20%",
-  cell: ({row, value}) => (
-    <Link href={`/orders/${row.original.ID}`} passHref>
-      {dateHelper.formatDate(value)}
-    </Link>
-  ),
+  cell: ({value}) => <Text noOfLines={2}>{dateHelper.formatDate(value)}</Text>,
   sortable: true
 }
 
@@ -90,13 +82,7 @@ const StatusColumn: DataTableColumn<IOrder> = {
   header: "Status",
   accessor: "Status",
   width: "15%",
-  cell: ({row, value}) => (
-    <Link href={`/orders/${row.original.ID}`} passHref>
-      <Tag as="a" colorScheme={OrderStatusColorSchemeMap[value] || "default"}>
-        {value}
-      </Tag>
-    </Link>
-  ),
+  cell: ({value}) => <Tag colorScheme={OrderStatusColorSchemeMap[value] || "default"}>{value}</Tag>,
   sortable: true
 }
 
@@ -105,12 +91,10 @@ const TotalColumn: DataTableColumn<IOrder> = {
   accessor: "Total",
   width: "5%",
   align: "right",
-  cell: ({row, value}) => (
-    <Link href={`/orders/${value}`} passHref>
-      <Text as="a" noOfLines={1} title={value}>
-        {priceHelper.formatPrice(value)}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={1} title={value}>
+      {priceHelper.formatPrice(value)}
+    </Text>
   ),
   sortable: true
 }
@@ -135,6 +119,11 @@ const OrderList: FC = () => {
     },
     [deleteDisclosure.onOpen]
   )
+
+  const resolveOrderDetailHref = (order: IOrder) => {
+    return `/orders/${order.ID}`
+  }
+
   return (
     <ListView<IOrder>
       service={Orders.List}
@@ -143,7 +132,8 @@ const OrderList: FC = () => {
       paramMap={OrderParamMap}
       queryMap={OrderQueryMap}
       filterMap={OrderFilterMap}
-      defaultServiceOptions={{parameters: ["Incoming"]}}
+      itemHrefResolver={resolveOrderDetailHref}
+      defaultServiceOptions={OrderDefaultServiceOptions}
     >
       {({renderContent, items, ...listViewChildProps}) => (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
@@ -153,7 +143,7 @@ const OrderList: FC = () => {
           {renderContent}
           <OrderDeleteModal
             onComplete={listViewChildProps.removeItems}
-            orderReturns={
+            orders={
               actionOrder
                 ? [actionOrder]
                 : items

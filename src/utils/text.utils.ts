@@ -13,7 +13,10 @@ export const textHelper = {
  * Result:    "The Rocket III Project started in 1998 led by Triumph Product Range Manager Ross Clifford"
  * https://date-fns.org/v2.29.2/docs/format
  */
-function stripHTML(myString: string) {
+function stripHTML(myString?: string) {
+  if (!myString) {
+    return ""
+  }
   const regex = /(&nbsp;|<([^>]+)>)/gi
   const strippedHTML = myString.replace(regex, "")
   return strippedHTML

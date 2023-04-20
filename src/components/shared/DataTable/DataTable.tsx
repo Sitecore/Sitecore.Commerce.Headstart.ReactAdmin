@@ -17,6 +17,7 @@ import {
   useBreakpointValue
 } from "@chakra-ui/react"
 import get from "lodash/get"
+import Link from "next/link"
 import {ReactElement, useMemo} from "react"
 import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from "react-icons/ti"
 import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
@@ -27,6 +28,8 @@ export interface DataTableColumn<T> {
   minWidth?: string
   accessor?: string
   align?: "left" | "center" | "right"
+  skipHref?: boolean
+  hrefResolver?: (item: T) => string
   cell?: ({row, value}: {row: {original: T}; value: any}) => ReactElement | string
   sortable?: boolean
 }
@@ -43,6 +46,7 @@ export interface IDataTable<T> {
   emptyDisplay?: ListViewTemplate
   selected?: string[]
   currentSort?: string
+  itemHrefResolver?: (item: T) => string
   onSelectChange?: (changedIds: string[] | string, isSelected: boolean) => void
   onSortChange: (sortKey: string, isSorted: boolean, isSortedDesc: boolean) => void
   rowActions?: (rowData: T) => ListViewTemplate
@@ -61,6 +65,7 @@ const DataTable = <T extends IDefaultResource>({
   loading,
   currentSort,
   emptyDisplay = DEFAULT_DATA_TABLE_EMPTY_DISPLAY,
+  itemHrefResolver,
   rowActions,
   onSortChange,
   onSelectChange,
@@ -98,6 +103,8 @@ const DataTable = <T extends IDefaultResource>({
         const value = get(row, column.accessor, null)
         const formattedValue = Array.isArray(value) ? value.join(", ") : value
         return {
+          skipHref: column.skipHref,
+          hrefResolver: column.hrefResolver,
           minWidth: column.minWidth,
           width: column.width,
           align: column.align,
@@ -196,7 +203,7 @@ const DataTable = <T extends IDefaultResource>({
 
         <Tbody role="rowgroup" position="relative" minH={100}>
           {rows.map((row, rowIndex) => (
-            <Tr key={rowIndex} role="row" cursor="pointer"> 
+            <Tr key={rowIndex} role="row" cursor="pointer">
               {onSelectChange && (
                 <Td w="1%">
                   <Checkbox
@@ -206,11 +213,39 @@ const DataTable = <T extends IDefaultResource>({
                   />
                 </Td>
               )}
-              {row.cells.map((cell, cellIndex) => (
-                <Td textAlign={cell.align} w={cell.width} minW={cell.minWidth} role="cell" key={cellIndex}>
-                  {cell.value}
-                </Td>
-              ))}
+              {row.cells.map((cell, cellIndex) => {
+                const defaultCellReturn = (
+                  <Td textAlign={cell.align} w={cell.width} minW={cell.minWidth} role="cell" key={cellIndex}>
+                    {cell.value}
+                  </Td>
+                )
+                if (cell.skipHref || !(cell.hrefResolver || itemHrefResolver)) {
+                  return defaultCellReturn
+                }
+                try {
+                  const hrefValue = cell.hrefResolver ? cell.hrefResolver(row.data) : itemHrefResolver(row.data)
+                  return (
+                    <Td
+                      h="1px"
+                      padding={0}
+                      textAlign={cell.align}
+                      w={cell.width}
+                      minW={cell.minWidth}
+                      role="cell"
+                      key={cellIndex}
+                    >
+                      <Link passHref href={hrefValue}>
+                        <Box paddingY={4} paddingX={6} display="flex" alignItems="center" h="100%" as="a">
+                          {cell.value}
+                        </Box>
+                      </Link>
+                    </Td>
+                  )
+                } catch (e) {
+                  console.error("DataTable: itemHrefResolver error: ", e)
+                  return defaultCellReturn
+                }
+              })}
               {rowActions && <Td w="1%">{rowActions(row.data)}</Td>}
             </Tr>
           ))}

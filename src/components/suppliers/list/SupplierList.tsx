@@ -31,11 +31,9 @@ const IdColumn: DataTableColumn<ISupplierListItem> = {
   header: "Supplier ID",
   accessor: "ID",
   cell: ({row, value}) => (
-    <Link passHref href={"/suppliers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   )
 }
 
@@ -43,11 +41,9 @@ const NameColumn: DataTableColumn<ISupplierListItem> = {
   header: "NAME",
   accessor: "Name",
   cell: ({row, value}) => (
-    <Link passHref href={"/suppliers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   )
 }
 
@@ -67,6 +63,7 @@ const CreatedDateColumn: DataTableColumn<ISupplierListItem> = {
 
 const UserGroupColumn: DataTableColumn<ISupplierListItem> = {
   header: "USER GROUPS",
+  skipHref: true,
   cell: ({row}) => (
     <Link passHref href={`/suppliers/${row.original.ID}/usergroups`}>
       <Button as="a" variant="outline">
@@ -78,6 +75,7 @@ const UserGroupColumn: DataTableColumn<ISupplierListItem> = {
 
 const SupplierUsersColumn: DataTableColumn<ISupplierListItem> = {
   header: "USERS",
+  skipHref: true,
   cell: ({row}) => (
     <Link passHref href={`/suppliers/${row.original.ID}/users`}>
       <Button as="a" variant="outline">
@@ -136,12 +134,17 @@ const SupplierList: FC = () => {
     [deleteDisclosure.onOpen]
   )
 
+  const resolveSupplierDetailHref = (supplier: ISupplier) => {
+    return `/suppliers/${supplier.ID}`
+  }
+
   return (
     <ListView<ISupplierListItem>
       service={supplierListCall}
       tableOptions={SupplierTableOptions}
       queryMap={SupplierQueryMap}
       filterMap={SupplierFilterMap}
+      itemHrefResolver={resolveSupplierDetailHref}
       itemActions={renderSupplierActionMenu}
     >
       {({renderContent, items, ...listViewChildProps}) => (

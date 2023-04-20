@@ -21,11 +21,9 @@ const IDColumn: DataTableColumn<IAdminAddress> = {
   accessor: "ID",
   width: "10%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminaddresses/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -35,11 +33,9 @@ const AddressNameColumn: DataTableColumn<IAdminAddress> = {
   accessor: "AddressName",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminaddresses/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -49,11 +45,9 @@ const Street1Column: DataTableColumn<IAdminAddress> = {
   accessor: "Street1",
   width: "25%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminaddresses/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -63,11 +57,9 @@ const Street2Column: DataTableColumn<IAdminAddress> = {
   accessor: "Street2",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminaddresses/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -77,11 +69,9 @@ const CityColumn: DataTableColumn<IAdminAddress> = {
   accessor: "City",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminaddresses/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -91,11 +81,9 @@ const StateColumn: DataTableColumn<IAdminAddress> = {
   accessor: "State",
   width: "5%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminaddresses/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -105,11 +93,9 @@ const ZipColumn: DataTableColumn<IAdminAddress> = {
   accessor: "Zip",
   width: "10%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminaddresses/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -119,11 +105,9 @@ const CountryColumn: DataTableColumn<IAdminAddress> = {
   accessor: "Country",
   width: "5%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminaddresses/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -166,10 +150,15 @@ const AdminAddressList = () => {
     [deleteDisclosure.onOpen]
   )
 
+  const resolveAdminAddressDetailHref = (address: IAdminAddress) => {
+    return `/settings/adminaddresses/${address.ID}`
+  }
+
   return (
     <ListView<IAdminAddress>
       service={AdminAddresses.List}
       queryMap={AdminAddressQueryMap}
+      itemHrefResolver={resolveAdminAddressDetailHref}
       itemActions={renderAdminAddressActionsMenu}
       tableOptions={AdminAddressTableOptions}
       gridOptions={AdminAddressGridOptions}

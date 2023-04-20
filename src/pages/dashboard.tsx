@@ -14,28 +14,28 @@ import {
   useMediaQuery,
   theme
 } from "@chakra-ui/react"
-import { HiOutlineCurrencyDollar, HiOutlineFolderOpen, HiOutlineUserAdd, HiOutlineUserCircle } from "react-icons/hi"
-import { useEffect, useState } from "react"
+import {HiOutlineCurrencyDollar, HiOutlineFolderOpen, HiOutlineUserAdd, HiOutlineUserCircle} from "react-icons/hi"
+import {useEffect, useState} from "react"
 import AverageOrderAmount from "components/analytics/AverageOrderAmount"
 import NewClients from "components/analytics/PercentChangeTile"
-import { NextSeo } from "next-seo"
+import {NextSeo} from "next-seo"
 import TodaysMoney from "components/analytics/PercentChangeTile"
 import TodaysUsers from "components/analytics/PercentChangeTile"
 import TotalSales from "components/analytics/PercentChangeTile"
-import { appPermissions } from "constants/app-permissions.config"
-import { priceHelper } from "utils/price.utils"
+import {appPermissions} from "constants/app-permissions.config"
+import {priceHelper} from "utils/price.utils"
 import useHasAccess from "hooks/useHasAccess"
-import { Link } from "components/navigation/Link"
-import { Orders, Products, Promotions } from "ordercloud-javascript-sdk"
-import { IOrder } from "types/ordercloud/IOrder"
-import { IProduct } from "types/ordercloud/IProduct"
-import { IPromotion } from "types/ordercloud/IPromotion"
-import { dashboardService } from "services/dashboard.service"
+import {Link} from "components/navigation/Link"
+import {Orders, Products, Promotions} from "ordercloud-javascript-sdk"
+import {IOrder} from "types/ordercloud/IOrder"
+import {IProduct} from "types/ordercloud/IProduct"
+import {IPromotion} from "types/ordercloud/IPromotion"
+import {dashboardService} from "services/dashboard.service"
 import schraTheme from "theme/theme"
-import { TbArrowsDiagonal } from "react-icons/tb"
+import {TbArrowsDiagonal} from "react-icons/tb"
 
 const Dashboard = () => {
-  const { colorMode, toggleColorMode } = useColorMode()
+  const {colorMode, toggleColorMode} = useColorMode()
   const [orders, setOrders] = useState([])
   const [products, setProducts] = useState([])
   const [promotions, setPromotions] = useState([])
@@ -57,13 +57,10 @@ const Dashboard = () => {
   const hasAccessToViewReports = useHasAccess(appPermissions.ReportViewer)
   const [dashboardListMeta, setDashboardMeta] = useState({})
 
-  const [above2xl] = useMediaQuery(
-    `(min-width: ${theme.breakpoints["2xl"]})`,
-    {
-      ssr: true,
-      fallback: false, // return false on the server, and re-evaluate on the client side
-    }
-  );
+  const [above2xl] = useMediaQuery(`(min-width: ${theme.breakpoints["2xl"]})`, {
+    ssr: true,
+    fallback: false // return false on the server, and re-evaluate on the client side
+  })
 
   useEffect(() => {
     setCanViewReports(hasAccessToViewReports)
@@ -154,25 +151,55 @@ const Dashboard = () => {
     return <div></div>
   }
 
-  const productsLatestUpdated = new Date(products?.map((i) => i?.Inventory)?.map((lu) => lu?.LastUpdated)?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})).toLocaleDateString()
-  const ordersLatestUpdated = new Date(orders?.map((lu) => lu?.LastUpdated)?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})).toLocaleDateString()
-  const usersLatestUpdated = new Date(users?.map((i) => i?.StartDate)?.filter((wtf) => wtf)?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})).toLocaleDateString()
-  const promotionsLatestUpdated = new Date(promotions?.map((i) => i?.StartDate)?.filter((wtf) => wtf)?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})).toLocaleDateString()
+  const productsLatestUpdated = new Date(
+    products
+      ?.map((i) => i?.Inventory)
+      ?.map((lu) => lu?.LastUpdated)
+      ?.reduce((a, b) => (a?.MeasureDate > b?.MeasureDate ? a : b), {})
+  ).toLocaleDateString()
+  const ordersLatestUpdated = new Date(
+    orders?.map((lu) => lu?.LastUpdated)?.reduce((a, b) => (a?.MeasureDate > b?.MeasureDate ? a : b), {})
+  ).toLocaleDateString()
+  const usersLatestUpdated = new Date(
+    users
+      ?.map((i) => i?.StartDate)
+      ?.filter((wtf) => wtf)
+      ?.reduce((a, b) => (a?.MeasureDate > b?.MeasureDate ? a : b), {})
+  ).toLocaleDateString()
+  const promotionsLatestUpdated = new Date(
+    promotions
+      ?.map((i) => i?.StartDate)
+      ?.filter((wtf) => wtf)
+      ?.reduce((a, b) => (a?.MeasureDate > b?.MeasureDate ? a : b), {})
+  ).toLocaleDateString()
 
   console.log("promotions", promotionsLatestUpdated)
 
   const data = [
-    { label: "products", labelSingular: "product", var: products, funFact: productsLatestUpdated },
-    { label: "orders", labelSingular: "order", var: orders, funFact: ordersLatestUpdated },
-    { label: "users", labelSingular: "user", var: users, funFact: usersLatestUpdated },
-    { label: "promotions", labelSingular: "promotion", var: promotions, funFact: promotionsLatestUpdated }
+    {label: "products", labelSingular: "product", var: products, funFact: productsLatestUpdated},
+    {label: "orders", labelSingular: "order", var: orders, funFact: ordersLatestUpdated},
+    {label: "users", labelSingular: "user", var: users, funFact: usersLatestUpdated},
+    {label: "promotions", labelSingular: "promotion", var: promotions, funFact: promotionsLatestUpdated}
   ]
 
-
-
   const miniWidgets = data.map((item) => (
-    <Card as={Link} variant={"levitating"} border={`.5px solid ${schraTheme.colors.blackAlpha[300]}`} href={"/" + item.label} key={item.label} pos={"relative"}>
-      <IconButton icon={<TbArrowsDiagonal />} variant={"outline"} size="xs" aria-label={""} pos="absolute" right={2} top={2} />
+    <Card
+      as={Link}
+      variant={"levitating"}
+      border={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}
+      href={"/" + item.label}
+      key={item.label}
+      pos={"relative"}
+    >
+      <IconButton
+        icon={<TbArrowsDiagonal />}
+        variant={"outline"}
+        size="xs"
+        aria-label={""}
+        pos="absolute"
+        right={2}
+        top={2}
+      />
       <CardHeader py={0}>
         {item.var != null ? (
           <Text fontWeight={"light"} color={color} fontSize="5xl">
@@ -189,7 +216,8 @@ const Dashboard = () => {
         <Text fontSize="xs" fontWeight="normal" color={labelColor} casing="uppercase">
           latest {item.label.toString()} update:
           <Text as={"span"} fontSize="xs" fontWeight={"semibold"}>
-            {" "}{item.funFact}
+            {" "}
+            {item.funFact}
           </Text>
         </Text>
       </CardBody>
@@ -199,14 +227,17 @@ const Dashboard = () => {
   return (
     <>
       <NextSeo title="Dashboard" />
-      <VStack flexGrow={1} gap={4} p={[4, 6, 8]}
-        h="100%" w="100%" bg={"st.mainBackgroundColor"}>
-
+      <VStack flexGrow={1} gap={4} p={[4, 6, 8]} h="100%" w="100%" bg={"st.mainBackgroundColor"}>
         <Flex w="100%" gap={4} direction={above2xl ? "row" : "column-reverse"}>
-          <SimpleGrid w="100%" gap={4} templateRows={above2xl && "1fr 1fr"} templateColumns={{
-            md: '1fr 1fr',
-            xl: 'repeat(auto-fit, minmax(48%, 1fr))',
-          }}>
+          <SimpleGrid
+            w="100%"
+            gap={4}
+            templateRows={above2xl && "1fr 1fr"}
+            templateColumns={{
+              md: "1fr 1fr",
+              xl: "repeat(auto-fit, minmax(48%, 1fr))"
+            }}
+          >
             <TodaysMoney
               title="todays money"
               totalamount={` ${priceHelper.formatShortPrice(totalTodaysSales)} `}
@@ -246,10 +277,9 @@ const Dashboard = () => {
           <AverageOrderAmount />
         </Flex>
 
-        <SimpleGrid w="full" spacing={4} templateColumns='repeat(auto-fit, minmax(200px, 1fr))'>
+        <SimpleGrid w="full" spacing={4} templateColumns="repeat(auto-fit, minmax(200px, 1fr))">
           {miniWidgets}
         </SimpleGrid>
-
       </VStack>
     </>
   )

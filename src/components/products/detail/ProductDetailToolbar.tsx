@@ -104,7 +104,7 @@ export default function ProductDetailToolbar({
                 </MenuItem>
               </Link>
               <ViewProduct />
-              <ExportToCsv />
+              <ExportToCsv variant="menuitem" />
               <LanguageSelector />
               <ConfirmDelete deleteText="Delete Product" loading={deleteLoading} onDelete={onDelete} />
             </MenuList>

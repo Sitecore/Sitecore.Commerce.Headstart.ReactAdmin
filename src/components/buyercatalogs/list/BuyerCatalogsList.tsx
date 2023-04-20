@@ -10,21 +10,21 @@ import BuyerCatalogsDeleteModal from "../modals/BuyerCatalogsDeleteModal"
 import {Catalogs} from "ordercloud-javascript-sdk"
 
 export const BuyerCatalogColorSchemeMap = {
-    "": "gray",
-    true: "success",
-    false: "danger"
-  }
+  "": "gray",
+  true: "success",
+  false: "danger"
+}
 
 interface IBuyerCatalogList {
   buyerid: string
 }
 
 const buyerCategoryListCall = async (listOptions: any) => {
-    const assignments = await Catalogs.ListAssignments(listOptions)
-    const catalogIds = assignments.Items.map((assignment) => assignment.CatalogID)
-    const response = await Catalogs.List<ICatalog>({filters: {ID: catalogIds.join("|")}})
-    return response
- }
+  const assignments = await Catalogs.ListAssignments(listOptions)
+  const catalogIds = assignments.Items.map((assignment) => assignment.CatalogID)
+  const response = await Catalogs.List<ICatalog>({filters: {ID: catalogIds.join("|")}})
+  return response
+}
 
 const paramMap = {
   d: "Direction",
@@ -41,30 +41,40 @@ const BuyerCatalogsFilterMap = {
   active: "Active"
 }
 
+const BuyerIDColumn: DataTableColumn<ICatalog> = {
+  header: "Catalog ID",
+  accessor: "ID",
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
+  )
+}
+
 const BuyerNameColumn: DataTableColumn<ICatalog> = {
   header: "Name",
   accessor: "Name"
 }
 
 const BuyerDescriptionColumn: DataTableColumn<ICatalog> = {
-    header: "Description",
-    accessor: "Description"
-  }
+  header: "Description",
+  accessor: "Description"
+}
 
 const BuyerOwnerIDColumn: DataTableColumn<ICatalog> = {
-    header: "Owner ID",
-    accessor: "OwnerID"
+  header: "Owner ID",
+  accessor: "OwnerID"
 }
 
 const BuyerCatalogActiveColumn: DataTableColumn<ICatalog> = {
-    header: "Active",
-    accessor: "Active",
-    cell: ({row, value}) => (
-      <Tag as="a" colorScheme={BuyerCatalogColorSchemeMap[value] || "default"}>
-        <Text>{row.original.Active ? "Active" : "Non active"}</Text>
-      </Tag>
-    )
-  }
+  header: "Active",
+  accessor: "Active",
+  cell: ({row, value}) => (
+    <Tag colorScheme={BuyerCatalogColorSchemeMap[value] || "default"}>
+      <Text>{row.original.Active ? "Active" : "Non active"}</Text>
+    </Tag>
+  )
+}
 
 const BuyerCatalogsList: FC<IBuyerCatalogList> = ({buyerid}) => {
   const [actionBuyerCatalogs, setActionBuyerCatalogs] = useState<ICatalog>()
@@ -84,42 +94,45 @@ const BuyerCatalogsList: FC<IBuyerCatalogList> = ({buyerid}) => {
     [buyerid, deleteDisclosure.onOpen]
   )
 
-  const BuyerIDColumn: DataTableColumn<ICatalog> = useMemo(() => {
+  const BuyerCategoryCountColumn: DataTableColumn<ICatalog> = useMemo(() => {
     return {
-      header: "Catalog ID",
-      accessor: "ID",
+      header: "Category Count",
+      accessor: "CategoryCount",
+      skipHref: true,
       cell: ({row, value}) => (
-        <Link href={`/buyers/${buyerid}/catalogs/${row.original.ID}`}>
-          <Text as="a" noOfLines={2} title={value}>
-            {value}
-          </Text>
+        <Link passHref href={`/buyers/${buyerid}/catalogs/${row.original.ID}/categories`}>
+          <Button as="a" variant="outline">
+            Categories ({value})
+          </Button>
         </Link>
       )
     }
-    }, [buyerid])
-
-    const BuyerCategoryCountColumn: DataTableColumn<ICatalog> = useMemo(() => {
-        return {
-          header: "Category Count",
-          accessor: "CategoryCount",
-          cell: ({row, value}) => (
-            <Link href={`/buyers/${buyerid}/catalogs/${row.original.ID}/categories`}>
-              <Button variant="outline">Categories ({value})</Button>
-            </Link>
-          )
-        }
-        }, [buyerid])
+  }, [buyerid])
 
   const BuyerCatalogsTableOptions: ListViewTableOptions<ICatalog> = useMemo(() => {
     return {
-    responsive: {
-      base: [BuyerIDColumn, BuyerNameColumn],
-      md: [BuyerIDColumn, BuyerNameColumn],
-      lg: [BuyerIDColumn, BuyerNameColumn, BuyerCategoryCountColumn, BuyerCatalogActiveColumn],
-      xl: [BuyerIDColumn, BuyerNameColumn, BuyerDescriptionColumn, BuyerCategoryCountColumn, BuyerCatalogActiveColumn, BuyerOwnerIDColumn]
+      responsive: {
+        base: [BuyerIDColumn, BuyerNameColumn],
+        md: [BuyerIDColumn, BuyerNameColumn],
+        lg: [BuyerIDColumn, BuyerNameColumn, BuyerCategoryCountColumn, BuyerCatalogActiveColumn],
+        xl: [
+          BuyerIDColumn,
+          BuyerNameColumn,
+          BuyerDescriptionColumn,
+          BuyerCategoryCountColumn,
+          BuyerCatalogActiveColumn,
+          BuyerOwnerIDColumn
+        ]
+      }
     }
-  }
-  }, [BuyerIDColumn, BuyerCategoryCountColumn])
+  }, [BuyerCategoryCountColumn])
+
+  const resolveCatalogDetailHref = useCallback(
+    (c: ICatalog) => {
+      return `/buyers/${buyerid}/catalogs/${c.ID}`
+    },
+    [buyerid]
+  )
 
   return (
     <ListView<ICatalog>
@@ -128,6 +141,7 @@ const BuyerCatalogsList: FC<IBuyerCatalogList> = ({buyerid}) => {
       paramMap={paramMap}
       queryMap={BuyerCatalogsQueryMap}
       filterMap={BuyerCatalogsFilterMap}
+      itemHrefResolver={resolveCatalogDetailHref}
       itemActions={renderBuyerCatalogsActionMenu}
     >
       {({renderContent, items, ...listViewChildProps}) => (

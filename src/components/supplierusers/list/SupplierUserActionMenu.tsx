@@ -13,14 +13,19 @@ interface ISupplierUserActionMenu {
   onDelete: () => void
 }
 
-const SupplierUserActionMenu: FC<ISupplierUserActionMenu> = ({supplierid, supplieruser: supplieruser, onOpen, onClose, onDelete}) => {
+const SupplierUserActionMenu: FC<ISupplierUserActionMenu> = ({
+  supplierid,
+  supplieruser: supplieruser,
+  onOpen,
+  onClose,
+  onDelete
+}) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
       <MenuButton
         as={IconButton}
         aria-label={`Action menu for ${supplieruser.FirstName} ${supplieruser.LastName}`}
         variant="ghost"
-        colorScheme="secondary"
       >
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>

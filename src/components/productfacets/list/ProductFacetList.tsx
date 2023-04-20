@@ -1,5 +1,4 @@
 import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
-import Link from "next/link"
 import {ProductFacets} from "ordercloud-javascript-sdk"
 import {useCallback, useState} from "react"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
@@ -20,12 +19,10 @@ const IDColumn: DataTableColumn<IProductFacet> = {
   header: "ID",
   accessor: "ID",
   width: "20%",
-  cell: ({row, value}) => (
-    <Link href={"/settings/productfacets/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -34,12 +31,10 @@ const NameColumn: DataTableColumn<IProductFacet> = {
   header: "Name",
   accessor: "Name",
   width: "20%",
-  cell: ({row, value}) => (
-    <Link href={"/settings/productfacets/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -89,10 +84,15 @@ const ProductFacetList = () => {
     [deleteDisclosure.onOpen]
   )
 
+  const resolveProductFacetDetailHref = (facet: IProductFacet) => {
+    return `/settings/productfacets/${facet.ID}`
+  }
+
   return (
     <ListView<IProductFacet>
       service={ProductFacets.List}
       queryMap={ProductFacetQueryMap}
+      itemHrefResolver={resolveProductFacetDetailHref}
       itemActions={renderProductFacetActionsMenu}
       tableOptions={ProductFacetTableOptions}
       gridOptions={ProductFacetGridOptions}

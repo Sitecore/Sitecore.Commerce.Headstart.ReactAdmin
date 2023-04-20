@@ -1,6 +1,6 @@
 import React from "react"
 import {useRouter} from "hooks/useRouter"
-import SupplierUserList from "@/components/supplierursers/list/SupplierUserList"
+import SupplierUserList from "@/components/supplierusers/list/SupplierUserList"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {

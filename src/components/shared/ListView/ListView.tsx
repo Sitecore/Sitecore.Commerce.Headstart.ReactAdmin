@@ -35,6 +35,7 @@ interface IListView<T, F = any> {
   defaultServiceOptions?: ServiceOptions
   service?: (...args) => Promise<T extends Product ? ListPageWithFacets<T, F> : ListPage<T>>
   itemActions?: (item: T) => ListViewTemplate
+  itemHrefResolver?: (item: T) => string
   tableOptions: ListViewTableOptions<T>
   gridOptions?: ListViewGridOptions<T>
   paramMap?: LocationSearchMap
@@ -78,6 +79,7 @@ const ListView = <T extends IDefaultResource>({
   paramMap,
   queryMap,
   filterMap,
+  itemHrefResolver,
   itemActions,
   tableOptions,
   gridOptions,
@@ -115,6 +117,7 @@ const ListView = <T extends IDefaultResource>({
   )
 
   const params = useMemo(() => {
+    console.log("HIT maps", paramMap, queryMap, filterMap)
     return {
       routeParams: mapRouterQuery(paramMap),
       queryParams: mapRouterQuery(queryMap),
@@ -125,6 +128,7 @@ const ListView = <T extends IDefaultResource>({
   const fetchData = useCallback(async () => {
     let response
     setLoading(true)
+    console.log("HIT (service, params, dso)", defaultServiceOptions)
     const {parameters: defaultParameters = [], listOptions: defaultListOptions = {}} = defaultServiceOptions || {}
     const listOptions = {
       ...defaultListOptions,
@@ -141,6 +145,7 @@ const ListView = <T extends IDefaultResource>({
   }, [service, params, defaultServiceOptions])
 
   useEffect(() => {
+    console.log("HIT (fetchData, isReady)", isReady)
     if (isReady) {
       fetchData()
     }
@@ -252,6 +257,7 @@ const ListView = <T extends IDefaultResource>({
               loading={loading}
               emptyDisplay={isSearching ? noResultsMessage : noDataMessage}
               gridItemActions={itemActions}
+              itemHrefResolver={itemHrefResolver}
               data={data && data.Items}
               selected={selected}
               onSelectChange={handleSelectChange}
@@ -261,6 +267,7 @@ const ListView = <T extends IDefaultResource>({
             <DataTable
               {...tableOptions}
               loading={loading}
+              itemHrefResolver={itemHrefResolver}
               rowActions={itemActions}
               data={data && data.Items}
               selected={selected}

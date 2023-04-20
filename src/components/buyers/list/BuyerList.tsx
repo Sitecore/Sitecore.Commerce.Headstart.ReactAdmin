@@ -26,6 +26,111 @@ interface IBuyerListItem extends RequiredDeep<IBuyer> {
   catalogsCount: number
 }
 
+const BuyerParamMap = {}
+
+const BuyerQueryMap = {
+  s: "Search",
+  sort: "SortBy",
+  p: "Page"
+}
+
+const BuyerFilterMap = {
+  active: "Active"
+}
+
+const IdColumn: DataTableColumn<IBuyerListItem> = {
+  header: "Buyer ID",
+  accessor: "ID",
+  cell: ({row, value}) => (
+    <Link passHref href={"/buyers/" + row.original.ID}>
+      <Text as="a" noOfLines={2} title={value}>
+        {value}
+      </Text>
+    </Link>
+  )
+}
+
+const NameColumn: DataTableColumn<IBuyerListItem> = {
+  header: "NAME",
+  accessor: "Name",
+  cell: ({row, value}) => (
+    <Link passHref href={"/buyers/" + row.original.ID}>
+      <Text as="a" noOfLines={2} title={value}>
+        {value}
+      </Text>
+    </Link>
+  )
+}
+
+const DefaultCatalogIDColumn: DataTableColumn<IBuyer> = {
+  header: "DEFAULT CATALOG ID",
+  accessor: "DefaultCatalogID"
+}
+
+const StatusColumn: DataTableColumn<IBuyerListItem> = {
+  header: "STATUS",
+  accessor: "Active",
+  cell: ({row, value}) => (
+    <Tag as="a" colorScheme={BuyerColorSchemeMap[value] || "default"}>
+      <Text>{row.original.Active ? "Active" : "Non active"}</Text>
+    </Tag>
+  )
+}
+
+const CreatedDateColumn: DataTableColumn<IBuyerListItem> = {
+  header: "CREATED DATE",
+  accessor: "DateCreated",
+  cell: ({value}) => dateHelper.formatDate(value)
+}
+
+const UserGroupColumn: DataTableColumn<IBuyerListItem> = {
+  header: "USER GROUPS",
+  skipHref: true,
+  cell: ({row}) => (
+    <Link passHref href={`/buyers/${row.original.ID}/usergroups`}>
+      <Button variant="outline">User Groups ({row.original.userGroupsCount})</Button>
+    </Link>
+  )
+}
+
+const BuyerUsersColumn: DataTableColumn<IBuyerListItem> = {
+  header: "USERS",
+  skipHref: true,
+  cell: ({row}) => (
+    <Link passHref href={`/buyers/${row.original.ID}/users`}>
+      <Button variant="outline">Users ({row.original.usersCount})</Button>
+    </Link>
+  )
+}
+
+const CatalogColumn: DataTableColumn<IBuyerListItem> = {
+  header: "CATALOGS",
+  skipHref: true,
+  cell: ({row}) => (
+    <Link href={`/buyers/${row.original.ID}/catalogs`}>
+      <Button variant="outline">Catalogs ({row.original.catalogsCount})</Button>
+    </Link>
+  )
+}
+
+const BuyerTableOptions: ListViewTableOptions<IBuyerListItem> = {
+  responsive: {
+    base: [IdColumn, NameColumn],
+    md: [IdColumn, NameColumn],
+    lg: [IdColumn, NameColumn],
+    xl: [
+      IdColumn,
+      NameColumn,
+      DefaultCatalogIDColumn,
+      StatusColumn,
+      CreatedDateColumn,
+      UserGroupColumn,
+      BuyerUsersColumn,
+      CatalogColumn
+    ]
+  }
+}
+
 const buyerListCall = async (listOptions: any) => {
   const response = await Buyers.List(listOptions)
   const queue = []
@@ -61,117 +166,19 @@ const BuyerList: FC = () => {
     },
     [deleteDisclosure.onOpen]
   )
-  const paramMap = {
-    d: "Direction"
-  }
 
-  const BuyerQueryMap = {
-    s: "Search",
-    sort: "SortBy",
-    p: "Page"
-  }
-
-  const BuyerFilterMap = {
-    active: "Active"
-  }
-
-  const IdColumn: DataTableColumn<IBuyerListItem> = {
-    header: "Buyer ID",
-    accessor: "ID",
-    cell: ({row, value}) => (
-      <Link passHref href={"/buyers/" + row.original.ID}>
-        <Text as="a" noOfLines={2} title={value}>
-          {value}
-        </Text>
-      </Link>
-    )
-  }
-
-  const NameColumn: DataTableColumn<IBuyerListItem> = {
-    header: "NAME",
-    accessor: "Name",
-    cell: ({row, value}) => (
-      <Link passHref href={"/buyers/" + row.original.ID}>
-        <Text as="a" noOfLines={2} title={value}>
-          {value}
-        </Text>
-      </Link>
-    )
-  }
-
-  const DefaultCatalogIDColumn: DataTableColumn<IBuyer> = {
-    header: "DEFAULT CATALOG ID",
-    accessor: "DefaultCatalogID"
-  }
-
-  const StatusColumn: DataTableColumn<IBuyerListItem> = {
-    header: "STATUS",
-    accessor: "Active",
-    cell: ({row, value}) => (
-      <Tag as="a" colorScheme={BuyerColorSchemeMap[value] || "default"}>
-        <Text>{row.original.Active ? "Active" : "Non active"}</Text>
-      </Tag>
-    )
-  }
-
-  const CreatedDateColumn: DataTableColumn<IBuyerListItem> = {
-    header: "CREATED DATE",
-    accessor: "DateCreated",
-    cell: ({value}) => dateHelper.formatDate(value)
-  }
-
-  const UserGroupColumn: DataTableColumn<IBuyerListItem> = {
-    header: "USER GROUPS",
-    cell: ({row}) => (
-      <Link passHref href={`/buyers/${row.original.ID}/usergroups`}>
-        <Button variant="outline">User Groups ({row.original.userGroupsCount})</Button>
-      </Link>
-    )
-  }
-
-  const BuyerUsersColumn: DataTableColumn<IBuyerListItem> = {
-    header: "USERS",
-    cell: ({row}) => (
-      <Link passHref href={`/buyers/${row.original.ID}/users`}>
-        <Button variant="outline">Users ({row.original.usersCount})</Button>
-      </Link>
-    )
-  }
-
-  const CatalogColumn: DataTableColumn<IBuyerListItem> = {
-    header: "CATALOGS",
-    cell: ({row}) => (
-      <Link href={`/buyers/${row.original.ID}/catalogs`}>
-        <Button variant="outline">Catalogs ({row.original.catalogsCount})</Button>
-      </Link>
-    )
-  }
-
-  const BuyerTableOptions: ListViewTableOptions<IBuyerListItem> = {
-    responsive: {
-      base: [IdColumn, NameColumn],
-      md: [IdColumn, NameColumn],
-      lg: [IdColumn, NameColumn],
-      xl: [
-        IdColumn,
-        NameColumn,
-        DefaultCatalogIDColumn,
-        StatusColumn,
-        CreatedDateColumn,
-        UserGroupColumn,
-        BuyerUsersColumn,
-        CatalogColumn
-      ]
-    }
+  const resolveBuyerDetailHref = (buyer: IBuyer) => {
+    return `/buyers/${buyer.ID}`
   }
 
   return (
     <ListView<IBuyerListItem>
       service={buyerListCall}
       tableOptions={BuyerTableOptions}
-      paramMap={paramMap}
+      paramMap={BuyerParamMap}
       queryMap={BuyerQueryMap}
       filterMap={BuyerFilterMap}
+      itemHrefResolver={resolveBuyerDetailHref}
       itemActions={renderBuyerActionMenu}
     >
       {({renderContent, items, ...listViewChildProps}) => (

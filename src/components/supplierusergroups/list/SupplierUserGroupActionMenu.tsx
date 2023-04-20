@@ -13,15 +13,16 @@ interface ISupplierUserGroupActionMenu {
   onDelete: () => void
 }
 
-const SupplierUserGroupActionMenu: FC<ISupplierUserGroupActionMenu> = ({supplierid, usergroup, onOpen, onClose, onDelete}) => {
+const SupplierUserGroupActionMenu: FC<ISupplierUserGroupActionMenu> = ({
+  supplierid,
+  usergroup,
+  onOpen,
+  onClose,
+  onDelete
+}) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
-      <MenuButton
-        as={IconButton}
-        aria-label={`Action menu for ${usergroup.Name}`}
-        variant="ghost"
-        colorScheme="secondary"
-      >
+      <MenuButton as={IconButton} aria-label={`Action menu for ${usergroup.Name}`} variant="ghost">
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>
       <MenuList>

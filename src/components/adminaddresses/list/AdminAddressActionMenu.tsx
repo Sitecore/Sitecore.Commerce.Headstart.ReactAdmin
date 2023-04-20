@@ -19,7 +19,6 @@ const AdminAddressActionMenu: FC<IAdminAddressActionMenu> = ({adminAddress, onOp
         as={IconButton}
         aria-label={`Admin address action menu for ${adminAddress.AddressName}`}
         variant="ghost"
-        colorScheme="secondary"
       >
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>

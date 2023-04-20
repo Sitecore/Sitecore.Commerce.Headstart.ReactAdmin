@@ -35,28 +35,15 @@ export default function ExportToCsv({variant = "button"}: ExportToCsvProps) {
 
   return (
     <>
-      <Hide below="md">
+      {variant === "menuitem" ? (
+        <MenuItem justifyContent="space-between" onClick={() => setExportCSVDialogOpen(true)}>
+          Export to CSV <TbTableExport />
+        </MenuItem>
+      ) : (
         <Button variant="outline" onClick={() => setExportCSVDialogOpen(true)}>
           Export to CSV
         </Button>
-      </Hide>
-      <Hide above="md">
-        <Button
-          display="flex"
-          justifyContent={"flex-start"}
-          variant="unstyled"
-          px={3}
-          _hover={{backgroundColor: "gray.100"}}
-          w="full"
-          textAlign="left"
-          borderRadius="0"
-          fontWeight="normal"
-          leftIcon={<TbTableExport size="1rem" />}
-          onClick={() => setExportCSVDialogOpen(true)}
-        >
-          Export to CSV
-        </Button>
-      </Hide>
+      )}
       <AlertDialog
         isOpen={isExportCSVDialogOpen}
         onClose={() => setExportCSVDialogOpen(false)}

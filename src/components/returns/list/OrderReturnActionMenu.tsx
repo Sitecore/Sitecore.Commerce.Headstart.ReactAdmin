@@ -19,7 +19,6 @@ const OrderReturnActionMenu: FC<IOrderReturnActionMenu> = ({orderReturn, onOpen,
         as={IconButton}
         aria-label={`Admin user action menu for Order Return ${orderReturn.ID}`}
         variant="ghost"
-        colorScheme="secondary"
       >
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>

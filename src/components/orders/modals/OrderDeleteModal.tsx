@@ -21,18 +21,18 @@ import {
   UseDisclosureProps,
   VStack
 } from "@chakra-ui/react"
-import {FC, useCallback, useEffect, useState} from "react"
+import {FC, Fragment, useCallback, useEffect, useState} from "react"
 import {IOrder} from "types/ordercloud/IOrder"
 import {priceHelper} from "utils"
 import {OrderStatusColorSchemeMap} from "../list/OrderList"
 
 interface IOrderDeleteModal {
-  orderReturns?: IOrder[]
+  orders?: IOrder[]
   disclosure: UseDisclosureProps
   onComplete: (idsToRemove: string[]) => void
 }
 
-const OrderDeleteModal: FC<IOrderDeleteModal> = ({orderReturns, disclosure, onComplete}) => {
+const OrderDeleteModal: FC<IOrderDeleteModal> = ({orders, disclosure, onComplete}) => {
   const {isOpen, onClose} = disclosure
   const [showOrders, setShowOrders] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -47,26 +47,17 @@ const OrderDeleteModal: FC<IOrderDeleteModal> = ({orderReturns, disclosure, onCo
   const handleSubmit = useCallback(() => {
     setLoading(true)
     setTimeout(() => {
-      onComplete(orderReturns.map((o) => o.ID))
+      onComplete(orders.map((o) => o.ID))
       onClose()
     }, 2000)
-  }, [onComplete, orderReturns, onClose])
+  }, [onComplete, orders, onClose])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         {loading && (
-          <Center
-            rounded="md"
-            position="absolute"
-            left={0}
-            w="full"
-            h="full"
-            bg="whiteAlpha.500"
-            zIndex={2}
-            color="teal"
-          >
+          <Center rounded="md" position="absolute" left={0} w="full" h="full" bg="whiteAlpha.500" zIndex={2}>
             <Spinner></Spinner>
           </Center>
         )}
@@ -75,7 +66,7 @@ const OrderDeleteModal: FC<IOrderDeleteModal> = ({orderReturns, disclosure, onCo
         <ModalBody>
           <HStack justifyContent="space-between" mb={5}>
             <Heading size="sm" as="h5">
-              {`Deleting ${orderReturns.length} Selected Order Return${orderReturns.length === 1 ? "" : "s"}`}
+              {`Deleting ${orders.length} Selected Orders${orders.length === 1 ? "" : "s"}`}
             </Heading>
             <Button variant="link" onClick={() => setShowOrders((s) => !s)}>
               {showOrders ? "Hide" : "Show"}
@@ -83,9 +74,9 @@ const OrderDeleteModal: FC<IOrderDeleteModal> = ({orderReturns, disclosure, onCo
           </HStack>
           <Collapse in={showOrders}>
             <List mb={5}>
-              {orderReturns.map((o, i) => (
-                <>
-                  <ListItem key={o.ID} as={HStack}>
+              {orders.map((o, i) => (
+                <Fragment key={i}>
+                  <ListItem as={HStack}>
                     <HStack flexGrow={1} justifyContent="space-between">
                       <VStack alignItems="start">
                         <Badge>{o.ID}</Badge>
@@ -94,8 +85,8 @@ const OrderDeleteModal: FC<IOrderDeleteModal> = ({orderReturns, disclosure, onCo
                       <Tag colorScheme={OrderStatusColorSchemeMap[o.Status] || "default"}>{o.Status}</Tag>
                     </HStack>
                   </ListItem>
-                  {i < orderReturns.length - 1 && <Divider my={3} />}
-                </>
+                  {i < orders.length - 1 && <Divider my={3} />}
+                </Fragment>
               ))}
             </List>
           </Collapse>
@@ -109,7 +100,7 @@ const OrderDeleteModal: FC<IOrderDeleteModal> = ({orderReturns, disclosure, onCo
             Cancel
           </Button>
           <Button colorScheme="red" onClick={handleSubmit}>
-            {`Delete Order Return${orderReturns.length === 1 ? "" : "s"}`}
+            {`Delete Order Return${orders.length === 1 ? "" : "s"}`}
           </Button>
         </ModalFooter>
       </ModalContent>

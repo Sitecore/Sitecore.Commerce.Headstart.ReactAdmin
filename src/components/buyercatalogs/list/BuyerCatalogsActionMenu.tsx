@@ -13,15 +13,16 @@ interface IBuyerCatalogsActionMenu {
   onDelete: () => void
 }
 
-const BuyerCatalogsActionMenu: FC<IBuyerCatalogsActionMenu> = ({buyerid, buyercatalog: buyercatalog, onOpen, onClose, onDelete}) => {
+const BuyerCatalogsActionMenu: FC<IBuyerCatalogsActionMenu> = ({
+  buyerid,
+  buyercatalog: buyercatalog,
+  onOpen,
+  onClose,
+  onDelete
+}) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
-      <MenuButton
-        as={IconButton}
-        aria-label={`Action menu for ${buyercatalog.Name}`}
-        variant="ghost"
-        colorScheme="secondary"
-      >
+      <MenuButton as={IconButton} aria-label={`Action menu for ${buyercatalog.Name}`} variant="ghost">
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>
       <MenuList>

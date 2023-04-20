@@ -25,11 +25,9 @@ const FirstNameColumn: DataTableColumn<IAdminUser> = {
   accessor: "FirstName",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminusers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -39,11 +37,9 @@ const LastNameColumn: DataTableColumn<IAdminUser> = {
   accessor: "LastName",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminusers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -53,11 +49,9 @@ const EmailColumn: DataTableColumn<IAdminUser> = {
   accessor: "Email",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={"/settings/adminusers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -109,11 +103,16 @@ const AdminUserList = () => {
     [deleteDisclosure.onOpen]
   )
 
+  const resolveAdminUserDetailHref = (user: IAdminUser) => {
+    return `/settings/adminuser/${user.ID}`
+  }
+
   return (
     <ListView<IAdminUser>
       service={AdminUsers.List}
       queryMap={AdminUserQueryMap}
       filterMap={AdminUserFilterMap}
+      itemHrefResolver={resolveAdminUserDetailHref}
       itemActions={renderAdminUserActionsMenu}
       tableOptions={AdminUserTableOptions}
       gridOptions={AdminUserGridOptions}

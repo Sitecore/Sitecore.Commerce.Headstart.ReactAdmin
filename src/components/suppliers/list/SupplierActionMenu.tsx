@@ -15,12 +15,7 @@ interface ISupplierActionMenu {
 const SupplierActionMenu: FC<ISupplierActionMenu> = ({supplier, onOpen, onClose, onDelete}) => {
   return (
     <Menu computePositionOnMount isLazy onOpen={onOpen} onClose={onClose} strategy="fixed">
-      <MenuButton
-        as={IconButton}
-        aria-label={`Admin user action menu for ${supplier.Name}`}
-        variant="ghost"
-        colorScheme="secondary"
-      >
+      <MenuButton as={IconButton} aria-label={`Admin user action menu for ${supplier.Name}`} variant="ghost">
         <Icon as={TbDotsVertical} mt={1} />
       </MenuButton>
       <MenuList>

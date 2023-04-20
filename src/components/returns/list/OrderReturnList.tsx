@@ -25,12 +25,10 @@ const IdColumn: DataTableColumn<IOrderReturn> = {
   header: "ID",
   accessor: "ID",
   width: "15%",
-  cell: ({row, value}) => (
-    <Link href={`/returns/${value}`} passHref>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -39,12 +37,11 @@ const OrderIdColumn: DataTableColumn<IOrderReturn> = {
   header: "Order ID",
   accessor: "OrderID",
   width: "15%",
-  cell: ({row, value}) => (
-    <Link href={`/orders/${value}`} passHref>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+  hrefResolver: (item) => `/orders/${item.OrderID}`,
+  cell: ({value}) => (
+    <Text noOfLines={2} title={value}>
+      {value}
+    </Text>
   ),
   sortable: true
 }
@@ -53,11 +50,7 @@ const LastUpdatedColumn: DataTableColumn<IOrderReturn> = {
   header: "Last Updated",
   accessor: "Status",
   width: "20%",
-  cell: ({row, value}) => (
-    <Link href={`/orders/${value}`} passHref>
-      {dateHelper.formatDate(row.original[`Date${value}`])}
-    </Link>
-  )
+  cell: ({row, value}) => <Text noOfLines={2}>{dateHelper.formatDate(row.original[`Date${value}`])}</Text>
 }
 
 const StatusColumn: DataTableColumn<IOrderReturn> = {
@@ -79,12 +72,10 @@ const NoOfItemsColumn: DataTableColumn<IOrderReturn> = {
   accessor: "ItemsToReturn",
   width: "5%",
   align: "right",
-  cell: ({row, value}) => (
-    <Link href={`/returns/${row.original.ID}`} passHref>
-      <Text as="a" noOfLines={1} title={value.length}>
-        {value.length}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={1} title={value.length}>
+      {value.length}
+    </Text>
   ),
   sortable: true
 }
@@ -94,12 +85,10 @@ const RefundAmountColumn: DataTableColumn<IOrderReturn> = {
   accessor: "RefundAmount",
   width: "5%",
   align: "right",
-  cell: ({row, value}) => (
-    <Link href={`/returns/${value}`} passHref>
-      <Text as="a" noOfLines={1} title={value}>
-        {priceHelper.formatPrice(value)}
-      </Text>
-    </Link>
+  cell: ({value}) => (
+    <Text noOfLines={1} title={value}>
+      {priceHelper.formatPrice(value)}
+    </Text>
   ),
   sortable: true
 }
@@ -130,9 +119,15 @@ const OrderReturnList: FC = () => {
     },
     [deleteDisclosure.onOpen]
   )
+
+  const resolveOrderReturnDetailHref = (orderReturn: IOrderReturn) => {
+    return `/returns/${orderReturn.ID}`
+  }
+
   return (
     <ListView<IOrderReturn>
       initialViewMode="table"
+      itemHrefResolver={resolveOrderReturnDetailHref}
       itemActions={renderOrderReturnActionMenu}
       queryMap={OrderReturnQueryMap}
       filterMap={OrderReturnFilterMap}

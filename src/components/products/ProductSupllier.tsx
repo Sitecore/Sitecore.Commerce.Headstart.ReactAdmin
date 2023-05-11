@@ -26,7 +26,7 @@ type ProductDataProps = {
 
 export default function ProductSuppliers({composedProduct, setComposedProduct}: ProductDataProps) {
   const color = useColorModeValue("textColor.900", "textColor.100")
-  const bg = useColorModeValue("brand.500", "brand.500")
+  const bg = useColorModeValue("accent.500", "accent.500")
   const okColor = useColorModeValue("okColor.800", "okColor.200")
   const errorColor = useColorModeValue("errorColor.800", "errorColor.200")
   const [expanded, setExpanded] = useState(false)
@@ -86,10 +86,9 @@ export default function ProductSuppliers({composedProduct, setComposedProduct}: 
                             {" "}
                             <Tooltip label="Remove Supplier from Product">
                               <Button
-                                colorScheme="brandButtons"
                                 aria-label="Remove Supplier from Product"
                                 disabled={true}
-                                variant="secondaryButton"
+                                variant="outline"
                                 // onClick={onRemoveSpecification}
                                 data-id={item.ID}
                               >
@@ -110,9 +109,8 @@ export default function ProductSuppliers({composedProduct, setComposedProduct}: 
       <HStack float={"right"} position="absolute" bottom="20px">
         <Tooltip label="Add Product Supplier">
           <Button
-            colorScheme="brandButtons"
             aria-label="Add Product Supplier"
-            variant="tertiaryButton"
+            colorScheme="secondary"
             disabled={true}
             // onClick={onOpen}
           >

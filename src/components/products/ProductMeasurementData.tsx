@@ -159,12 +159,12 @@ export default function ProductMeasurementData({composedProduct, setComposedProd
       {isEditingBasicData ? (
         <HStack float={"right"} position="absolute" bottom="20px">
           <Tooltip label="Save">
-            <Button colorScheme="brandButtons" aria-label="Save" variant="primaryButton" onClick={onSaveClicked}>
+            <Button aria-label="Save" variant="solid" colorScheme="primary" onClick={onSaveClicked}>
               Save
             </Button>
           </Tooltip>
           <Tooltip label="Cancel">
-            <Button colorScheme="brandButtons" aria-label="Cancel" variant="secondaryButton" onClick={onAbortClicked}>
+            <Button aria-label="Cancel" variant="outline" onClick={onAbortClicked}>
               Cancel
             </Button>
           </Tooltip>
@@ -172,7 +172,7 @@ export default function ProductMeasurementData({composedProduct, setComposedProd
       ) : (
         <HStack float={"right"} position="absolute" bottom="20px">
           <Tooltip label="Edit">
-            <Button colorScheme="brandButtons" aria-label="Edit" variant="tertiaryButton" onClick={onEditClicked}>
+            <Button aria-label="Edit" colorScheme="secondary" onClick={onEditClicked}>
               Edit
             </Button>
           </Tooltip>

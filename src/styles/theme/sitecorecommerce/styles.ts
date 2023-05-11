@@ -6,7 +6,6 @@ export const styles = {
     body: {
       bg: "bodyBg",
       color: "text",
-
       fontSize: "sm",
 
       _dark: {

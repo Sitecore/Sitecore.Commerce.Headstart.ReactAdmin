@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Container,
+  Card,
   Divider,
   Flex,
   Grid,
@@ -22,14 +23,14 @@ import {
   Text,
   Textarea,
   Tr,
-  VStack
+  VStack,
+  Heading
 } from "@chakra-ui/react"
 import {IntegrationEvents, OrderReturn, OrderReturns, OrderWorksheet, Orders} from "ordercloud-javascript-sdk"
 import React, {FunctionComponent, useEffect, useRef, useState} from "react"
 import {dateHelper, priceHelper} from "utils/"
 
 import AddressCard from "../../components/card/AddressCard"
-import Card from "components/card/Card"
 import ExportToCsv from "components/demo/ExportToCsv"
 import ExportToPdf from "components/demo/ExportToPdf"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
@@ -173,11 +174,13 @@ const OrderConfirmationPage: FunctionComponent = () => {
 
   return (
     <>
-      <Container maxW="full">
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
         <NextSeo title="Order Details" />
         <HStack justifyContent="space-between" w="100%" mb={5}>
           <Link href={`/orders/new`} pl="2" pr="2">
-            <Button variant="primaryButton">Place re-order</Button>
+            <Button variant="solid" colorScheme="primary">
+              Place re-order
+            </Button>
           </Link>
           <HStack>
             <PrintShippingLabel />
@@ -185,139 +188,150 @@ const OrderConfirmationPage: FunctionComponent = () => {
             <ExportToPdf />
           </HStack>
         </HStack>
-        <Card variant="primaryCard">
-          <HStack justifyContent="space-between" w="100%" pr="60px">
-            <Text fontSize="20px" fontWeight="600" pb="GlobalPadding" color="gray.300">
-              Order Information
-            </Text>
-            <Text>Status: {orderStatus}</Text>
-          </HStack>
+        <VStack gap={6}>
+          <Card p={6} w="100%">
+            <HStack justifyContent="space-between" w="100%" pr="60px">
+              <Heading fontSize="2xl">Order Information</Heading>
+              <Text>Status: {orderStatus}</Text>
+            </HStack>
 
-          <HStack>
-            <LettersCard
-              FirstName={orderWorksheet.Order.FromUser.FirstName}
-              LastName={orderWorksheet.Order.FromUser.LastName}
-            />
-            <VStack textAlign="left" w="100%">
-              <HStack textAlign="left" w="100%">
-                <Text textAlign="left">
-                  {orderWorksheet.Order.FromUser.FirstName} &nbsp;
-                  {orderWorksheet.Order.FromUser.LastName}
-                </Text>
-              </HStack>
-              <Text textAlign="left" w="100%">
-                {orderWorksheet.Order.FromUser.Phone}
-              </Text>
-              <Text textAlign="left" w="100%">
-                {orderWorksheet.Order.FromUser.Email}
-              </Text>
-            </VStack>
-          </HStack>
-          <Grid templateColumns="repeat(3, 1fr)" gap={20} pt="20">
-            <GridItem w="100%">
-              <VStack>
-                <Text width="full">Invoice Number</Text>
-                <Input placeholder="Invoice Number" defaultValue={orderWorksheet.Order.ID}></Input>
-                <Spacer pt="25px"></Spacer>
-                <Text width="full">Billing Address</Text>
-                <AddressCard
-                  Street1={orderWorksheet.Order.BillingAddress?.Street1}
-                  Street2={orderWorksheet.Order.BillingAddress?.Street2}
-                  City={orderWorksheet.Order.BillingAddress?.City}
-                  State={orderWorksheet.Order.BillingAddress?.State}
-                  Zip={orderWorksheet.Order.BillingAddress?.Zip}
-                />
-                <Spacer pt="25px"></Spacer>
-                <Text width="full">Buyer Comments</Text>
-                <Textarea defaultValue={orderWorksheet.Order.Comments} />
+            <HStack alignItems="center" mt={4}>
+              <LettersCard
+                FirstName={orderWorksheet.Order.FromUser.FirstName}
+                LastName={orderWorksheet.Order.FromUser.LastName}
+              />
+              <VStack textAlign="left" w="100%">
+                <HStack textAlign="left" w="100%">
+                  <Text textAlign="left">
+                    {orderWorksheet.Order.FromUser.FirstName} &nbsp;
+                    {orderWorksheet.Order.FromUser.LastName}
+                  </Text>
+                </HStack>
+                {orderWorksheet.Order.FromUser.Phone && (
+                  <Text textAlign="left" w="100%">
+                    {orderWorksheet.Order.FromUser.Phone}
+                  </Text>
+                )}
+                {orderWorksheet.Order.FromUser.Email && (
+                  <Text textAlign="left" w="100%">
+                    {orderWorksheet.Order.FromUser.Email}
+                  </Text>
+                )}
               </VStack>
-            </GridItem>
-            <GridItem w="100%">
-              <VStack>
-                <Text width="full">Order Placed</Text>
-                <Input
-                  placeholder="Order Placed"
-                  defaultValue={dateHelper.formatDate(orderWorksheet.Order.DateSubmitted)}
-                ></Input>
-                <Spacer pt="25px"></Spacer>
-                <Text width="full">Shipping Address</Text>
-                <AddressCard
-                  Street1={orderWorksheet.LineItems[0].ShippingAddress?.Street1}
-                  Street2={orderWorksheet.LineItems[0].ShippingAddress?.Street2}
-                  City={orderWorksheet.LineItems[0].ShippingAddress?.City}
-                  State={orderWorksheet.LineItems[0].ShippingAddress?.State}
-                  Zip={orderWorksheet.LineItems[0].ShippingAddress?.Zip}
-                />
-              </VStack>
-            </GridItem>
-            <GridItem w="100%" justifyContent="center" key={orderWorksheet.Order.ID}>
-              <Box border="1px" borderColor="gray.200" padding="GlobalPadding" w="100%" maxW="450px">
+            </HStack>
+
+            <Grid templateColumns="repeat(3, 1fr)" gap={20} pt={20}>
+              <GridItem w="100%">
                 <VStack>
-                  <Text>Order Recap</Text>
-                  <Divider border="1px" borderColor="gray.200" />
-                  <Flex flexDirection="column" marginLeft={10} w="full" pr="10" pl="10">
-                    <Table size="sm" width="full" maxWidth="100%" marginBottom={5}>
-                      <Tbody>
-                        <Tr>
-                          <Td>Subtotal</Td>
-                          <Td textAlign="right">
-                            <Text fontWeight="bold">{priceHelper.formatPrice(orderWorksheet.Order.Subtotal)}</Text>
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Promotion Discount</Td>
-                          <Td textAlign="right">
-                            <Text fontWeight="bold">
-                              -{priceHelper.formatPrice(orderWorksheet.Order.PromotionDiscount)}
-                            </Text>
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Shipping</Td>
-                          <Td textAlign="right">
-                            <Text fontWeight="bold">{priceHelper.formatPrice(orderWorksheet.Order.ShippingCost)}</Text>
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Tax</Td>
-                          <Td textAlign="right">
-                            <Text fontWeight="bold">{priceHelper.formatPrice(orderWorksheet.Order.TaxCost)}</Text>
-                          </Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Order Total</Td>
-                          <Td textAlign="right">
-                            <Text fontWeight="bold">{priceHelper.formatPrice(orderWorksheet.Order.Total)}</Text>
-                          </Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
-                  </Flex>
+                  <Text width="full">Invoice Number</Text>
+                  <Input placeholder="Invoice Number" defaultValue={orderWorksheet.Order.ID}></Input>
+                  <Spacer pt="25px"></Spacer>
+                  <Heading fontSize="lg" as="h3" w="full">
+                    Billing Address
+                  </Heading>
+                  <AddressCard
+                    Street1={orderWorksheet.Order.BillingAddress?.Street1}
+                    Street2={orderWorksheet.Order.BillingAddress?.Street2}
+                    City={orderWorksheet.Order.BillingAddress?.City}
+                    State={orderWorksheet.Order.BillingAddress?.State}
+                    Zip={orderWorksheet.Order.BillingAddress?.Zip}
+                  />
+                  <Spacer pt="25px"></Spacer>
+                  <Text width="full">Buyer Comments</Text>
+                  <Textarea defaultValue={orderWorksheet.Order.Comments} />
                 </VStack>
-              </Box>
-            </GridItem>
-          </Grid>
-        </Card>
-        {actionButtons}
-        <Card variant="primaryCard">
-          <HStack justifyContent="space-between" w="100%" pr="60px" mb="30px">
-            <VStack alignContent="left" align="flex-start">
-              <Text fontSize="20px" fontWeight="600" color="gray.300">
-                Ship From
-              </Text>
-              <Text fontSize="18px">Distributor Main Warehouse</Text>
-              <Text fontSize="14px">123 First Avenue, Minneapolis, MN 55347</Text>
-            </VStack>
-            <VStack alignContent="right" align="flex-end">
-              <Text fontSize="GlobalPadding" fontWeight="600" color="gray.300" textAlign="right">
-                Ship Method
-              </Text>
-              <Text textAlign="right">FEDEX 2 DAY SHIPPING, EST ARRIVAL DATE 1/1/2023</Text>
-            </VStack>
-          </HStack>
+              </GridItem>
+              <GridItem w="100%">
+                <VStack>
+                  <Text width="full">Order Placed</Text>
+                  <Input
+                    placeholder="Order Placed"
+                    defaultValue={dateHelper.formatDate(orderWorksheet.Order.DateSubmitted)}
+                  ></Input>
+                  <Spacer pt="25px"></Spacer>
+                  <Heading fontSize="lg" as="h3" w="full">
+                    Shipping Address
+                  </Heading>
+                  <AddressCard
+                    Street1={orderWorksheet.LineItems[0].ShippingAddress?.Street1}
+                    Street2={orderWorksheet.LineItems[0].ShippingAddress?.Street2}
+                    City={orderWorksheet.LineItems[0].ShippingAddress?.City}
+                    State={orderWorksheet.LineItems[0].ShippingAddress?.State}
+                    Zip={orderWorksheet.LineItems[0].ShippingAddress?.Zip}
+                  />
+                </VStack>
+              </GridItem>
+              <GridItem w="100%" justifyContent="center" key={orderWorksheet.Order.ID}>
+                <Box border="1px" borderColor="gray.200" padding="GlobalPadding" w="100%" maxW="450px">
+                  <VStack>
+                    <Heading fontSize="lg" as="h3" w="full" p={3}>
+                      Order Recap
+                    </Heading>
+                    <Divider border="1px" borderColor="gray.200" />
+                    <Flex flexDirection="column" marginLeft={10} w="full" pr="10" pl="10">
+                      <Table size="sm" width="full" maxWidth="100%" marginBottom={5}>
+                        <Tbody>
+                          <Tr>
+                            <Td>Subtotal</Td>
+                            <Td textAlign="right">
+                              <Text fontWeight="bold">{priceHelper.formatPrice(orderWorksheet.Order.Subtotal)}</Text>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td>Promotion Discount</Td>
+                            <Td textAlign="right">
+                              <Text fontWeight="bold">
+                                -{priceHelper.formatPrice(orderWorksheet.Order.PromotionDiscount)}
+                              </Text>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td>Shipping</Td>
+                            <Td textAlign="right">
+                              <Text fontWeight="bold">
+                                {priceHelper.formatPrice(orderWorksheet.Order.ShippingCost)}
+                              </Text>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td>Tax</Td>
+                            <Td textAlign="right">
+                              <Text fontWeight="bold">{priceHelper.formatPrice(orderWorksheet.Order.TaxCost)}</Text>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td>Order Total</Td>
+                            <Td textAlign="right">
+                              <Text fontWeight="bold">{priceHelper.formatPrice(orderWorksheet.Order.Total)}</Text>
+                            </Td>
+                          </Tr>
+                        </Tbody>
+                      </Table>
+                    </Flex>
+                  </VStack>
+                </Box>
+              </GridItem>
+            </Grid>
+          </Card>
+          {actionButtons}
+          <Card p={6} w="100%">
+            <HStack justifyContent="space-between" w="100%" pr="60px" mb="30px">
+              <VStack alignContent="left" align="flex-start">
+                <Heading fontSize="2xl">Ship From</Heading>
+                <Text fontSize="18px">Distributor Main Warehouse</Text>
+                <Text fontSize="14px">123 First Avenue, Minneapolis, MN 55347</Text>
+              </VStack>
+              <VStack alignContent="right" align="flex-end">
+                <Text fontSize="GlobalPadding" fontWeight="600" color="gray.300" textAlign="right">
+                  Ship Method
+                </Text>
+                <Text textAlign="right">FEDEX 2 DAY SHIPPING, EST ARRIVAL DATE 1/1/2023</Text>
+              </VStack>
+            </HStack>
 
-          <LineItemList lineItems={orderWorksheet.LineItems} editable={false} />
-        </Card>
+            <LineItemList lineItems={orderWorksheet.LineItems} editable={false} />
+          </Card>
+        </VStack>
       </Container>
       <AlertDialog
         isOpen={isRefundDialogOpen}
@@ -333,7 +347,7 @@ const OrderConfirmationPage: FunctionComponent = () => {
               <Text display="inline">
                 A return for this order will be requested and if approved will refund the balance of
               </Text>{" "}
-              <Text display="inline" color="brand.500" fontWeight="bold">
+              <Text display="inline" color="accent.500" fontWeight="bold">
                 {priceHelper.formatPrice(orderWorksheet.Order.Total)}
               </Text>
               <Textarea
@@ -344,16 +358,11 @@ const OrderConfirmationPage: FunctionComponent = () => {
               />
             </AlertDialogBody>
             <AlertDialogFooter justifyContent="space-between" w="100%">
-              <Button
-                ref={cancelRef}
-                onClick={() => setRefundDialogOpen(false)}
-                disabled={loading}
-                variant="secondaryButton"
-              >
+              <Button ref={cancelRef} onClick={() => setRefundDialogOpen(false)} disabled={loading} variant="outline">
                 Cancel
               </Button>
               <Button onClick={requestRefund} disabled={loading}>
-                {loading ? <Spinner color="brand.500" /> : "Request Refund"}
+                {loading ? <Spinner color="accent.500" /> : "Request Refund"}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -382,12 +391,12 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   ref={cancelRef}
                   onClick={() => setExportCSVDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
                 <Button onClick={requestExportCSV} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Export Orders CSV"}
+                  {loading ? <Spinner color="accent.500" /> : "Export Orders CSV"}
                 </Button>
               </HStack>
             </AlertDialogFooter>
@@ -418,12 +427,12 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   ref={cancelRef}
                   onClick={() => setExportPDFDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
                 <Button onClick={requestExportPDF} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Export Orders PDF"}
+                  {loading ? <Spinner color="accent.500" /> : "Export Orders PDF"}
                 </Button>
               </HStack>
             </AlertDialogFooter>
@@ -454,12 +463,12 @@ const OrderConfirmationPage: FunctionComponent = () => {
                   ref={cancelRef}
                   onClick={() => setPrintLabelDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
                 <Button onClick={requestPrintLabel} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Print Labels"}
+                  {loading ? <Spinner color="accent.500" /> : "Print Labels"}
                 </Button>
               </HStack>
             </AlertDialogFooter>

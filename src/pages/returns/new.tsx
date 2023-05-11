@@ -1,17 +1,4 @@
-import {
-  Button,
-  Container,
-  Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Heading,
-  HStack,
-  IconButton,
-  Input,
-  Text
-} from "@chakra-ui/react"
-import {Form} from "formik"
+import {Button, Container, FormControl, FormLabel, HStack, Input} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import Card from "components/card/Card"
 import {appPermissions} from "constants/app-permissions.config"
@@ -48,7 +35,7 @@ const NewReturnPage = () => {
           </FormControl>
         </HStack>
         <HStack justifyContent="space-between" w="100%">
-          <Button variant="secondaryButton">Cancel</Button>
+          <Button variant="outline">Cancel</Button>
           <Button> Submit</Button>
         </HStack>
       </Card>

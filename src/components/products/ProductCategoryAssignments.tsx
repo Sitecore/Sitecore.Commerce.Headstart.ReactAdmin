@@ -59,7 +59,7 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
   const [newCategory, setNewCategory] = useState("")
 
   const color = useColorModeValue("textColor.900", "textColor.100")
-  const bg = useColorModeValue("brand.500", "brand.500")
+  const bg = useColorModeValue("accent.500", "accent.500")
 
   useEffect(() => {
     async function GetAssignments() {
@@ -145,7 +145,7 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
         <>
           <HStack float={"right"}>
             <Tooltip label="Add to Category">
-              <Button colorScheme="brandButtons" onClick={onOpen} aria-label="add to category">
+              <Button onClick={onOpen} aria-label="add to category">
                 <FiPlus />
               </Button>
             </Tooltip>
@@ -181,12 +181,7 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
                             <Td>
                               {" "}
                               <Tooltip label="Remove from Category">
-                                <Button
-                                  colorScheme="brandButtons"
-                                  aria-label="remove from category"
-                                  onClick={onRemoveCategory}
-                                  data-id={item.ID}
-                                >
+                                <Button aria-label="remove from category" onClick={onRemoveCategory} data-id={item.ID}>
                                   <FiTrash2 />
                                 </Button>
                               </Tooltip>
@@ -272,7 +267,6 @@ export default function ProductCategoryAssignments({product, catalog}: ProductDa
                       float={"right"}
                       width={"45%"}
                       size={"md"}
-                      colorScheme="brandButtons"
                       onClick={onCategoryLink}
                       ml={3}
                       disabled={!isCategoryChosen}

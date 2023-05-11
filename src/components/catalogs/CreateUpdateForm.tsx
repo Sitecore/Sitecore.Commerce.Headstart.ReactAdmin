@@ -1,12 +1,16 @@
-import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Flex, Stack} from "@chakra-ui/react"
-import {InputControl, SwitchControl, TextareaControl} from "components/formik"
-import Card from "../card/Card"
-import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
-import {Formik} from "formik"
-import {useRouter} from "hooks/useRouter"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {InputControl, SwitchControl, TextareaControl} from "components/react-hook-form"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {useRouter} from "hooks/useRouter"
+import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
+import {useForm} from "react-hook-form"
+import {TbChevronLeft} from "react-icons/tb"
 import {ICatalog} from "types/ordercloud/ICatalog"
+import * as Yup from "yup"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
+import CatalogXpCard from "./CatalogXpCard"
 
 export {CreateUpdateForm}
 
@@ -19,8 +23,15 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
     Name: Yup.string().max(100).required("Name is required"),
     Description: Yup.string().max(100)
   }
-  const {isCreating, successToast, errorToast, validationSchema, initialValues, onSubmit} =
+  const {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit} =
     useCreateUpdateForm<Catalog>(catalog, formShape, createCatalog, updateCatalog)
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isSubmitting},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   async function createCatalog(fields: Catalog) {
     const createdCatalog = await Catalogs.Create<ICatalog>(fields)
@@ -41,60 +52,44 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
   }
 
   return (
-    <Card variant="primaryCard">
-      <Flex flexDirection="column" p="10">
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-          {({
-            // most of the useful available Formik props
-            values,
-            errors,
-            touched,
-            dirty,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isValid,
-            isSubmitting,
-            setFieldValue,
-            resetForm
-          }) => (
-            <Box as="form" onSubmit={handleSubmit as any}>
-              <Stack spacing={5}>
-                <InputControl name="Name" label="Catalog Name" isRequired />
-                <TextareaControl name="Description" label="Description" />
-                <SwitchControl name="Active" label="Active" />
-                <ButtonGroup>
-                  <Button
-                    variant="primaryButton"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    isDisabled={!isValid || !dirty}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      resetForm()
-                    }}
-                    type="reset"
-                    variant="secondaryButton"
-                    isLoading={isSubmitting}
-                  >
-                    Reset
-                  </Button>
-                  <Button
-                    onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
-                    variant="secondaryButton"
-                    isLoading={isSubmitting}
-                  >
-                    Cancel
-                  </Button>
-                </ButtonGroup>
-              </Stack>
-            </Box>
-          )}
-        </Formik>
-      </Flex>
-    </Card>
+    <>
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+        <Card>
+          <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+            <Button
+              onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
+              variant="outline"
+              isLoading={isSubmitting}
+              leftIcon={<TbChevronLeft />}
+            >
+              Back
+            </Button>
+            <ButtonGroup>
+              <ResetButton control={control} reset={reset} variant="outline">
+                Discard Changes
+              </ResetButton>
+              <SubmitButton control={control} variant="solid" colorScheme="primary">
+                Save
+              </SubmitButton>
+            </ButtonGroup>
+          </CardHeader>
+          <CardBody
+            display="flex"
+            flexDirection={"column"}
+            as="form"
+            onSubmit={handleSubmit(onSubmit)}
+            gap={4}
+            maxW={{xl: "container.md"}}
+          >
+            <InputControl name="Name" label="Catalog Name" isRequired control={control} />
+            <TextareaControl name="Description" label="Description" control={control} />
+            <SwitchControl name="Active" label="Active" control={control} />
+          </CardBody>
+        </Card>
+        <Card mt={6}>
+          <CatalogXpCard catalog={catalog} />
+        </Card>
+      </Container>
+    </>
   )
 }

@@ -40,7 +40,7 @@ type ProductDataProps = {
 
 export default function ProductSpecs({composedProduct, setComposedProduct}: ProductDataProps) {
   const color = useColorModeValue("textColor.900", "textColor.100")
-  const bg = useColorModeValue("brand.500", "brand.500")
+  const bg = useColorModeValue("accent.500", "accent.500")
   const okColor = useColorModeValue("okColor.800", "okColor.200")
   const errorColor = useColorModeValue("errorColor.800", "errorColor.200")
   const [expanded, setExpanded] = useState(false)
@@ -126,7 +126,7 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
   return (
     <>
       <>
-        <Heading size={{base: "sm", md: "md", lg: "md"}}>Specs</Heading>{" "}
+        <Heading size={{base: "sm", md: "md", lg: "md"}}>Specs2</Heading>{" "}
         {(isLoading || !composedProduct?.Product) && expanded ? (
           <Box pt={6} textAlign={"center"}>
             Updating... <BrandedSpinner />
@@ -176,9 +176,8 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
                             {" "}
                             <Tooltip label="Remove specification from Product">
                               <Button
-                                colorScheme="brandButtons"
                                 aria-label="Remove specification from Product"
-                                variant="secondaryButton"
+                                variant="outline"
                                 onClick={onRemoveSpecification}
                                 data-id={item.ID}
                               >
@@ -198,12 +197,7 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
       </>
       <HStack float={"right"} position="absolute" bottom="20px">
         <Tooltip label="Add Product Specification">
-          <Button
-            colorScheme="brandButtons"
-            aria-label="Add Product Specification"
-            variant="tertiaryButton"
-            onClick={onOpen}
-          >
+          <Button aria-label="Add Product Specification" colorScheme="secondary" onClick={onOpen}>
             Add Specs
           </Button>
         </Tooltip>
@@ -283,14 +277,14 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
                 <AlertDialogFooter>
                   <Box width={"full"}>
                     {isSpecChosen ? null : <Text pb={2}>Please choose from the search results to link a spec</Text>}
-                    <Button width={"45%"} size={"md"} variant="tertiaryButton" onClick={onClose}>
+                    <Button width={"45%"} size={"md"} colorScheme="secondary" onClick={onClose}>
                       Cancel
                     </Button>
                     <Button
                       float={"right"}
                       width={"45%"}
                       size={"md"}
-                      variant="tertiaryButton"
+                      colorScheme="secondary"
                       onClick={onSpecificationLink}
                       ml={3}
                       disabled={!isSpecChosen}

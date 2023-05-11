@@ -42,7 +42,8 @@ type ProductDataProps = {
 export default function ProductVariants({composedProduct, setComposedProduct}: ProductDataProps) {
   const {colorMode, toggleColorMode} = useColorMode()
   const color = useColorModeValue("textColor.900", "textColor.100")
-  const gradient = colorMode === "light" ? "linear(to-t, brand.300, brand.400)" : "linear(to-t, brand.600, brand.500)"
+  const gradient =
+    colorMode === "light" ? "linear(to-t, accent.300, accent.400)" : "linear(to-t, accent.600, accent.500)"
   const shadow = "5px 5px 5px #999999"
   const okColor = useColorModeValue("okColor.800", "okColor.200")
   const errorColor = useColorModeValue("errorColor.800", "errorColor.200")
@@ -124,10 +125,9 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
                                   {item?.Active ?? false ? (
                                     <Tooltip label="Deactivate Variant">
                                       <Button
-                                        colorScheme="brandButtons"
                                         aria-label="Deactivate variant"
                                         onClick={onVariantStatusChange}
-                                        variant="tertiaryButton"
+                                        colorScheme="secondary"
                                         data-id={item.ID}
                                       >
                                         <FiMinus />
@@ -136,10 +136,9 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
                                   ) : (
                                     <Tooltip label="Activate Variant">
                                       <Button
-                                        colorScheme="brandButtons"
                                         aria-label="Activate Variant"
                                         onClick={onVariantStatusChange}
-                                        variant="tertiaryButton"
+                                        colorScheme="secondary"
                                         data-id={item.ID}
                                       >
                                         <FiPlus />
@@ -166,7 +165,7 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
       </>
       <HStack float={"right"} position="absolute" bottom="20px">
         <Tooltip label="Generate variants">
-          <Button colorScheme="brandButtons" aria-label="Generate Variants" variant="tertiaryButton" onClick={onOpen}>
+          <Button aria-label="Generate Variants" colorScheme="secondary" onClick={onOpen}>
             Create Variant
           </Button>
         </Tooltip>
@@ -195,15 +194,10 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
                   }}
                 />
                 <AlertDialogFooter>
-                  <Button variant="tertiaryButton" onClick={onClose}>
+                  <Button colorScheme="secondary" onClick={onClose}>
                     Cancel
                   </Button>
-                  <Button
-                    colorScheme="brandButtons"
-                    onClick={onGenerateVariantsClicked}
-                    variant="tertiaryButton"
-                    ml={3}
-                  >
+                  <Button onClick={onGenerateVariantsClicked} colorScheme="secondary" ml={3}>
                     Generate
                   </Button>
                 </AlertDialogFooter>

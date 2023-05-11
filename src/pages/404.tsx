@@ -33,7 +33,7 @@ const Page404 = () => {
             It&apos;s Okay!
           </Text>
           <Link href="/">
-            <Button backgroundColor={colorMode === "light" ? "gray.300" : "brand.500"} size="sm">
+            <Button backgroundColor={colorMode === "light" ? "gray.300" : "accent.500"} size="sm">
               Let&apos;s Head Back
             </Button>
           </Link>

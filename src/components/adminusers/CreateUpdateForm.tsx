@@ -3,19 +3,24 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
   Flex,
   Heading,
+  SimpleGrid,
   Stack,
   Switch,
   Table,
   TableContainer,
   Tbody,
   Td,
-  Tr
+  theme,
+  Tr,
+  VStack
 } from "@chakra-ui/react"
-import {Formik} from "formik"
-import {InputControl, SwitchControl} from "components/formik"
-import Card from "../card/Card"
+import {InputControl, SwitchControl} from "components/react-hook-form"
 import {AdminUserGroups, AdminUsers, User} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
@@ -24,6 +29,12 @@ import {textHelper} from "utils"
 import {appPermissions} from "constants/app-permissions.config"
 import {isEqual, sortBy, difference, pick} from "lodash"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
+import AdminUserXpCard from "./AdminUserXpCard"
+import {useForm} from "react-hook-form"
+import {yupResolver} from "@hookform/resolvers/yup"
+import SubmitButton from "../react-hook-form/submit-button"
+import ResetButton from "../react-hook-form/reset-button"
+import {TbChevronLeft} from "react-icons/tb"
 
 interface PermissionTableProps {
   assignedPermissions?: string[]
@@ -45,7 +56,7 @@ const PermissionsTable = (props: PermissionTableProps) => {
   }
 
   return (
-    <TableContainer padding={5} backgroundColor="bodyBg" maxWidth={600}>
+    <TableContainer padding={4} maxWidth={"lg"}>
       <Table>
         <Tbody>
           <Tr>
@@ -58,6 +69,7 @@ const PermissionsTable = (props: PermissionTableProps) => {
               <Td>{textHelper.camelCaseToTitleCase(permission)}</Td>
               <Td textAlign="right">
                 <Switch
+                  colorScheme={"primary"}
                   isChecked={assignedPermissions.includes(permission)}
                   onChange={() => handlePermissionChange(permission)}
                 ></Switch>
@@ -92,12 +104,19 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
     setPermissions(updatedPermissions)
   }
 
-  const {successToast, validationSchema, initialValues, onSubmit} = useCreateUpdateForm<User>(
+  const {successToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<User>(
     user,
     formShape,
     createUser,
     updateUser
   )
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isSubmitting},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   async function createUser(fields: User) {
     const createdUser = await AdminUsers.Create<IAdminUser>(fields)
@@ -134,63 +153,51 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
   }
 
   return (
-    <Card variant="primaryCard">
-      <Flex flexDirection="column" p="10">
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-          {({
-            // most of the useful available Formik props
-            values,
-            errors,
-            touched,
-            dirty,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isValid,
-            isSubmitting,
-            setFieldValue,
-            resetForm
-          }) => (
-            <Box as="form" onSubmit={handleSubmit as any}>
-              <Stack spacing={5}>
-                <InputControl name="Username" label="Username" isRequired />
-                <InputControl name="FirstName" label="First name" isRequired />
-                <InputControl name="LastName" label="Last name" isRequired />
-                <InputControl name="Email" label="Email" isRequired />
-                <InputControl name="Phone" label="Phone" />
-                <SwitchControl name="Active" label="Active" marginBottom={5} />
-                <PermissionsTable
-                  onPermissionChange={handlePermissionChange}
-                  assignedPermissions={assignedPermissions || []}
-                />
-                <ButtonGroup>
-                  <Button
-                    variant="primaryButton"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    isDisabled={!isValid || !dirty}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      resetForm()
-                    }}
-                    type="reset"
-                    variant="secondaryButton"
-                    isLoading={isSubmitting}
-                  >
-                    Reset
-                  </Button>
-                  <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
-                    Cancel
-                  </Button>
-                </ButtonGroup>
-              </Stack>
-            </Box>
-          )}
-        </Formik>
-      </Flex>
-    </Card>
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+      <Card>
+        <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+          <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting} leftIcon={<TbChevronLeft />}>
+            Back
+          </Button>
+          <ButtonGroup>
+            <ResetButton control={control} reset={reset} variant="outline">
+              Discard Changes
+            </ResetButton>
+            <SubmitButton control={control} variant="solid" colorScheme="primary">
+              Save
+            </SubmitButton>
+          </ButtonGroup>
+        </CardHeader>
+        <CardBody
+          display="flex"
+          flexWrap={{base: "wrap", lg: "nowrap"}}
+          as="form"
+          alignItems={"flex-start"}
+          justifyContent="space-between"
+          onSubmit={handleSubmit(onSubmit)}
+          gap={6}
+        >
+          <VStack flexBasis={"container.lg"} gap={4}>
+            <SwitchControl name="Active" label="Active" control={control} />
+            <InputControl name="Username" label="Username" control={control} isRequired />
+            <SimpleGrid gap={4} w="100%" gridTemplateColumns={{lg: "1fr 1fr"}}>
+              <InputControl name="FirstName" label="First name" control={control} isRequired />
+              <InputControl name="LastName" label="Last name" control={control} isRequired />
+              <InputControl name="Email" label="Email" control={control} isRequired />
+              <InputControl name="Phone" label="Phone" control={control} />
+            </SimpleGrid>
+          </VStack>
+          <Box border={`1px solid ${theme.colors.gray[200]}`} flexGrow="1" borderRadius="md">
+            <PermissionsTable
+              onPermissionChange={handlePermissionChange}
+              assignedPermissions={assignedPermissions || []}
+            />
+          </Box>
+        </CardBody>
+      </Card>
+      <Card mt={6}>
+        <AdminUserXpCard user={user} />
+      </Card>
+    </Container>
   )
 }

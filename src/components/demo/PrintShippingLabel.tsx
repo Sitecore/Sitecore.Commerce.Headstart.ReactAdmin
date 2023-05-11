@@ -27,7 +27,7 @@ export default function PrintShippingLabel() {
 
   return (
     <>
-      <Button variant="secondaryButton" onClick={() => setPrintLabelDialogOpen(true)}>
+      <Button variant="outline" onClick={() => setPrintLabelDialogOpen(true)}>
         Print Shipping Label
       </Button>
       <AlertDialog
@@ -53,12 +53,12 @@ export default function PrintShippingLabel() {
                   ref={cancelRef}
                   onClick={() => setPrintLabelDialogOpen(false)}
                   disabled={loading}
-                  variant="secondaryButton"
+                  variant="outline"
                 >
                   Cancel
                 </Button>
                 <Button onClick={requestPrintLabel} disabled={loading}>
-                  {loading ? <Spinner color="brand.500" /> : "Print Labels"}
+                  {loading ? <Spinner color="accent.500" /> : "Print Labels"}
                 </Button>
               </HStack>
             </AlertDialogFooter>

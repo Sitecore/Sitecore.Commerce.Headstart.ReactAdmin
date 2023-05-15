@@ -35,7 +35,7 @@ import {ISpec} from "types/ordercloud/ISpec"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
-  setComposedProduct: React.Dispatch<React.SetStateAction<ComposedProduct>>
+  setComposedProduct?: React.Dispatch<React.SetStateAction<ComposedProduct>>
 }
 
 export default function ProductSpecs({composedProduct, setComposedProduct}: ProductDataProps) {
@@ -126,7 +126,6 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
   return (
     <>
       <>
-        <Heading size={{base: "sm", md: "md", lg: "md"}}>Specs2</Heading>{" "}
         {(isLoading || !composedProduct?.Product) && expanded ? (
           <Box pt={6} textAlign={"center"}>
             Updating... <BrandedSpinner />
@@ -144,7 +143,7 @@ export default function ProductSpecs({composedProduct, setComposedProduct}: Prod
                       <Th color={color}>Name</Th>
                       <Th color={color}>Number Options</Th>
                       <Th color={color}>Defines Variant</Th>
-                      <Th color={color}>Action</Th>
+                      <Th color={color}>Options</Th>
                     </Tr>
                   </Thead>
                   <Tbody alignContent={"center"}>

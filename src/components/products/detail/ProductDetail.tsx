@@ -46,6 +46,10 @@ import {ProductDetailTab} from "./ProductDetailTab"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {TbBarrierBlock, TbCactus, TbFileUpload} from "react-icons/tb"
 import schraTheme from "theme/theme"
+import { ISpec } from "types/ordercloud/ISpec"
+import ProductSpecs from "../ProductSpecs"
+import { IVariant } from "types/ordercloud/IVariant"
+import ProductVariants from "../ProductVariants"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization" | "SEO"
 
@@ -64,12 +68,16 @@ interface ProductDetailProps {
   initialTab: ProductDetailTab
   product?: IProduct
   defaultPriceSchedule?: IPriceSchedule
+  specs?: ISpec[]
+  variants?: IVariant[]
 }
 export default function ProductDetail({
   showTabbedView,
   initialTab,
   product,
-  defaultPriceSchedule = {} as IPriceSchedule
+  defaultPriceSchedule = {} as IPriceSchedule,
+  specs,
+  variants
 }: ProductDetailProps) {
   const router = useRouter()
   const successToast = useSuccessToast()
@@ -216,29 +224,34 @@ export default function ProductDetail({
                   <Card w="100%">
                     <CardHeader display="flex" alignItems={"center"}>
                       <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-                        Attributes
+                        Specs
                         <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                          Create attributes like size and color to generate variants for this product.
+                          Create specs like size and color to generate variants for this product.
                         </Text>
                       </Heading>
                       <Button variant="outline" colorScheme="accent" ml="auto">
-                        Create attributes
+                        Create specs
                       </Button>
                     </CardHeader>
                     <CardBody>
-                      <Box
-                        p={6}
-                        display="flex"
-                        flexDirection={"column"}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        minH={"xs"}
-                      >
+                        {!specs?.length && (
+                          <Box
+                          p={6}
+                          display="flex"
+                          flexDirection={"column"}
+                          alignItems={"center"}
+                          justifyContent={"center"}
+                          minH={"xs"}
+                        >
                         <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
                         <Heading colorScheme="secondary" fontSize="xl">
-                          This product has no attributes
+                          This product has no specs {specs?.length}
                         </Heading>
-                      </Box>
+                        </Box>
+                      )}
+                      {specs?.length && (
+                        <ProductSpecs composedProduct={{Product: product, Specs: specs, Variants: variants}} />
+                      )}
                     </CardBody>
                   </Card>
                   <Card w="100%" mt={6}>
@@ -247,9 +260,29 @@ export default function ProductDetail({
                         Variants
                       </Heading>
                       <Text fontSize="sm" color="gray.400">
-                        Variants will be generated after creating or adding attributes
+                        Variants will be generated after creating or adding specs and spec options
                       </Text>
                     </CardHeader>
+                    <CardBody>
+                        {!variants?.length && (
+                          <Box
+                          p={6}
+                          display="flex"
+                          flexDirection={"column"}
+                          alignItems={"center"}
+                          justifyContent={"center"}
+                          minH={"xs"}
+                        >
+                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
+                        <Heading colorScheme="secondary" fontSize="xl">
+                          This product has no variants {variants?.length}
+                        </Heading>
+                        </Box>
+                      )}
+                      {variants?.length && (
+                        <ProductVariants composedProduct={{Product: product, Specs: specs, Variants: variants}} />
+                      )}
+                    </CardBody>
                   </Card>
                 </TabPanel>
               )}

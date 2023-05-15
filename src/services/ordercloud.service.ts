@@ -42,9 +42,9 @@ export function SetConfiguration() {
 }
 
 export interface ComposedProduct {
-  Product: RequiredDeep<IProduct>
-  Specs: RequiredDeep<Spec<any, any>>[]
-  Variants: RequiredDeep<Variant<any>>[]
+  Product: IProduct
+  Specs: Spec<any, any>[]
+  Variants: Variant<any>[]
 }
 
 export async function GetComposedProduct(productId: string): Promise<ComposedProduct> {

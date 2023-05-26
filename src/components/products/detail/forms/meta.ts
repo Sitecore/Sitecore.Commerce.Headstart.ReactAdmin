@@ -7,6 +7,7 @@ import * as inventoryForm from "./InventoryForm"
 import * as shippingForm from "./ShippingForm"
 import * as unitOfMeasureForm from "./UnitOfMeasureForm"
 import * as pricingForm from "./PricingForm"
+import * as facetsForm from "./FacetsForm"
 import {ProductDetailTab} from "../ProductDetail"
 
 export const defaultValues = {
@@ -15,7 +16,8 @@ export const defaultValues = {
   ...inventoryForm.defaultValues,
   ...shippingForm.defaultValues,
   ...unitOfMeasureForm.defaultValues,
-  ...pricingForm.defaultValues
+  ...pricingForm.defaultValues,
+  ...facetsForm.defaultValues
 }
 
 export const validationSchema = yup.object().shape(
@@ -25,7 +27,8 @@ export const validationSchema = yup.object().shape(
     ...inventoryForm.formShape,
     ...shippingForm.formShape,
     ...unitOfMeasureForm.formShape,
-    ...pricingForm.formShape
+    ...pricingForm.formShape,
+    ...facetsForm.formShape
   })
 )
 
@@ -35,12 +38,12 @@ export const tabFieldNames: Record<ProductDetailTab, any[]> = {
     ...values(detailsForm.fieldNames),
     ...values(inventoryForm.fieldNames),
     ...values(shippingForm.fieldNames),
-    ...values(unitOfMeasureForm.fieldNames)
+    ...values(unitOfMeasureForm.fieldNames),
   ],
   Pricing: [...values(pricingForm.fieldNames)],
   Variants: [],
   Media: [],
-  Facets: [],
+  Facets: [...values(facetsForm.fieldNames)],
   Customization: [],
   SEO: []
 }

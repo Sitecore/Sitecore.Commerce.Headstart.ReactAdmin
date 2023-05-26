@@ -6,6 +6,7 @@ export interface IProductXp {
   // add custom xp properties required for this project here
   Images?: XpImage[]
   UnitOfMeasure?: string
+  Facets?: { [key: string]: any[] }
 }
 
 export interface XpImage {

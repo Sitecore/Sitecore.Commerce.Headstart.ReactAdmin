@@ -103,7 +103,7 @@ export default function ProductDetail({
       const { ID, Name, xp: { Options } } = facet;
       const optionsWithValues = Options.map(option => ({
         facetOptionName: option,
-        value: facetsOnProduct[ID] ? facetsOnProduct[ID].includes(option) : false
+        value: (facetsOnProduct && facetsOnProduct[ID] && facetsOnProduct[ID].includes(option)) || false
       }));
 
       return {

@@ -1,5 +1,5 @@
 import {InputControl, SwitchControl} from "@/components/react-hook-form"
-import {Grid, GridItem, HStack, SimpleGrid} from "@chakra-ui/react"
+import {HStack} from "@chakra-ui/react"
 import {Control, FieldValues} from "react-hook-form"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"

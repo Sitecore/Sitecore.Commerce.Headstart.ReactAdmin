@@ -11,14 +11,10 @@ import {
   Flex,
   Divider,
   Container,
-  Center,
-  VStack,
   Icon,
   SimpleGrid,
   Text,
   Button,
-  theme,
-  InputGroup,
   FormLabel,
   Input,
   FormControl,
@@ -44,7 +40,7 @@ import {useForm} from "react-hook-form"
 import {PricingForm} from "./forms/PricingForm/PricingForm"
 import {ProductDetailTab} from "./ProductDetailTab"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
-import {TbBarrierBlock, TbCactus, TbFileUpload} from "react-icons/tb"
+import {TbCactus, TbFileUpload} from "react-icons/tb"
 import schraTheme from "theme/theme"
 import { ISpec } from "types/ordercloud/ISpec"
 import ProductSpecs from "../ProductSpecs"

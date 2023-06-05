@@ -24,6 +24,8 @@ export const CheckboxControl: FC<CheckboxControlProps> = (props: CheckboxControl
   let isChecked
   if (field.value instanceof Array) {
     isChecked = field.value.includes(props.value) ?? false
+  } else {
+    isChecked = field.value ?? false
   }
 
   const isRequired = isRequiredField(props.validationSchema, field.name)

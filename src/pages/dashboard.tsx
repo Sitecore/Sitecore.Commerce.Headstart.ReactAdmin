@@ -15,28 +15,28 @@ import {
   theme,
   Heading
 } from "@chakra-ui/react"
-import {HiOutlineCurrencyDollar, HiOutlineFolderOpen, HiOutlineUserAdd, HiOutlineUserCircle} from "react-icons/hi"
-import {useEffect, useState} from "react"
+import { HiOutlineCurrencyDollar, HiOutlineFolderOpen, HiOutlineUserAdd, HiOutlineUserCircle } from "react-icons/hi"
+import { useEffect, useState } from "react"
 import AverageOrderAmount from "components/analytics/AverageOrderAmount"
 import NewClients from "components/analytics/PercentChangeTile"
-import {NextSeo} from "next-seo"
+import { NextSeo } from "next-seo"
 import TodaysMoney from "components/analytics/PercentChangeTile"
 import TodaysUsers from "components/analytics/PercentChangeTile"
 import TotalSales from "components/analytics/PercentChangeTile"
-import {appPermissions} from "constants/app-permissions.config"
-import {priceHelper} from "utils/price.utils"
+import { appPermissions } from "constants/app-permissions.config"
+import { priceHelper } from "utils/price.utils"
 import useHasAccess from "hooks/useHasAccess"
-import {Link} from "components/navigation/Link"
-import {Orders, Products, Promotions} from "ordercloud-javascript-sdk"
-import {IOrder} from "types/ordercloud/IOrder"
-import {IProduct} from "types/ordercloud/IProduct"
-import {IPromotion} from "types/ordercloud/IPromotion"
-import {dashboardService} from "services/dashboard.service"
+import { Link } from "components/navigation/Link"
+import { Orders, Products, Promotions } from "ordercloud-javascript-sdk"
+import { IOrder } from "types/ordercloud/IOrder"
+import { IProduct } from "types/ordercloud/IProduct"
+import { IPromotion } from "types/ordercloud/IPromotion"
+import { dashboardService } from "services/dashboard.service"
 import schraTheme from "theme/theme"
-import {TbArrowsDiagonal} from "react-icons/tb"
+import { TbArrowsDiagonal } from "react-icons/tb"
 
 const Dashboard = () => {
-  const {colorMode, toggleColorMode} = useColorMode()
+  const { colorMode, toggleColorMode } = useColorMode()
   const [orders, setOrders] = useState([])
   const [products, setProducts] = useState([])
   const [promotions, setPromotions] = useState([])
@@ -154,10 +154,11 @@ const Dashboard = () => {
   }
 
   const productsLatestUpdated = new Date(
-    products
-      ?.map((i) => i?.Inventory)
-      ?.map((lu) => lu?.LastUpdated)
-      ?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
+    (products || [])
+      .filter((p) => p.Inventory !== null)
+      .map((i) => i?.Inventory)
+      .map((lu) => lu?.LastUpdated)
+      .reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
   ).toLocaleDateString()
   const ordersLatestUpdated = new Date(
     orders?.map((lu) => lu?.LastUpdated)?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
@@ -178,10 +179,10 @@ const Dashboard = () => {
   console.log("promotions", promotionsLatestUpdated)
 
   const data = [
-    {label: "products", labelSingular: "product", var: products, funFact: productsLatestUpdated},
-    {label: "orders", labelSingular: "order", var: orders, funFact: ordersLatestUpdated},
-    {label: "users", labelSingular: "user", var: users, funFact: usersLatestUpdated},
-    {label: "promotions", labelSingular: "promotion", var: promotions, funFact: promotionsLatestUpdated}
+    { label: "products", labelSingular: "product", var: products, funFact: productsLatestUpdated },
+    { label: "orders", labelSingular: "order", var: orders, funFact: ordersLatestUpdated },
+    { label: "users", labelSingular: "user", var: users, funFact: usersLatestUpdated },
+    { label: "promotions", labelSingular: "promotion", var: promotions, funFact: promotionsLatestUpdated }
   ]
 
   const miniWidgets = data.map((item) => (

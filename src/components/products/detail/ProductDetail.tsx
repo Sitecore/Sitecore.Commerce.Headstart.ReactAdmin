@@ -31,7 +31,7 @@ import {cloneDeep, invert} from "lodash"
 import {PriceSchedules, Products} from "ordercloud-javascript-sdk"
 import {defaultValues, validationSchema} from "./forms/meta"
 import ProductDetailToolbar from "./ProductDetailToolbar"
-import {useSuccessToast} from "hooks/useToast"
+import {useErrorToast, useSuccessToast} from "hooks/useToast"
 import {IProduct} from "types/ordercloud/IProduct"
 import {useRouter} from "hooks/useRouter"
 import {useState} from "react"
@@ -42,9 +42,9 @@ import {ProductDetailTab} from "./ProductDetailTab"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {TbCactus, TbFileUpload} from "react-icons/tb"
 import schraTheme from "theme/theme"
-import { ISpec } from "types/ordercloud/ISpec"
+import {ISpec} from "types/ordercloud/ISpec"
 import ProductSpecs from "../ProductSpecs"
-import { IVariant } from "types/ordercloud/IVariant"
+import {IVariant} from "types/ordercloud/IVariant"
 import ProductVariants from "../ProductVariants"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization" | "SEO"
@@ -77,6 +77,7 @@ export default function ProductDetail({
 }: ProductDetailProps) {
   const router = useRouter()
   const successToast = useSuccessToast()
+  const errorToast = useErrorToast()
   const [tabIndex, setTabIndex] = useState(tabIndexMap[initialTab])
   const isCreatingNew = !Boolean(product?.ID)
   const initialViewVisibility: Record<ProductDetailTab, boolean> = {
@@ -146,6 +147,10 @@ export default function ProductDetail({
     }
   }
 
+  const onInvalid = (errors) => {
+    errorToast({title: "Form errors", description: "Please resolve the errors and try again."})
+  }
+
   const SimpleCard = (props: {title?: string; children: React.ReactElement}) => (
     <Card>
       <CardHeader>{props.title && <Heading size="md">{props.title}</Heading>}</CardHeader>
@@ -155,7 +160,7 @@ export default function ProductDetail({
 
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-      <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+      <Box as="form" noValidate onSubmit={handleSubmit(onSubmit, onInvalid)}>
         <ProductDetailToolbar
           product={product}
           control={control}
@@ -230,8 +235,8 @@ export default function ProductDetail({
                       </Button>
                     </CardHeader>
                     <CardBody>
-                        {!specs?.length && (
-                          <Box
+                      {!specs?.length && (
+                        <Box
                           p={6}
                           display="flex"
                           flexDirection={"column"}
@@ -239,10 +244,10 @@ export default function ProductDetail({
                           justifyContent={"center"}
                           minH={"xs"}
                         >
-                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
-                        <Heading colorScheme="secondary" fontSize="xl">
-                          This product has no specs {specs?.length}
-                        </Heading>
+                          <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
+                          <Heading colorScheme="secondary" fontSize="xl">
+                            This product has no specs {specs?.length}
+                          </Heading>
                         </Box>
                       )}
                       {specs?.length && (
@@ -260,8 +265,8 @@ export default function ProductDetail({
                       </Text>
                     </CardHeader>
                     <CardBody>
-                        {!variants?.length && (
-                          <Box
+                      {!variants?.length && (
+                        <Box
                           p={6}
                           display="flex"
                           flexDirection={"column"}
@@ -269,10 +274,10 @@ export default function ProductDetail({
                           justifyContent={"center"}
                           minH={"xs"}
                         >
-                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
-                        <Heading colorScheme="secondary" fontSize="xl">
-                          This product has no variants {variants?.length}
-                        </Heading>
+                          <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
+                          <Heading colorScheme="secondary" fontSize="xl">
+                            This product has no variants {variants?.length}
+                          </Heading>
                         </Box>
                       )}
                       {variants?.length && (

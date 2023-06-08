@@ -20,7 +20,8 @@ const priceBreakSchema = {
     .transform(emptyStringToNull)
     .nullable()
     .required("Price is required"),
-  SalePrice: yup.number().min(1).transform(emptyStringToNull).nullable().required("Sale price is required")
+  SalePrice: yup.number().min(0).transform(emptyStringToNull).nullable(),
+  SubscriptionPrice: yup.number().min(0).transform(emptyStringToNull).nullable()
 }
 
 export const formShape: Record<FieldName, any> = {

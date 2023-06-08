@@ -110,6 +110,14 @@ const PriceBreakTable = ({control, trigger}: PriceBreakTableProps) => {
             leftAddon="$"
             validationSchema={validationSchema}
           />
+          <NumberInputControl
+            numberInputProps={{flexGrow: 1}}
+            name={`${fieldNames.PRICE_BREAKS}.${index}.SubscriptionPrice`}
+            label="Subscription Price (per unit)"
+            control={control}
+            leftAddon="$"
+            validationSchema={validationSchema}
+          />
           {index === 0 ? (
             // this feels very wrong
             <Box minWidth="46px"></Box>
@@ -146,7 +154,7 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
     <>
       <Card>
         <CardBody flexDirection="column" gap={4}>
-          <Grid templateColumns={{base: "1fr", xl: "1fr 1fr"}} gap={4}>
+          <Grid templateColumns={{base: "1fr", xl: "1fr 1fr 1fr"}} gap={4}>
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.Price`}
               label="Regular Price (per unit)"
@@ -163,7 +171,15 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
               validationSchema={validationSchema}
             />
 
-            <Grid gap={4} gridTemplateColumns={{base: "1fr", xl: "1fr 1fr"}}>
+            <InputControl
+              name={`${fieldNames.PRICE_BREAKS}.${0}.SubscriptionPrice`}
+              label="Subscription Price (per unit)"
+              control={control}
+              leftAddon="$"
+              validationSchema={validationSchema}
+            />
+
+            <Grid gap={4} gridTemplateColumns={{base: "1fr", xl: "1fr 1fr 1fr"}}>
               <InputControl
                 name={fieldNames.SALE_START}
                 label="Sale Start"

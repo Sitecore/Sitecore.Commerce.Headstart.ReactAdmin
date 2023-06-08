@@ -165,7 +165,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
   return (
     <>
       <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-        <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+        <Box as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <Box>
             <ButtonGroup>
               <SubmitButton control={control} variant="solid" colorScheme="primary">

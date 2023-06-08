@@ -9,5 +9,5 @@ export const defaultValues: Record<FieldName, any> = {
   [fieldNames.RESTRICTED_QUANTITY]: false,
   [fieldNames.MIN_QUANTITY]: 1,
   [fieldNames.MAX_QUANTITY]: "",
-  [fieldNames.PRICE_BREAKS]: [{Quantity: 1, Price: "", SalePrice: ""}]
+  [fieldNames.PRICE_BREAKS]: [{Quantity: 1, Price: "", SalePrice: "", SubscriptionPrice: ""}]
 }

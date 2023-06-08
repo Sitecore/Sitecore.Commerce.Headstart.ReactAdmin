@@ -34,6 +34,17 @@ export function withDefaultValuesFallback(obj: any, defaultValues: any): any {
     const value = get(obj, key, null)
     if (value == null) {
       set(obj, key, defaultValues[key])
+    } else if (Array.isArray(value) && Array.isArray(defaultValues[key]) && defaultValues[key].length) {
+      // If the value is an array we need to check the value for each item in the array
+      // fallback will be the first item in the defaultValues array item
+      value.forEach((innerObj, index) => {
+        Object.keys(innerObj).forEach((innerKey) => {
+          const innerObjValue = innerObj[innerKey]
+          if (innerObjValue == null) {
+            set(obj, `${key}.${index}.${innerKey}`, defaultValues[key][0][innerKey])
+          }
+        })
+      })
     }
   })
   return obj

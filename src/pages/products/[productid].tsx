@@ -39,7 +39,7 @@ export async function getServerSideProps() {
 }
 
 const ProductDetailPage = () => {
-  const {product, defaultPriceSchedule, specs, variants, loading, showTabbedView, initialTab} = useProductDetail()
+  const {product, defaultPriceSchedule, specs, variants, facets, loading, showTabbedView, initialTab} = useProductDetail()
 
   if (loading || !product) {
     return (
@@ -82,6 +82,7 @@ const ProductDetailPage = () => {
       defaultPriceSchedule={defaultPriceSchedule}
       specs={specs}
       variants={variants}
+      facets={facets}
     />
   )
 }

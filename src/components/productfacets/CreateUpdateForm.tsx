@@ -161,6 +161,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
           display="flex"
           flexDirection={"column"}
           as="form"
+          noValidate
           alignItems={"flex-start"}
           justifyContent="space-between"
           onSubmit={handleSubmit(onSubmit)}

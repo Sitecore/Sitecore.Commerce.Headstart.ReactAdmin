@@ -79,6 +79,7 @@ function CreateUpdateForm({supplier}: CreateUpdateFormProps) {
           display="flex"
           flexDirection={"column"}
           as="form"
+          noValidate
           onSubmit={handleSubmit(onSubmit)}
           gap={4}
           maxW={{xl: "container.md"}}

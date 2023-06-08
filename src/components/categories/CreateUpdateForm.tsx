@@ -100,7 +100,7 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
       >
         {headerComponent}
         <Flex flexDirection="column" p="10">
-          <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+          <Box as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={5}>
               <InputControl name="Name" label="Category Name" isRequired control={control} />
               <TextareaControl name="Description" label="Description" control={control} />

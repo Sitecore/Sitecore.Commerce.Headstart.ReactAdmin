@@ -172,6 +172,7 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
           display="flex"
           flexWrap={{base: "wrap", lg: "nowrap"}}
           as="form"
+          noValidate
           alignItems={"flex-start"}
           justifyContent="space-between"
           onSubmit={handleSubmit(onSubmit)}

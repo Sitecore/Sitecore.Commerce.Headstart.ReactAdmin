@@ -28,13 +28,13 @@ export const FormControl: FC<BaseProps> = (props: BaseProps) => {
   const {children, name, control, label, labelProps, helperText, helperTextProps, errorMessageProps, ...rest} = props
 
   const {
-    fieldState: {isTouched},
     formState: {errors}
   } = useController({name, control})
   const error = get(errors, name, "") as any
+  const hasError = Boolean(error?.message)
 
   return (
-    <ChakraFormControl isInvalid={!!error && isTouched} {...rest}>
+    <ChakraFormControl isInvalid={hasError} {...rest}>
       {label && typeof label === "string" ? (
         <FormLabel m={0} htmlFor={name} {...labelProps}>
           {label}

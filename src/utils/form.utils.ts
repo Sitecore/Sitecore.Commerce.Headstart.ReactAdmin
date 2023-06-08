@@ -1,4 +1,4 @@
-import { get, set } from "lodash"
+import {get, set} from "lodash"
 import * as yup from "yup"
 
 /**
@@ -33,11 +33,8 @@ export function withDefaultValuesFallback(obj: any, defaultValues: any): any {
   Object.keys(defaultValues).forEach((key) => {
     const value = get(obj, key, null)
     if (value == null) {
-      console.log(key)
       set(obj, key, defaultValues[key])
-    }
-    else if (Array.isArray(value) && Array.isArray(defaultValues[key]) && defaultValues[key].length) {
-      console.log(value)
+    } else if (Array.isArray(value) && Array.isArray(defaultValues[key]) && defaultValues[key].length) {
       // If the value is an array we need to check the value for each item in the array
       // fallback will be the first item in the defaultValues array item
       value.forEach((innerObj, index) => {

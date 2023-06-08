@@ -128,7 +128,7 @@ export default function ProductDetail({
         Name: product.ID
       })
     } else {
-      const priceScheduleDiff = getObjectDiff(defaultPriceSchedule, fields.defaultPriceSchedule)
+      const priceScheduleDiff = getObjectDiff(defaultPriceSchedule, fields.DefaultPriceSchedule)
       defaultPriceSchedule = await PriceSchedules.Patch<IPriceSchedule>(
         product.DefaultPriceScheduleID,
         priceScheduleDiff

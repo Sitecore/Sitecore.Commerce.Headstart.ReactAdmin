@@ -48,7 +48,7 @@ const PriceBreakTable = ({control, trigger}: PriceBreakTableProps) => {
       errorToast({description: "Please resolve errors before adding a new price break"})
       return
     }
-    append({Quantity: "", Price: "", SalePrice: ""})
+    append({Quantity: "", Price: "", SalePrice: "", SubscriptionPrice: ""})
   }
 
   function getPricebreakErrorMessage(errors: any) {

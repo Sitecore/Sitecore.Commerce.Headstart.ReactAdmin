@@ -44,7 +44,6 @@ export default function AverageOrderAmount() {
   const graphColor2 = useColorModeValue(schraTheme.colors.accent[500], schraTheme.colors.accent[300])
   //const [chartData, setchartData] = useState()
   let chartData = require("../../mockdata/dashboard_data.json")
-  console.log(chartData)
   useEffect(() => {
     initData()
   }, [])

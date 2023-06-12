@@ -38,12 +38,11 @@ export const tabFieldNames: Record<ProductDetailTab, any[]> = {
     ...values(detailsForm.fieldNames),
     ...values(inventoryForm.fieldNames),
     ...values(shippingForm.fieldNames),
-    ...values(unitOfMeasureForm.fieldNames),
+    ...values(unitOfMeasureForm.fieldNames)
   ],
   Pricing: [...values(pricingForm.fieldNames)],
   Variants: [],
   Media: [],
   Facets: [...values(facetsForm.fieldNames)],
-  Customization: [],
-  SEO: []
+  Customization: []
 }

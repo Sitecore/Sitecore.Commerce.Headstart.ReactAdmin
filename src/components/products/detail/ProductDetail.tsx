@@ -49,7 +49,7 @@ import ProductVariants from "../ProductVariants"
 import {FacetsForm} from "./forms/FacetsForm/FacetsForm"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 
-export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization" | "SEO"
+export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
 
 const tabIndexMap: Record<ProductDetailTab, number> = {
   Details: 0,
@@ -57,8 +57,7 @@ const tabIndexMap: Record<ProductDetailTab, number> = {
   Variants: 2,
   Media: 3,
   Facets: 4,
-  Customization: 5,
-  SEO: 6
+  Customization: 5
 }
 const inverseTabIndexMap = invert(tabIndexMap)
 interface ProductDetailProps {
@@ -90,8 +89,7 @@ export default function ProductDetail({
     Variants: true,
     Media: true,
     Facets: true,
-    Customization: true,
-    SEO: true
+    Customization: true
   }
   const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
 
@@ -232,7 +230,6 @@ export default function ProductDetail({
               {viewVisibility.Media && <ProductDetailTab tab="Media" control={control} />}
               {viewVisibility.Facets && <ProductDetailTab tab="Facets" control={control} />}
               {viewVisibility.Customization && <ProductDetailTab tab="Customization" control={control} />}
-              {viewVisibility.SEO && <ProductDetailTab tab="SEO" control={control} />}
             </TabList>
 
             <TabPanels>
@@ -421,37 +418,6 @@ export default function ProductDetail({
                   </Card>
                 </TabPanel>
               )}
-              {viewVisibility.SEO && (
-                <TabPanel p={0} mt={6}>
-                  <Card w="100%">
-                    <CardHeader display="flex" alignItems={"center"}></CardHeader>
-                    <CardBody maxW="container.xl">
-                      <SimpleGrid minChildWidth={"350px"} gap={6}>
-                        <FormControl>
-                          <FormLabel>Product Page Title</FormLabel>
-                          <Input placeholder="example" />
-                        </FormControl>
-                        <FormControl>
-                          <FormLabel>Meta Title</FormLabel>
-                          <Input placeholder="example" />
-                        </FormControl>
-                        <FormControl>
-                          <FormLabel>Set page URL</FormLabel>
-                          <Input placeholder="example" />
-                        </FormControl>
-                        <FormControl>
-                          <FormLabel>Product Page Description</FormLabel>
-                          <Textarea placeholder="example" />
-                        </FormControl>
-                        <FormControl>
-                          <FormLabel>Meta Description</FormLabel>
-                          <Textarea placeholder="example" />
-                        </FormControl>
-                      </SimpleGrid>
-                    </CardBody>
-                  </Card>
-                </TabPanel>
-              )}
             </TabPanels>
           </Tabs>
         ) : (
@@ -518,14 +484,6 @@ export default function ProductDetail({
                   <Heading>Customization</Heading>
                 </CardHeader>
                 <CardBody>Customization under construction</CardBody>
-              </Card>
-            )}
-            {viewVisibility.SEO && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>SEO</Heading>
-                </CardHeader>
-                <CardBody>SEO under construction</CardBody>
               </Card>
             )}
           </Flex>

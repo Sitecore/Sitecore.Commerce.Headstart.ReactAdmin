@@ -1,35 +1,16 @@
 import * as Yup from "yup"
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardHeader,
-  Container,
-  Flex,
-  FormLabel,
-  HStack,
-  Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Stack,
-  Text
-} from "@chakra-ui/react"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
 import {InputControl} from "components/react-hook-form"
 import {ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
-import {useEffect, useState, KeyboardEvent} from "react"
-import {HiOutlineX} from "react-icons/hi"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
-import {xpHelper} from "utils"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
-import {TbChevronLeft, TbX} from "react-icons/tb"
+import {TbChevronLeft} from "react-icons/tb"
+import ChipInputControl from "../react-hook-form/chip-input-control"
 
 export {CreateUpdateForm}
 
@@ -40,14 +21,11 @@ interface CreateUpdateFormProps {
 function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
   const router = useRouter()
   const formShape = {
-    Name: Yup.string().required("Name is required")
+    Name: Yup.string().required("Name is required"),
+    xp_Options: Yup.array().min(1, "Must have at least one option").required("Options are required")
   }
-  const {isCreating, successToast, errorToast, validationSchema, defaultValues} = useCreateUpdateForm<ProductFacet>(
-    productfacet,
-    formShape,
-    createProductFacet,
-    updateProductFacet
-  )
+  const {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit} =
+    useCreateUpdateForm<ProductFacet>(productfacet, formShape, createProductFacet, updateProductFacet)
 
   const {
     handleSubmit,
@@ -55,34 +33,6 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
     formState: {isSubmitting},
     reset
   } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
-
-  const [inputValue, setInputValue] = useState("")
-  const [facetOptions, setFacetOptions] = useState([])
-
-  useEffect(() => {
-    setFacetOptions(productfacet?.xp?.Options || [])
-  }, [productfacet?.xp?.Options])
-
-  function onSubmit(fields) {
-    fields.xp_Options = facetOptions
-    const productfacet = xpHelper.unflattenXpObject(fields, "_") as ProductFacet
-    if (isCreating) {
-      createProductFacet(productfacet)
-    } else {
-      updateProductFacet(productfacet)
-    }
-  }
-
-  const handleAddButtonClick = () => {
-    const newFacetOptions = [...facetOptions, inputValue]
-    setFacetOptions(newFacetOptions)
-    setInputValue("")
-  }
-  const removeFacetOption = (index) => {
-    setFacetOptions((oldValues) => {
-      return oldValues.filter((_, i) => i !== index)
-    })
-  }
 
   async function createProductFacet(fields: ProductFacet) {
     await ProductFacets.Create<IProductFacet>(fields)
@@ -100,7 +50,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
     router.push(".")
   }
 
-  async function deleteProductFacets() {
+  async function deleteProductFacet() {
     try {
       await ProductFacets.Delete(router.query.id as string)
       router.push(".")
@@ -114,22 +64,9 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
     }
   }
 
-  const resetForm = () => {
-    setFacetOptions(productfacet.xp?.Options || [])
-    setInputValue("")
-    reset()
-  }
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      event.preventDefault() // prevent form from being submitted
-      handleAddButtonClick()
-    }
-  }
-
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-      <Card>
+      <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
           <Button
             onClick={() => router.push("/settings/productfacets")}
@@ -141,7 +78,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
           </Button>
           <ButtonGroup>
             <Button
-              onClick={() => deleteProductFacets()}
+              onClick={() => deleteProductFacet()}
               variant="outline"
               colorScheme={"danger"}
               isLoading={isSubmitting}
@@ -160,54 +97,19 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
         <CardBody
           display="flex"
           flexDirection={"column"}
-          as="form"
-          noValidate
           alignItems={"flex-start"}
           justifyContent="space-between"
-          onSubmit={handleSubmit(onSubmit)}
           gap={6}
         >
-          <FormLabel>
-            Facet Options :
-            <Text color="gray.400" fontWeight={"light"} fontSize="sm">
-              Create options for this facet group
-            </Text>
-          </FormLabel>
-          <InputGroup maxW="sm">
-            <Input
-              type="text"
-              value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Add a facet value..."
-            />
-            <InputRightElement right=".5rem">
-              <Button
-                isDisabled={!inputValue}
-                size="sm"
-                onClick={() => {
-                  handleAddButtonClick()
-                }}
-              >
-                Add
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-          <ButtonGroup display="flex" flexWrap="wrap" gap={2}>
-            {facetOptions.map((facetOption, index) => (
-              <Button
-                key={index}
-                leftIcon={<TbX />}
-                variant={"outline"}
-                fontWeight={"normal"}
-                borderRadius={"full"}
-                onClick={() => removeFacetOption(index)}
-                style={{margin: 0}}
-              >
-                {facetOption}
-              </Button>
-            ))}
-          </ButtonGroup>
+          <InputControl maxW="sm" name="Name" label="Name" helperText="A name for this facet group" control={control} />
+          <ChipInputControl
+            maxW="sm"
+            name="xp_Options"
+            label="Options"
+            helperText="Create options for this facet group"
+            inputProps={{placeholder: "Add a facet option..."}}
+            control={control}
+          />
         </CardBody>
       </Card>
     </Container>

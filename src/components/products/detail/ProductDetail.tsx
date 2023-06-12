@@ -95,13 +95,10 @@ export default function ProductDetail({
   }
   const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
 
-  const createFormFacets = (facetList: IProductFacet[], facetsOnProduct: any) => {
+  const createFormFacets = (facetList: IProductFacet[] = [], facetsOnProduct: any) => {
     const formattedFacets = facetList.map((facet) => {
-      const {
-        ID,
-        Name,
-        xp: {Options}
-      } = facet
+      const {ID, Name} = facet
+      const Options = facet.xp?.Options || []
       const optionsWithValues = Options.map((option) => ({
         facetOptionName: option,
         value: (facetsOnProduct && facetsOnProduct[ID] && facetsOnProduct[ID].includes(option)) || false

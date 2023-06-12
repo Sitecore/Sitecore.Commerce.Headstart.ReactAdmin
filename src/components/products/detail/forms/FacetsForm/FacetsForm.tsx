@@ -47,7 +47,7 @@ interface FacetTableProps {
   productFacets?: any
 }
 
-const FacetTable = ({control, trigger, facetList, productFacets}: FacetTableProps) => {
+const FacetTable = ({control, trigger, facetList = [], productFacets}: FacetTableProps) => {
   return (
     <Card>
       <CardBody gap={4}>

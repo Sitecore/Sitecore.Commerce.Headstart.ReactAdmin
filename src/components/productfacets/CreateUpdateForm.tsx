@@ -101,7 +101,14 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
           justifyContent="space-between"
           gap={6}
         >
-          <InputControl maxW="sm" name="Name" label="Name" helperText="A name for this facet group" control={control} />
+          <InputControl
+            maxW="sm"
+            name="Name"
+            label="Name"
+            helperText="A name for this facet group"
+            control={control}
+            validationSchema={validationSchema}
+          />
           <ChipInputControl
             maxW="sm"
             name="xp_Options"
@@ -109,6 +116,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
             helperText="Create options for this facet group"
             inputProps={{placeholder: "Add a facet option..."}}
             control={control}
+            validationSchema={validationSchema}
           />
         </CardBody>
       </Card>

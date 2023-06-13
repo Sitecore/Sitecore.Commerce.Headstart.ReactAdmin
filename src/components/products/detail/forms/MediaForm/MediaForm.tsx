@@ -190,12 +190,16 @@ function ImageCard({image, index, onSetPrimary, onRemove, onMove}: ImageCardProp
     collect: (monitor) => ({isDragging: monitor.isDragging()})
   })
 
+  const loadFallbackImage = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    event.currentTarget.src = "/raster/dummy-image-square.jpg"
+  }
+
   const opacity = isDragging ? 0 : 1
   drag(drop(ref))
   return (
     <Card height="full" ref={ref} style={{opacity}} data-handler-id={handlerId}>
       <CardBody flexGrow={1}>
-        <Image src={image.ThumbnailUrl || image.Url} alt="Product image" />
+        <Image src={image.ThumbnailUrl || image.Url} onError={loadFallbackImage} alt="Product image" />
       </CardBody>
       <Divider color="blackAlpha.300" />
       <CardFooter>

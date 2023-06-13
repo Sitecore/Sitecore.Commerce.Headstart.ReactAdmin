@@ -85,7 +85,6 @@ export default function XpCard<T>({
 
   const handleXPChange = (name: string) => {
     setEditing(name)
-    console.log("handleXPChange:formValues[name]:", formValues[name])
     setNewXpFormValue(formValues[name])
     onOpenEditXP()
   }
@@ -153,7 +152,6 @@ export default function XpCard<T>({
 
   const onNewProductXP = async () => {
     const TempXpFormName = newXpFormType == "tag" ? newXpFormName + "###" : newXpFormName
-    console.log("TempXpFormName:", TempXpFormName)
     if (formValues[TempXpFormName] !== undefined) {
       errorToast({
         title: "Validation Error",
@@ -269,7 +267,6 @@ export default function XpCard<T>({
   }
   const renderEditType = () => {
     const myType = editing.endsWith("###") ? "tag" : typeof formValues[editing]
-    console.log("myType:", myType)
     switch (myType) {
       case "string":
         return <Input type={"text"} name={"type"} value={"text"} readOnly />

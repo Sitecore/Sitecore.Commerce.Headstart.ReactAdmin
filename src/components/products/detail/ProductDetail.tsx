@@ -14,11 +14,7 @@ import {
   Icon,
   SimpleGrid,
   Text,
-  Button,
-  FormLabel,
-  Input,
-  FormControl,
-  Textarea
+  Button
 } from "@chakra-ui/react"
 import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
 import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
@@ -40,14 +36,14 @@ import {useForm} from "react-hook-form"
 import {PricingForm} from "./forms/PricingForm/PricingForm"
 import {ProductDetailTab} from "./ProductDetailTab"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
-import {TbCactus, TbFileUpload} from "react-icons/tb"
-import schraTheme from "theme/theme"
+import {TbCactus} from "react-icons/tb"
 import {ISpec} from "types/ordercloud/ISpec"
 import ProductSpecs from "../ProductSpecs"
 import {IVariant} from "types/ordercloud/IVariant"
 import ProductVariants from "../ProductVariants"
 import {FacetsForm} from "./forms/FacetsForm/FacetsForm"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
+import {MediaForm} from "./forms/MediaForm/MediaForm"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
 
@@ -134,7 +130,7 @@ export default function ProductDetail({
     mode: "onBlur"
   })
 
-  const generateUpdatedFacets = (facets) => {
+  const generateUpdatedFacets = (facets = []) => {
     const updatedFacetsOnProduct = {}
 
     facets.forEach((facet) => {
@@ -156,21 +152,25 @@ export default function ProductDetail({
 
     // create/update product
     if (isCreatingNew) {
-      product = await Products.Create<IProduct>({
-        ...fields.Product,
-        DefaultPriceScheduleID: defaultPriceSchedule.ID,
-        xp: {
-          Facets: updatedFacetsOnProduct
+      const productDiff = fields.Product as IProduct
+      productDiff.DefaultPriceScheduleID = defaultPriceSchedule.ID
+      if (updatedFacetsOnProduct) {
+        if (!productDiff.xp) {
+          productDiff.xp = {}
         }
-      })
+        productDiff.xp.Facets = updatedFacetsOnProduct
+      }
+      product = await Products.Create<IProduct>(productDiff)
     } else {
-      const productDiff = getObjectDiff(product, fields.Product)
-      product = await Products.Patch<IProduct>(product.ID, {
-        ...productDiff,
-        xp: {
-          Facets: updatedFacetsOnProduct
+      const productDiff = getObjectDiff(product, fields.Product) as IProduct
+      if (updatedFacetsOnProduct) {
+        if (!productDiff.xp) {
+          productDiff.xp = {}
         }
-      })
+        productDiff.xp.Facets = updatedFacetsOnProduct
+      }
+
+      product = await Products.Patch<IProduct>(product.ID, productDiff)
     }
 
     // create/update price schedule
@@ -342,37 +342,8 @@ export default function ProductDetail({
               {viewVisibility.Media && (
                 <TabPanel p={0} mt={6}>
                   <Card w="100%">
-                    <CardHeader display="flex" alignItems={"center"}>
-                      <Button variant="outline" colorScheme="accent" ml="auto">
-                        Add From URL
-                      </Button>
-                    </CardHeader>
                     <CardBody>
-                      <Box
-                        alignSelf={"center"}
-                        shadow="md"
-                        border={`1px dashed ${schraTheme.colors.gray[300]}`}
-                        borderRadius="md"
-                        display="flex"
-                        flexDirection={"column"}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        minH={"xs"}
-                        bgColor={"blackAlpha.50"}
-                        my={6}
-                        mx="auto"
-                        w="full"
-                        maxW="container.xl"
-                        gap={4}
-                      >
-                        <Icon as={TbFileUpload} fontSize={"5xl"} strokeWidth={"2px"} color="gray.300" />
-                        <Heading colorScheme="secondary" fontSize="xl">
-                          Browser or drop files here
-                        </Heading>
-                        <Text color="gray.400" fontSize="sm">
-                          JPEG, PNG, GIF, MP4
-                        </Text>
-                      </Box>
+                      <MediaForm control={control} />
                     </CardBody>
                   </Card>
                 </TabPanel>

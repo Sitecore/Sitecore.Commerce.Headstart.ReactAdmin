@@ -137,6 +137,7 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
           <Grid templateColumns={{base: "1fr", xl: "1fr 1fr 1fr"}} gap={4}>
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.Price`}
+              inputProps={{type: "number"}}
               label="Regular Price (per unit)"
               control={control}
               leftAddon="$"
@@ -145,6 +146,7 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
 
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.SalePrice`}
+              inputProps={{type: "number"}}
               label="Sale Price (per unit)"
               control={control}
               leftAddon="$"
@@ -153,6 +155,7 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
 
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.SubscriptionPrice`}
+              inputProps={{type: "number"}}
               label="Subscription Price (per unit)"
               control={control}
               leftAddon="$"
@@ -215,12 +218,14 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
                     <Flex gap={4} flexWrap={{base: "wrap", lg: "nowrap"}}>
                       <InputControl
                         name={fieldNames.MIN_QUANTITY}
+                        inputProps={{type: "number"}}
                         label="Minimum quantity"
                         control={control}
                         validationSchema={validationSchema}
                       />
                       <InputControl
                         name={fieldNames.MAX_QUANTITY}
+                        inputProps={{type: "number"}}
                         label="Maximum quantity"
                         control={control}
                         validationSchema={validationSchema}

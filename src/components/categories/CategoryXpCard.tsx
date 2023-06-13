@@ -10,7 +10,6 @@ type CategoryDataProps = {
 }
 
 export default function CategoryXpCard({catalogID, category}: CategoryDataProps) {
-  console.log("catalog id?", catalogID)
   const [isEditingBasicData, setIsEditingBasicData] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)

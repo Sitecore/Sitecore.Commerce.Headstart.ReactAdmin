@@ -32,6 +32,7 @@ export function InventoryForm({control}: InventoryFormProps) {
           <InputControl
             mt={6}
             label="Quantity Available"
+            inputProps={{type: "number"}}
             name={fieldNames.INVENTORY_QUANTITY_AVAILABLE}
             control={control}
             validationSchema={validationSchema}

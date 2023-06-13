@@ -7,13 +7,17 @@ interface ImagePreviewProps {
 }
 export default function ImagePreview({images = []}: ImagePreviewProps) {
   const [selectedImage, setSelectedImage] = useState(0)
+  const loadFallbackImage = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    event.currentTarget.src = "/raster/dummy-image-square.jpg"
+  }
   return (
     <>
       <Image
         maxWidth="300px"
         mt={4}
         alt={"Product Image"}
-        src={images?.length ? images[selectedImage].Url : "/images/dummy-image-square.jpg"}
+        src={images?.length ? images[selectedImage].Url : "/raster/dummy-image-square.jpg"}
+        onError={loadFallbackImage}
       />
       <HStack mt={4}>
         {images.map((image, index) => {

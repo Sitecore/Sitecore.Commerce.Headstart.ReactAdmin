@@ -67,9 +67,6 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
                 <Checkbox value="Customization" isChecked={visibility.Customization} onChange={handleChange}>
                   Customization
                 </Checkbox>
-                <Checkbox value="SEO" isChecked={visibility.SEO} onChange={handleChange}>
-                  SEO
-                </Checkbox>
               </SimpleGrid>
             </PopoverBody>
             <PopoverFooter>

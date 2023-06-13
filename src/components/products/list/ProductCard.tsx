@@ -46,7 +46,7 @@ const ProductCard = (props: ProductCardProps) => {
           src={
             typeof product?.xp?.Images != "undefined" && product?.xp?.Images?.length > 0
               ? product?.xp?.Images[0]?.ThumbnailUrl || product?.xp?.Images[0]?.Url || product?.xp?.Images[0]?.url
-              : "/images/dummy-image-square.jpg"
+              : "/raster/dummy-image-square.jpg"
           }
           alt="product image"
           width="175px"

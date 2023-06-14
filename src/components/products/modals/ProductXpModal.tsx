@@ -43,9 +43,7 @@ const ProductXpModal: FC<IProductXpModal> = ({
   const {isOpen, onClose} = disclosure
   const [loading, setLoading] = useState(false)
   const [propertyName, setPropertyName] = useState<string>(existingPropertyName ?? "")
-  const [dataType, setDataType] = useState<string>(
-    typeof existingPropertyValue == "undefined" ? "string" : typeof existingPropertyValue
-  )
+  const [dataType, setDataType] = useState<string>("string")
   const [value, setValue] = useState<any>(existingPropertyValue ?? "")
   const [errors, setErrors] = useState<string[]>([])
   const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -66,7 +64,7 @@ const ProductXpModal: FC<IProductXpModal> = ({
     }
     setPropertyName(existingPropertyName)
     setValue(existingPropertyValue)
-    setDataType(typeof existingPropertyValue)
+    setDataType(existingPropertyValue ? typeof existingPropertyValue : "string")
     if (existingPropertyName || existingPropertyValue) setIsEditing(true)
   }, [isOpen, existingPropertyName, existingPropertyValue])
 
@@ -88,10 +86,9 @@ const ProductXpModal: FC<IProductXpModal> = ({
     }
     const request = {
       xp: {
-        [propertyName]: value
+        [propertyName]: dataType == "number" ? Number(value) : value
       }
     }
-    console.log(request)
     setLoading(true)
     Products.Patch(productID, request)
       .then((res) => {

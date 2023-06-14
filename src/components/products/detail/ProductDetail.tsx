@@ -24,14 +24,14 @@ import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
 import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
 import ImagePreview from "./ImagePreview"
 import {withDefaultValuesFallback, getObjectDiff, makeNestedObject} from "utils"
-import _, {cloneDeep, invert} from "lodash"
+import {cloneDeep, invert} from "lodash"
 import {PriceSchedules, Products} from "ordercloud-javascript-sdk"
 import {defaultValues, validationSchema} from "./forms/meta"
 import ProductDetailToolbar from "./ProductDetailToolbar"
 import {useErrorToast, useSuccessToast} from "hooks/useToast"
 import {IProduct, IProductXp} from "types/ordercloud/IProduct"
 import {useRouter} from "hooks/useRouter"
-import {useMemo, useState} from "react"
+import {useEffect, useMemo, useState} from "react"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import {PricingForm} from "./forms/PricingForm/PricingForm"
@@ -82,6 +82,8 @@ export default function ProductDetail({
   const successToast = useSuccessToast()
   const errorToast = useErrorToast()
   const [tabIndex, setTabIndex] = useState(tabIndexMap[initialTab])
+  const [liveXp, setLiveXp] = useState<{[key: string]: any}>(product?.xp)
+  const [nonUiXp, setNonUiXp] = useState<{[key: string]: any}>({})
   const xpDisclosure = useDisclosure()
   const isCreatingNew = !Boolean(product?.ID)
   const initialViewVisibility: Record<ProductDetailTab, boolean> = {
@@ -211,22 +213,104 @@ export default function ProductDetail({
     errorToast({title: "Form errors", description: "Please resolve the errors and try again."})
   }
 
+  const handleXpRemoval = async (key: string) => {
+    const newXp = cloneDeep(liveXp)
+    delete newXp[key]
+    // First patch xp to null
+    await Products.Patch(product?.ID, {xp: null})
+    // Then patch xp back to the state without the respective removed key
+    const patchedProduct = await Products.Patch(product?.ID, {xp: newXp})
+    // Then set nonUiXp again with the new state.
+    setNonUiXp(getNonUiXp(patchedProduct.xp))
+    setLiveXp(patchedProduct.xp)
+  }
+
   const SimpleCard = (props: {title?: string; children: React.ReactElement}) => (
     <Card>
       <CardHeader>{props.title && <Heading size="md">{props.title}</Heading>}</CardHeader>
       <CardBody>{props.children}</CardBody>
     </Card>
   )
-  const nonUiXp = useMemo(() => {
-    const uiXpFields = Object.values(tabFieldNames)
-      ?.flat()
-      ?.filter((field) => field.includes(".xp."))
-      ?.map((xp) => xp?.split(".")?.at(2))
-    const productXp = _.cloneDeep(product?.xp)
-    uiXpFields.forEach((f) => delete productXp[f])
-    return productXp
+
+  const xpCard = (): JSX.Element => {
+    return (
+      <Card w="100%">
+        <CardHeader display="flex" alignItems={"center"}>
+          <Text fontSize="sm" color="gray.400" fontWeight="normal">
+            Define custom data for your products.
+          </Text>
+          <Button variant="outline" colorScheme="accent" ml="auto" onClick={() => xpDisclosure.onOpen()}>
+            Add additional property
+          </Button>
+        </CardHeader>
+        <CardBody>
+          <Box
+            p={6}
+            display="flex"
+            flexDirection={"column"}
+            alignItems={"flex-start"}
+            justifyContent={"center"}
+            minH={"xs"}
+          >
+            {Object.values(nonUiXp)?.map((xp, idx) => {
+              return (
+                <Box key={idx} my={1} display="flex" justifyContent="flex-start" alignItems="center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    colorScheme="primary"
+                    onClick={() => {
+                      setXpPropertyNameToEdit(Object.keys(nonUiXp)?.[idx])
+                      setXpPropertyValueToEdit(xp)
+                      xpDisclosure.onOpen()
+                    }}
+                    mr={3}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    colorScheme="secondary"
+                    onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
+                    mr={3}
+                  >
+                    Delete
+                  </Button>
+                  <Text
+                    minWidth="7rem"
+                    fontSize="0.8rem"
+                    fontWeight="bold"
+                    color="blackAlpha.400"
+                    textTransform="uppercase"
+                    letterSpacing={1}
+                  >
+                    {Object.keys(nonUiXp)?.[idx]}
+                  </Text>
+                  <Text ml={4}>{xp}</Text>
+                </Box>
+              )
+            })}
+          </Box>
+        </CardBody>
+      </Card>
+    )
+  }
+
+  useEffect(() => {
+    const productXp = getNonUiXp(product?.xp)
+    setNonUiXp(productXp)
   }, [product])
 
+  const getNonUiXp = (xp: {[key: string]: any}): {[key: string]: any} => {
+    const uiXpFields = Object.values(tabFieldNames)
+      .flat()
+      .filter((field) => field.includes(".xp."))
+      .map((xp) => xp?.split(".")?.at(2))
+    const productXp = cloneDeep(xp)
+    uiXpFields.forEach((f) => delete productXp[f])
+    return productXp
+  }
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Box as="form" noValidate onSubmit={handleSubmit(onSubmit, onInvalid)}>
@@ -378,57 +462,7 @@ export default function ProductDetail({
               )}
               {viewVisibility.Customization && (
                 <TabPanel p={0} mt={6}>
-                  <Card w="100%">
-                    <CardHeader display="flex" alignItems={"center"}>
-                      <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                        Define custom data for your products.
-                      </Text>
-                      <Button variant="outline" colorScheme="accent" ml="auto" onClick={() => xpDisclosure.onOpen()}>
-                        Add additional property
-                      </Button>
-                    </CardHeader>
-                    <CardBody>
-                      <Box
-                        p={6}
-                        display="flex"
-                        flexDirection={"column"}
-                        alignItems={"flex-start"}
-                        justifyContent={"center"}
-                        minH={"xs"}
-                      >
-                        {Object.values(nonUiXp)?.map((xp, idx) => {
-                          return (
-                            <Box key={idx} my={1} display="flex" justifyContent="flex-start" alignItems="center">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                colorScheme="primary"
-                                onClick={() => {
-                                  setXpPropertyNameToEdit(Object.keys(nonUiXp)?.[idx])
-                                  setXpPropertyValueToEdit(xp)
-                                  xpDisclosure.onOpen()
-                                }}
-                                mr={3}
-                              >
-                                Edit
-                              </Button>
-                              <Text
-                                minWidth="7rem"
-                                fontSize="0.8rem"
-                                fontWeight="bold"
-                                color="blackAlpha.400"
-                                textTransform="uppercase"
-                                letterSpacing={1}
-                              >
-                                {Object.keys(nonUiXp)?.[idx]}
-                              </Text>
-                              <Text ml={4}>{xp}</Text>
-                            </Box>
-                          )
-                        })}
-                      </Box>
-                    </CardBody>
-                  </Card>
+                  {xpCard()}
                 </TabPanel>
               )}
             </TabPanels>
@@ -491,14 +525,7 @@ export default function ProductDetail({
                 <CardBody>Facets under construction</CardBody>
               </Card>
             )}
-            {viewVisibility.Customization && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Customization</Heading>
-                </CardHeader>
-                <CardBody>Customization under construction</CardBody>
-              </Card>
-            )}
+            {viewVisibility.Customization && xpCard()}
           </Flex>
         )}
         <ProductXpModal
@@ -512,8 +539,8 @@ export default function ProductDetail({
             setXpPropertyValueToEdit(null)
           }}
           onSuccess={(patchResponse) => {
-            console.log("patch response from parent", patchResponse)
-            product = patchResponse
+            setNonUiXp(getNonUiXp(patchResponse.xp))
+            setLiveXp(patchResponse.xp)
           }}
         />
       </Box>

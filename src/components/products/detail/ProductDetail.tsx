@@ -14,7 +14,8 @@ import {
   Icon,
   SimpleGrid,
   Text,
-  Button
+  Button,
+  useDisclosure
 } from "@chakra-ui/react"
 import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
 import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
@@ -23,14 +24,14 @@ import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
 import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
 import ImagePreview from "./ImagePreview"
 import {withDefaultValuesFallback, getObjectDiff, makeNestedObject} from "utils"
-import {cloneDeep, invert} from "lodash"
+import _, {cloneDeep, invert} from "lodash"
 import {PriceSchedules, Products} from "ordercloud-javascript-sdk"
 import {defaultValues, validationSchema} from "./forms/meta"
 import ProductDetailToolbar from "./ProductDetailToolbar"
 import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {IProduct} from "types/ordercloud/IProduct"
+import {IProduct, IProductXp} from "types/ordercloud/IProduct"
 import {useRouter} from "hooks/useRouter"
-import {useState} from "react"
+import {useMemo, useState} from "react"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import {PricingForm} from "./forms/PricingForm/PricingForm"
@@ -44,6 +45,9 @@ import ProductVariants from "../ProductVariants"
 import {FacetsForm} from "./forms/FacetsForm/FacetsForm"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {MediaForm} from "./forms/MediaForm/MediaForm"
+import ProductXpCard from "../ProductXpCard"
+import ProductXpModal from "../modals/ProductXpModal"
+import {tabFieldNames} from "./forms/meta"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
 
@@ -78,6 +82,7 @@ export default function ProductDetail({
   const successToast = useSuccessToast()
   const errorToast = useErrorToast()
   const [tabIndex, setTabIndex] = useState(tabIndexMap[initialTab])
+  const xpDisclosure = useDisclosure()
   const isCreatingNew = !Boolean(product?.ID)
   const initialViewVisibility: Record<ProductDetailTab, boolean> = {
     Details: true,
@@ -88,6 +93,8 @@ export default function ProductDetail({
     Customization: true
   }
   const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
+  const [xpPropertyNameToEdit, setXpPropertyNameToEdit] = useState<string>(null)
+  const [xpPropertyValueToEdit, setXpPropertyValueToEdit] = useState<string>(null)
 
   const createFormFacets = (facetList: IProductFacet[] = [], facetsOnProduct: any) => {
     const formattedFacets = facetList.map((facet) => {
@@ -119,16 +126,16 @@ export default function ProductDetail({
       )
     : makeNestedObject(defaultValues)
 
-  const handleTabsChange = (index) => {
-    router.push({query: {...router.query, tab: inverseTabIndexMap[index]}}, undefined, {shallow: true})
-    setTabIndex(index)
-  }
-
   const {handleSubmit, control, reset, trigger} = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
     mode: "onBlur"
   })
+
+  const handleTabsChange = (index) => {
+    router.push({query: {...router.query, tab: inverseTabIndexMap[index]}}, undefined, {shallow: true})
+    setTabIndex(index)
+  }
 
   const generateUpdatedFacets = (facets = []) => {
     const updatedFacetsOnProduct = {}
@@ -210,6 +217,15 @@ export default function ProductDetail({
       <CardBody>{props.children}</CardBody>
     </Card>
   )
+  const nonUiXp = useMemo(() => {
+    const uiXpFields = Object.values(tabFieldNames)
+      ?.flat()
+      ?.filter((field) => field.includes(".xp."))
+      ?.map((xp) => xp?.split(".")?.at(2))
+    const productXp = _.cloneDeep(product?.xp)
+    uiXpFields.forEach((f) => delete productXp[f])
+    return productXp
+  }, [product])
 
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
@@ -365,10 +381,10 @@ export default function ProductDetail({
                   <Card w="100%">
                     <CardHeader display="flex" alignItems={"center"}>
                       <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                        Add options like shirt text and sign verbiage to enable further product customization.
+                        Define custom data for your products.
                       </Text>
-                      <Button variant="outline" colorScheme="accent" ml="auto">
-                        Create option
+                      <Button variant="outline" colorScheme="accent" ml="auto" onClick={() => xpDisclosure.onOpen()}>
+                        Add additional property
                       </Button>
                     </CardHeader>
                     <CardBody>
@@ -376,14 +392,40 @@ export default function ProductDetail({
                         p={6}
                         display="flex"
                         flexDirection={"column"}
-                        alignItems={"center"}
+                        alignItems={"flex-start"}
                         justifyContent={"center"}
                         minH={"xs"}
                       >
-                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
-                        <Heading colorScheme="secondary" fontSize="xl">
-                          Nothing created yet...
-                        </Heading>
+                        {Object.values(nonUiXp)?.map((xp, idx) => {
+                          return (
+                            <Box key={idx} my={1} display="flex" justifyContent="flex-start" alignItems="center">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                colorScheme="primary"
+                                onClick={() => {
+                                  setXpPropertyNameToEdit(Object.keys(nonUiXp)?.[idx])
+                                  setXpPropertyValueToEdit(xp)
+                                  xpDisclosure.onOpen()
+                                }}
+                                mr={3}
+                              >
+                                Edit
+                              </Button>
+                              <Text
+                                minWidth="7rem"
+                                fontSize="0.8rem"
+                                fontWeight="bold"
+                                color="blackAlpha.400"
+                                textTransform="uppercase"
+                                letterSpacing={1}
+                              >
+                                {Object.keys(nonUiXp)?.[idx]}
+                              </Text>
+                              <Text ml={4}>{xp}</Text>
+                            </Box>
+                          )
+                        })}
                       </Box>
                     </CardBody>
                   </Card>
@@ -459,6 +501,21 @@ export default function ProductDetail({
             )}
           </Flex>
         )}
+        <ProductXpModal
+          productID={product?.ID}
+          nonUiXp={nonUiXp}
+          disclosure={xpDisclosure}
+          existingPropertyName={xpPropertyNameToEdit}
+          existingPropertyValue={xpPropertyValueToEdit}
+          clearExistingPropertyValues={() => {
+            setXpPropertyNameToEdit(null)
+            setXpPropertyValueToEdit(null)
+          }}
+          onSuccess={(patchResponse) => {
+            console.log("patch response from parent", patchResponse)
+            product = patchResponse
+          }}
+        />
       </Box>
     </Container>
   )

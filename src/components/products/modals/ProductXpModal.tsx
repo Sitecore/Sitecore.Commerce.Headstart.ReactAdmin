@@ -155,14 +155,6 @@ const ProductXpModal: FC<IProductXpModal> = ({
             >
               Number
             </Button>
-            <Button
-              flexGrow={1}
-              onClick={handleDataTypeChange("date")}
-              isActive={dataType === "date"}
-              isDisabled={isEditing}
-            >
-              Date
-            </Button>
           </ButtonGroup>
           <Heading size="sm" as="h5" mb={3} mt={7}>
             Property value

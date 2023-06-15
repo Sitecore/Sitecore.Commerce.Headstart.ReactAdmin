@@ -92,7 +92,7 @@ const AdminUserList = () => {
   )
 
   const resolveAdminUserDetailHref = (user: IAdminUser) => {
-    return `/settings/adminuser/${user.ID}`
+    return `/settings/adminusers/${user.ID}`
   }
 
   return (

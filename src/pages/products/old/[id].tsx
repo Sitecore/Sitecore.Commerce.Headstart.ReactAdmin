@@ -57,7 +57,6 @@ import ProductPriceScheduleAssignments from "components/products/ProductPriceSch
 import ProductSpecs from "components/products/ProductSpecs"
 import ProductSuppliers from "components/products/ProductSupllier"
 import ProductVariants from "components/products/ProductVariants"
-import ProductXpCard from "@/components/products/ProductXpCard"
 import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
 import {appPermissions} from "constants/app-permissions.config"
@@ -305,11 +304,6 @@ const ProductDetails = () => {
                       composedProduct={composedProduct}
                       setComposedProduct={setComposedProduct}
                     />
-                  </Card>
-                </GridItem>
-                <GridItem rowSpan={1} colSpan={2}>
-                  <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">
-                    <ProductXpCard composedProduct={composedProduct} setComposedProduct={setComposedProduct} />
                   </Card>
                 </GridItem>
                 <GridItem rowSpan={1} colSpan={{base: 6, md: 6, sm: 6, lg: 4, xl: 2}}>

@@ -1,49 +1,54 @@
 import {
-  Heading,
-  Tabs,
-  TabList,
-  TabPanel,
-  TabPanels,
+  Box,
+  Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardHeader,
-  Box,
-  Flex,
-  Divider,
   Container,
+  Divider,
+  Flex,
+  Heading,
+  Hide,
   Icon,
+  IconButton,
   SimpleGrid,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
-  Button
+  useDisclosure
 } from "@chakra-ui/react"
-import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
-import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
-import {InventoryForm} from "./forms/InventoryForm/InventoryForm"
-import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
-import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
-import ImagePreview from "./ImagePreview"
-import {withDefaultValuesFallback, getObjectDiff, makeNestedObject} from "utils"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {useRouter} from "hooks/useRouter"
+import {useErrorToast, useSuccessToast} from "hooks/useToast"
 import {cloneDeep, invert} from "lodash"
 import {PriceSchedules, Products} from "ordercloud-javascript-sdk"
-import {defaultValues, validationSchema} from "./forms/meta"
-import ProductDetailToolbar from "./ProductDetailToolbar"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {IProduct} from "types/ordercloud/IProduct"
-import {useRouter} from "hooks/useRouter"
-import {useState} from "react"
-import {yupResolver} from "@hookform/resolvers/yup"
+import {useEffect, useState} from "react"
 import {useForm} from "react-hook-form"
-import {PricingForm} from "./forms/PricingForm/PricingForm"
-import {ProductDetailTab} from "./ProductDetailTab"
+import {TbCactus, TbEdit, TbTrash} from "react-icons/tb"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
-import {TbCactus} from "react-icons/tb"
-import {ISpec} from "types/ordercloud/ISpec"
-import ProductSpecs from "../ProductSpecs"
-import {IVariant} from "types/ordercloud/IVariant"
-import ProductVariants from "../ProductVariants"
-import {FacetsForm} from "./forms/FacetsForm/FacetsForm"
+import {IProduct} from "types/ordercloud/IProduct"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
+import {ISpec} from "types/ordercloud/ISpec"
+import {IVariant} from "types/ordercloud/IVariant"
+import {getObjectDiff, makeNestedObject, withDefaultValuesFallback} from "utils"
+import ProductSpecs from "../ProductSpecs"
+import ProductVariants from "../ProductVariants"
+import ProductXpModal from "../modals/ProductXpModal"
+import ImagePreview from "./ImagePreview"
+import {ProductDetailTab} from "./ProductDetailTab"
+import ProductDetailToolbar from "./ProductDetailToolbar"
+import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
+import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
+import {FacetsForm} from "./forms/FacetsForm/FacetsForm"
+import {InventoryForm} from "./forms/InventoryForm/InventoryForm"
 import {MediaForm} from "./forms/MediaForm/MediaForm"
+import {PricingForm} from "./forms/PricingForm/PricingForm"
+import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
+import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
+import {defaultValues, tabFieldNames, validationSchema} from "./forms/meta"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
 
@@ -78,6 +83,9 @@ export default function ProductDetail({
   const successToast = useSuccessToast()
   const errorToast = useErrorToast()
   const [tabIndex, setTabIndex] = useState(tabIndexMap[initialTab])
+  const [liveXp, setLiveXp] = useState<{[key: string]: any}>(product?.xp)
+  const [nonUiXp, setNonUiXp] = useState<{[key: string]: any}>({})
+  const xpDisclosure = useDisclosure()
   const isCreatingNew = !Boolean(product?.ID)
   const initialViewVisibility: Record<ProductDetailTab, boolean> = {
     Details: true,
@@ -88,6 +96,8 @@ export default function ProductDetail({
     Customization: true
   }
   const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
+  const [xpPropertyNameToEdit, setXpPropertyNameToEdit] = useState<string>(null)
+  const [xpPropertyValueToEdit, setXpPropertyValueToEdit] = useState<string>(null)
 
   const createFormFacets = (facetList: IProductFacet[] = [], facetsOnProduct: any) => {
     const formattedFacets = facetList.map((facet) => {
@@ -119,16 +129,16 @@ export default function ProductDetail({
       )
     : makeNestedObject(defaultValues)
 
-  const handleTabsChange = (index) => {
-    router.push({query: {...router.query, tab: inverseTabIndexMap[index]}}, undefined, {shallow: true})
-    setTabIndex(index)
-  }
-
   const {handleSubmit, control, reset, trigger} = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValues,
     mode: "onBlur"
   })
+
+  const handleTabsChange = (index) => {
+    router.push({query: {...router.query, tab: inverseTabIndexMap[index]}}, undefined, {shallow: true})
+    setTabIndex(index)
+  }
 
   const generateUpdatedFacets = (facets = []) => {
     const updatedFacetsOnProduct = {}
@@ -204,6 +214,21 @@ export default function ProductDetail({
     errorToast({title: "Form errors", description: "Please resolve the errors and try again."})
   }
 
+  const handleXpRemoval = async (key: string) => {
+    const newXp = cloneDeep(liveXp)
+    delete newXp[key]
+    // First patch xp to null
+    await Products.Patch(product?.ID, {xp: null})
+    // Then patch xp back to the state without the respective removed key
+    const patchedProduct = await Products.Patch(product?.ID, {xp: newXp})
+    // Then set nonUiXp again with the new state.
+    successToast({
+      description: "Extended property successfully removed. It may take up to 10 minutes to see the change propagate."
+    })
+    setNonUiXp(getNonUiXp(patchedProduct.xp))
+    setLiveXp(patchedProduct.xp)
+  }
+
   const SimpleCard = (props: {title?: string; children: React.ReactElement}) => (
     <Card>
       <CardHeader>{props.title && <Heading size="md">{props.title}</Heading>}</CardHeader>
@@ -211,6 +236,128 @@ export default function ProductDetail({
     </Card>
   )
 
+  const xpCard = (): JSX.Element => {
+    return (
+      <Card w="100%">
+        <CardHeader display="flex" alignItems={"center"} flexWrap="wrap" gap={4}>
+          <Text fontSize="sm" color="gray.400" fontWeight="normal">
+            Define custom properties for your product
+          </Text>
+          <Button variant="outline" colorScheme="accent" ml={{md: "auto"}} onClick={() => xpDisclosure.onOpen()}>
+            Add additional property
+          </Button>
+        </CardHeader>
+        <CardBody
+          p={6}
+          display="flex"
+          flexDirection={"column"}
+          alignItems={"flex-start"}
+          justifyContent={"center"}
+          minH={"xs"}
+        >
+          {Object.values(nonUiXp).map((xp, idx) => {
+            return (
+              <Box
+                key={idx}
+                display="grid"
+                gridTemplateColumns={"auto 2fr 2fr"}
+                justifyContent="flex-start"
+                w={"full"}
+                maxW={{xl: "75%"}}
+              >
+                <Hide below="lg">
+                  <ButtonGroup size="xs" mr={2} alignItems="center">
+                    <Button
+                      onClick={() => {
+                        setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
+                        setXpPropertyValueToEdit(xp)
+                        xpDisclosure.onOpen()
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      colorScheme="red"
+                      onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
+                    >
+                      Delete
+                    </Button>
+                  </ButtonGroup>
+                </Hide>
+                <Hide above="lg">
+                  <ButtonGroup
+                    size="sm"
+                    mr={{base: 3, md: 6}}
+                    flexDirection={{base: "column", md: "row"}}
+                    padding={{base: 1, md: 0}}
+                    alignItems={{base: "flex-start", md: "center"}}
+                    gap={2}
+                    alignSelf="center"
+                  >
+                    <IconButton
+                      icon={<TbEdit size="1rem" />}
+                      aria-label="edit"
+                      onClick={() => {
+                        setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
+                        setXpPropertyValueToEdit(xp)
+                        xpDisclosure.onOpen()
+                      }}
+                    >
+                      Edit
+                    </IconButton>
+                    <IconButton
+                      ml={"0 !important"}
+                      icon={<TbTrash size="1rem" />}
+                      variant="outline"
+                      borderColor="red.300"
+                      color="red.300"
+                      aria-label="delete"
+                      onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
+                    >
+                      Delete
+                    </IconButton>
+                  </ButtonGroup>
+                </Hide>
+                <Flex borderWidth={1} borderColor="gray.100" mt={"-1px"} px={4} py={2} alignItems="center">
+                  <Text
+                    fontSize="0.8rem"
+                    fontWeight="bold"
+                    color="blackAlpha.500"
+                    textTransform="uppercase"
+                    letterSpacing={1}
+                    wordBreak={"break-word"}
+                  >
+                    {Object.keys(nonUiXp)[idx]}
+                  </Text>
+                </Flex>
+                <Flex borderWidth={1} borderColor="gray.100" px={4} py={2} mt={"-1px"} ml={"-1px"} alignItems="center">
+                  <Text whiteSpace="pre-wrap" wordBreak="break-word">
+                    {xp}
+                  </Text>
+                </Flex>
+              </Box>
+            )
+          })}
+        </CardBody>
+      </Card>
+    )
+  }
+
+  useEffect(() => {
+    const productXp = getNonUiXp(product?.xp)
+    setNonUiXp(productXp)
+  }, [product])
+
+  const getNonUiXp = (xp: {[key: string]: any}): {[key: string]: any} => {
+    const uiXpFields = Object.values(tabFieldNames)
+      .flat()
+      .filter((field) => field.includes(".xp."))
+      .map((xp) => xp?.split(".")?.at(2))
+    const productXp = cloneDeep(xp)
+    uiXpFields.forEach((f) => delete productXp[f])
+    return productXp
+  }
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Box as="form" noValidate onSubmit={handleSubmit(onSubmit, onInvalid)}>
@@ -362,31 +509,7 @@ export default function ProductDetail({
               )}
               {viewVisibility.Customization && (
                 <TabPanel p={0} mt={6}>
-                  <Card w="100%">
-                    <CardHeader display="flex" alignItems={"center"}>
-                      <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                        Add options like shirt text and sign verbiage to enable further product customization.
-                      </Text>
-                      <Button variant="outline" colorScheme="accent" ml="auto">
-                        Create option
-                      </Button>
-                    </CardHeader>
-                    <CardBody>
-                      <Box
-                        p={6}
-                        display="flex"
-                        flexDirection={"column"}
-                        alignItems={"center"}
-                        justifyContent={"center"}
-                        minH={"xs"}
-                      >
-                        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
-                        <Heading colorScheme="secondary" fontSize="xl">
-                          Nothing created yet...
-                        </Heading>
-                      </Box>
-                    </CardBody>
-                  </Card>
+                  {xpCard()}
                 </TabPanel>
               )}
             </TabPanels>
@@ -449,16 +572,24 @@ export default function ProductDetail({
                 <CardBody>Facets under construction</CardBody>
               </Card>
             )}
-            {viewVisibility.Customization && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Customization</Heading>
-                </CardHeader>
-                <CardBody>Customization under construction</CardBody>
-              </Card>
-            )}
+            {viewVisibility.Customization && xpCard()}
           </Flex>
         )}
+        <ProductXpModal
+          productID={product?.ID}
+          nonUiXp={nonUiXp}
+          disclosure={xpDisclosure}
+          existingPropertyName={xpPropertyNameToEdit}
+          existingPropertyValue={xpPropertyValueToEdit}
+          clearExistingPropertyValues={() => {
+            setXpPropertyNameToEdit(null)
+            setXpPropertyValueToEdit(null)
+          }}
+          onSuccess={(patchResponse) => {
+            setNonUiXp(getNonUiXp(patchResponse.xp))
+            setLiveXp(patchResponse.xp)
+          }}
+        />
       </Box>
     </Container>
   )

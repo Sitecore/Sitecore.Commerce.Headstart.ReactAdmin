@@ -1,30 +1,16 @@
-import * as Yup from "yup"
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardHeader,
-  Container,
-  Flex,
-  SimpleGrid,
-  Stack,
-  theme,
-  VStack
-} from "@chakra-ui/react"
-import {InputControl, SwitchControl} from "components/react-hook-form"
-import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
-import {useRouter} from "hooks/useRouter"
-import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
-import {pick} from "lodash"
-import {IAdminAddress} from "types/ordercloud/IAdminAddress"
-import {useForm} from "react-hook-form"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container, SimpleGrid} from "@chakra-ui/react"
 import {yupResolver} from "@hookform/resolvers/yup"
-import SubmitButton from "../react-hook-form/submit-button"
-import ResetButton from "../react-hook-form/reset-button"
+import {InputControl} from "components/react-hook-form"
+import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {useRouter} from "hooks/useRouter"
+import {pick} from "lodash"
+import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
+import {useForm} from "react-hook-form"
 import {TbChevronLeft} from "react-icons/tb"
-import AdminUserXpCard from "../adminusers/AdminUserXpCard"
+import {IAdminAddress} from "types/ordercloud/IAdminAddress"
+import * as Yup from "yup"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
 
 export {CreateUpdateForm}
 interface CreateUpdateFormProps {

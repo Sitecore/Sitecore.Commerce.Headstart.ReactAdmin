@@ -252,7 +252,7 @@ export default function ProductDetail({
             justifyContent={"center"}
             minH={"xs"}
           >
-            {Object.values(nonUiXp)?.map((xp, idx) => {
+            {Object.values(nonUiXp).map((xp, idx) => {
               return (
                 <Box key={idx} my={1} display="flex" justifyContent="flex-start" alignItems="center">
                   <Button
@@ -260,7 +260,7 @@ export default function ProductDetail({
                     size="sm"
                     colorScheme="primary"
                     onClick={() => {
-                      setXpPropertyNameToEdit(Object.keys(nonUiXp)?.[idx])
+                      setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
                       setXpPropertyValueToEdit(xp)
                       xpDisclosure.onOpen()
                     }}
@@ -285,7 +285,7 @@ export default function ProductDetail({
                     textTransform="uppercase"
                     letterSpacing={1}
                   >
-                    {Object.keys(nonUiXp)?.[idx]}
+                    {Object.keys(nonUiXp)[idx]}
                   </Text>
                   <Text ml={4}>{xp}</Text>
                 </Box>

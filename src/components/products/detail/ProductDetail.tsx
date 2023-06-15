@@ -244,7 +244,7 @@ export default function ProductDetail({
             Define custom properties for your product
           </Text>
           <Button variant="outline" colorScheme="accent" ml={{md: "auto"}} onClick={() => xpDisclosure.onOpen()}>
-            Add additional property
+            Add {Object.keys(nonUiXp).length > 0 && "additional"} property
           </Button>
         </CardHeader>
         <CardBody
@@ -350,6 +350,7 @@ export default function ProductDetail({
   }, [product])
 
   const getNonUiXp = (xp: {[key: string]: any}): {[key: string]: any} => {
+    if (isCreatingNew) return {}
     const uiXpFields = Object.values(tabFieldNames)
       .flat()
       .filter((field) => field.includes(".xp."))
@@ -358,6 +359,18 @@ export default function ProductDetail({
     uiXpFields.forEach((f) => delete productXp[f])
     return productXp
   }
+
+  const creatingNewXpCard = () => (
+    <Card w="100%">
+      <CardHeader>
+        <Heading>Additional properties</Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>Add additional properties after you create the product.</Text>
+      </CardBody>
+    </Card>
+  )
+
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Box as="form" noValidate onSubmit={handleSubmit(onSubmit, onInvalid)}>
@@ -509,7 +522,7 @@ export default function ProductDetail({
               )}
               {viewVisibility.Customization && (
                 <TabPanel p={0} mt={6}>
-                  {xpCard()}
+                  {isCreatingNew ? creatingNewXpCard() : xpCard()}
                 </TabPanel>
               )}
             </TabPanels>
@@ -572,7 +585,8 @@ export default function ProductDetail({
                 <CardBody>Facets under construction</CardBody>
               </Card>
             )}
-            {viewVisibility.Customization && xpCard()}
+            {viewVisibility.Customization && !isCreatingNew && xpCard()}
+            {viewVisibility.Customization && isCreatingNew && creatingNewXpCard()}
           </Flex>
         )}
         <ProductXpModal

@@ -222,6 +222,9 @@ export default function ProductDetail({
     // Then patch xp back to the state without the respective removed key
     const patchedProduct = await Products.Patch(product?.ID, {xp: newXp})
     // Then set nonUiXp again with the new state.
+    successToast({
+      description: "Extended property successfully removed. It may take up to 10 minutes to see the change propagate."
+    })
     setNonUiXp(getNonUiXp(patchedProduct.xp))
     setLiveXp(patchedProduct.xp)
   }

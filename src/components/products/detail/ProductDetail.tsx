@@ -359,6 +359,18 @@ export default function ProductDetail({
     uiXpFields.forEach((f) => delete productXp[f])
     return productXp
   }
+
+  const creatingNewXpCard = () => (
+    <Card w="100%">
+      <CardHeader>
+        <Heading>Additional properties</Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>Add additional properties after you create the product.</Text>
+      </CardBody>
+    </Card>
+  )
+
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Box as="form" noValidate onSubmit={handleSubmit(onSubmit, onInvalid)}>
@@ -510,17 +522,7 @@ export default function ProductDetail({
               )}
               {viewVisibility.Customization && (
                 <TabPanel p={0} mt={6}>
-                  {!isCreatingNew && xpCard()}
-                  {isCreatingNew && (
-                    <Card w="100%">
-                      <CardHeader>
-                        <Heading>Additional properties</Heading>
-                      </CardHeader>
-                      <CardBody>
-                        <Text>Add additional properties after you create the product.</Text>
-                      </CardBody>
-                    </Card>
-                  )}
+                  {isCreatingNew ? creatingNewXpCard() : xpCard()}
                 </TabPanel>
               )}
             </TabPanels>
@@ -584,16 +586,7 @@ export default function ProductDetail({
               </Card>
             )}
             {viewVisibility.Customization && !isCreatingNew && xpCard()}
-            {viewVisibility.Customization && isCreatingNew && (
-              <Card w="100%">
-                <CardHeader>
-                  <Heading>Additional properties</Heading>
-                </CardHeader>
-                <CardBody>
-                  <Text>Add additional properties after you create the product.</Text>
-                </CardBody>
-              </Card>
-            )}
+            {viewVisibility.Customization && isCreatingNew && creatingNewXpCard()}
           </Flex>
         )}
         <ProductXpModal

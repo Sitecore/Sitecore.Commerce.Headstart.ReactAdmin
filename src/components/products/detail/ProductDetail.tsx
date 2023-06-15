@@ -1,5 +1,7 @@
 import {
   Heading,
+  Hide,
+  IconButton,
   Tabs,
   TabList,
   TabPanel,
@@ -8,6 +10,7 @@ import {
   CardBody,
   CardHeader,
   Box,
+  ButtonGroup,
   Flex,
   Divider,
   Container,
@@ -37,7 +40,7 @@ import {useForm} from "react-hook-form"
 import {PricingForm} from "./forms/PricingForm/PricingForm"
 import {ProductDetailTab} from "./ProductDetailTab"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
-import {TbCactus} from "react-icons/tb"
+import {TbCactus, TbEdit, TbTrash} from "react-icons/tb"
 import {ISpec} from "types/ordercloud/ISpec"
 import ProductSpecs from "../ProductSpecs"
 import {IVariant} from "types/ordercloud/IVariant"
@@ -235,63 +238,106 @@ export default function ProductDetail({
   const xpCard = (): JSX.Element => {
     return (
       <Card w="100%">
-        <CardHeader display="flex" alignItems={"center"}>
+        <CardHeader display="flex" alignItems={"center"} flexWrap="wrap" gap={4}>
           <Text fontSize="sm" color="gray.400" fontWeight="normal">
-            Define custom data for your products.
+            Define custom properties for your product
           </Text>
-          <Button variant="outline" colorScheme="accent" ml="auto" onClick={() => xpDisclosure.onOpen()}>
+          <Button variant="outline" colorScheme="accent" ml={{md: "auto"}} onClick={() => xpDisclosure.onOpen()}>
             Add additional property
           </Button>
         </CardHeader>
-        <CardBody>
-          <Box
-            p={6}
-            display="flex"
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"center"}
-            minH={"xs"}
-          >
-            {Object.values(nonUiXp).map((xp, idx) => {
-              return (
-                <Box key={idx} my={1} display="flex" justifyContent="flex-start" alignItems="center">
-                  <Button
-                    variant="outline"
+        <CardBody
+          p={6}
+          display="flex"
+          flexDirection={"column"}
+          alignItems={"flex-start"}
+          justifyContent={"center"}
+          minH={"xs"}
+        >
+          {Object.values(nonUiXp).map((xp, idx) => {
+            return (
+              <Box
+                key={idx}
+                display="grid"
+                gridTemplateColumns={"auto 2fr 2fr"}
+                justifyContent="flex-start"
+                w={"full"}
+                maxW={{xl: "75%"}}
+              >
+                <Hide below="lg">
+                  <ButtonGroup size="xs" mr={2} alignItems="center">
+                    <Button
+                      onClick={() => {
+                        setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
+                        setXpPropertyValueToEdit(xp)
+                        xpDisclosure.onOpen()
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      colorScheme="red"
+                      onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
+                    >
+                      Delete
+                    </Button>
+                  </ButtonGroup>
+                </Hide>
+                <Hide above="lg">
+                  <ButtonGroup
                     size="sm"
-                    colorScheme="primary"
-                    onClick={() => {
-                      setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
-                      setXpPropertyValueToEdit(xp)
-                      xpDisclosure.onOpen()
-                    }}
-                    mr={3}
+                    mr={{base: 3, md: 6}}
+                    flexDirection={{base: "column", md: "row"}}
+                    padding={{base: 1, md: 0}}
+                    alignItems={{base: "flex-start", md: "center"}}
+                    gap={2}
+                    alignSelf="center"
                   >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    colorScheme="secondary"
-                    onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
-                    mr={3}
-                  >
-                    Delete
-                  </Button>
+                    <IconButton
+                      icon={<TbEdit size="1rem" />}
+                      aria-label="edit"
+                      onClick={() => {
+                        setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
+                        setXpPropertyValueToEdit(xp)
+                        xpDisclosure.onOpen()
+                      }}
+                    >
+                      Edit
+                    </IconButton>
+                    <IconButton
+                      ml={"0 !important"}
+                      icon={<TbTrash size="1rem" />}
+                      variant="outline"
+                      borderColor="red.300"
+                      color="red.300"
+                      aria-label="delete"
+                      onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
+                    >
+                      Delete
+                    </IconButton>
+                  </ButtonGroup>
+                </Hide>
+                <Flex borderWidth={1} borderColor="gray.100" mt={"-1px"} px={4} py={2} alignItems="center">
                   <Text
-                    minWidth="7rem"
                     fontSize="0.8rem"
                     fontWeight="bold"
-                    color="blackAlpha.400"
+                    color="blackAlpha.500"
                     textTransform="uppercase"
                     letterSpacing={1}
+                    wordBreak={"break-word"}
                   >
                     {Object.keys(nonUiXp)[idx]}
                   </Text>
-                  <Text ml={4}>{xp}</Text>
-                </Box>
-              )
-            })}
-          </Box>
+                </Flex>
+                <Flex borderWidth={1} borderColor="gray.100" px={4} py={2} mt={"-1px"} ml={"-1px"} alignItems="center">
+                  <Text whiteSpace="pre-wrap" wordBreak="break-word">
+                    {xp}
+                  </Text>
+                </Flex>
+              </Box>
+            )
+          })}
         </CardBody>
       </Card>
     )

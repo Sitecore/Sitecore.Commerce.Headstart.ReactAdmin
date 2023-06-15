@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container, Text} from "@chakra-ui/react"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {InputControl, SwitchControl, TextareaControl} from "components/react-hook-form"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
@@ -10,7 +10,6 @@ import {ICatalog} from "types/ordercloud/ICatalog"
 import * as Yup from "yup"
 import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
-import CatalogXpCard from "./CatalogXpCard"
 
 export {CreateUpdateForm}
 
@@ -88,7 +87,7 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
           </CardBody>
         </Card>
         <Card mt={6}>
-          <CatalogXpCard catalog={catalog} />
+          <Text>Under construction</Text>
         </Card>
       </Container>
     </>

@@ -1,56 +1,54 @@
 import {
-  Heading,
-  Hide,
-  IconButton,
-  Tabs,
-  TabList,
-  TabPanel,
-  TabPanels,
+  Box,
+  Button,
+  ButtonGroup,
   Card,
   CardBody,
   CardHeader,
-  Box,
-  ButtonGroup,
-  Flex,
-  Divider,
   Container,
+  Divider,
+  Flex,
+  Heading,
+  Hide,
   Icon,
+  IconButton,
   SimpleGrid,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
-  Button,
   useDisclosure
 } from "@chakra-ui/react"
-import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
-import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
-import {InventoryForm} from "./forms/InventoryForm/InventoryForm"
-import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
-import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
-import ImagePreview from "./ImagePreview"
-import {withDefaultValuesFallback, getObjectDiff, makeNestedObject} from "utils"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {useRouter} from "hooks/useRouter"
+import {useErrorToast, useSuccessToast} from "hooks/useToast"
 import {cloneDeep, invert} from "lodash"
 import {PriceSchedules, Products} from "ordercloud-javascript-sdk"
-import {defaultValues, validationSchema} from "./forms/meta"
-import ProductDetailToolbar from "./ProductDetailToolbar"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {IProduct, IProductXp} from "types/ordercloud/IProduct"
-import {useRouter} from "hooks/useRouter"
-import {useEffect, useMemo, useState} from "react"
-import {yupResolver} from "@hookform/resolvers/yup"
+import {useEffect, useState} from "react"
 import {useForm} from "react-hook-form"
-import {PricingForm} from "./forms/PricingForm/PricingForm"
-import {ProductDetailTab} from "./ProductDetailTab"
-import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {TbCactus, TbEdit, TbTrash} from "react-icons/tb"
-import {ISpec} from "types/ordercloud/ISpec"
-import ProductSpecs from "../ProductSpecs"
-import {IVariant} from "types/ordercloud/IVariant"
-import ProductVariants from "../ProductVariants"
-import {FacetsForm} from "./forms/FacetsForm/FacetsForm"
+import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
+import {IProduct} from "types/ordercloud/IProduct"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
-import {MediaForm} from "./forms/MediaForm/MediaForm"
-import ProductXpCard from "../ProductXpCard"
+import {ISpec} from "types/ordercloud/ISpec"
+import {IVariant} from "types/ordercloud/IVariant"
+import {getObjectDiff, makeNestedObject, withDefaultValuesFallback} from "utils"
+import ProductSpecs from "../ProductSpecs"
+import ProductVariants from "../ProductVariants"
 import ProductXpModal from "../modals/ProductXpModal"
-import {tabFieldNames} from "./forms/meta"
+import ImagePreview from "./ImagePreview"
+import {ProductDetailTab} from "./ProductDetailTab"
+import ProductDetailToolbar from "./ProductDetailToolbar"
+import {DescriptionForm} from "./forms/DescriptionForm/DescriptionForm"
+import {DetailsForm} from "./forms/DetailsForm/DetailsForm"
+import {FacetsForm} from "./forms/FacetsForm/FacetsForm"
+import {InventoryForm} from "./forms/InventoryForm/InventoryForm"
+import {MediaForm} from "./forms/MediaForm/MediaForm"
+import {PricingForm} from "./forms/PricingForm/PricingForm"
+import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
+import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
+import {defaultValues, tabFieldNames, validationSchema} from "./forms/meta"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
 

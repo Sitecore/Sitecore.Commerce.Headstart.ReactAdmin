@@ -36,7 +36,7 @@ import {useState} from "react"
 
 type ProductDataProps = {
   composedProduct: ComposedProduct
-  setComposedProduct: React.Dispatch<React.SetStateAction<ComposedProduct>>
+  setComposedProduct?: React.Dispatch<React.SetStateAction<ComposedProduct>>
 }
 
 export default function ProductVariants({composedProduct, setComposedProduct}: ProductDataProps) {
@@ -97,7 +97,7 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
               {composedProduct?.Variants?.length ?? 0 > 0 ? (
                 <>
                   <BrandedTable>
-                    <Thead boxShadow={shadow} bgGradient={gradient}>
+                    <Thead>
                       <Tr>
                         <Th color={color}>ID</Th>
                         <Th color={color}>Name</Th>

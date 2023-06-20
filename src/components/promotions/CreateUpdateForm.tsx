@@ -27,7 +27,8 @@ import {
   Container,
   Flex,
   FormControl,
-  VStack
+  VStack,
+  Text
 } from "@chakra-ui/react"
 import {DeleteIcon} from "@chakra-ui/icons"
 import {InputControl, RadioGroupControl, SwitchControl, TextareaControl} from "components/react-hook-form"
@@ -40,7 +41,6 @@ import {Promotion, Promotions} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {IPromotion} from "types/ordercloud/IPromotion"
-import PromotionXpCard from "./PromotionXpCard"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import {emptyStringToNull} from "utils"
@@ -165,7 +165,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
   return (
     <>
       <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-        <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+        <Box as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <Box>
             <ButtonGroup>
               <SubmitButton control={control} variant="solid" colorScheme="primary">
@@ -310,7 +310,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                     </Card>
                   </TabPanel>
                   <TabPanel p={0}>
-                    <PromotionXpCard promotion={promotion} />
+                    <Text>Under construction</Text>
                     {/* <Card p={6}>
                       <SimpleGrid columns={2} spacing={10}>
                       </SimpleGrid>

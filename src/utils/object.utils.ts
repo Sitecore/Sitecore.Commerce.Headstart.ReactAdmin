@@ -9,6 +9,9 @@ import {get, isArray, isEqual, isObject, set} from "lodash"
 export function getObjectDiff(obj1, obj2) {
   const diff = {}
   const diffKeys = getObjectDiffKeys(obj1, obj2)
+  if(!diffKeys?.length) {
+    return diff;
+  }
   diffKeys.forEach((diffKey) => {
     const value = get(obj2, diffKey, null)
     set(diff, diffKey, value)
@@ -17,7 +20,7 @@ export function getObjectDiff(obj1, obj2) {
 }
 
 function getObjectDiffKeys(obj1, obj2) {
-  return Object.keys(obj2).reduce((result, key) => {
+  return Object.keys(obj2 || {}).reduce((result, key) => {
     const inner1 = obj1[key]
     const inner2 = obj2[key]
     if (!isEqual(inner1, inner2)) {

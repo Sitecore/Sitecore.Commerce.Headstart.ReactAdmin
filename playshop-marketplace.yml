@@ -1009,9 +1009,7 @@ Objects:
       xp:
         Status: Draft
         Brand: OTG
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAGG
         Images:
           - ThumbnailUrl: ''
@@ -1051,9 +1049,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACES
         Images:
           - ThumbnailUrl: ''
@@ -1114,9 +1110,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -1157,9 +1151,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWS
         Images:
           - ThumbnailUrl: ''
@@ -1197,9 +1189,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -1240,9 +1230,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Outrace
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -1278,9 +1266,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Outrace
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACES
         Images:
           - ThumbnailUrl: ''
@@ -1324,9 +1310,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACES
         Images:
           - ThumbnailUrl: ''
@@ -1368,9 +1352,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -1401,9 +1383,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -1453,9 +1433,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -1514,9 +1492,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Sydney Cummings
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWH
         Images:
           - ThumbnailUrl: ''
@@ -1552,9 +1528,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -1631,9 +1605,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Run Right Through
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSARA
         Images:
           - ThumbnailUrl: ''
@@ -1667,9 +1639,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -1736,9 +1706,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -1808,9 +1776,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -1846,9 +1812,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACES
         Images:
           - ThumbnailUrl: ''
@@ -1888,9 +1852,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -1925,9 +1887,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -1977,9 +1937,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Run Right Through
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSARA
         Images:
           - ThumbnailUrl: ''
@@ -2010,9 +1968,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -2053,9 +2009,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -2090,9 +2044,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACES
         Images:
           - ThumbnailUrl: ''
@@ -2135,9 +2087,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -2181,9 +2131,7 @@ Objects:
       xp:
         Status: Draft
         Brand: OTG
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAGA
         Images:
           - ThumbnailUrl: ''
@@ -2242,9 +2190,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Pro Staff
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAGG
         Images:
           - ThumbnailUrl: ''
@@ -2291,9 +2237,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Run Right Through
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSARA
         Images:
           - ThumbnailUrl: ''
@@ -2333,9 +2277,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Gameday
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAFA
         Images:
           - ThumbnailUrl: ''
@@ -2377,9 +2319,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -2415,9 +2355,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Alba
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSCMT
         Images:
           - ThumbnailUrl: ''
@@ -2454,9 +2392,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACES
         Images:
           - ThumbnailUrl: ''
@@ -2547,9 +2483,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Sydney Cummings
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWH
         Images:
           - ThumbnailUrl: ''
@@ -2588,9 +2522,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -2627,9 +2559,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Sydney Cummings
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWH
         Images:
           - ThumbnailUrl: ''
@@ -2678,9 +2608,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Sydney Cummings
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWH
         Images:
           - ThumbnailUrl: ''
@@ -2715,9 +2643,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACC
         Images:
           - ThumbnailUrl: ''
@@ -2755,9 +2681,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -2792,9 +2716,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACES
         Images:
           - ThumbnailUrl: ''
@@ -2825,9 +2747,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -2862,9 +2782,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Plus
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSARA
         Images:
           - ThumbnailUrl: ''
@@ -2900,9 +2818,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -2937,9 +2853,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -2972,9 +2886,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWS
         Images:
           - ThumbnailUrl: ''
@@ -3017,9 +2929,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWA
         Images:
           - ThumbnailUrl: ''
@@ -3061,9 +2971,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWA
         Images:
           - ThumbnailUrl: ''
@@ -3096,9 +3004,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Striva
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWA
         Images:
           - ThumbnailUrl: ''
@@ -3155,9 +3061,7 @@ Objects:
       xp:
         Status: Draft
         Brand: OverUnder
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWA
         Images:
           - ThumbnailUrl: ''
@@ -3191,9 +3095,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Gameday
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAFA
         Images:
           - ThumbnailUrl: ''
@@ -3238,9 +3140,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Robin Fitness
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAFE
         Images:
           - ThumbnailUrl: ''
@@ -3287,9 +3187,7 @@ Objects:
       xp:
         Status: Draft
         Brand: OverUnder
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAFEM
         Images:
           - ThumbnailUrl: ''
@@ -3341,9 +3239,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Pro Staff
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAGA
         Images:
           - ThumbnailUrl: ''
@@ -3379,9 +3275,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -3429,9 +3323,7 @@ Objects:
       xp:
         Status: Draft
         Brand: OverUnder
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAFEM
         Images:
           - ThumbnailUrl: ''
@@ -3474,9 +3366,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -3514,9 +3404,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Sydney Cummings
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSEWA
         Images:
           - ThumbnailUrl: ''
@@ -3554,9 +3442,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -3590,9 +3476,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACE
         Images:
           - ThumbnailUrl: ''
@@ -3630,9 +3514,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEE
         Images:
           - ThumbnailUrl: ''
@@ -3670,9 +3552,7 @@ Objects:
       xp:
         Status: Draft
         Brand: CenterCycle
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSACEM
         Images:
           - ThumbnailUrl: ''
@@ -3722,9 +3602,7 @@ Objects:
       xp:
         Status: Draft
         Brand: Outrace
-        UnitOfMeasure:
-          Qty: 1
-          Unit: Per
+        UnitOfMeasure: Per
         CCID: PSAYAM
         Images:
           - ThumbnailUrl: ''

@@ -16,6 +16,7 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   theme,
   Tr,
   VStack
@@ -29,7 +30,6 @@ import {textHelper} from "utils"
 import {appPermissions} from "constants/app-permissions.config"
 import {isEqual, sortBy, difference, pick} from "lodash"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
-import AdminUserXpCard from "./AdminUserXpCard"
 import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
 import SubmitButton from "../react-hook-form/submit-button"
@@ -172,6 +172,7 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
           display="flex"
           flexWrap={{base: "wrap", lg: "nowrap"}}
           as="form"
+          noValidate
           alignItems={"flex-start"}
           justifyContent="space-between"
           onSubmit={handleSubmit(onSubmit)}
@@ -196,7 +197,7 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
         </CardBody>
       </Card>
       <Card mt={6}>
-        <AdminUserXpCard user={user} />
+        <Text>Under construction</Text>
       </Card>
     </Container>
   )

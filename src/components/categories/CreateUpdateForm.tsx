@@ -1,11 +1,10 @@
 import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Flex, HStack, Stack} from "@chakra-ui/react"
+import {Box, Button, ButtonGroup, Flex, HStack, Stack, Text} from "@chakra-ui/react"
 import {Categories, Category} from "ordercloud-javascript-sdk"
 import {InputControl, SwitchControl, TextareaControl} from "components/react-hook-form"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {ICategory} from "types/ordercloud/ICategoryXp"
-import CategoryXpCard from "./CategoryXpCard"
 import Card from "../card/Card"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
@@ -100,7 +99,7 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
       >
         {headerComponent}
         <Flex flexDirection="column" p="10">
-          <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+          <Box as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={5}>
               <InputControl name="Name" label="Category Name" isRequired control={control} />
               <TextareaControl name="Description" label="Description" control={control} />
@@ -136,7 +135,7 @@ function CreateUpdateForm({category, headerComponent, parentId, onSuccess}: Crea
           </Box>
           {!isCreating && (
             <Card variant="primaryCard" h={"100%"} closedText="Extended Properties Cards">
-              <CategoryXpCard catalogID={catalogID} category={category} />
+              <Text>Under construction</Text>
             </Card>
           )}
         </Flex>

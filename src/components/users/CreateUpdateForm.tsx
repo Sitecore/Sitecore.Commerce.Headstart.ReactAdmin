@@ -11,14 +11,14 @@ import {
   HStack,
   List,
   ListIcon,
-  ListItem
+  ListItem,
+  Text
 } from "@chakra-ui/react"
 import {MdCheckCircle} from "react-icons/md"
 import {User} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useState} from "react"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
-import UserXpCard from "./UserXpCard"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import {DataTable} from "../data-table/DataTable"
@@ -105,6 +105,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
             display="flex"
             flexDirection={"column"}
             as="form"
+            noValidate
             onSubmit={handleSubmit(onSubmit)}
             gap={4}
             maxW={{xl: "container.md"}}
@@ -137,7 +138,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
             </Flex>
           </Card>
           <Card h={"100%"}>
-            <UserXpCard organizationID={parentId} user={user} />
+            <Text>Under construction</Text>
           </Card>
         </>
       )}

@@ -120,7 +120,6 @@ const ListView = <T extends IDefaultResource>({
   )
 
   const params = useMemo(() => {
-    console.log("HIT maps", paramMap, queryMap, filterMap)
     return {
       routeParams: mapRouterQuery(paramMap),
       queryParams: mapRouterQuery(queryMap),
@@ -131,7 +130,6 @@ const ListView = <T extends IDefaultResource>({
   const fetchData = useCallback(async () => {
     let response
     setLoading(true)
-    console.log("HIT (service, params, dso)", defaultServiceOptions)
     const {parameters: defaultParameters = [], listOptions: defaultListOptions = {}} = defaultServiceOptions || {}
     const listOptions = {
       ...defaultListOptions,
@@ -148,7 +146,6 @@ const ListView = <T extends IDefaultResource>({
   }, [service, params, defaultServiceOptions])
 
   useEffect(() => {
-    console.log("HIT (fetchData, isReady)", isReady)
     if (isReady) {
       fetchData()
     }

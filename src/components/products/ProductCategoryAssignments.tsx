@@ -43,13 +43,13 @@ import BrandedSpinner from "../branding/BrandedSpinner"
 import BrandedTable from "../branding/BrandedTable"
 
 type ProductDataProps = {
-  product: RequiredDeep<Product<any>>
+  product: IProduct,
   catalog: Catalog
 }
 
 export default function ProductCategoryAssignments({product, catalog}: ProductDataProps) {
   const [productCategoryAssignments, setProductCategoryAssignments] = useState<Category[]>(null)
-  const [componentProduct, setComponentProduct] = useState<RequiredDeep<Product<any>>>(product)
+  const [componentProduct, setComponentProduct] = useState<Product>(product)
   const [isLoading, setIsLoading] = useState(false)
   const {isOpen, onOpen, onClose} = useDisclosure()
   const cancelRef = React.useRef()

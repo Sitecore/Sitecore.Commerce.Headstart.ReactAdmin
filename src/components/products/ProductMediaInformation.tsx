@@ -53,7 +53,7 @@ export default function ProductMediaInformation({composedProduct, setComposedPro
     var newVal = e.target.value
     var emptyVal = null
     var tmpImages = [...formValues.images]
-    var tmpImage: Required<XpImage> = {
+    var tmpImage: XpImage = {
       Url: newVal,
       ThumbnailUrl: newVal
     }
@@ -80,12 +80,12 @@ export default function ProductMediaInformation({composedProduct, setComposedPro
 
   const onNewProductImageClicked = async (e) => {
     setIsLoading(true)
-    var tmpImages: Required<XpImage>[] = []
+    var tmpImages: XpImage[] = []
     if (formValues.images) {
       tmpImages = [...formValues.images]
     }
 
-    var tmpImage: Required<XpImage> = {
+    var tmpImage: XpImage = {
       Url: "",
       ThumbnailUrl: ""
     }

@@ -1,5 +1,5 @@
 import {InputControl, NumberInputControl, SwitchControl} from "@/components/react-hook-form"
-import {ChevronDownIcon, ChevronRightIcon, InfoOutlineIcon} from "@chakra-ui/icons"
+import {InfoOutlineIcon} from "@chakra-ui/icons"
 import {
   Accordion,
   AccordionButton,
@@ -10,21 +10,18 @@ import {
   Button,
   Card,
   CardBody,
-  Collapse,
   Divider,
   Flex,
   FormControl,
   FormErrorMessage,
   Grid,
-  GridItem,
   Heading,
-  Text,
-  useDisclosure
+  Text
 } from "@chakra-ui/react"
 import {useErrorToast} from "hooks/useToast"
-import {compact, get} from "lodash"
-import {useEffect, useState} from "react"
-import {Control, FieldValues, useFieldArray, useFormState, UseFormTrigger, useWatch} from "react-hook-form"
+import {get} from "lodash"
+import {useState} from "react"
+import {Control, FieldValues, useFieldArray, useFormState, UseFormTrigger} from "react-hook-form"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
 
@@ -38,46 +35,30 @@ const PriceBreakTable = ({control, trigger}: PriceBreakTableProps) => {
     name: fieldNames.PRICE_BREAKS
   })
   const {errors} = useFormState({control})
-  const watchFields = useWatch({control, name: fieldNames.PRICE_BREAKS})
   const errorMessage = getPricebreakErrorMessage(errors)
   const errorToast = useErrorToast()
-
-  useEffect(() => {
-    // trigger validation whenever any change to the individual price break fields change
-    // without this, validation is only run when a price break is added but we want
-    // it to validate before so we can prevent the creation of a new price break if there
-    // are any invalid ones
-    trigger(fieldNames.PRICE_BREAKS)
-  }, [watchFields, trigger])
 
   const handleDeletePriceBreak = (index: number) => {
     remove(index)
   }
 
-  const handleAddPriceBreak = () => {
-    if (errorMessage) {
-      errorToast({description: errorMessage})
+  const handleAddPriceBreak = async () => {
+    const isValid = await trigger(fieldNames.PRICE_BREAKS)
+    if (!isValid) {
+      errorToast({description: "Please resolve errors before adding a new price break"})
       return
     }
-    append({Quantity: "", Price: "", SalePrice: ""})
+    append({Quantity: "", Price: "", SalePrice: "", SubscriptionPrice: ""})
   }
 
   function getPricebreakErrorMessage(errors: any) {
     const error = get(errors, fieldNames.PRICE_BREAKS, "") as any
     if (error.message) {
-      // error on price breaks as a whole
+      // error on price breaks as a whole, individual price break messages will be reported on the inputs
       return error.message
+    } else {
+      return ""
     }
-    if (error.length) {
-      // get first error on an individual price break
-      const individualErrors = compact(error) as any[]
-      if (individualErrors.length) {
-        const firstError = individualErrors[0]
-        const keys = Object.keys(firstError)
-        return firstError[keys[0]].message
-      }
-    }
-    return ""
   }
 
   return (
@@ -106,6 +87,14 @@ const PriceBreakTable = ({control, trigger}: PriceBreakTableProps) => {
             numberInputProps={{flexGrow: 1}}
             name={`${fieldNames.PRICE_BREAKS}.${index}.SalePrice`}
             label="Sale Price (per unit)"
+            control={control}
+            leftAddon="$"
+            validationSchema={validationSchema}
+          />
+          <NumberInputControl
+            numberInputProps={{flexGrow: 1}}
+            name={`${fieldNames.PRICE_BREAKS}.${index}.SubscriptionPrice`}
+            label="Subscription Price (per unit)"
             control={control}
             leftAddon="$"
             validationSchema={validationSchema}
@@ -141,14 +130,14 @@ interface PricingFormProps {
 }
 export function PricingForm({control, trigger, priceBreakCount}: PricingFormProps) {
   const [showAdvancedPricing, setShowAdvancedPricing] = useState(priceBreakCount > 1)
-  const {isOpen, onToggle} = useDisclosure()
   return (
     <>
       <Card>
         <CardBody flexDirection="column" gap={4}>
-          <Grid templateColumns={{base: "1fr", xl: "1fr 1fr"}} gap={4}>
+          <Grid templateColumns={{base: "1fr", xl: "1fr 1fr 1fr"}} gap={4}>
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.Price`}
+              inputProps={{type: "number"}}
               label="Regular Price (per unit)"
               control={control}
               leftAddon="$"
@@ -157,13 +146,23 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
 
             <InputControl
               name={`${fieldNames.PRICE_BREAKS}.${0}.SalePrice`}
+              inputProps={{type: "number"}}
               label="Sale Price (per unit)"
               control={control}
               leftAddon="$"
               validationSchema={validationSchema}
             />
 
-            <Grid gap={4} gridTemplateColumns={{base: "1fr", xl: "1fr 1fr"}}>
+            <InputControl
+              name={`${fieldNames.PRICE_BREAKS}.${0}.SubscriptionPrice`}
+              inputProps={{type: "number"}}
+              label="Subscription Price (per unit)"
+              control={control}
+              leftAddon="$"
+              validationSchema={validationSchema}
+            />
+
+            <Grid gap={4} gridTemplateColumns={{base: "1fr", xl: "1fr 1fr 1fr"}}>
               <InputControl
                 name={fieldNames.SALE_START}
                 label="Sale Start"
@@ -219,12 +218,14 @@ export function PricingForm({control, trigger, priceBreakCount}: PricingFormProp
                     <Flex gap={4} flexWrap={{base: "wrap", lg: "nowrap"}}>
                       <InputControl
                         name={fieldNames.MIN_QUANTITY}
+                        inputProps={{type: "number"}}
                         label="Minimum quantity"
                         control={control}
                         validationSchema={validationSchema}
                       />
                       <InputControl
                         name={fieldNames.MAX_QUANTITY}
+                        inputProps={{type: "number"}}
                         label="Maximum quantity"
                         control={control}
                         validationSchema={validationSchema}

@@ -13,6 +13,7 @@ export function UnitOfMeasureForm({control}: UnitOfMeasureFormProps) {
     <HStack flexWrap={{base: "wrap", md: "nowrap"}} gap={6} mt={6}>
       <InputControl
         label="Quantity per unit"
+        inputProps={{type: "number"}}
         name={fieldNames.QUANTITY_PER_UNIT}
         control={control}
         validationSchema={validationSchema}

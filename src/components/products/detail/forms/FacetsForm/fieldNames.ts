@@ -1,0 +1,1 @@
+export const FACETS = "Product.xp.Facets"

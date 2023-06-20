@@ -14,7 +14,7 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
   const {name, control, label, inputProps, leftAddon, rightAddon, validationSchema, ...rest} = props
   const {
     field,
-    formState: {isSubmitting, errors}
+    formState: {isSubmitting}
   } = useController({
     name,
     control

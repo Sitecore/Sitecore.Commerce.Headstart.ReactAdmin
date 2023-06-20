@@ -154,10 +154,11 @@ const Dashboard = () => {
   }
 
   const productsLatestUpdated = new Date(
-    products
-      ?.map((i) => i?.Inventory)
-      ?.map((lu) => lu?.LastUpdated)
-      ?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
+    (products || [])
+      .filter((p) => p.Inventory !== null)
+      .map((i) => i?.Inventory)
+      .map((lu) => lu?.LastUpdated)
+      .reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
   ).toLocaleDateString()
   const ordersLatestUpdated = new Date(
     orders?.map((lu) => lu?.LastUpdated)?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
@@ -174,8 +175,6 @@ const Dashboard = () => {
       ?.filter((wtf) => wtf)
       ?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
   ).toLocaleDateString()
-
-  console.log("promotions", promotionsLatestUpdated)
 
   const data = [
     {label: "products", labelSingular: "product", var: products, funFact: productsLatestUpdated},

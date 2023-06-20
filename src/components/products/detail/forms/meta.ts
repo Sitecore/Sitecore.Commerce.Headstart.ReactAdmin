@@ -1,6 +1,6 @@
 import * as yup from "yup"
 import {makeNestedValidationSchema} from "utils"
-import {values} from "lodash"
+import {mapKeys, values} from "lodash"
 import * as descriptionForm from "./DescriptionForm"
 import * as detailsForm from "./DetailsForm"
 import * as inventoryForm from "./InventoryForm"
@@ -17,7 +17,9 @@ export const defaultValues = {
   ...inventoryForm.defaultValues,
   ...shippingForm.defaultValues,
   ...unitOfMeasureForm.defaultValues,
-  ...pricingForm.defaultValues,
+  // Pricing is a special case because its used for both default price schedule as well as override price schedules
+  ...mapKeys(pricingForm.defaultValues, (value, key) => `DefaultPriceSchedule.${key}`),
+  ...mapKeys(pricingForm.defaultValues, (value, key) => `OverridePriceSchedules.${key}`),
   ...facetsForm.defaultValues,
   ...mediaForm.defaultValues
 }
@@ -29,7 +31,9 @@ export const validationSchema = yup.object().shape(
     ...inventoryForm.formShape,
     ...shippingForm.formShape,
     ...unitOfMeasureForm.formShape,
-    ...pricingForm.formShape,
+    // Pricing is a special case because its used for both default price schedule as well as override price schedules
+    ...mapKeys(pricingForm.formShape, (value, key) => `DefaultPriceSchedule.${key}`),
+    OverridePriceSchedules: yup.array().of(yup.object().shape(pricingForm.formShape)),
     ...facetsForm.formShape,
     ...mediaForm.formShape
   })
@@ -43,7 +47,11 @@ export const tabFieldNames: Record<ProductDetailTab, any[]> = {
     ...values(shippingForm.fieldNames),
     ...values(unitOfMeasureForm.fieldNames)
   ],
-  Pricing: [...values(pricingForm.fieldNames)],
+  Pricing: [
+    // Pricing is a special case because its used for both default price schedule as well as override price schedules
+    ...values(pricingForm.fieldNames).map((fieldName) => `DefaultPriceSchedule.${fieldName}`),
+    ...values(pricingForm.fieldNames).map((fieldName) => `OverridePriceSchedules.${fieldName}`)
+  ],
   Variants: [],
   Media: [...values(mediaForm.fieldNames)],
   Facets: [...values(facetsForm.fieldNames)],

@@ -23,8 +23,8 @@ import {
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useRouter} from "hooks/useRouter"
 import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {cloneDeep, invert} from "lodash"
-import {PriceSchedules, Products} from "ordercloud-javascript-sdk"
+import {cloneDeep, invert, isEmpty} from "lodash"
+import {PriceSchedules, ProductAssignment, Products} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 import {useForm} from "react-hook-form"
 import {TbCactus, TbEdit, TbTrash} from "react-icons/tb"
@@ -49,6 +49,8 @@ import {PricingForm} from "./forms/PricingForm/PricingForm"
 import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
 import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
 import {defaultValues, tabFieldNames, validationSchema} from "./forms/meta"
+import {v4 as randomId} from "uuid"
+import {OverridePriceScheduleFieldValues} from "types/OverridePriceScheduleFieldValues"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
 
@@ -66,6 +68,7 @@ interface ProductDetailProps {
   initialTab: ProductDetailTab
   product?: IProduct
   defaultPriceSchedule?: IPriceSchedule
+  overridePriceSchedules?: IPriceSchedule[]
   specs?: ISpec[]
   variants?: IVariant[]
   facets?: IProductFacet[]
@@ -75,6 +78,7 @@ export default function ProductDetail({
   initialTab,
   product,
   defaultPriceSchedule = {} as IPriceSchedule,
+  overridePriceSchedules,
   specs,
   variants,
   facets
@@ -123,7 +127,8 @@ export default function ProductDetail({
         {
           Product: cloneDeep(product),
           DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
-          Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets))
+          Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
+          OverridePriceSchedules: cloneDeep(overridePriceSchedules)
         },
         defaultValues
       )
@@ -201,6 +206,55 @@ export default function ProductDetail({
     // patch product with default price schedule
     product = await Products.Patch<IProduct>(product.ID, {DefaultPriceScheduleID: defaultPriceSchedule.ID})
 
+    // create/update price overrides
+    const oldPriceSchedules = overridePriceSchedules
+    const newPriceSchedules = fields.OverridePriceSchedules.filter(
+      (priceSchedule) => priceSchedule.PriceBreaks[0].Price
+    )
+
+    const addPriceSchedules = newPriceSchedules.filter((priceSchedule) => !priceSchedule.ID)
+    const updatePriceSchedules = newPriceSchedules.filter((newPriceSchedule) => {
+      const oldPriceSchedule = oldPriceSchedules.find((p) => p.ID === newPriceSchedule.ID)
+      if (oldPriceSchedule) {
+        // has updates
+        const diff = getObjectDiff(newPriceSchedule, oldPriceSchedule)
+        return !isEmpty(diff)
+      }
+    })
+    const deletePriceSchedules = oldPriceSchedules.filter((oldPriceSchedule) => {
+      const newPriceSchedule = newPriceSchedules.find((p) => p.ID === oldPriceSchedule.ID)
+      if (!newPriceSchedule) {
+        return true
+      }
+    })
+
+    const addPriceScheduleRequests = (addPriceSchedules || []).map(
+      async (priceOverride: OverridePriceScheduleFieldValues) => {
+        const priceSchedule = await PriceSchedules.Create<IPriceSchedule>({
+          ...priceOverride,
+          Name: randomId() // this isn't user facing and is only used to satisfy the API
+        })
+        const addRequests = priceOverride.ProductAssignments.map((assignment) => {
+          return Products.SaveAssignment({
+            ...assignment,
+            PriceScheduleID: priceSchedule.ID,
+            ProductID: product.ID
+          })
+        })
+        await Promise.all(addRequests)
+      }
+    )
+    const updatePriceScheduleRequests = (updatePriceSchedules || []).map(async (priceOverride) => {
+      const priceSchedule = await PriceSchedules.Patch<IPriceSchedule>(priceOverride.ID, priceOverride)
+      await updateProductAssignments(product.ID, priceSchedule.ID, priceOverride.ProductAssignments)
+    })
+
+    const deletePriceScheduleRequests = (deletePriceSchedules || []).map(async (priceOverride) =>
+      PriceSchedules.Delete(priceOverride.ID)
+    )
+
+    await Promise.all([...addPriceScheduleRequests, ...updatePriceScheduleRequests, ...deletePriceScheduleRequests])
+
     successToast({
       description: isCreatingNew ? "ProductCreated" : "Product updated"
     })
@@ -208,6 +262,57 @@ export default function ProductDetail({
     if (isCreatingNew) {
       router.push(`/products/${product.ID}`)
     }
+  }
+
+  async function updateProductAssignments(
+    productId: string,
+    priceScheduleId: string,
+    newAssignments: ProductAssignment[]
+  ) {
+    const oldAssignmentsList = await Products.ListAssignments({productID: productId, priceScheduleID: priceScheduleId})
+    const oldAssignments = oldAssignmentsList.Items
+
+    // determine which assignments to add
+    const addAssignments = newAssignments.filter((newAssignment) => {
+      const oldAssignment = oldAssignments.find((oldAssignment) => {
+        if (newAssignment.UserGroupID) {
+          return (
+            oldAssignment.BuyerID === newAssignment.BuyerID && oldAssignment.UserGroupID === newAssignment.UserGroupID
+          )
+        } else {
+          return oldAssignment.BuyerID === newAssignment.BuyerID
+        }
+      })
+      return !oldAssignment
+    })
+
+    // determine which assignments to remove
+    const removeAssignments = oldAssignments.filter((oldAssignment) => {
+      const newAssignment = newAssignments.find((newAssignment) => {
+        if (newAssignment.UserGroupID) {
+          return (
+            oldAssignment.BuyerID === newAssignment.BuyerID && oldAssignment.UserGroupID === newAssignment.UserGroupID
+          )
+        } else {
+          return oldAssignment.BuyerID === newAssignment.BuyerID
+        }
+      })
+      return !newAssignment
+    })
+
+    const addRequests = addAssignments.map((assignment) => {
+      return Products.SaveAssignment({
+        ...assignment,
+        PriceScheduleID: priceScheduleId,
+        ProductID: productId
+      })
+    })
+
+    const removeRequests = removeAssignments.map((assignment) => {
+      return Products.DeleteAssignment(product.ID, assignment.BuyerID, {userGroupID: assignment.UserGroupID})
+    })
+
+    await Promise.all([...addRequests, ...removeRequests])
   }
 
   const onInvalid = (errors) => {
@@ -429,6 +534,7 @@ export default function ProductDetail({
                     control={control}
                     trigger={trigger}
                     priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
+                    overridePriceSchedules={overridePriceSchedules}
                   />
                 </TabPanel>
               )}

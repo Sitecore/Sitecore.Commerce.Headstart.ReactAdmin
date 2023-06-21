@@ -1,24 +1,6 @@
 import ProtectedContent from "@/components/auth/ProtectedContent"
 import ProductDetail from "@/components/products/detail/ProductDetail"
-import {
-  Box,
-  Center,
-  Container,
-  Flex,
-  HStack,
-  SimpleGrid,
-  Skeleton,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Tfoot,
-  Th,
-  Thead,
-  Tr,
-  VStack
-} from "@chakra-ui/react"
+import {Container, Flex, HStack, Skeleton, VStack} from "@chakra-ui/react"
 import {appPermissions} from "constants/app-permissions.config"
 import {useProductDetail} from "hooks/useProductDetail"
 import {NextSeo} from "next-seo"
@@ -39,7 +21,17 @@ export async function getServerSideProps() {
 }
 
 const ProductDetailPage = () => {
-  const {product, defaultPriceSchedule, specs, variants, facets, loading, showTabbedView, initialTab} = useProductDetail()
+  const {
+    product,
+    defaultPriceSchedule,
+    overridePriceSchedules,
+    specs,
+    variants,
+    facets,
+    loading,
+    showTabbedView,
+    initialTab
+  } = useProductDetail()
 
   if (loading || !product) {
     return (
@@ -80,6 +72,7 @@ const ProductDetailPage = () => {
       initialTab={initialTab}
       product={product}
       defaultPriceSchedule={defaultPriceSchedule}
+      overridePriceSchedules={overridePriceSchedules}
       specs={specs}
       variants={variants}
       facets={facets}

@@ -25,8 +25,8 @@ const priceBreakSchema = {
 }
 
 export const formShape: Record<FieldName, any> = {
-  [fieldNames.SALE_START]: yup.string(),
-  [fieldNames.SALE_END]: yup.string(),
+  [fieldNames.SALE_START]: yup.string().nullable(),
+  [fieldNames.SALE_END]: yup.string().nullable(),
   [fieldNames.RESTRICTED_QUANTITY]: yup.bool(),
   [fieldNames.PRICE_BREAKS]: yup
     .array()

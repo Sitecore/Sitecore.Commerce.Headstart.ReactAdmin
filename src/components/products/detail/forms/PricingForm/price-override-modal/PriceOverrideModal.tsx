@@ -1,6 +1,5 @@
 import {Button, ButtonProps, MenuItem, MenuItemProps, Modal, ModalOverlay, useDisclosure} from "@chakra-ui/react"
 import {useState} from "react"
-import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {UpdatePriceModalContent} from "./UpdatePriceModalContent"
 import {AssignPriceModalContent} from "./AssignPriceModalContent"
 import {ProductAssignment} from "ordercloud-javascript-sdk"
@@ -35,8 +34,9 @@ export function PriceOverrideModal({
 
   const onSubmit = (productAssignments: ProductAssignment[]) => {
     currentPriceSchedule.ProductAssignments = productAssignments
-    setCurrentPriceSchedule(currentPriceSchedule)
     onUpdate(currentPriceSchedule)
+    setCurrentPriceSchedule(priceSchedule) // reset to initial price schedule
+    setCurrentStep(step) // reset to initial step
     onClose()
   }
 

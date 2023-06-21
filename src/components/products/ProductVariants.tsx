@@ -45,8 +45,8 @@ export default function ProductVariants({composedProduct, setComposedProduct}: P
   const gradient =
     colorMode === "light" ? "linear(to-t, accent.300, accent.400)" : "linear(to-t, accent.600, accent.500)"
   const shadow = "5px 5px 5px #999999"
-  const okColor = useColorModeValue("okColor.800", "okColor.200")
-  const errorColor = useColorModeValue("errorColor.800", "errorColor.200")
+  const okColor = useColorModeValue("green.500", "green.300")
+  const errorColor = useColorModeValue("red.500", "red.300")
   const [expanded, setExpanded] = useState(false)
   const [overwriteExistingVariants, setOverwriteExistingVariants] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)

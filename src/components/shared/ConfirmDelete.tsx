@@ -40,30 +40,9 @@ export default function ConfirmDelete({
 
   return (
     <>
-      <Hide below="md">
-        <Button variant="outline" onClick={onOpen} disabled={loading}>
-          {loading ? deletingText : deleteText}
-        </Button>
-      </Hide>
-      <Hide above="md">
-        <Button
-          disabled={loading}
-          display="flex"
-          justifyContent={"flex-start"}
-          variant="unstyled"
-          color="danger.500"
-          px={3}
-          _hover={{backgroundColor: "gray.100"}}
-          w="full"
-          textAlign="left"
-          borderRadius="0"
-          fontWeight="normal"
-          leftIcon={<TbTrash size="1rem" />}
-          onClick={onOpen}
-        >
-          {loading ? deletingText : deleteText}
-        </Button>
-      </Hide>
+      <MenuItem justifyContent="space-between" onClick={onOpen}>
+        {deleteText} <TbTrash />
+      </MenuItem>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>

@@ -8,12 +8,13 @@ import {
   Button,
   Hide,
   HStack,
+  MenuItem,
   Select,
   Text,
   useDisclosure
 } from "@chakra-ui/react"
 import {useRef} from "react"
-import {TbLanguage, TbTableExport} from "react-icons/tb"
+import {TbLanguage} from "react-icons/tb"
 
 interface LanguageSelectorProps {}
 export default function LanguageSelector({}: LanguageSelectorProps) {
@@ -27,28 +28,9 @@ export default function LanguageSelector({}: LanguageSelectorProps) {
 
   return (
     <>
-      <Hide below="md">
-        <Button variant="outline" onClick={onOpen}>
-          Switch Language
-        </Button>
-      </Hide>
-      <Hide above="md">
-        <Button
-          display="flex"
-          justifyContent={"flex-start"}
-          variant="unstyled"
-          px={3}
-          _hover={{backgroundColor: "gray.100"}}
-          w="full"
-          textAlign="left"
-          borderRadius="0"
-          fontWeight="normal"
-          leftIcon={<TbLanguage size="1rem" />}
-          onClick={onOpen}
-        >
-          Switch Language
-        </Button>
-      </Hide>
+      <MenuItem justifyContent="space-between" onClick={onOpen}>
+        Switch Language <TbLanguage />
+      </MenuItem>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>

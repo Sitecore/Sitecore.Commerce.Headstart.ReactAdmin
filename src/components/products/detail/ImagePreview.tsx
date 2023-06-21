@@ -31,7 +31,8 @@ export default function ImagePreview({images = []}: ImagePreviewProps) {
                   objectFit="scale-down"
                   mt={4}
                   alt={"Product Image"}
-                  src={image?.ThumbnailUrl}
+                  src={image?.ThumbnailUrl || image?.Url || "/raster/dummy-image-square.jpg"}
+                  onError={loadFallbackImage}
                   border={index == selectedImage ? "1px solid" : ""}
                   onClick={() => {
                     setSelectedImage(index)

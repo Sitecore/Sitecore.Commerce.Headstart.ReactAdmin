@@ -4,18 +4,18 @@ import {
   Box,
   Button,
   ButtonGroup,
+  FormErrorMessage,
   HStack,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Tag,
-  TagLabel,
-  Text
+  Text,
+  FormControl as ChakraFormControl
 } from "@chakra-ui/react"
 import {yupResolver} from "@hookform/resolvers/yup"
-import {Control, FieldValues, useController, useForm} from "react-hook-form"
+import {Control, FieldValues, useController, useForm, useFormState} from "react-hook-form"
 import {array, object, string} from "yup"
 import {FormEvent, useState} from "react"
 import {Buyers, ProductAssignment, UserGroups} from "ordercloud-javascript-sdk"
@@ -75,6 +75,8 @@ export function AssignPriceModalContent({
     resolver: yupResolver(validationSchema),
     defaultValues: getAsyncDefaultValues as any
   })
+
+  const {errors} = useFormState({control})
 
   async function getAsyncDefaultValues() {
     // get buyer assignments data
@@ -163,6 +165,12 @@ export function AssignPriceModalContent({
             Cancel
           </Button>
           <HStack>
+            {/* Display top level (multi-field) errors */}
+            {errors && Boolean(errors[""]) && (
+              <ChakraFormControl isInvalid={true}>
+                <FormErrorMessage>{(errors as any)[""].message}</FormErrorMessage>
+              </ChakraFormControl>
+            )}
             <Button onClick={() => onStepChange("editprice")}>Edit Price</Button>
             <SubmitButton control={control} variant="solid" colorScheme="primary">
               Save changes

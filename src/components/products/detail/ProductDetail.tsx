@@ -23,7 +23,7 @@ import {
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useRouter} from "hooks/useRouter"
 import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {cloneDeep, invert} from "lodash"
+import {cloneDeep, invert, set} from "lodash"
 import {Products} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 import {useForm} from "react-hook-form"
@@ -65,23 +65,32 @@ const inverseTabIndexMap = invert(tabIndexMap)
 interface ProductDetailProps {
   showTabbedView?: boolean
   initialTab: ProductDetailTab
-  product?: IProduct
-  defaultPriceSchedule?: IPriceSchedule
-  overridePriceSchedules?: IPriceSchedule[]
-  specs?: ISpec[]
-  variants?: IVariant[]
-  facets?: IProductFacet[]
+  initialProduct?: IProduct
+  initialDefaultPriceSchedule?: IPriceSchedule
+  initialOverridePriceSchedules?: IPriceSchedule[]
+  initialSpecs?: ISpec[]
+  initialVariants?: IVariant[]
+  initialFacets?: IProductFacet[]
 }
 export default function ProductDetail({
   showTabbedView,
   initialTab,
-  product,
-  defaultPriceSchedule = {} as IPriceSchedule,
-  overridePriceSchedules,
-  specs,
-  variants,
-  facets
+  initialProduct,
+  initialDefaultPriceSchedule = {} as IPriceSchedule,
+  initialOverridePriceSchedules,
+  initialSpecs,
+  initialVariants,
+  initialFacets
 }: ProductDetailProps) {
+  // setting initial values for state so we can update on submit when product is updated
+  // this allows us to keep the form in sync with the product without having to refresh the page
+  const [product, setProduct] = useState(initialProduct)
+  const [defaultPriceSchedule, setDefaultPriceSchedule] = useState(initialDefaultPriceSchedule)
+  const [overridePriceSchedules, setOverridePriceSchedules] = useState(initialOverridePriceSchedules)
+  const [specs, setSpecs] = useState(initialSpecs)
+  const [variants, setVariants] = useState(initialVariants)
+  const [facets, setFacets] = useState(initialFacets)
+
   const router = useRouter()
   const successToast = useSuccessToast()
   const errorToast = useErrorToast()
@@ -146,7 +155,7 @@ export default function ProductDetail({
   }
 
   const onSubmit = async (fields) => {
-    await submitProduct(
+    const {updatedProduct, updatedDefaultPriceSchedule, updatedPriceOverrides, updatedSpecs} = await submitProduct(
       isCreatingNew,
       defaultPriceSchedule,
       fields.DefaultPriceSchedule,
@@ -164,6 +173,26 @@ export default function ProductDetail({
 
     if (isCreatingNew) {
       router.push(`/products/${product.ID}`)
+    } else {
+      // Update the state with the new product data
+      setProduct(updatedProduct)
+      setDefaultPriceSchedule(updatedDefaultPriceSchedule)
+      setOverridePriceSchedules(updatedPriceOverrides)
+      setSpecs(updatedSpecs)
+
+      // reset the form with new product data
+      reset(
+        withDefaultValuesFallback(
+          {
+            Product: cloneDeep(updatedProduct),
+            DefaultPriceSchedule: cloneDeep(updatedDefaultPriceSchedule),
+            Specs: cloneDeep(updatedSpecs),
+            Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
+            OverridePriceSchedules: cloneDeep(updatedPriceOverrides)
+          },
+          defaultValues
+        )
+      )
     }
   }
 

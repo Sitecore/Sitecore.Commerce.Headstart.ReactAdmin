@@ -1,5 +1,5 @@
 import {isEmpty} from "lodash"
-import {PriceSchedules, Products, ProductAssignment, Specs} from "ordercloud-javascript-sdk"
+import {PriceSchedules, Products, ProductAssignment, Specs, SpecProductAssignment} from "ordercloud-javascript-sdk"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {SpecFieldValues, SpecOptionFieldValues} from "types/form/SpecFieldValues"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
@@ -7,6 +7,7 @@ import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 import {getObjectDiff} from "utils"
 import {v4 as randomId} from "uuid"
+import {fetchOverridePriceSchedules, fetchSpecs} from "./product-data-fetcher.service"
 
 export async function submitProduct(
   isCreatingNew: boolean,
@@ -37,14 +38,16 @@ export async function submitProduct(
   )
 
   // create/update/delete specs & spec options
-  await handleUpdateSpecs(updatedProduct.ID, oldSpecs, newSpecs)
+  const updatedSpecs = await handleUpdateSpecs(oldSpecs, newSpecs, updatedProduct)
 
   // create/update/delete price overrides and related assignments
-  await handleUpdatePriceOverrides(
+  const updatedPriceOverrides = await handleUpdatePriceOverrides(
     oldOverridePriceSchedules,
     newOverridePriceSchedules.filter((priceSchedule) => priceSchedule.PriceBreaks[0].Price),
-    updatedProduct.ID
+    updatedProduct
   )
+
+  return {updatedProduct, updatedSpecs, updatedPriceOverrides, updatedDefaultPriceSchedule}
 }
 
 async function handleUpdateDefaultPriceSchedule(
@@ -114,7 +117,7 @@ async function handleUpdateProduct(
 async function handleUpdatePriceOverrides(
   oldPriceSchedules: IPriceSchedule[],
   newPriceSchedules: OverridePriceScheduleFieldValues[],
-  productID: string
+  product: IProduct
 ) {
   const addPriceSchedules = getObjectsToAdd(newPriceSchedules)
   const updatePriceSchedules = getObjectsToUpdate(oldPriceSchedules, newPriceSchedules)
@@ -129,7 +132,7 @@ async function handleUpdatePriceOverrides(
       return Products.SaveAssignment({
         ...assignment,
         PriceScheduleID: priceSchedule.ID,
-        ProductID: productID
+        ProductID: product.ID
       })
     })
     await Promise.all(addRequests)
@@ -139,7 +142,7 @@ async function handleUpdatePriceOverrides(
     const oldPriceSchedule = oldPriceSchedules.find((oldPriceSchedule) => oldPriceSchedule.ID === priceOverride.ID)
     const diff = getObjectDiff(oldPriceSchedule, priceOverride)
     const priceSchedule = await PriceSchedules.Patch<IPriceSchedule>(priceOverride.ID, diff)
-    await updateProductAssignments(productID, priceSchedule.ID, priceOverride.ProductAssignments)
+    await updateProductAssignments(priceSchedule.ID, priceOverride.ProductAssignments, product)
   })
 
   const deletePriceScheduleRequests = deletePriceSchedules.map(async (priceOverride) =>
@@ -147,15 +150,15 @@ async function handleUpdatePriceOverrides(
   )
 
   await Promise.all([...addPriceScheduleRequests, ...updatePriceScheduleRequests, ...deletePriceScheduleRequests])
+  return await fetchOverridePriceSchedules(product)
 }
 
 async function updateProductAssignments(
-  productId: string,
   priceScheduleId: string,
   newAssignments: ProductAssignment[],
-  productID?: string
+  product: IProduct
 ) {
-  const oldAssignmentsList = await Products.ListAssignments({productID: productId, priceScheduleID: priceScheduleId})
+  const oldAssignmentsList = await Products.ListAssignments({productID: product.ID, priceScheduleID: priceScheduleId})
   const oldAssignments = oldAssignmentsList.Items
 
   // determine which assignments to add
@@ -190,18 +193,18 @@ async function updateProductAssignments(
     return Products.SaveAssignment({
       ...assignment,
       PriceScheduleID: priceScheduleId,
-      ProductID: productId
+      ProductID: product.ID
     })
   })
 
   const removeRequests = removeAssignments.map((assignment) => {
-    return Products.DeleteAssignment(productID, assignment.BuyerID, {userGroupID: assignment.UserGroupID})
+    return Products.DeleteAssignment(product.ID, assignment.BuyerID, {userGroupID: assignment.UserGroupID})
   })
 
   await Promise.all([...addRequests, ...removeRequests])
 }
 
-async function handleUpdateSpecs(productId: string, oldSpecs: ISpec[], newSpecs: SpecFieldValues[]) {
+async function handleUpdateSpecs(oldSpecs: ISpec[], newSpecs: SpecFieldValues[], product: IProduct) {
   const addSpecs = getObjectsToAdd(newSpecs)
   const updateSpecs = getObjectsToUpdate(oldSpecs, newSpecs)
   const deleteSpecs = getObjectsToDelete(oldSpecs, newSpecs)
@@ -210,7 +213,7 @@ async function handleUpdateSpecs(productId: string, oldSpecs: ISpec[], newSpecs:
     const newSpec = await Specs.Create<ISpec>(spec)
     const optionRequests = spec.Options.map((option) => Specs.CreateOption(newSpec.ID, option))
     await Promise.all(optionRequests)
-    await Specs.SaveProductAssignment({SpecID: newSpec.ID, ProductID: productId})
+    await Specs.SaveProductAssignment({SpecID: newSpec.ID, ProductID: product.ID})
   })
 
   const updateSpecRequests = updateSpecs.map(async (spec) => {
@@ -223,6 +226,7 @@ async function handleUpdateSpecs(productId: string, oldSpecs: ISpec[], newSpecs:
   const deleteSpecRequests = deleteSpecs.map(async (spec) => Specs.Delete(spec.ID))
 
   await Promise.all([...addSpecRequests, ...updateSpecRequests, ...deleteSpecRequests])
+  return await fetchSpecs(product)
 }
 
 async function handleUpdateSpecOptions(specId, newOptions: SpecOptionFieldValues[]) {

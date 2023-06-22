@@ -70,12 +70,12 @@ const ProductDetailPage = () => {
     <ProductDetail
       showTabbedView={showTabbedView}
       initialTab={initialTab}
-      product={product}
-      defaultPriceSchedule={defaultPriceSchedule}
-      overridePriceSchedules={overridePriceSchedules}
-      specs={specs}
-      variants={variants}
-      facets={facets}
+      initialProduct={product}
+      initialDefaultPriceSchedule={defaultPriceSchedule}
+      initialOverridePriceSchedules={overridePriceSchedules}
+      initialSpecs={specs}
+      initialVariants={variants}
+      initialFacets={facets}
     />
   )
 }

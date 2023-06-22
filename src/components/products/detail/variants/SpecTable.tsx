@@ -85,7 +85,15 @@ export function SpecTable({control}: SpecTableProps) {
             <Tbody>
               {specs.map((spec, index) => (
                 <Tr key={spec.ID || spec.id || index}>
-                  <Td>{spec.ID}</Td>
+                  <Td>
+                    {spec.ID ? (
+                      spec.ID
+                    ) : (
+                      <Text fontStyle="italic" fontSize="small">
+                        ID will be assigned once product is saved
+                      </Text>
+                    )}
+                  </Td>
                   <Td>{spec.Name}</Td>
                   <Td>
                     {spec.DefinesVariant ? (

@@ -1,13 +1,19 @@
 import {ProductDetailTab} from "@/components/products/detail/ProductDetail"
 import {useRouter} from "next/router"
-import {PriceSchedules, Products, SpecProductAssignment, Specs, ProductFacets} from "ordercloud-javascript-sdk"
+import {ProductFacets} from "ordercloud-javascript-sdk"
 import {useState, useEffect} from "react"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 import {IVariant} from "types/ordercloud/IVariant"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
-import {uniq} from "lodash"
+import {
+  fetchProduct,
+  fetchDefaultPriceSchedule,
+  fetchSpecs,
+  fetchVariants,
+  fetchOverridePriceSchedules
+} from "services/product-data-fetcher.service"
 
 export function useProductDetail() {
   const {isReady, query, push} = useRouter()
@@ -28,55 +34,15 @@ export function useProductDetail() {
     })()
 
     const getProduct = async () => {
-      const _product = await fetchProduct()
+      const _product = await fetchProduct(query.productid.toString())
       if (_product) {
         await Promise.all([
-          fetchDefaultPriceSchedule(_product),
-          fetchSpecs(_product),
-          fetchVariants(_product),
-          fetchOverridePriceSchedules(_product)
+          fetchDefaultPriceSchedule(_product).then((response) => setDefaultPriceSchedule(response)),
+          fetchSpecs(_product).then((response) => setSpecs(response)),
+          fetchVariants(_product).then((response) => setVariants(response)),
+          fetchOverridePriceSchedules(_product).then((response) => setOverridePriceSchedules(response))
         ])
         setProduct(_product)
-      }
-    }
-
-    const fetchProduct = async () => {
-      return await Products.Get<IProduct>(query.productid.toString())
-    }
-
-    const fetchDefaultPriceSchedule = async (_product: IProduct) => {
-      if (_product?.DefaultPriceScheduleID) {
-        const _defaultPriceSchedule = await PriceSchedules?.Get(_product?.DefaultPriceScheduleID)
-        setDefaultPriceSchedule(_defaultPriceSchedule)
-      }
-    }
-
-    const fetchSpecs = async (_product: IProduct) => {
-      if (_product?.SpecCount) {
-        const listOptions = {
-          filters: {ProductID: _product?.ID},
-          pageSize: 100
-        }
-        const _specAssignments = await Specs?.ListProductAssignments(listOptions)
-        if (_specAssignments?.Items) {
-          const _specs = await fetchSpecsFromAssignments(_specAssignments.Items)
-          setSpecs(_specs)
-        }
-      }
-    }
-
-    const fetchSpecsFromAssignments = async (items: Array<SpecProductAssignment>) => {
-      const specIDs = uniq(items.map((assignment) => assignment.SpecID))
-      const listResponse = await Specs.List<ISpec>({filters: {ID: specIDs.join("|")}})
-      return listResponse.Items
-    }
-
-    const fetchVariants = async (_product: IProduct) => {
-      if (_product?.VariantCount) {
-        const _variants = await Products?.ListVariants(_product?.ID)
-        if (_variants?.Items) {
-          setVariants(_variants.Items)
-        }
       }
     }
 
@@ -84,22 +50,6 @@ export function useProductDetail() {
       getProduct()
     }
   }, [query.productid])
-
-  const fetchOverridePriceSchedules = async (_product: IProduct) => {
-    const assignments = await Products.ListAssignments({productID: _product.ID, pageSize: 100})
-    if (!assignments.Items.length) {
-      return
-    }
-    const priceScheduleIDs = uniq(assignments.Items.map((assignment) => assignment.PriceScheduleID))
-    const priceSchedules = await PriceSchedules.List({filters: {ID: priceScheduleIDs.join("|")}})
-    const enhancedPriceSchedules = priceSchedules.Items.map((priceSchedule) => {
-      priceSchedule["ProductAssignments"] = assignments.Items.filter(
-        (assignment) => assignment.PriceScheduleID === priceSchedule.ID
-      )
-      return priceSchedule
-    })
-    setOverridePriceSchedules(enhancedPriceSchedules)
-  }
 
   useEffect(() => {
     const shouldShowTabbedView = () => {

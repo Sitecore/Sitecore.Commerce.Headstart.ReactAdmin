@@ -66,13 +66,9 @@ export function useProductDetail() {
     }
 
     const fetchSpecsFromAssignments = async (items: Array<SpecProductAssignment>) => {
-      const specs = await Promise.all(
-        items.map(async (item) => {
-          const _spec = await Specs.Get<ISpec>(item.SpecID)
-          return _spec
-        })
-      )
-      return specs
+      const specIDs = uniq(items.map((assignment) => assignment.SpecID))
+      const listResponse = await Specs.List<ISpec>({filters: {ID: specIDs.join("|")}})
+      return listResponse.Items
     }
 
     const fetchVariants = async (_product: IProduct) => {

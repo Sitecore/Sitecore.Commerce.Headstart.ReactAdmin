@@ -1,0 +1,148 @@
+import {DragHandleIcon, InfoOutlineIcon} from "@chakra-ui/icons"
+import {
+  Flex,
+  TableContainer,
+  Table,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+  Td,
+  FormControl as ChakraFormControl,
+  FormErrorMessage,
+  Button
+} from "@chakra-ui/react"
+import {useErrorToast} from "hooks/useToast"
+import {get} from "lodash"
+import {Control, FieldValues, UseFormTrigger, useFieldArray, useFormState, useWatch} from "react-hook-form"
+import {specFormDefaultValues} from "./SpecUpdateModal"
+import {SpecOptionFieldValues} from "types/form/SpecFieldValues"
+import {InputControl, SelectControl} from "@/components/react-hook-form"
+
+interface SpecOptionTableProps {
+  control: Control<FieldValues, any>
+  trigger: UseFormTrigger<any>
+}
+export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
+  const {fields, append, remove} = useFieldArray({
+    control,
+    name: "Options"
+  })
+  const options = fields as SpecOptionFieldValues[]
+  const {errors} = useFormState({control, name: "Options"})
+  const errorMessage = getOptionsErrorMessage(errors)
+  const errorToast = useErrorToast()
+
+  const handleDeleteOption = (index: number) => {
+    remove(index)
+  }
+
+  const handleAddOption = async () => {
+    const isValid = await trigger("Options")
+    if (!isValid) {
+      errorToast({description: "Please resolve errors before adding a new option"})
+      return
+    }
+    append(specFormDefaultValues.Options[0])
+  }
+
+  function getOptionsErrorMessage(errors: any) {
+    const error = get(errors, "Options", "") as any
+    if (error.message) {
+      // error on options array as a whole, individual option messages will be reported on the inputs
+      return error.message
+    } else {
+      return ""
+    }
+  }
+
+  const tableCellPadding = 1
+
+  return (
+    <>
+      <TableContainer width="full">
+        <Table>
+          <Thead>
+            <Tr>
+              <Th></Th>
+              <Th padding={tableCellPadding}>Value</Th>
+              {/* TODO: add tooltip to explain the various markup types and behavior */}
+              <Th padding={tableCellPadding}>Markup Type</Th>
+              <Th padding={tableCellPadding}>Markup</Th>
+              <Th></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {options.map((option, index) => {
+              return (
+                <Tr key={option.id || option.Value || index}>
+                  <Td padding={tableCellPadding} paddingLeft={0}>
+                    <DragHandleIcon />
+                  </Td>
+                  <Td padding={tableCellPadding}>
+                    <InputControl name={`Options.${index}.Value`} control={control} inputProps={{isRequired: true}} />
+                  </Td>
+                  <Td padding={tableCellPadding}>
+                    <SelectControl name={`Options.${index}.PriceMarkupType`} control={control}>
+                      <option value="NoMarkup">None</option>
+                      <option value="Percentage">Percentage</option>
+                      <option value="AmountPerQuantity">Amount per quantity </option>
+                      <option value="AmountTotal">Amount total</option>
+                    </SelectControl>
+                  </Td>
+                  <Td padding={tableCellPadding}>
+                    <PriceMarkupControl index={index} control={control} />
+                  </Td>
+                  <Td
+                    _hover={{cursor: "pointer"}}
+                    onClick={() => handleDeleteOption(index)}
+                    padding={tableCellPadding}
+                    textAlign="right"
+                    paddingRight={0}
+                  >
+                    <Button variant="link" colorScheme="danger">
+                      Delete
+                    </Button>
+                  </Td>
+                </Tr>
+              )
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
+      <Flex width="full" justifyContent="space-between" alignContent="center" marginTop={2}>
+        <Button variant="link" color="accent.400" maxWidth="max-content" onClick={handleAddOption}>
+          Add option
+        </Button>
+        <ChakraFormControl isInvalid={errorMessage} maxWidth="max-content">
+          <FormErrorMessage display="inline-block">
+            <InfoOutlineIcon mr={2} /> {errorMessage}
+          </FormErrorMessage>
+        </ChakraFormControl>
+      </Flex>
+    </>
+  )
+}
+
+interface PriceMarkupControlProps {
+  control: Control<FieldValues, any>
+  index: number
+}
+// Isolating this component to limit rerenders caused by useWatch (best practice)
+function PriceMarkupControl({control, index}: PriceMarkupControlProps) {
+  const markupType = useWatch({control, name: `Options.${index}.PriceMarkupType`})
+
+  const isDisabled = markupType === "NoMarkup"
+  const leftAddon = markupType === "AmountTotal" ? "$" : null
+  const rightAddon = markupType === "Percentage" ? "%" : null
+
+  return (
+    <InputControl
+      inputProps={{isDisabled}}
+      leftAddon={leftAddon}
+      rightAddon={rightAddon}
+      name={`Options.${index}.PriceMarkup`}
+      control={control}
+    />
+  )
+}

@@ -1,18 +1,19 @@
 import {ProductDetailTab} from "@/components/products/detail/ProductDetail"
-import { Console } from "console"
 import {useRouter} from "next/router"
-import {PriceSchedules, Products, Spec, SpecOption, SpecProductAssignment, Specs, Variant, ProductFacets} from "ordercloud-javascript-sdk"
+import {PriceSchedules, Products, SpecProductAssignment, Specs, ProductFacets} from "ordercloud-javascript-sdk"
 import {useState, useEffect} from "react"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {IProduct} from "types/ordercloud/IProduct"
-import { ISpec } from "types/ordercloud/ISpec"
-import { IVariant } from "types/ordercloud/IVariant"
+import {ISpec} from "types/ordercloud/ISpec"
+import {IVariant} from "types/ordercloud/IVariant"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
+import {uniq} from "lodash"
 
 export function useProductDetail() {
   const {isReady, query, push} = useRouter()
   const [product, setProduct] = useState(null as IProduct)
   const [defaultPriceSchedule, setDefaultPriceSchedule] = useState(null as IPriceSchedule)
+  const [overridePriceSchedules, setOverridePriceSchedules] = useState([] as IPriceSchedule[])
   const [specs, setSpecs] = useState(null as ISpec[])
   const [variants, setVariants] = useState(null as IVariant[])
   const [facets, setFacets] = useState([] as IProductFacet[])
@@ -21,69 +22,88 @@ export function useProductDetail() {
   const [initialTab, setInitialTab] = useState("Details" as ProductDetailTab)
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const _facets = await ProductFacets.List<IProductFacet>({pageSize: 100})
       setFacets(_facets.Items)
     })()
 
     const getProduct = async () => {
-      const _product = await fetchProduct();
+      const _product = await fetchProduct()
       if (_product) {
-        await fetchDefaultPriceSchedule(_product);
-        await fetchSpecs(_product);
-        await fetchVariants(_product);
-        setProduct(_product);
+        await Promise.all([
+          fetchDefaultPriceSchedule(_product),
+          fetchSpecs(_product),
+          fetchVariants(_product),
+          fetchOverridePriceSchedules(_product)
+        ])
+        setProduct(_product)
       }
-    };
+    }
 
     const fetchProduct = async () => {
-      return await Products.Get<IProduct>(query.productid.toString());
-    };
+      return await Products.Get<IProduct>(query.productid.toString())
+    }
 
     const fetchDefaultPriceSchedule = async (_product: IProduct) => {
       if (_product?.DefaultPriceScheduleID) {
-        const _defaultPriceSchedule = await PriceSchedules?.Get(_product?.DefaultPriceScheduleID);
-        setDefaultPriceSchedule(_defaultPriceSchedule);
+        const _defaultPriceSchedule = await PriceSchedules?.Get(_product?.DefaultPriceScheduleID)
+        setDefaultPriceSchedule(_defaultPriceSchedule)
       }
-    };
+    }
 
     const fetchSpecs = async (_product: IProduct) => {
       if (_product?.SpecCount) {
         const listOptions = {
-          filters: { ProductID: _product?.ID },
-          pageSize: 100,
-        };
-        const _specAssignments = await Specs?.ListProductAssignments(listOptions);
+          filters: {ProductID: _product?.ID},
+          pageSize: 100
+        }
+        const _specAssignments = await Specs?.ListProductAssignments(listOptions)
         if (_specAssignments?.Items) {
-          const _specs = await fetchSpecsFromAssignments(_specAssignments.Items);
-          setSpecs(_specs);
+          const _specs = await fetchSpecsFromAssignments(_specAssignments.Items)
+          setSpecs(_specs)
         }
       }
-    };
+    }
 
     const fetchSpecsFromAssignments = async (items: Array<SpecProductAssignment>) => {
       const specs = await Promise.all(
         items.map(async (item) => {
-          const _spec = await Specs.Get<ISpec>(item.SpecID);
-          return _spec;
-        }),
-      );
-      return specs;
-    };
+          const _spec = await Specs.Get<ISpec>(item.SpecID)
+          return _spec
+        })
+      )
+      return specs
+    }
 
     const fetchVariants = async (_product: IProduct) => {
       if (_product?.VariantCount) {
-        const _variants = await Products?.ListVariants(_product?.ID);
+        const _variants = await Products?.ListVariants(_product?.ID)
         if (_variants?.Items) {
-          setVariants(_variants.Items);
+          setVariants(_variants.Items)
         }
       }
-    };
+    }
 
     if (query.productid) {
-      getProduct();
+      getProduct()
     }
-  }, [query.productid]);
+  }, [query.productid])
+
+  const fetchOverridePriceSchedules = async (_product: IProduct) => {
+    const assignments = await Products.ListAssignments({productID: _product.ID, pageSize: 100})
+    if (!assignments.Items.length) {
+      return
+    }
+    const priceScheduleIDs = uniq(assignments.Items.map((assignment) => assignment.PriceScheduleID))
+    const priceSchedules = await PriceSchedules.List({filters: {ID: priceScheduleIDs.join("|")}})
+    const enhancedPriceSchedules = priceSchedules.Items.map((priceSchedule) => {
+      priceSchedule["ProductAssignments"] = assignments.Items.filter(
+        (assignment) => assignment.PriceScheduleID === priceSchedule.ID
+      )
+      return priceSchedule
+    })
+    setOverridePriceSchedules(enhancedPriceSchedules)
+  }
 
   useEffect(() => {
     const shouldShowTabbedView = () => {
@@ -120,5 +140,15 @@ export function useProductDetail() {
     }
   }, [isReady, query, push])
 
-  return {product, defaultPriceSchedule, specs, variants, facets, loading, showTabbedView, initialTab}
+  return {
+    product,
+    defaultPriceSchedule,
+    overridePriceSchedules,
+    specs,
+    variants,
+    facets,
+    loading,
+    showTabbedView,
+    initialTab
+  }
 }

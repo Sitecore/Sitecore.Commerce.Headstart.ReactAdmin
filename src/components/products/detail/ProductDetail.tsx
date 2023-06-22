@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useRouter} from "hooks/useRouter"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
+import {useErrorToast, useSuccessToast, useToast} from "hooks/useToast"
 import {cloneDeep, invert} from "lodash"
 import {Products} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
@@ -94,6 +94,7 @@ export default function ProductDetail({
   const router = useRouter()
   const successToast = useSuccessToast()
   const errorToast = useErrorToast()
+  const toast = useToast()
   const [tabIndex, setTabIndex] = useState(tabIndexMap[initialTab])
   const [liveXp, setLiveXp] = useState<{[key: string]: any}>(product?.xp)
   const [nonUiXp, setNonUiXp] = useState<{[key: string]: any}>({})
@@ -156,24 +157,33 @@ export default function ProductDetail({
   }
 
   const onSubmit = async (fields) => {
-    const {updatedProduct, updatedDefaultPriceSchedule, updatedPriceOverrides, updatedSpecs, updatedVariants} =
-      await submitProduct(
-        isCreatingNew,
-        defaultPriceSchedule,
-        fields.DefaultPriceSchedule,
-        product,
-        fields.Product,
-        fields.Facets,
-        specs,
-        fields.Specs,
-        variants,
-        fields.Variants,
-        overridePriceSchedules,
-        fields.OverridePriceSchedules
-      )
+    const {
+      updatedProduct,
+      updatedDefaultPriceSchedule,
+      updatedPriceOverrides,
+      updatedSpecs,
+      didUpdateSpecs,
+      updatedVariants
+    } = await submitProduct(
+      isCreatingNew,
+      defaultPriceSchedule,
+      fields.DefaultPriceSchedule,
+      product,
+      fields.Product,
+      fields.Facets,
+      specs,
+      fields.Specs,
+      variants,
+      fields.Variants,
+      overridePriceSchedules,
+      fields.OverridePriceSchedules
+    )
     successToast({
       description: isCreatingNew ? "Product Created" : "Product updated"
     })
+    if (didUpdateSpecs) {
+      toast({status: "info", description: "It looks like you updated specs. You may wish to regenerate variants"})
+    }
 
     if (isCreatingNew) {
       router.push(`/products/${product.ID}`)

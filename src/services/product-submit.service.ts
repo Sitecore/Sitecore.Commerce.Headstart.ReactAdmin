@@ -1,4 +1,4 @@
-import {isEmpty} from "lodash"
+import {isEmpty, omit} from "lodash"
 import {PriceSchedules, Products, ProductAssignment, Specs, SpecProductAssignment} from "ordercloud-javascript-sdk"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {SpecFieldValues, SpecOptionFieldValues} from "types/form/SpecFieldValues"
@@ -43,7 +43,7 @@ export async function submitProduct(
   )
 
   // create/update/delete specs & spec options
-  const updatedSpecs = await handleUpdateSpecs(oldSpecs, newSpecs, updatedProduct)
+  const {updatedSpecs, didUpdateSpecs} = await handleUpdateSpecs(oldSpecs, newSpecs, updatedProduct)
 
   // update variants
   const updatedVariants = await handleUpdateVariants(oldVariants, newVariants, updatedProduct)
@@ -55,7 +55,14 @@ export async function submitProduct(
     updatedProduct
   )
 
-  return {updatedProduct, updatedSpecs, updatedVariants, updatedPriceOverrides, updatedDefaultPriceSchedule}
+  return {
+    updatedProduct,
+    updatedSpecs,
+    didUpdateSpecs,
+    updatedVariants,
+    updatedPriceOverrides,
+    updatedDefaultPriceSchedule
+  }
 }
 
 async function handleUpdateDefaultPriceSchedule(
@@ -227,14 +234,18 @@ async function handleUpdateSpecs(oldSpecs: ISpec[], newSpecs: SpecFieldValues[],
   const updateSpecRequests = updateSpecs.map(async (spec) => {
     const oldSpec = oldSpecs.find((oldSpec) => oldSpec.ID === spec.ID)
     const diff = getObjectDiff(oldSpec, spec)
-    const updatedSpec = await Specs.Patch<ISpec>(spec.ID, diff)
-    await handleUpdateSpecOptions(updatedSpec.ID, spec.Options)
+    const diffWithoutAssignments = omit(diff, ["ProductAssignments", "id"])
+    if (!isEmpty(diffWithoutAssignments)) {
+      await Specs.Patch<ISpec>(spec.ID, diffWithoutAssignments)
+    }
+    await handleUpdateSpecOptions(spec.ID, spec.Options)
   })
 
   const deleteSpecRequests = deleteSpecs.map(async (spec) => Specs.Delete(spec.ID))
 
   await Promise.all([...addSpecRequests, ...updateSpecRequests, ...deleteSpecRequests])
-  return await fetchSpecs(product)
+  const updatedSpecs = await fetchSpecs(product)
+  return {updatedSpecs, didUpdateSpecs: addSpecs.length || updateSpecs.length || deleteSpecs.length}
 }
 
 async function handleUpdateVariants(oldVariants: IVariant[], newVariants: VariantFieldValues[], product: IProduct) {

@@ -38,7 +38,7 @@ export function GenerateVariantsButton({control, buttonProps, specs, onGenerate}
       })
     }
     if (!specs.length) {
-      return toast({status: "info", description: "Please add specs before generating variants", position: "top-right"})
+      return toast({status: "info", description: "Please add specs before generating variants"})
     }
     onOpen()
   }

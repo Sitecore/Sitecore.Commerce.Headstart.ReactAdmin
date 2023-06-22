@@ -17,7 +17,7 @@ export function SpecActionsMenu({spec, onDelete, onUpdate}: SpecActionMenuProps)
       </MenuButton>
       <MenuList>
         <SpecUpdateModal
-          spec={spec}
+          initialSpec={spec}
           onUpdate={onUpdate}
           as="menuitem"
           menuItemProps={{

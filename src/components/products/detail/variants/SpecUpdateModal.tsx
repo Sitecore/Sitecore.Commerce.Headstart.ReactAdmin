@@ -64,19 +64,25 @@ export const specFormDefaultValues = {
 }
 
 interface SpecUpdateModalProps {
-  spec?: SpecFieldValues
+  initialSpec?: SpecFieldValues
   onUpdate: (spec: SpecFieldValues) => void
   as: "button" | "menuitem"
   buttonProps?: ButtonProps
   menuItemProps?: MenuItemProps
 }
-export function SpecUpdateModal({spec, onUpdate, as = "button", buttonProps, menuItemProps}: SpecUpdateModalProps) {
-  const [currentSpec, setCurrentSpec] = useState<SpecFieldValues | null>(spec)
+export function SpecUpdateModal({
+  initialSpec,
+  onUpdate,
+  as = "button",
+  buttonProps,
+  menuItemProps
+}: SpecUpdateModalProps) {
+  const [spec, setSpec] = useState<SpecFieldValues | null>(initialSpec)
   const {isOpen, onOpen, onClose} = useDisclosure()
-  const {handleSubmit, control, trigger} = useForm({
+  const {handleSubmit, control, trigger, reset} = useForm({
     mode: "onBlur",
     resolver: yupResolver(specFormSchema),
-    defaultValues: (currentSpec || specFormDefaultValues) as any
+    defaultValues: (spec || specFormDefaultValues) as any
   })
 
   const handleSubmitPreventBubbling = (event: FormEvent) => {
@@ -94,7 +100,8 @@ export function SpecUpdateModal({spec, onUpdate, as = "button", buttonProps, men
 
   const onSubmit = (update: SpecFieldValues) => {
     onUpdate(update)
-    setCurrentSpec(spec) // reset to initial spec
+    setSpec(initialSpec) // reset spec to initial
+    reset(specFormDefaultValues) // reset form
     onClose()
   }
 

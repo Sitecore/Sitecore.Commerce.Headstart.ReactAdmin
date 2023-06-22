@@ -7,7 +7,10 @@ import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 import {getObjectDiff} from "utils"
 import {v4 as randomId} from "uuid"
-import {fetchOverridePriceSchedules, fetchSpecs} from "./product-data-fetcher.service"
+import {fetchOverridePriceSchedules, fetchSpecs, fetchVariants} from "./product-data-fetcher.service"
+import {IVariant} from "types/ordercloud/IVariant"
+import {VariantFieldValues} from "types/form/VariantFieldValues"
+import {ORIGINAL_ID} from "constants/original-id"
 
 export async function submitProduct(
   isCreatingNew: boolean,
@@ -18,6 +21,8 @@ export async function submitProduct(
   newFacets: any[],
   oldSpecs: ISpec[],
   newSpecs: SpecFieldValues[],
+  oldVariants: IVariant[],
+  newVariants: VariantFieldValues[],
   oldOverridePriceSchedules: IPriceSchedule[],
   newOverridePriceSchedules: OverridePriceScheduleFieldValues[]
 ) {
@@ -40,6 +45,9 @@ export async function submitProduct(
   // create/update/delete specs & spec options
   const updatedSpecs = await handleUpdateSpecs(oldSpecs, newSpecs, updatedProduct)
 
+  // update variants
+  const updatedVariants = await handleUpdateVariants(oldVariants, newVariants, updatedProduct)
+
   // create/update/delete price overrides and related assignments
   const updatedPriceOverrides = await handleUpdatePriceOverrides(
     oldOverridePriceSchedules,
@@ -47,7 +55,7 @@ export async function submitProduct(
     updatedProduct
   )
 
-  return {updatedProduct, updatedSpecs, updatedPriceOverrides, updatedDefaultPriceSchedule}
+  return {updatedProduct, updatedSpecs, updatedVariants, updatedPriceOverrides, updatedDefaultPriceSchedule}
 }
 
 async function handleUpdateDefaultPriceSchedule(
@@ -229,6 +237,29 @@ async function handleUpdateSpecs(oldSpecs: ISpec[], newSpecs: SpecFieldValues[],
   return await fetchSpecs(product)
 }
 
+async function handleUpdateVariants(oldVariants: IVariant[], newVariants: VariantFieldValues[], product: IProduct) {
+  // we keep a reference to the original ID in order to make updates (since we let users modify ID)
+  const updateVariants = getObjectsToUpdate(oldVariants, newVariants, ORIGINAL_ID)
+  const updateVariantsRequests = updateVariants.map(async (variant) => {
+    const oldVariant = oldVariants.find((oldVariant) => oldVariant[ORIGINAL_ID] === variant[ORIGINAL_ID])
+    const diff = getObjectDiff(oldVariant, variant)
+    const patch = await Products.PatchVariant(product.ID, oldVariant[ORIGINAL_ID], diff)
+    patch[ORIGINAL_ID] = patch.ID
+    return {
+      UpdatedId: oldVariant[ORIGINAL_ID],
+      Update: patch
+    }
+  })
+  const updateVariantsResponses = await Promise.all(updateVariantsRequests)
+
+  // We can't fetch variants from the API because they might be stale, use the return value
+  // to update our list in place
+  return oldVariants.map((oldVariant) => {
+    const update = updateVariantsResponses.find((u) => u.UpdatedId === oldVariant[ORIGINAL_ID])?.Update
+    return update || oldVariant
+  })
+}
+
 async function handleUpdateSpecOptions(specId, newOptions: SpecOptionFieldValues[]) {
   const oldOptions = await Specs.ListOptions(specId)
 
@@ -243,13 +274,28 @@ async function handleUpdateSpecOptions(specId, newOptions: SpecOptionFieldValues
   await Promise.all([...addOptionRequests, ...updateOptionRequests, ...deleteOptionRequests])
 }
 
-function getObjectsToAdd<TReturnType>(newObjects: TReturnType[]): TReturnType[] {
-  return (newObjects || []).filter((newObject) => !newObject["ID"])
+/**
+ *
+ * @param newObjects current list of objects in their desired state (what we want them to be after updates)
+ * @param keyId used to determine if an object is new, updated, or deleted, in most cases this is ID but
+ * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
+ * @returns
+ */
+function getObjectsToAdd<TReturnType>(newObjects: TReturnType[], keyId: string = "ID"): TReturnType[] {
+  return (newObjects || []).filter((newObject) => !newObject[keyId])
 }
 
-function getObjectsToUpdate<TReturnType>(oldObjects, newObjects: TReturnType[]): TReturnType[] {
+/**
+ *
+ * @param oldObjects list of objects in their original state (before updates)
+ * @param newObjects current list of objects in their desired state
+ * @param keyId used to determine if an object is new, updated, or deleted, in most cases this is ID but
+ * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
+ * @returns
+ */
+function getObjectsToUpdate<TReturnType>(oldObjects, newObjects: TReturnType[], keyId: string = "ID"): TReturnType[] {
   return (newObjects || []).filter((newObject) => {
-    const oldObject = (oldObjects || []).find((oldObject) => oldObject.ID === newObject["ID"])
+    const oldObject = (oldObjects || []).find((oldObject) => oldObject.ID === newObject[keyId])
     if (oldObject) {
       const diff = getObjectDiff(oldObject, newObject)
       return !isEmpty(diff)
@@ -257,9 +303,17 @@ function getObjectsToUpdate<TReturnType>(oldObjects, newObjects: TReturnType[]):
   })
 }
 
-function getObjectsToDelete<TReturnType>(oldObjects: TReturnType[], newObjects): TReturnType[] {
+/**
+ *
+ * @param oldObjects list of objects in their original state (before updates)
+ * @param newObjects current list of objects in their desired state (what we want them to be after updates)
+ * @param keyId used to determine if an object is new, updated, or deleted, in most cases this is ID but
+ * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
+ * @returns
+ */
+function getObjectsToDelete<TReturnType>(oldObjects: TReturnType[], newObjects, keyId: string = "ID"): TReturnType[] {
   return (oldObjects || []).filter((oldObject) => {
-    const newObject = (newObjects || []).find((newObject) => newObject.ID === oldObject["ID"])
+    const newObject = (newObjects || []).find((newObject) => newObject.ID === oldObject[keyId])
     if (!newObject) {
       return true
     }

@@ -56,6 +56,13 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
     }
   }
 
+  function handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
+      event.preventDefault()
+      handleAddOption()
+    }
+  }
+
   const tableCellPadding = 1
 
   return (
@@ -64,9 +71,7 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
         <Table>
           <Thead>
             <Tr>
-              <Th></Th>
               <Th padding={tableCellPadding}>Value</Th>
-              {/* TODO: add tooltip to explain the various markup types and behavior */}
               <Th padding={tableCellPadding}>Markup Type</Th>
               <Th padding={tableCellPadding}>Markup</Th>
               <Th></Th>
@@ -76,11 +81,12 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
             {options.map((option, index) => {
               return (
                 <Tr key={option.id || option.Value || index}>
-                  <Td padding={tableCellPadding} paddingLeft={0}>
-                    <DragHandleIcon />
-                  </Td>
                   <Td padding={tableCellPadding}>
-                    <InputControl name={`Options.${index}.Value`} control={control} inputProps={{isRequired: true}} />
+                    <InputControl
+                      name={`Options.${index}.Value`}
+                      control={control}
+                      inputProps={{isRequired: true, onKeyPress: handleKeyPress}}
+                    />
                   </Td>
                   <Td padding={tableCellPadding}>
                     <SelectControl name={`Options.${index}.PriceMarkupType`} control={control}>
@@ -91,14 +97,13 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
                     </SelectControl>
                   </Td>
                   <Td padding={tableCellPadding}>
-                    <PriceMarkupControl index={index} control={control} />
+                    <PriceMarkupControl index={index} control={control} onKeyPress={handleKeyPress} />
                   </Td>
                   <Td
                     _hover={{cursor: "pointer"}}
                     onClick={() => handleDeleteOption(index)}
                     padding={tableCellPadding}
                     textAlign="right"
-                    paddingRight={0}
                   >
                     <Button variant="link" colorScheme="danger">
                       Delete
@@ -127,9 +132,10 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
 interface PriceMarkupControlProps {
   control: Control<FieldValues, any>
   index: number
+  onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 // Isolating this component to limit rerenders caused by useWatch (best practice)
-function PriceMarkupControl({control, index}: PriceMarkupControlProps) {
+function PriceMarkupControl({control, index, onKeyPress}: PriceMarkupControlProps) {
   const markupType = useWatch({control, name: `Options.${index}.PriceMarkupType`})
 
   const isDisabled = markupType === "NoMarkup"
@@ -138,7 +144,7 @@ function PriceMarkupControl({control, index}: PriceMarkupControlProps) {
 
   return (
     <InputControl
-      inputProps={{isDisabled}}
+      inputProps={{isDisabled, onKeyPress}}
       leftAddon={leftAddon}
       rightAddon={rightAddon}
       name={`Options.${index}.PriceMarkup`}

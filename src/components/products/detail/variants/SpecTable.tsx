@@ -1,7 +1,6 @@
 import {CheckIcon, CloseIcon} from "@chakra-ui/icons"
 import {
   Box,
-  Button,
   Card,
   CardBody,
   CardHeader,
@@ -24,6 +23,7 @@ import {SpecActionsMenu} from "./SpecActionsMenu"
 import {SpecUpdateModal} from "./SpecUpdateModal"
 import {Control, FieldValues, useFieldArray} from "react-hook-form"
 import {SpecFieldValues} from "types/form/SpecFieldValues"
+import {uniq, flatten} from "lodash"
 
 interface SpecTableProps {
   control: Control<FieldValues, any>
@@ -37,6 +37,23 @@ export function SpecTable({control}: SpecTableProps) {
   const specs = fields as SpecFieldValues[]
   const okColor = useColorModeValue("green.500", "green.300")
   const errorColor = useColorModeValue("red.500", "red.300")
+
+  // if you change the color codes here make sure to change in VariantTable.tsx
+  const colorCodes = [
+    "primary.500",
+    "accent.500",
+    "teal.500",
+    "pink.500",
+    "cyan.500",
+    "orange.500",
+    "green.500",
+    "yellow.500",
+    "red.500"
+  ]
+  const uniqueSpecIds = uniq(flatten(specs.map((spec) => spec.ID))).sort()
+  const useColorCodes = uniqueSpecIds.length <= 8
+  const specIdColorCodeMap =
+    useColorCodes && uniqueSpecIds.reduce((acc, specId, index) => ({...acc, [specId]: colorCodes[index]}), {})
 
   if (!specs.length) {
     return (
@@ -94,7 +111,13 @@ export function SpecTable({control}: SpecTableProps) {
                       </Text>
                     )}
                   </Td>
-                  <Td>{spec.Name}</Td>
+                  <Td>
+                    <Badge fontWeight="normal" px="2" py="1">
+                      <Text as="span" fontWeight="semibold" color={useColorCodes && specIdColorCodeMap[spec.ID]}>
+                        {spec.Name}
+                      </Text>
+                    </Badge>
+                  </Td>
                   <Td>
                     {spec.DefinesVariant ? (
                       <CheckIcon fontSize="sm" color={okColor} />
@@ -105,7 +128,14 @@ export function SpecTable({control}: SpecTableProps) {
                   <Td>
                     {spec.Options.map((option, index) => {
                       return (
-                        <Badge colorScheme="gray" fontSize="xs" marginLeft={2} key={option.id || option.ID || index}>
+                        <Badge
+                          key={option.id || option.ID || index}
+                          colorScheme="gray"
+                          fontWeight="normal"
+                          marginLeft={2}
+                          px="2"
+                          py="1"
+                        >
                           {option.Value}
                         </Badge>
                       )

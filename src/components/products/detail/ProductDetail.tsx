@@ -10,7 +10,6 @@ import {
   Flex,
   Heading,
   Hide,
-  Icon,
   IconButton,
   SimpleGrid,
   TabList,
@@ -23,18 +22,17 @@ import {
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useRouter} from "hooks/useRouter"
 import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {cloneDeep, invert, set} from "lodash"
+import {cloneDeep, invert} from "lodash"
 import {Products} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 import {useForm} from "react-hook-form"
-import {TbCactus, TbEdit, TbTrash} from "react-icons/tb"
+import {TbEdit, TbTrash} from "react-icons/tb"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {IProduct} from "types/ordercloud/IProduct"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {ISpec} from "types/ordercloud/ISpec"
 import {IVariant} from "types/ordercloud/IVariant"
 import {makeNestedObject, withDefaultValuesFallback} from "utils"
-import ProductVariants from "../ProductVariants"
 import ProductXpModal from "../modals/ProductXpModal"
 import ImagePreview from "./ImagePreview"
 import {ProductDetailTab} from "./ProductDetailTab"
@@ -50,6 +48,8 @@ import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
 import {defaultValues, tabFieldNames, validationSchema} from "./forms/meta"
 import {SpecTable} from "./variants/SpecTable"
 import {submitProduct} from "services/product-submit.service"
+import {VariantTable} from "./variants/VariantTable"
+import {fetchVariants} from "services/product-data-fetcher.service"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
 
@@ -137,6 +137,7 @@ export default function ProductDetail({
           DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
           Specs: cloneDeep(specs),
           Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
+          Variants: cloneDeep(variants),
           OverridePriceSchedules: cloneDeep(overridePriceSchedules)
         },
         defaultValues
@@ -155,18 +156,21 @@ export default function ProductDetail({
   }
 
   const onSubmit = async (fields) => {
-    const {updatedProduct, updatedDefaultPriceSchedule, updatedPriceOverrides, updatedSpecs} = await submitProduct(
-      isCreatingNew,
-      defaultPriceSchedule,
-      fields.DefaultPriceSchedule,
-      product,
-      fields.Product,
-      fields.Facets,
-      specs,
-      fields.Specs,
-      overridePriceSchedules,
-      fields.OverridePriceSchedules
-    )
+    const {updatedProduct, updatedDefaultPriceSchedule, updatedPriceOverrides, updatedSpecs, updatedVariants} =
+      await submitProduct(
+        isCreatingNew,
+        defaultPriceSchedule,
+        fields.DefaultPriceSchedule,
+        product,
+        fields.Product,
+        fields.Facets,
+        specs,
+        fields.Specs,
+        variants,
+        fields.Variants,
+        overridePriceSchedules,
+        fields.OverridePriceSchedules
+      )
     successToast({
       description: isCreatingNew ? "Product Created" : "Product updated"
     })
@@ -187,6 +191,7 @@ export default function ProductDetail({
             Product: cloneDeep(updatedProduct),
             DefaultPriceSchedule: cloneDeep(updatedDefaultPriceSchedule),
             Specs: cloneDeep(updatedSpecs),
+            Variants: cloneDeep(updatedVariants),
             Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
             OverridePriceSchedules: cloneDeep(updatedPriceOverrides)
           },
@@ -194,6 +199,26 @@ export default function ProductDetail({
         )
       )
     }
+  }
+
+  const handleGenerateVariants = async (shouldOverwrite: boolean) => {
+    const updatedProduct = await Products.GenerateVariants(product.ID, {overwriteExisting: shouldOverwrite})
+    const updatedVariants = await fetchVariants(updatedProduct)
+    setVariants(updatedVariants)
+    // reset the form with new product data
+    reset(
+      withDefaultValuesFallback(
+        {
+          Product: cloneDeep(updatedProduct),
+          DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
+          Specs: cloneDeep(specs),
+          Variants: cloneDeep(updatedVariants),
+          Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
+          OverridePriceSchedules: cloneDeep(overridePriceSchedules)
+        },
+        defaultValues
+      )
+    )
   }
 
   const onInvalid = (errors) => {
@@ -422,36 +447,14 @@ export default function ProductDetail({
               {viewVisibility.Variants && (
                 <TabPanel p={0} mt={6}>
                   <SpecTable control={control} />
-                  <Card w="100%" mt={6}>
-                    <CardHeader>
-                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-                        Variants
-                      </Heading>
-                      <Text fontSize="sm" color="gray.400">
-                        Variants will be generated after creating or adding specs and spec options
-                      </Text>
-                    </CardHeader>
-                    <CardBody>
-                      {!variants?.length && (
-                        <Box
-                          p={6}
-                          display="flex"
-                          flexDirection={"column"}
-                          alignItems={"center"}
-                          justifyContent={"center"}
-                          minH={"xs"}
-                        >
-                          <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
-                          <Heading colorScheme="secondary" fontSize="xl">
-                            This product has no variants {variants?.length}
-                          </Heading>
-                        </Box>
-                      )}
-                      {variants?.length && (
-                        <ProductVariants composedProduct={{Product: product, Specs: specs, Variants: variants}} />
-                      )}
-                    </CardBody>
-                  </Card>
+                  <Box mt={6}>
+                    <VariantTable
+                      onGenerateVariants={handleGenerateVariants}
+                      control={control}
+                      variants={variants}
+                      specs={specs}
+                    />
+                  </Box>
                 </TabPanel>
               )}
               {viewVisibility.Media && (

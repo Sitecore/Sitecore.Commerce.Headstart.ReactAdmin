@@ -1,3 +1,4 @@
+import {ORIGINAL_ID} from "constants/original-id"
 import {uniq} from "lodash"
 import {PriceSchedules, Products, SpecProductAssignment, Specs} from "ordercloud-javascript-sdk"
 import {IProduct} from "types/ordercloud/IProduct"
@@ -38,7 +39,11 @@ export async function fetchSpecs(product: IProduct) {
 export async function fetchVariants(product: IProduct) {
   if (product?.VariantCount) {
     const response = await Products?.ListVariants(product?.ID)
-    return response.Items
+    return response.Items.map((variant) => {
+      // we need to keep a reference to the original ID in order to make updates (since we let users modify ID)
+      variant[ORIGINAL_ID] = variant.ID
+      return variant
+    })
   }
   return []
 }

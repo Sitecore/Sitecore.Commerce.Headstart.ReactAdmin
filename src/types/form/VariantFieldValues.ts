@@ -2,4 +2,5 @@
 export interface VariantFieldValues {
   id?: string // assigned by react-hook-form
   ID?: string
+  Active?: boolean
 }

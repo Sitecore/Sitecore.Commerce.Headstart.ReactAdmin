@@ -1,5 +1,5 @@
 import {isEmpty, omit} from "lodash"
-import {PriceSchedules, Products, ProductAssignment, Specs, SpecProductAssignment} from "ordercloud-javascript-sdk"
+import {PriceSchedules, Products, ProductAssignment, Specs} from "ordercloud-javascript-sdk"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {SpecFieldValues, SpecOptionFieldValues} from "types/form/SpecFieldValues"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
@@ -7,7 +7,7 @@ import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 import {getObjectDiff} from "utils"
 import {v4 as randomId} from "uuid"
-import {fetchOverridePriceSchedules, fetchSpecs, fetchVariants} from "./product-data-fetcher.service"
+import {fetchOverridePriceSchedules, fetchSpecs} from "./product-data-fetcher.service"
 import {IVariant} from "types/ordercloud/IVariant"
 import {VariantFieldValues} from "types/form/VariantFieldValues"
 import {ORIGINAL_ID} from "constants/original-id"
@@ -134,9 +134,9 @@ async function handleUpdatePriceOverrides(
   newPriceSchedules: OverridePriceScheduleFieldValues[],
   product: IProduct
 ) {
-  const addPriceSchedules = getObjectsToAdd(newPriceSchedules)
-  const updatePriceSchedules = getObjectsToUpdate(oldPriceSchedules, newPriceSchedules)
-  const deletePriceSchedules = getObjectsToDelete(oldPriceSchedules, newPriceSchedules)
+  const addPriceSchedules = getItemsToAdd(newPriceSchedules)
+  const updatePriceSchedules = getItemsToUpdate(oldPriceSchedules, newPriceSchedules)
+  const deletePriceSchedules = getItemsToDelete(oldPriceSchedules, newPriceSchedules)
 
   const addPriceScheduleRequests = addPriceSchedules.map(async (priceOverride: OverridePriceScheduleFieldValues) => {
     const priceSchedule = await PriceSchedules.Create<IPriceSchedule>({
@@ -220,9 +220,9 @@ async function updateProductAssignments(
 }
 
 async function handleUpdateSpecs(oldSpecs: ISpec[], newSpecs: SpecFieldValues[], product: IProduct) {
-  const addSpecs = getObjectsToAdd(newSpecs)
-  const updateSpecs = getObjectsToUpdate(oldSpecs, newSpecs)
-  const deleteSpecs = getObjectsToDelete(oldSpecs, newSpecs)
+  const addSpecs = getItemsToAdd(newSpecs)
+  const updateSpecs = getItemsToUpdate(oldSpecs, newSpecs)
+  const deleteSpecs = getItemsToDelete(oldSpecs, newSpecs)
 
   const addSpecRequests = addSpecs.map(async (spec) => {
     const newSpec = await Specs.Create<ISpec>(spec)
@@ -250,7 +250,7 @@ async function handleUpdateSpecs(oldSpecs: ISpec[], newSpecs: SpecFieldValues[],
 
 async function handleUpdateVariants(oldVariants: IVariant[], newVariants: VariantFieldValues[], product: IProduct) {
   // we keep a reference to the original ID in order to make updates (since we let users modify ID)
-  const updateVariants = getObjectsToUpdate(oldVariants, newVariants, ORIGINAL_ID)
+  const updateVariants = getItemsToUpdate(oldVariants, newVariants, ORIGINAL_ID)
   const updateVariantsRequests = updateVariants.map(async (variant) => {
     const oldVariant = oldVariants.find((oldVariant) => oldVariant[ORIGINAL_ID] === variant[ORIGINAL_ID])
     const diff = getObjectDiff(oldVariant, variant)
@@ -263,8 +263,8 @@ async function handleUpdateVariants(oldVariants: IVariant[], newVariants: Varian
   })
   const updateVariantsResponses = await Promise.all(updateVariantsRequests)
 
-  // We can't fetch variants from the API because they might be stale, use the return value
-  // to update our list in place
+  // We can't fetch variants from the API because similar to products they might be stale
+  // use the return value to update our list in place
   return oldVariants.map((oldVariant) => {
     const update = updateVariantsResponses.find((u) => u.UpdatedId === oldVariant[ORIGINAL_ID])?.Update
     return update || oldVariant
@@ -274,9 +274,9 @@ async function handleUpdateVariants(oldVariants: IVariant[], newVariants: Varian
 async function handleUpdateSpecOptions(specId, newOptions: SpecOptionFieldValues[]) {
   const oldOptions = await Specs.ListOptions(specId)
 
-  const addOptions = getObjectsToAdd(newOptions)
-  const updateOptions = getObjectsToUpdate(oldOptions.Items, newOptions)
-  const deleteOptions = getObjectsToDelete(oldOptions.Items, newOptions)
+  const addOptions = getItemsToAdd(newOptions)
+  const updateOptions = getItemsToUpdate(oldOptions.Items, newOptions)
+  const deleteOptions = getItemsToDelete(oldOptions.Items, newOptions)
 
   const addOptionRequests = addOptions.map(async (option) => Specs.CreateOption(specId, option))
   const updateOptionRequests = updateOptions.map(async (option) => Specs.PatchOption(specId, option.ID, option))
@@ -287,26 +287,26 @@ async function handleUpdateSpecOptions(specId, newOptions: SpecOptionFieldValues
 
 /**
  *
- * @param newObjects current list of objects in their desired state (what we want them to be after updates)
- * @param keyId used to determine if an object is new, updated, or deleted, in most cases this is ID but
+ * @param newItems current list of items in their desired state (what we want them to be after updates)
+ * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
  * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
  * @returns
  */
-function getObjectsToAdd<TReturnType>(newObjects: TReturnType[], keyId: string = "ID"): TReturnType[] {
-  return (newObjects || []).filter((newObject) => !newObject[keyId])
+function getItemsToAdd<TReturnType>(newItems: TReturnType[], keyId: string = "ID"): TReturnType[] {
+  return (newItems || []).filter((newObject) => !newObject[keyId])
 }
 
 /**
  *
- * @param oldObjects list of objects in their original state (before updates)
- * @param newObjects current list of objects in their desired state
- * @param keyId used to determine if an object is new, updated, or deleted, in most cases this is ID but
+ * @param oldItems list of items in their original state (before updates)
+ * @param newItems current list of items in their desired state (what we want them to be after updates)
+ * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
  * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
  * @returns
  */
-function getObjectsToUpdate<TReturnType>(oldObjects, newObjects: TReturnType[], keyId: string = "ID"): TReturnType[] {
-  return (newObjects || []).filter((newObject) => {
-    const oldObject = (oldObjects || []).find((oldObject) => oldObject.ID === newObject[keyId])
+function getItemsToUpdate<TReturnType>(oldItems, newItems: TReturnType[], keyId: string = "ID"): TReturnType[] {
+  return (newItems || []).filter((newObject) => {
+    const oldObject = (oldItems || []).find((oldObject) => oldObject.ID === newObject[keyId])
     if (oldObject) {
       const diff = getObjectDiff(oldObject, newObject)
       return !isEmpty(diff)
@@ -316,15 +316,15 @@ function getObjectsToUpdate<TReturnType>(oldObjects, newObjects: TReturnType[], 
 
 /**
  *
- * @param oldObjects list of objects in their original state (before updates)
- * @param newObjects current list of objects in their desired state (what we want them to be after updates)
- * @param keyId used to determine if an object is new, updated, or deleted, in most cases this is ID but
+ * @param oldItems list of items in their original state (before updates)
+ * @param newItems current list of items in their desired state (what we want them to be after updates)
+ * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
  * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
  * @returns
  */
-function getObjectsToDelete<TReturnType>(oldObjects: TReturnType[], newObjects, keyId: string = "ID"): TReturnType[] {
-  return (oldObjects || []).filter((oldObject) => {
-    const newObject = (newObjects || []).find((newObject) => newObject.ID === oldObject[keyId])
+function getItemsToDelete<TReturnType>(oldItems: TReturnType[], newItems, keyId: string = "ID"): TReturnType[] {
+  return (oldItems || []).filter((oldObject) => {
+    const newObject = (newItems || []).find((newObject) => newObject.ID === oldObject[keyId])
     if (!newObject) {
       return true
     }

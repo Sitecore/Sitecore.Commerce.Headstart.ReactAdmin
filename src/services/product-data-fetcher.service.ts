@@ -26,26 +26,21 @@ export async function fetchDefaultPriceSchedule(product: IProduct) {
 }
 
 export async function fetchSpecs(product: IProduct) {
-  if (product?.SpecCount) {
-    const listOptions = {
-      filters: {ProductID: product?.ID},
-      pageSize: 100
-    }
-    const specAssignments = await Specs?.ListProductAssignments(listOptions)
-    return fetchSpecsFromAssignments(specAssignments.Items)
+  const listOptions = {
+    filters: {ProductID: product?.ID},
+    pageSize: 100
   }
+  const specAssignments = await Specs?.ListProductAssignments(listOptions)
+  return fetchSpecsFromAssignments(specAssignments.Items)
 }
 
 export async function fetchVariants(product: IProduct) {
-  if (product?.VariantCount) {
-    const response = await Products?.ListVariants(product?.ID)
-    return response.Items.map((variant) => {
-      // we need to keep a reference to the original ID in order to make updates (since we let users modify ID)
-      variant[ORIGINAL_ID] = variant.ID
-      return variant
-    })
-  }
-  return []
+  const response = await Products?.ListVariants(product?.ID)
+  return response.Items.map((variant) => {
+    // we need to keep a reference to the original ID in order to make updates (since we let users modify ID)
+    variant[ORIGINAL_ID] = variant.ID
+    return variant
+  })
 }
 
 export async function fetchOverridePriceSchedules(product: IProduct) {
@@ -63,7 +58,10 @@ export async function fetchOverridePriceSchedules(product: IProduct) {
   })
 }
 
-async function fetchSpecsFromAssignments(items: Array<SpecProductAssignment>) {
+async function fetchSpecsFromAssignments(items: SpecProductAssignment[]) {
+  if (!items.length) {
+    return []
+  }
   const specIDs = uniq(items.map((assignment) => assignment.SpecID))
   const listResponse = await Specs.List<ISpec>({filters: {ID: specIDs.join("|")}})
   return listResponse.Items

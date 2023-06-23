@@ -22,7 +22,7 @@ interface GenerateVariantsButtonProps {
   buttonProps: ButtonProps
   onGenerate: (shouldOverwrite: boolean) => void
 }
-export function GenerateVariantsButton({control, buttonProps, specs, onGenerate}: GenerateVariantsButtonProps) {
+export function GenerateVariantsButton({control, buttonProps, specs = [], onGenerate}: GenerateVariantsButtonProps) {
   const [shouldOverwrite, setShouldOverwrite] = useState(false)
   const {isOpen, onClose, onOpen} = useDisclosure()
   const cancelRef = useRef()

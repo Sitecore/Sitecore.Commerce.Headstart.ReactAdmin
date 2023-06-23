@@ -71,7 +71,7 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
         <Table>
           <Thead>
             <Tr>
-              <Th padding={tableCellPadding}>Value</Th>
+              <Th padding={tableCellPadding}>Options</Th>
               <Th padding={tableCellPadding}>Markup Type</Th>
               <Th padding={tableCellPadding}>Markup</Th>
               <Th></Th>

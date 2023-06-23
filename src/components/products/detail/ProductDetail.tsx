@@ -181,7 +181,7 @@ export default function ProductDetail({
     successToast({
       description: isCreatingNew ? "Product Created" : "Product updated"
     })
-    if (didUpdateSpecs) {
+    if (didUpdateSpecs && updatedSpecs?.length) {
       toast({status: "info", description: "It looks like you updated specs. You may wish to regenerate variants"})
     }
 
@@ -193,6 +193,7 @@ export default function ProductDetail({
       setDefaultPriceSchedule(updatedDefaultPriceSchedule)
       setOverridePriceSchedules(updatedPriceOverrides)
       setSpecs(updatedSpecs)
+      setVariants(updatedVariants)
 
       // reset the form with new product data
       reset(

@@ -46,7 +46,7 @@ export async function submitProduct(
   const {updatedSpecs, didUpdateSpecs} = await handleUpdateSpecs(oldSpecs, newSpecs, updatedProduct)
 
   // update variants
-  const updatedVariants = await handleUpdateVariants(oldVariants, newVariants, updatedProduct)
+  const updatedVariants = await handleUpdateVariants(oldVariants, newVariants, updatedProduct, updatedSpecs)
 
   // create/update/delete price overrides and related assignments
   const updatedPriceOverrides = await handleUpdatePriceOverrides(
@@ -248,7 +248,18 @@ async function handleUpdateSpecs(oldSpecs: ISpec[], newSpecs: SpecFieldValues[],
   return {updatedSpecs, didUpdateSpecs: addSpecs.length || updateSpecs.length || deleteSpecs.length}
 }
 
-async function handleUpdateVariants(oldVariants: IVariant[], newVariants: VariantFieldValues[], product: IProduct) {
+async function handleUpdateVariants(
+  oldVariants: IVariant[],
+  newVariants: VariantFieldValues[],
+  product: IProduct,
+  updatedSpecs: ISpec[]
+) {
+  if (!updatedSpecs.length && newVariants?.length) {
+    // unique case where we should clear out any remaining variants since there are no specs
+    await Products.GenerateVariants(product.ID, {overwriteExisting: true})
+    return []
+  }
+
   // we keep a reference to the original ID in order to make updates (since we let users modify ID)
   const updateVariants = getItemsToUpdate(oldVariants, newVariants, ORIGINAL_ID)
   const updateVariantsRequests = updateVariants.map(async (variant) => {

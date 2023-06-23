@@ -75,7 +75,7 @@ const ProductDetailPage = () => {
       initialOverridePriceSchedules={overridePriceSchedules}
       initialSpecs={specs}
       initialVariants={variants}
-      initialFacets={facets}
+      facets={facets}
     />
   )
 }

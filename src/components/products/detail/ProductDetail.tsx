@@ -498,63 +498,97 @@ export default function ProductDetail({
         ) : (
           <Flex flexWrap="wrap">
             {viewVisibility.Details && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Details</Heading>
-                </CardHeader>
-                <CardBody>
-                  <DetailsForm control={control} />
-                  <Divider marginY={5} />
-                  <DescriptionForm control={control} />
-                  <Divider marginY={5} />
-                  <UnitOfMeasureForm control={control} />
-                  <Divider marginY={5} />
-                  <InventoryForm control={control} />
-                  <Divider marginY={5} />
-                  <ShippingForm control={control} />
-                </CardBody>
-              </Card>
-            )}
-            {viewVisibility.Pricing && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Pricing</Heading>
-                </CardHeader>
-                <CardBody>
-                  <PricingForm
-                    control={control}
-                    trigger={trigger}
-                    priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
-                  />
-                </CardBody>
-              </Card>
-            )}
-            {viewVisibility.Variants && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Variants</Heading>
-                </CardHeader>
-                <CardBody>Variants under construction</CardBody>
-              </Card>
+              <Box width={{base: "100%", xl: "50%"}}>
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Details</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <DetailsForm control={control} />
+                    <Divider marginY={5} />
+                    <DescriptionForm control={control} />
+                    <Divider marginY={5} />
+                    <UnitOfMeasureForm control={control} />
+                    <Divider marginY={5} />
+                    <InventoryForm control={control} />
+                    <Divider marginY={5} />
+                    <ShippingForm control={control} />
+                  </CardBody>
+                </Card>
+              </Box>
             )}
             {viewVisibility.Media && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Media</Heading>
-                </CardHeader>
-                <CardBody>Media under construction</CardBody>
-              </Card>
+              <Box width={{base: "100%", xl: "50%"}}>
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Media</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <MediaForm control={control} />
+                  </CardBody>
+                </Card>
+              </Box>
             )}
+            {viewVisibility.Pricing && (
+              <Box width="100%">
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Pricing</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <PricingForm
+                      control={control}
+                      trigger={trigger}
+                      priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
+                    />
+                  </CardBody>
+                </Card>
+              </Box>
+            )}
+            {viewVisibility.Variants && (
+              <Box width={{base: "100%", xl: "50%"}}>
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Variants</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <SpecTable control={control} />
+                    <Box mt={6}>
+                      <VariantTable
+                        onGenerateVariants={handleGenerateVariants}
+                        control={control}
+                        variants={variants}
+                        specs={specs}
+                      />
+                    </Box>
+                  </CardBody>
+                </Card>
+              </Box>
+            )}
+
             {viewVisibility.Facets && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Facets</Heading>
-                </CardHeader>
-                <CardBody>Facets under construction</CardBody>
-              </Card>
+              <Box width={{base: "100%", xl: "50%"}}>
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Facets</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <FacetsForm
+                      control={control}
+                      trigger={trigger}
+                      facetList={facets}
+                      productFacets={product?.xp?.Facets}
+                    />
+                  </CardBody>
+                </Card>
+              </Box>
             )}
-            {viewVisibility.Customization && !isCreatingNew && xpCard()}
-            {viewVisibility.Customization && isCreatingNew && creatingNewXpCard()}
+            <Box width={{base: "100%", xl: "50%"}}>
+              <Box margin={3}>
+                {viewVisibility.Customization && !isCreatingNew && xpCard()}
+                {viewVisibility.Customization && isCreatingNew && creatingNewXpCard()}
+              </Box>
+            </Box>
           </Flex>
         )}
         <ProductXpModal

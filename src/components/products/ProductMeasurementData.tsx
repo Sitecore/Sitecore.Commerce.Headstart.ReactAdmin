@@ -12,8 +12,8 @@ type ProductDataProps = {
 
 export default function ProductMeasurementData({composedProduct, setComposedProduct}: ProductDataProps) {
   const [isEditingBasicData, setIsEditingBasicData] = useState(false)
-  const okColor = useColorModeValue("okColor.800", "okColor.200")
-  const errorColor = useColorModeValue("errorColor.800", "errorColor.200")
+  const okColor = useColorModeValue("green.500", "green.300")
+  const errorColor = useColorModeValue("red.500", "red.300")
   const [expanded, setExpanded] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [formValues, setFormValues] = useState({

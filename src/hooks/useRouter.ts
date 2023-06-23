@@ -1,8 +1,13 @@
 import {useRouter as useNextRouter} from "next/router"
-import {useCallback, useMemo} from "react"
+import {useMemo} from "react"
 
+/**
+ * This is a thin wrapper around next/router's useRouter hook
+ * used in place of next/router to allow someone to easily change implementation
+ * and possibly remove next/router from the project in the future
+ */
 export function useRouter() {
-  const {back, push, pathname, query, isReady, asPath} = useNextRouter()
+  const {back, push, pathname, query, isReady, asPath, reload} = useNextRouter()
 
   const result = useMemo(() => {
     return {
@@ -11,9 +16,10 @@ export function useRouter() {
       pathname,
       query,
       isReady,
-      asPath
+      asPath,
+      reload
     }
-  }, [back, push, pathname, query, isReady, asPath])
+  }, [back, push, pathname, query, isReady, asPath, reload])
 
   return result
 }

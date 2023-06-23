@@ -34,6 +34,15 @@ export const validationSchema = yup.object().shape(
     // Pricing is a special case because its used for both default price schedule as well as override price schedules
     ...mapKeys(pricingForm.formShape, (value, key) => `DefaultPriceSchedule.${key}`),
     OverridePriceSchedules: yup.array().of(yup.object().shape(pricingForm.formShape)),
+    Variants: yup.array().of(
+      yup.object().shape({
+        ID: yup
+          .string()
+          .matches(/^[\w-]+$/, "ID must be alphanumeric (may also include dashes or underscores)")
+          .required("Required"),
+        Active: yup.bool()
+      })
+    ),
     ...facetsForm.formShape,
     ...mediaForm.formShape
   })

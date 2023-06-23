@@ -4,7 +4,6 @@
 
 //-------------------------------------------------------------------------------
 
-import deprecatedCard from "../../styles/theme/components/Card" // this is temporary
 // import Accordion from "./accordion"
 import Alert from "./alert"
 // import Avatar from "./avatar"
@@ -54,7 +53,6 @@ const components = {
   Badge,
   Breadcrumb,
   // Button,
-  deprecatedCard,
   Card,
   Checkbox,
   CloseButton,
@@ -87,7 +85,7 @@ const components = {
   // Switch,
   // Table,
   Tabs,
-  Tag,
+  Tag
   // Textarea
   // Tooltip,
 }

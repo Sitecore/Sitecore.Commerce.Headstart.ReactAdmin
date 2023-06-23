@@ -17,7 +17,7 @@ import {
   useMediaQuery
 } from "@chakra-ui/react"
 import {useRef} from "react"
-import {TbShoppingCartPlus} from "react-icons/tb"
+import {TbAd2} from "react-icons/tb"
 
 interface ViewProductProps {}
 export default function ViewProduct({}: ViewProductProps) {
@@ -31,26 +31,9 @@ export default function ViewProduct({}: ViewProductProps) {
 
   return (
     <>
-      <Hide below="md">
-        <Button variant="outline" onClick={onOpen}>
-          View Product
-        </Button>
-      </Hide>
-      <Hide above="md">
-        <Button
-          variant="unstyled"
-          px={3}
-          _hover={{backgroundColor: "gray.100"}}
-          w="full"
-          textAlign="left"
-          borderRadius="0"
-          fontWeight="normal"
-          leftIcon={<TbShoppingCartPlus size="1rem" />}
-          onClick={onOpen}
-        >
-          View Product
-        </Button>
-      </Hide>
+      <MenuItem justifyContent="space-between" onClick={onOpen}>
+        View Product <TbAd2 />
+      </MenuItem>
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>

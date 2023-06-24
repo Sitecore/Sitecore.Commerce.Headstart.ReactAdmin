@@ -54,7 +54,7 @@ export function FacetsForm({control, facetList}: FacetFormProps) {
       clone[key] = []
     })
     removeKeys.forEach((key) => {
-      clone[key] = ""
+      clone[key] = null
     })
     field.onChange(clone)
   }

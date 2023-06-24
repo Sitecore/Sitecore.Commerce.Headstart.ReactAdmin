@@ -20,18 +20,18 @@ export function useProductDetail() {
   const [product, setProduct] = useState(null as IProduct)
   const [defaultPriceSchedule, setDefaultPriceSchedule] = useState(null as IPriceSchedule)
   const [overridePriceSchedules, setOverridePriceSchedules] = useState([] as IPriceSchedule[])
-  const [specs, setSpecs] = useState(null as ISpec[])
-  const [variants, setVariants] = useState(null as IVariant[])
+  const [specs, setSpecs] = useState([] as ISpec[])
+  const [variants, setVariants] = useState([] as IVariant[])
   const [facets, setFacets] = useState([] as IProductFacet[])
   const [showTabbedView, setShowTabbedView] = useState(true)
   const [loading, setLoading] = useState(true)
   const [initialTab, setInitialTab] = useState("Details" as ProductDetailTab)
 
   useEffect(() => {
-    ;(async () => {
+    const getFacets = async () => {
       const _facets = await ProductFacets.List<IProductFacet>({pageSize: 100})
       setFacets(_facets.Items)
-    })()
+    }
 
     const getProduct = async () => {
       const _product = await fetchProduct(query.productid.toString())
@@ -45,10 +45,16 @@ export function useProductDetail() {
         setProduct(_product)
       }
     }
-
-    if (query.productid) {
-      getProduct()
+    const initializeData = async () => {
+      const requests = [getFacets()]
+      if (query.productid) {
+        requests.push(getProduct())
+      }
+      await Promise.all(requests)
+      setLoading(false)
     }
+
+    initializeData()
   }, [query.productid])
 
   useEffect(() => {
@@ -79,7 +85,6 @@ export function useProductDetail() {
       const showTabbedView = shouldShowTabbedView()
       await setCurrentTabQueryParam()
       setShowTabbedView(showTabbedView)
-      setLoading(false)
     }
     if (isReady) {
       checkQueryParams()

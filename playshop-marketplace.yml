@@ -21,24 +21,18 @@ Objects:
         - CatalogAdmin
         - CategoryAdmin
         - UserGroupAdmin
-      xp: {
-        IsPermission: true
-      }
+      xp: {IsPermission: true}
     - ID: MeManager
       Name: Me Manager
       Roles:
         - MeAdmin
         - MeXpAdmin
-      xp: {
-        IsPermission: true
-      }
+      xp: {IsPermission: true}
     - ID: OrderManager
       Name: Order Manager
       Roles:
         - OrderAdmin
-      xp: {
-        IsPermission: true
-      }
+      xp: {IsPermission: true}
     - ID: ReportViewer
       Name: Report Viewer
       Roles:
@@ -50,9 +44,8 @@ Objects:
         - ProductAdmin
         - PromotionAdmin
         - PriceScheduleAdmin
-      xp: {
-        IsPermission: true
-      }
+        - ProductFacetReader
+      xp: {IsPermission: true}
     - ID: SettingsManager
       Name: Settings Manager
       Roles:
@@ -60,9 +53,7 @@ Objects:
         - AdminUserAdmin
         - AdminUserGroupAdmin
         - AdminAddressAdmin
-      xp: {
-        IsPermission: true
-      }
+      xp: {IsPermission: true}
     - ID: SupplierManager
       Name: Supplier Manager
       Roles:
@@ -70,15 +61,13 @@ Objects:
         - SupplierAddressAdmin
         - SupplierUserAdmin
         - SupplierUserGroupAdmin
-      xp: {
-        IsPermission: true
-      }
+      xp: {IsPermission: true}
   ImpersonationConfigs:
     - ID: buyer1
       BuyerID: buyer1
       SecurityProfileID: BuyerUser
       ClientID: BUYER_CLIENT_ID
-  OpenIdConnects: 
+  OpenIdConnects:
     - ID: Auth0Connection
       OrderCloudApiClientID: BUYER_CLIENT_ID
       ConnectClientID: ZpEPH2WiXPDSu3jYG9wUL9e8Kp4hchGb
@@ -216,8 +205,8 @@ Objects:
   Catalogs:
     - ID: PlayShopPublic
       OwnerID: <MarketplaceID placeholder>
-      Name: 'Play Shop Public Catalog '
-      Description: ''
+      Name: "Play Shop Public Catalog "
+      Description: ""
       Active: true
   Categories:
     - ID: PSC0
@@ -1012,14 +1001,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAGG
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/clubs-with-bag-1-product?v=378c7541
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/clubs-with-bag-2-product?v=6b7923fc 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/clubs-with-bag-3-product?v=158fbae6'
+              https://ch.sitecoredemo.com/api/public/content/clubs-with-bag-2-product?v=6b7923fc
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/clubs-with-bag-3-product?v=158fbae6"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPOTG10CSWSB/otg-10-club-set-with-a-stand-bag
@@ -1052,7 +1041,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACES
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-bell-product?v=294eec3d
         Currency: USD
@@ -1113,10 +1102,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-cover-product?v=1a005210
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-cover-2-product?v=dd7b8bb0
         Currency: USD
@@ -1154,10 +1143,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWS
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-gps-product?v=39d10443
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-gps-2-product?v=7395d8c5
         Currency: USD
@@ -1192,14 +1181,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-handlebar-bag-product?v=e7369e5e
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/bike-handlebar-bag-white-background-product?v=f694c62c 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/bike-handlebar-bag-2-product?v=8218571a'
+              https://ch.sitecoredemo.com/api/public/content/bike-handlebar-bag-white-background-product?v=f694c62c
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/bike-handlebar-bag-2-product?v=8218571a"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPCCBHB/centercycle-bike-handlebar-bag
@@ -1233,7 +1222,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/rapair-kit-product?v=f88b01a2
         Currency: USD
@@ -1269,14 +1258,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACES
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-lights-set-product?v=885c59f3
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/bike-lights-product?v=01d88eac 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/bike-lights-2-product?v=ab10c54d'
+              https://ch.sitecoredemo.com/api/public/content/bike-lights-product?v=01d88eac
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/bike-lights-2-product?v=ab10c54d"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPOBLS/outrace-bike-light-set
@@ -1313,10 +1302,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACES
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-lights-product?v=01d88eac
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-lights-2-product?v=ab10c54d
         Currency: USD
@@ -1355,7 +1344,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/phone-holder-product?v=0eda742b
         Currency: USD
@@ -1386,7 +1375,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/wheel-product?v=ee28f5d1
         Currency: USD
@@ -1436,7 +1425,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/black-bicycle-cassette-product?v=97c83532
         Currency: USD
@@ -1495,7 +1484,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWH
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/smartscalelead-product?v=f3fa0813
         Currency: USD
@@ -1531,7 +1520,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/break-lever-product?v=2ee9ada3
         Currency: USD
@@ -1608,7 +1597,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSARA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/camel-back-product?v=6ec69bb2
         Currency: USD
@@ -1642,7 +1631,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/carbon-cycling-bottle-cage-product?v=312458fb
         Currency: USD
@@ -1709,7 +1698,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-paddles-product?v=c0fd12e4
         Currency: USD
@@ -1779,7 +1768,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/frame-product?v=db4c59d2
         Currency: USD
@@ -1815,7 +1804,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACES
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/combination-bike-lock-product?v=b355531d
         Currency: USD
@@ -1855,7 +1844,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/connection-hose-and-valve-adapters-product?v=20d7e176
         Currency: USD
@@ -1890,10 +1879,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/dropper-post-product?v=16c93dea
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/dropper-post-3-product?v=6dea4cdf
         Currency: USD
@@ -1940,7 +1929,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSARA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/knee-band-product?v=680e7ee0
         Currency: USD
@@ -1971,14 +1960,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/ergonomic-bike-seat-product?v=5aba1ca3
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/ergonomic-bike-seat-2-product?v=e367b7a7 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/ergonomic-bike-seat-3-product?v=a60f3a41'
+              https://ch.sitecoredemo.com/api/public/content/ergonomic-bike-seat-2-product?v=e367b7a7
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/ergonomic-bike-seat-3-product?v=a60f3a41"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPSEBS/striva-ergonomic-bike-seat
@@ -2012,7 +2001,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-foot-pump-product?v=cbcee1dc
         Currency: USD
@@ -2047,7 +2036,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACES
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/front-led-battery-bike-light-product?v=5f40a0d1
         Currency: USD
@@ -2090,7 +2079,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/gift-set-product?v=4b1dce7a
         Currency: USD
@@ -2134,7 +2123,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAGA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/golf-ball-retriever-product?v=0aea9b50
         Currency: USD
@@ -2193,14 +2182,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAGG
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/golf-set-1-product?v=3b5d1507
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/golf-set-2-product?v=87653ac6 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/golf-set-3-product?v=dde21e9a'
+              https://ch.sitecoredemo.com/api/public/content/golf-set-2-product?v=87653ac6
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/golf-set-3-product?v=dde21e9a"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPPSGCS/pro-staff-golf-clubs-set
@@ -2240,10 +2229,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSARA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/water-bottles-product?v=be45cf13
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/water-bottle-2-product?v=3a3c58cd
         Currency: USD
@@ -2280,14 +2269,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAFA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/gym-bag-product?v=e36117ea
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/gym-bag-2-product?v=c39a11da 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/gym-bag-3-product?v=e5195aa1'
+              https://ch.sitecoredemo.com/api/public/content/gym-bag-2-product?v=c39a11da
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/gym-bag-3-product?v=e5195aa1"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPGG/gameday-gym-bag
@@ -2322,7 +2311,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-hand-pump-product?v=4e0023e4
         Currency: USD
@@ -2358,7 +2347,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSCMT
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-2-product?v=536dc7a1
         Currency: USD
@@ -2395,7 +2384,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACES
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/mini-bike-d-lock-product?v=5f40a0d1
         Currency: USD
@@ -2486,10 +2475,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWH
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/ekg-monitor-product?v=5298fe31
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/ekg-monitor-2-product?v=da5267d2
         Currency: USD
@@ -2525,7 +2514,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/multitool-product?v=d4ae8061
         Currency: USD
@@ -2562,10 +2551,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWH
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/nutridis-product?v=173865b1
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/nutridis-2-product?v=b05d3b08
         Currency: USD
@@ -2611,7 +2600,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWH
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/pillow-product?v=9455bc35
         Currency: USD
@@ -2646,7 +2635,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACC
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/protective-gear-set-product?v=b3bef02c
         Currency: USD
@@ -2684,7 +2673,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/ratchet-kit-3-product?v=e899159b
         Currency: USD
@@ -2719,7 +2708,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACES
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/rear-battery-led-bike-light-product?v=0d1331b7
         Currency: USD
@@ -2750,7 +2739,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/rear-gearshift-product?v=e7c18fde
         Currency: USD
@@ -2785,7 +2774,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSARA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/running-belt-sport-waist-pack-pouch-1-product?v=47e6d962
         Currency: USD
@@ -2821,7 +2810,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/saddle-bag-product?v=05847bc3
         Currency: USD
@@ -2856,7 +2845,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/single-bike-protective-cover-product?v=07b579da
         Currency: USD
@@ -2889,7 +2878,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWS
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/smart-audio-band-product?v=29a9d6f2
         Currency: USD
@@ -2932,14 +2921,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/smart-band-1-product?v=844936af
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/smart-band-2-product?v=6abe8b29 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/smart-band-3-product?v=467983f2'
+              https://ch.sitecoredemo.com/api/public/content/smart-band-2-product?v=6abe8b29
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/smart-band-3-product?v=467983f2"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPSSB/striva-smart-band
@@ -2974,7 +2963,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/fitness-tracker-product?v=021dc6dd
         Currency: USD
@@ -3007,14 +2996,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/smart-sleeve-product?v=7482700a
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/smart-sleeve-2-product?v=f0cf33c1 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/smart-sleeve-3-product?v=7f9005b8'
+              https://ch.sitecoredemo.com/api/public/content/smart-sleeve-2-product?v=f0cf33c1
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/smart-sleeve-3-product?v=7f9005b8"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPSSS/striva-smart-sleeve
@@ -3064,7 +3053,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/smartwatch-product?v=11095651
         Currency: USD
@@ -3098,7 +3087,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAFA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/water-bottle-product?v=096ba4ad
         Currency: USD
@@ -3143,14 +3132,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAFE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/abb-wheel-1-product?v=9dbb093f
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/abb-wheel-2-product?v=43b7ce08 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/abb-wheel-3-product?v=c8c422a5'
+              https://ch.sitecoredemo.com/api/public/content/abb-wheel-2-product?v=43b7ce08
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/abb-wheel-3-product?v=c8c422a5"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPRFSAW/robin-fitness-strengthening-ab-wheel
@@ -3190,14 +3179,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAFEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/studio-cycle-product?v=a92478f6
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/studio-cycle-2-product?v=40fa6e56 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/studio-cycle-3-product?v=113cdfc5'
+              https://ch.sitecoredemo.com/api/public/content/studio-cycle-2-product?v=40fa6e56
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/studio-cycle-3-product?v=113cdfc5"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPOUSC/overunder-studio-cycle
@@ -3242,7 +3231,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAGA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/sunday-golf-bag-product?v=23b29a0c
         Currency: USD
@@ -3278,14 +3267,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/telescopic-bike-pump-product?v=e3799b74
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/telescopic-bike-pump-2-product?v=93a28d03 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/telescopic-bike-pump-3-product?v=230e40ce'
+              https://ch.sitecoredemo.com/api/public/content/telescopic-bike-pump-2-product?v=93a28d03
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/telescopic-bike-pump-3-product?v=230e40ce"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPCCTP/centercycle-travel-pump
@@ -3326,16 +3315,16 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAFEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/treadmill-product?v=dd24f34f
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/treadmill-2-product?v=fd52c4b8 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/treadmill-3-product?v=96a41f57 '
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/treadmill-5-product?v=193558f6'
+              https://ch.sitecoredemo.com/api/public/content/treadmill-2-product?v=fd52c4b8
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/treadmill-3-product?v=96a41f57 "
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/treadmill-5-product?v=193558f6"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPOUT/overunder-treadmill
@@ -3369,10 +3358,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/tubyhead-1-product?v=f79a46dd
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/tubyhead-2-product?v=32ecb2eb
         Currency: USD
@@ -3407,10 +3396,10 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSEWA
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/smart-watch-product?v=869a341f
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/smart-watch-2-product?v=27dd8ea1
         Currency: USD
@@ -3445,7 +3434,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/waterproof-smartphone-holder-product?v=df66ff4b
         Currency: USD
@@ -3479,7 +3468,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/bike-bottle-cage-product?v=1a4424b0
         Currency: USD
@@ -3517,7 +3506,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEE
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/wireless-cyclometer-product?v=ef0ea54e
         Currency: USD
@@ -3555,14 +3544,14 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSACEM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/work-stand-product?v=10f37c88
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
-              https://ch.sitecoredemo.com/api/public/content/work-stand-2-product?v=b1ece29e 
-          - ThumbnailUrl: ''
-            Url: ' https://ch.sitecoredemo.com/api/public/content/work-stand-3-product?v=3580a79f'
+              https://ch.sitecoredemo.com/api/public/content/work-stand-2-product?v=b1ece29e
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/work-stand-3-product?v=3580a79f"
         Currency: USD
         ProductType: Standard
         ProductUrl: /shop/products/PSPCCW/centercycle-work-stand
@@ -3605,7 +3594,7 @@ Objects:
         UnitOfMeasure: Per
         CCID: PSAYAM
         Images:
-          - ThumbnailUrl: ''
+          - ThumbnailUrl: ""
             Url: >-
               https://ch.sitecoredemo.com/api/public/content/fitness-mat-product?v=6e8d20d6
         Currency: USD
@@ -3638,7 +3627,7 @@ Objects:
         Images:
           - Url: >-
               https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-1-product?v=68cd7e0f
-            ThumbnailUrl: ''
+            ThumbnailUrl: ""
         SkuUrl: >-
           /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BK-L
       ProductID: PSPAMMWSSRCJ
@@ -3668,7 +3657,7 @@ Objects:
         Images:
           - Url: >-
               https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-1-product?v=68cd7e0f
-            ThumbnailUrl: ''
+            ThumbnailUrl: ""
         SkuUrl: >-
           /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BK-M
       ProductID: PSPAMMWSSRCJ
@@ -3698,7 +3687,7 @@ Objects:
         Images:
           - Url: >-
               https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-1-product?v=68cd7e0f
-            ThumbnailUrl: ''
+            ThumbnailUrl: ""
         SkuUrl: >-
           /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BK-S
       ProductID: PSPAMMWSSRCJ
@@ -3728,7 +3717,7 @@ Objects:
         Images:
           - Url: >-
               https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-2-product?v=536dc7a1
-            ThumbnailUrl: ''
+            ThumbnailUrl: ""
         SkuUrl: >-
           /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BL-L
       ProductID: PSPAMMWSSRCJ
@@ -3758,7 +3747,7 @@ Objects:
         Images:
           - Url: >-
               https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-2-product?v=536dc7a1
-            ThumbnailUrl: ''
+            ThumbnailUrl: ""
         SkuUrl: >-
           /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BL-M
       ProductID: PSPAMMWSSRCJ
@@ -3788,7 +3777,7 @@ Objects:
         Images:
           - Url: >-
               https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-2-product?v=536dc7a1
-            ThumbnailUrl: ''
+            ThumbnailUrl: ""
         SkuUrl: >-
           /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BL-S
       ProductID: PSPAMMWSSRCJ
@@ -5048,7 +5037,7 @@ Assignments:
       SupplierID: null
       UserID: null
       UserGroupID: SettingsManager
-  AdminUserGroupAssignments: 
+  AdminUserGroupAssignments:
     - UserGroupID: BuyerManager
       UserID: initial-admin-user
     - UserGroupID: MeManager

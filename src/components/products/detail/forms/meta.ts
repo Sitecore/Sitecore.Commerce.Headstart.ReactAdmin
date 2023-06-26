@@ -21,7 +21,9 @@ export const defaultValues = {
   ...mapKeys(pricingForm.defaultValues, (value, key) => `DefaultPriceSchedule.${key}`),
   ...mapKeys(pricingForm.defaultValues, (value, key) => `OverridePriceSchedules.${key}`),
   ...facetsForm.defaultValues,
-  ...mediaForm.defaultValues
+  ...mediaForm.defaultValues,
+  OverridePriceSchedules: [], // default value but not captured in form
+  "Product.AutoForward": true // default value but not captured in form
 }
 
 export const validationSchema = yup.object().shape(

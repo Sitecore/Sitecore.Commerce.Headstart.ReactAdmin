@@ -1,11 +1,7 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import {ColorModeScript} from "@chakra-ui/react"
 import type {DocumentContext} from "next/document"
 import Document, {Html, Head, Main, NextScript} from "next/document"
-import Script from "next/script"
-
-import sitecorecommerceTheme from "styles/theme/sitecorecommerce/"
-
+import theme from "theme/theme"
 const APP_NAME = "nextarter-chakra"
 
 class MyDocument extends Document {
@@ -29,7 +25,7 @@ class MyDocument extends Document {
           <link rel="manifest" href="/manifest.json" />
         </Head>
         <body>
-          <ColorModeScript initialColorMode={sitecorecommerceTheme.config?.initialColorMode} />
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />
         </body>

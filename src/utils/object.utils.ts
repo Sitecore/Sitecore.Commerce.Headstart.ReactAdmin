@@ -3,29 +3,35 @@ import {get, isArray, isEqual, isObject, set} from "lodash"
 /**
  * Returns an object that has only properties where the value has changed
  *
- * @param obj1 The original object to be compared
- * @param obj2 The original object with updates
+ * @param oldObj The original object to be compared
+ * @param newObj The new object with updates
  */
-export function getObjectDiff(obj1, obj2) {
+export function getObjectDiff(oldObj, newObj) {
   const diff = {}
-  const diffKeys = getObjectDiffKeys(obj1, obj2)
-  if(!diffKeys?.length) {
-    return diff;
+  const diffKeys = getObjectDiffKeys(oldObj, newObj)
+  if (!diffKeys?.length) {
+    return diff
   }
   diffKeys.forEach((diffKey) => {
-    const value = get(obj2, diffKey, null)
+    const value = get(newObj, diffKey, null)
     set(diff, diffKey, value)
   })
   return diff
 }
 
-function getObjectDiffKeys(obj1, obj2) {
-  return Object.keys(obj2 || {}).reduce((result, key) => {
-    const inner1 = obj1[key]
-    const inner2 = obj2[key]
+/**
+ * Returns the keys of an object that have changed
+ *
+ * @param oldObj The original object to be compared
+ * @param newObj The new object with updates
+ */
+function getObjectDiffKeys(oldObj, newObj) {
+  return Object.keys(newObj || {}).reduce((result, key) => {
+    const inner1 = oldObj[key]
+    const inner2 = newObj[key]
     if (!isEqual(inner1, inner2)) {
       if (isObject(inner2) && !isArray(inner2)) {
-        const innerDiffKeys = getObjectDiffKeys(obj1[key] || {}, obj2[key] || {}).map(
+        const innerDiffKeys = getObjectDiffKeys(oldObj[key] || {}, newObj[key] || {}).map(
           (innerKey) => `${key}.${innerKey}`
         )
         result = result.concat(innerDiffKeys)

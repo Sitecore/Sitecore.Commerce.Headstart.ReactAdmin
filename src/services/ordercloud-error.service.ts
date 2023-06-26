@@ -1,6 +1,6 @@
 import {AxiosError} from "axios"
 import {createStandaloneToast} from "@chakra-ui/react"
-import theme from "../styles/theme/sitecorecommerce"
+import theme from "../theme/theme"
 const {toast} = createStandaloneToast({theme})
 
 export const ordercloudErrorService = {

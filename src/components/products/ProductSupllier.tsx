@@ -27,8 +27,8 @@ type ProductDataProps = {
 export default function ProductSuppliers({composedProduct, setComposedProduct}: ProductDataProps) {
   const color = useColorModeValue("textColor.900", "textColor.100")
   const bg = useColorModeValue("accent.500", "accent.500")
-  const okColor = useColorModeValue("okColor.800", "okColor.200")
-  const errorColor = useColorModeValue("errorColor.800", "errorColor.200")
+  const okColor = useColorModeValue("green.500", "green.300")
+  const errorColor = useColorModeValue("red.500", "red.300")
   const [expanded, setExpanded] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [supplier, setSupplier] = useState<ProductSupplier[]>(null)

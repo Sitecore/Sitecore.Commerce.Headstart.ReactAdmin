@@ -8,7 +8,7 @@ import {SinglePricingForm} from "../SinglePricingForm"
 import {formShape} from "../formShape"
 import {defaultValues} from "../defaultValues"
 import {makeNestedObject, withDefaultValuesFallback} from "utils"
-import {OverridePriceScheduleFieldValues} from "types/OverridePriceScheduleFieldValues"
+import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 
 interface UpdatePriceModalContentProps {
   priceSchedule?: OverridePriceScheduleFieldValues

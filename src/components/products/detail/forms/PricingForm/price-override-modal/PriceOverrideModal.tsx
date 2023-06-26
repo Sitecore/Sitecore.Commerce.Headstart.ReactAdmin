@@ -3,7 +3,7 @@ import {useState} from "react"
 import {UpdatePriceModalContent} from "./UpdatePriceModalContent"
 import {AssignPriceModalContent} from "./AssignPriceModalContent"
 import {ProductAssignment} from "ordercloud-javascript-sdk"
-import {OverridePriceScheduleFieldValues} from "types/OverridePriceScheduleFieldValues"
+import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 
 interface PriceOverrideModalProps {
   onUpdate: (priceSchedule: OverridePriceScheduleFieldValues) => void

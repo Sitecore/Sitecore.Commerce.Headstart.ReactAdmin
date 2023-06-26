@@ -1,5 +1,5 @@
 import {Input, InputProps, InputGroup, InputLeftAddon, InputRightAddon} from "@chakra-ui/react"
-import React, {FC, useEffect} from "react"
+import React, {FC} from "react"
 import {useController} from "react-hook-form"
 import {isRequiredField} from "utils"
 import {BaseProps, FormControl} from "../form-control"

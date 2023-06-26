@@ -10,7 +10,6 @@ import {
   Flex,
   Heading,
   Hide,
-  Icon,
   IconButton,
   SimpleGrid,
   TabList,
@@ -22,20 +21,18 @@ import {
 } from "@chakra-ui/react"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useRouter} from "hooks/useRouter"
-import {useErrorToast, useSuccessToast} from "hooks/useToast"
-import {cloneDeep, invert, isEmpty} from "lodash"
-import {PriceSchedules, ProductAssignment, Products} from "ordercloud-javascript-sdk"
+import {useErrorToast, useSuccessToast, useToast} from "hooks/useToast"
+import {cloneDeep, invert} from "lodash"
+import {Products} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 import {useForm} from "react-hook-form"
-import {TbCactus, TbEdit, TbTrash} from "react-icons/tb"
+import {TbEdit, TbTrash} from "react-icons/tb"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {IProduct} from "types/ordercloud/IProduct"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {ISpec} from "types/ordercloud/ISpec"
 import {IVariant} from "types/ordercloud/IVariant"
-import {getObjectDiff, makeNestedObject, withDefaultValuesFallback} from "utils"
-import ProductSpecs from "../ProductSpecs"
-import ProductVariants from "../ProductVariants"
+import {makeNestedObject, withDefaultValuesFallback} from "utils"
 import ProductXpModal from "../modals/ProductXpModal"
 import ImagePreview from "./ImagePreview"
 import {ProductDetailTab} from "./ProductDetailTab"
@@ -49,8 +46,10 @@ import {PricingForm} from "./forms/PricingForm/PricingForm"
 import {ShippingForm} from "./forms/ShippingForm/ShippingForm"
 import {UnitOfMeasureForm} from "./forms/UnitOfMeasureForm/UnitOfMeasureForm"
 import {defaultValues, tabFieldNames, validationSchema} from "./forms/meta"
-import {v4 as randomId} from "uuid"
-import {OverridePriceScheduleFieldValues} from "types/OverridePriceScheduleFieldValues"
+import {SpecTable} from "./variants/SpecTable"
+import {submitProduct} from "services/product-submit.service"
+import {VariantTable} from "./variants/VariantTable"
+import {fetchVariants} from "services/product-data-fetcher.service"
 
 export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
 
@@ -66,26 +65,36 @@ const inverseTabIndexMap = invert(tabIndexMap)
 interface ProductDetailProps {
   showTabbedView?: boolean
   initialTab: ProductDetailTab
-  product?: IProduct
-  defaultPriceSchedule?: IPriceSchedule
-  overridePriceSchedules?: IPriceSchedule[]
-  specs?: ISpec[]
-  variants?: IVariant[]
-  facets?: IProductFacet[]
+  initialProduct?: IProduct
+  initialDefaultPriceSchedule?: IPriceSchedule
+  initialOverridePriceSchedules?: IPriceSchedule[]
+  initialSpecs?: ISpec[]
+  initialVariants?: IVariant[]
+  initialFacets?: IProductFacet[]
 }
 export default function ProductDetail({
   showTabbedView,
   initialTab,
-  product,
-  defaultPriceSchedule = {} as IPriceSchedule,
-  overridePriceSchedules,
-  specs,
-  variants,
-  facets
+  initialProduct,
+  initialDefaultPriceSchedule = {} as IPriceSchedule,
+  initialOverridePriceSchedules,
+  initialSpecs,
+  initialVariants,
+  initialFacets
 }: ProductDetailProps) {
+  // setting initial values for state so we can update on submit when product is updated
+  // this allows us to keep the form in sync with the product without having to refresh the page
+  const [product, setProduct] = useState(initialProduct)
+  const [defaultPriceSchedule, setDefaultPriceSchedule] = useState(initialDefaultPriceSchedule)
+  const [overridePriceSchedules, setOverridePriceSchedules] = useState(initialOverridePriceSchedules)
+  const [specs, setSpecs] = useState(initialSpecs)
+  const [variants, setVariants] = useState(initialVariants)
+  const [facets, setFacets] = useState(initialFacets)
+
   const router = useRouter()
   const successToast = useSuccessToast()
   const errorToast = useErrorToast()
+  const toast = useToast()
   const [tabIndex, setTabIndex] = useState(tabIndexMap[initialTab])
   const [liveXp, setLiveXp] = useState<{[key: string]: any}>(product?.xp)
   const [nonUiXp, setNonUiXp] = useState<{[key: string]: any}>({})
@@ -127,7 +136,9 @@ export default function ProductDetail({
         {
           Product: cloneDeep(product),
           DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
+          Specs: cloneDeep(specs),
           Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
+          Variants: cloneDeep(variants),
           OverridePriceSchedules: cloneDeep(overridePriceSchedules)
         },
         defaultValues
@@ -145,174 +156,80 @@ export default function ProductDetail({
     setTabIndex(index)
   }
 
-  const generateUpdatedFacets = (facets = []) => {
-    const updatedFacetsOnProduct = {}
-
-    facets.forEach((facet) => {
-      const {ID, Options} = facet
-      const filteredOptions = Options.filter((option) => option.value === true)
-
-      if (filteredOptions.length > 0) {
-        updatedFacetsOnProduct[ID] = filteredOptions.map((option) => option.facetOptionName)
-      } else {
-        updatedFacetsOnProduct[ID] = []
-      }
-    })
-
-    return updatedFacetsOnProduct
-  }
-
   const onSubmit = async (fields) => {
-    const updatedFacetsOnProduct = generateUpdatedFacets(fields.Facets)
-
-    // create/update product
-    if (isCreatingNew) {
-      const productDiff = fields.Product as IProduct
-      productDiff.DefaultPriceScheduleID = defaultPriceSchedule.ID
-      if (updatedFacetsOnProduct) {
-        if (!productDiff.xp) {
-          productDiff.xp = {}
-        }
-        productDiff.xp.Facets = updatedFacetsOnProduct
-      }
-      product = await Products.Create<IProduct>(productDiff)
-    } else {
-      const productDiff = getObjectDiff(product, fields.Product) as IProduct
-      if (updatedFacetsOnProduct) {
-        if (!productDiff.xp) {
-          productDiff.xp = {}
-        }
-        productDiff.xp.Facets = updatedFacetsOnProduct
-      }
-
-      product = await Products.Patch<IProduct>(product.ID, productDiff)
-    }
-
-    // create/update price schedule
-    if (isCreatingNew || !product.DefaultPriceScheduleID) {
-      defaultPriceSchedule = await PriceSchedules.Create<IPriceSchedule>({
-        ...fields.DefaultPriceSchedule,
-        ID: product.ID,
-        Name: product.ID
-      })
-    } else {
-      const priceScheduleDiff = getObjectDiff(defaultPriceSchedule, fields.DefaultPriceSchedule)
-      defaultPriceSchedule = await PriceSchedules.Patch<IPriceSchedule>(
-        product.DefaultPriceScheduleID,
-        priceScheduleDiff
-      )
-    }
-
-    // patch product with default price schedule
-    product = await Products.Patch<IProduct>(product.ID, {DefaultPriceScheduleID: defaultPriceSchedule.ID})
-
-    // create/update price overrides
-    const oldPriceSchedules = overridePriceSchedules
-    const newPriceSchedules = fields.OverridePriceSchedules.filter(
-      (priceSchedule) => priceSchedule.PriceBreaks[0].Price
+    const {
+      updatedProduct,
+      updatedDefaultPriceSchedule,
+      updatedPriceOverrides,
+      updatedSpecs,
+      didUpdateSpecs,
+      updatedVariants
+    } = await submitProduct(
+      isCreatingNew,
+      defaultPriceSchedule,
+      fields.DefaultPriceSchedule,
+      product,
+      fields.Product,
+      fields.Facets,
+      specs,
+      fields.Specs,
+      variants,
+      fields.Variants,
+      overridePriceSchedules,
+      fields.OverridePriceSchedules
     )
-
-    const addPriceSchedules = newPriceSchedules.filter((priceSchedule) => !priceSchedule.ID)
-    const updatePriceSchedules = newPriceSchedules.filter((newPriceSchedule) => {
-      const oldPriceSchedule = oldPriceSchedules.find((p) => p.ID === newPriceSchedule.ID)
-      if (oldPriceSchedule) {
-        // has updates
-        const diff = getObjectDiff(newPriceSchedule, oldPriceSchedule)
-        return !isEmpty(diff)
-      }
-    })
-    const deletePriceSchedules = oldPriceSchedules.filter((oldPriceSchedule) => {
-      const newPriceSchedule = newPriceSchedules.find((p) => p.ID === oldPriceSchedule.ID)
-      if (!newPriceSchedule) {
-        return true
-      }
-    })
-
-    const addPriceScheduleRequests = (addPriceSchedules || []).map(
-      async (priceOverride: OverridePriceScheduleFieldValues) => {
-        const priceSchedule = await PriceSchedules.Create<IPriceSchedule>({
-          ...priceOverride,
-          Name: randomId() // this isn't user facing and is only used to satisfy the API
-        })
-        const addRequests = priceOverride.ProductAssignments.map((assignment) => {
-          return Products.SaveAssignment({
-            ...assignment,
-            PriceScheduleID: priceSchedule.ID,
-            ProductID: product.ID
-          })
-        })
-        await Promise.all(addRequests)
-      }
-    )
-    const updatePriceScheduleRequests = (updatePriceSchedules || []).map(async (priceOverride) => {
-      const priceSchedule = await PriceSchedules.Patch<IPriceSchedule>(priceOverride.ID, priceOverride)
-      await updateProductAssignments(product.ID, priceSchedule.ID, priceOverride.ProductAssignments)
-    })
-
-    const deletePriceScheduleRequests = (deletePriceSchedules || []).map(async (priceOverride) =>
-      PriceSchedules.Delete(priceOverride.ID)
-    )
-
-    await Promise.all([...addPriceScheduleRequests, ...updatePriceScheduleRequests, ...deletePriceScheduleRequests])
-
     successToast({
-      description: isCreatingNew ? "ProductCreated" : "Product updated"
+      description: isCreatingNew ? "Product Created" : "Product updated"
     })
+    if (didUpdateSpecs && updatedSpecs?.length) {
+      toast({status: "info", description: "It looks like you updated specs. You may wish to regenerate variants"})
+    }
 
     if (isCreatingNew) {
       router.push(`/products/${product.ID}`)
+    } else {
+      // Update the state with the new product data
+      setProduct(updatedProduct)
+      setDefaultPriceSchedule(updatedDefaultPriceSchedule)
+      setOverridePriceSchedules(updatedPriceOverrides)
+      setSpecs(updatedSpecs)
+      setVariants(updatedVariants)
+
+      // reset the form with new product data
+      reset(
+        withDefaultValuesFallback(
+          {
+            Product: cloneDeep(updatedProduct),
+            DefaultPriceSchedule: cloneDeep(updatedDefaultPriceSchedule),
+            Specs: cloneDeep(updatedSpecs),
+            Variants: cloneDeep(updatedVariants),
+            Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
+            OverridePriceSchedules: cloneDeep(updatedPriceOverrides)
+          },
+          defaultValues
+        )
+      )
     }
   }
 
-  async function updateProductAssignments(
-    productId: string,
-    priceScheduleId: string,
-    newAssignments: ProductAssignment[]
-  ) {
-    const oldAssignmentsList = await Products.ListAssignments({productID: productId, priceScheduleID: priceScheduleId})
-    const oldAssignments = oldAssignmentsList.Items
-
-    // determine which assignments to add
-    const addAssignments = newAssignments.filter((newAssignment) => {
-      const oldAssignment = oldAssignments.find((oldAssignment) => {
-        if (newAssignment.UserGroupID) {
-          return (
-            oldAssignment.BuyerID === newAssignment.BuyerID && oldAssignment.UserGroupID === newAssignment.UserGroupID
-          )
-        } else {
-          return oldAssignment.BuyerID === newAssignment.BuyerID
-        }
-      })
-      return !oldAssignment
-    })
-
-    // determine which assignments to remove
-    const removeAssignments = oldAssignments.filter((oldAssignment) => {
-      const newAssignment = newAssignments.find((newAssignment) => {
-        if (newAssignment.UserGroupID) {
-          return (
-            oldAssignment.BuyerID === newAssignment.BuyerID && oldAssignment.UserGroupID === newAssignment.UserGroupID
-          )
-        } else {
-          return oldAssignment.BuyerID === newAssignment.BuyerID
-        }
-      })
-      return !newAssignment
-    })
-
-    const addRequests = addAssignments.map((assignment) => {
-      return Products.SaveAssignment({
-        ...assignment,
-        PriceScheduleID: priceScheduleId,
-        ProductID: productId
-      })
-    })
-
-    const removeRequests = removeAssignments.map((assignment) => {
-      return Products.DeleteAssignment(product.ID, assignment.BuyerID, {userGroupID: assignment.UserGroupID})
-    })
-
-    await Promise.all([...addRequests, ...removeRequests])
+  const handleGenerateVariants = async (shouldOverwrite: boolean) => {
+    const updatedProduct = await Products.GenerateVariants(product.ID, {overwriteExisting: shouldOverwrite})
+    const updatedVariants = await fetchVariants(updatedProduct)
+    setVariants(updatedVariants)
+    // reset the form with new product data
+    reset(
+      withDefaultValuesFallback(
+        {
+          Product: cloneDeep(updatedProduct),
+          DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
+          Specs: cloneDeep(specs),
+          Variants: cloneDeep(updatedVariants),
+          Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
+          OverridePriceSchedules: cloneDeep(overridePriceSchedules)
+        },
+        defaultValues
+      )
+    )
   }
 
   const onInvalid = (errors) => {
@@ -540,69 +457,15 @@ export default function ProductDetail({
               )}
               {viewVisibility.Variants && (
                 <TabPanel p={0} mt={6}>
-                  <Card w="100%">
-                    <CardHeader display="flex" alignItems={"center"}>
-                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-                        Specs
-                        <Text fontSize="sm" color="gray.400" fontWeight="normal">
-                          Create specs like size and color to generate variants for this product.
-                        </Text>
-                      </Heading>
-                      <Button variant="outline" colorScheme="accent" ml="auto">
-                        Create specs
-                      </Button>
-                    </CardHeader>
-                    <CardBody>
-                      {!specs?.length && (
-                        <Box
-                          p={6}
-                          display="flex"
-                          flexDirection={"column"}
-                          alignItems={"center"}
-                          justifyContent={"center"}
-                          minH={"xs"}
-                        >
-                          <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
-                          <Heading colorScheme="secondary" fontSize="xl">
-                            This product has no specs {specs?.length}
-                          </Heading>
-                        </Box>
-                      )}
-                      {specs?.length && (
-                        <ProductSpecs composedProduct={{Product: product, Specs: specs, Variants: variants}} />
-                      )}
-                    </CardBody>
-                  </Card>
-                  <Card w="100%" mt={6}>
-                    <CardHeader>
-                      <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-                        Variants
-                      </Heading>
-                      <Text fontSize="sm" color="gray.400">
-                        Variants will be generated after creating or adding specs and spec options
-                      </Text>
-                    </CardHeader>
-                    <CardBody>
-                      {!variants?.length && (
-                        <Box
-                          p={6}
-                          display="flex"
-                          flexDirection={"column"}
-                          alignItems={"center"}
-                          justifyContent={"center"}
-                          minH={"xs"}
-                        >
-                          <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
-                          <Heading colorScheme="secondary" fontSize="xl">
-                            This product has no variants {variants?.length}
-                          </Heading>
-                        </Box>
-                      )}
-                      {variants?.length && (
-                        <ProductVariants composedProduct={{Product: product, Specs: specs, Variants: variants}} />
-                      )}
-                    </CardBody>
-                  </Card>
+                  <SpecTable control={control} />
+                  <Box mt={6}>
+                    <VariantTable
+                      onGenerateVariants={handleGenerateVariants}
+                      control={control}
+                      variants={variants}
+                      specs={specs}
+                    />
+                  </Box>
                 </TabPanel>
               )}
               {viewVisibility.Media && (
@@ -636,63 +499,97 @@ export default function ProductDetail({
         ) : (
           <Flex flexWrap="wrap">
             {viewVisibility.Details && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Details</Heading>
-                </CardHeader>
-                <CardBody>
-                  <DetailsForm control={control} />
-                  <Divider marginY={5} />
-                  <DescriptionForm control={control} />
-                  <Divider marginY={5} />
-                  <UnitOfMeasureForm control={control} />
-                  <Divider marginY={5} />
-                  <InventoryForm control={control} />
-                  <Divider marginY={5} />
-                  <ShippingForm control={control} />
-                </CardBody>
-              </Card>
-            )}
-            {viewVisibility.Pricing && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Pricing</Heading>
-                </CardHeader>
-                <CardBody>
-                  <PricingForm
-                    control={control}
-                    trigger={trigger}
-                    priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
-                  />
-                </CardBody>
-              </Card>
-            )}
-            {viewVisibility.Variants && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Variants</Heading>
-                </CardHeader>
-                <CardBody>Variants under construction</CardBody>
-              </Card>
+              <Box width={{base: "100%", xl: "50%"}}>
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Details</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <DetailsForm control={control} />
+                    <Divider marginY={5} />
+                    <DescriptionForm control={control} />
+                    <Divider marginY={5} />
+                    <UnitOfMeasureForm control={control} />
+                    <Divider marginY={5} />
+                    <InventoryForm control={control} />
+                    <Divider marginY={5} />
+                    <ShippingForm control={control} />
+                  </CardBody>
+                </Card>
+              </Box>
             )}
             {viewVisibility.Media && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Media</Heading>
-                </CardHeader>
-                <CardBody>Media under construction</CardBody>
-              </Card>
+              <Box width={{base: "100%", xl: "50%"}}>
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Media</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <MediaForm control={control} />
+                  </CardBody>
+                </Card>
+              </Box>
             )}
+            {viewVisibility.Pricing && (
+              <Box width="100%">
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Pricing</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <PricingForm
+                      control={control}
+                      trigger={trigger}
+                      priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
+                    />
+                  </CardBody>
+                </Card>
+              </Box>
+            )}
+            {viewVisibility.Variants && (
+              <Box width={{base: "100%", xl: "50%"}}>
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Variants</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <SpecTable control={control} />
+                    <Box mt={6}>
+                      <VariantTable
+                        onGenerateVariants={handleGenerateVariants}
+                        control={control}
+                        variants={variants}
+                        specs={specs}
+                      />
+                    </Box>
+                  </CardBody>
+                </Card>
+              </Box>
+            )}
+
             {viewVisibility.Facets && (
-              <Card width={{base: "100%", xl: "50%"}}>
-                <CardHeader>
-                  <Heading>Facets</Heading>
-                </CardHeader>
-                <CardBody>Facets under construction</CardBody>
-              </Card>
+              <Box width={{base: "100%", xl: "50%"}}>
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Facets</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <FacetsForm
+                      control={control}
+                      trigger={trigger}
+                      facetList={facets}
+                      productFacets={product?.xp?.Facets}
+                    />
+                  </CardBody>
+                </Card>
+              </Box>
             )}
-            {viewVisibility.Customization && !isCreatingNew && xpCard()}
-            {viewVisibility.Customization && isCreatingNew && creatingNewXpCard()}
+            <Box width={{base: "100%", xl: "50%"}}>
+              <Box margin={3}>
+                {viewVisibility.Customization && !isCreatingNew && xpCard()}
+                {viewVisibility.Customization && isCreatingNew && creatingNewXpCard()}
+              </Box>
+            </Box>
           </Flex>
         )}
         <ProductXpModal

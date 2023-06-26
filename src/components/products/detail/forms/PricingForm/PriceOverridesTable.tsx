@@ -25,7 +25,7 @@ import {TbDotsVertical} from "react-icons/tb"
 import {priceHelper} from "utils"
 import {PriceOverrideModal} from "./price-override-modal/PriceOverrideModal"
 import {useEffect, useState} from "react"
-import {OverridePriceScheduleFieldValues} from "types/OverridePriceScheduleFieldValues"
+import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 
 interface PriceOverridesTableProps {
   control: Control<FieldValues, any>
@@ -151,7 +151,7 @@ export function PriceOverridesTable({control, fieldArray}: PriceOverridesTablePr
         <Tbody>
           {overridePriceSchedules.map((overridePriceSchedule, index: number) => {
             return (
-              <Tr key={overridePriceSchedule.id}>
+              <Tr key={overridePriceSchedule.ID || overridePriceSchedule.id}>
                 <Td>{getAssignedToDescription(overridePriceSchedule.ProductAssignments)}</Td>
                 <Td>{getPricingDescription(overridePriceSchedule)}</Td>
                 <Td>

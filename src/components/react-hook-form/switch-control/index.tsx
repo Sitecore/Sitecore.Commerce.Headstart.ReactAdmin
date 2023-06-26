@@ -27,8 +27,8 @@ export const SwitchControl: FC<SwitchControlProps> = (props: SwitchControlProps)
       label={label}
       isRequired={isRequired}
       {...rest}
-      display="inline-flex"
-      alignItems="center"
+      display="grid"
+      gridTemplateColumns={"1fr 1fr"}
       gap={2}
     >
       <Switch

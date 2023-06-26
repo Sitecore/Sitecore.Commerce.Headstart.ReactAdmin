@@ -225,5 +225,3 @@ function PriceOverridesActionMenu({priceSchedule, onDelete, onUpdate}: PriceOver
     </Menu>
   )
 }
-
-export default ProductActionMenu

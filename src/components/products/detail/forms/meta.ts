@@ -25,7 +25,8 @@ export const defaultValues = {
   Variants: [],
   OverridePriceSchedules: [],
   CatalogAssignments: [],
-  CategoryAssignments: []
+  CategoryAssignments: [],
+  "Product.AutoForward": true // default value but not captured in form
 }
 
 export const validationSchema = yup.object().shape(

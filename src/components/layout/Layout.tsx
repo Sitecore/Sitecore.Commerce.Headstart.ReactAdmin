@@ -1,13 +1,11 @@
-import { Box, Flex, Grid, HStack } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-
+import {Flex, Grid} from "@chakra-ui/react"
+import {useEffect, useState} from "react"
 import ContentFooter from "./ContentFooter"
 import ContentHeader from "./ContentHeader"
 import Footer from "./Footer"
 import Header from "./Header"
-import LeftNavigation from "components/navigation/SideNavigation"
-import { useAuth } from "hooks/useAuth"
-import DesktopSideBarMenu from "../navigation/DesktopSideBarMenu"
+import {useAuth} from "hooks/useAuth"
+import SideBarMenu from "../navigation/SideBarMenu"
 
 const Layout = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -26,7 +24,7 @@ const Layout = (props) => {
     <>
       <Header />
       <Grid as="main" gridTemplateColumns={["75px auto", "75px auto", "75px auto", "250px auto"]} flexGrow="1">
-        <DesktopSideBarMenu />
+        <SideBarMenu />
         <Flex flexFlow={"column nowrap"} overflowX="hidden">
           <ContentHeader {...props} />
           {props.children}

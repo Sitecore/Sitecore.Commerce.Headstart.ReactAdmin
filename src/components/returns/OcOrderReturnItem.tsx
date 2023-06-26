@@ -4,11 +4,11 @@ import {FunctionComponent} from "react"
 import {OrderReturnItem} from "ordercloud-javascript-sdk"
 import {priceHelper} from "../../utils/price.utils"
 
-interface OcOrderReturnItemListProps {
+interface OrderReturnListProps {
   itemsToReturn: OrderReturnItem[]
 }
 
-const OcOrderReturnItemList: FunctionComponent<OcOrderReturnItemListProps> = ({itemsToReturn}) => {
+const OrderReturnList: FunctionComponent<OrderReturnListProps> = ({itemsToReturn}) => {
   return itemsToReturn && itemsToReturn.length ? (
     <TableContainer>
       <Table variant="simple">
@@ -37,4 +37,4 @@ const OcOrderReturnItemList: FunctionComponent<OcOrderReturnItemListProps> = ({i
   )
 }
 
-export default OcOrderReturnItemList
+export default OrderReturnList

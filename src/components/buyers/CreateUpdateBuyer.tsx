@@ -1,9 +1,7 @@
-import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Card, CardBody, CardHeader, Container, Flex, Stack} from "@chakra-ui/react"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
 import {InputControl, NumberInputControl, SingleSelectControl, SwitchControl} from "components/react-hook-form"
 import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
-import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {useEffect, useState} from "react"
 import {ICatalog} from "types/ordercloud/ICatalog"
 import {IBuyer} from "types/ordercloud/IBuyer"
@@ -12,25 +10,36 @@ import {useForm} from "react-hook-form"
 import SubmitButton from "../react-hook-form/submit-button"
 import ResetButton from "../react-hook-form/reset-button"
 import {TbChevronLeft} from "react-icons/tb"
+import {boolean, number, object, string} from "yup"
+import {useSuccessToast} from "hooks/useToast"
 
-export {CreateUpdateForm}
-
-interface CreateUpdateFormProps {
-  buyer?: Buyer
+interface CreateUpdateBuyerProps {
+  buyer?: IBuyer
 }
-
-function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
+export function CreateUpdateBuyer({buyer}: CreateUpdateBuyerProps) {
   const router = useRouter()
-  const formShape = {
-    Name: Yup.string().required("Name is required"),
-    xp_MarkupPercent: Yup.number()
-  }
-  const {isCreating, successToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<Buyer>(
-    buyer,
-    formShape,
-    createBuyer,
-    updateBuyer
-  )
+  const isCreating = !buyer?.ID
+  const successToast = useSuccessToast()
+
+  const defaultValues = {
+    Active: true,
+    Name: "",
+    DefaultCatalogID: "",
+    xp: {
+      MarkupPercent: 0,
+      URL: ""
+    }
+  } as any
+
+  const validationSchema = object().shape({
+    Active: boolean(),
+    Name: string().required("Name is required"),
+    DefaultCatalogID: string(),
+    xp: object().shape({
+      MarkupPercent: number(),
+      URL: string()
+    })
+  })
 
   const {
     handleSubmit,
@@ -64,6 +73,14 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
       description: "Buyer updated successfully."
     })
     router.push(".")
+  }
+
+  async function onSubmit(buyer: IBuyer) {
+    if (isCreating) {
+      await createBuyer(buyer)
+    } else {
+      await updateBuyer(buyer)
+    }
   }
 
   return (

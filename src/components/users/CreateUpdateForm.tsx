@@ -72,7 +72,8 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
   }
 
   async function updateUser(fields: User) {
-    await ocService.Save(parentId, router.query.userid, fields)
+    delete fields.Password // We're not allowing password to be set by admins
+    await ocService.Patch(parentId, router.query.userid, fields)
     successToast({
       description: "User updated successfully."
     })

@@ -345,6 +345,7 @@ export default function ProductDetail({
   useEffect(() => {
     const productXp = getNonUiXp(product?.xp)
     setNonUiXp(productXp)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product])
 
   const getNonUiXp = (xp: {[key: string]: any}): {[key: string]: any} => {

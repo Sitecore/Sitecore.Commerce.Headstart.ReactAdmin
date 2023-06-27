@@ -66,7 +66,7 @@ const ProductXpModal: FC<IProductXpModal> = ({
     setValue(existingPropertyValue)
     setDataType(existingPropertyValue ? typeof existingPropertyValue : "string")
     if (existingPropertyName || existingPropertyValue) setIsEditing(true)
-  }, [isOpen, existingPropertyName, existingPropertyValue])
+  }, [isOpen, existingPropertyName, existingPropertyValue, clearExistingPropertyValues])
 
   const validate = (): string[] => {
     const errors = []

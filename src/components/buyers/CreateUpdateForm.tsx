@@ -25,7 +25,7 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
     Name: Yup.string().required("Name is required"),
     xp_MarkupPercent: Yup.number()
   }
-  const {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<Buyer>(
+  const {isCreating, successToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<Buyer>(
     buyer,
     formShape,
     createBuyer,
@@ -68,7 +68,7 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
 
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-      <Card>
+      <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
           <Button
             onClick={() => router.push("/buyers")}
@@ -87,15 +87,7 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
             </SubmitButton>
           </ButtonGroup>
         </CardHeader>
-        <CardBody
-          display="flex"
-          flexDirection={"column"}
-          as="form"
-          noValidate
-          onSubmit={handleSubmit(onSubmit)}
-          gap={4}
-          maxW={{xl: "container.md"}}
-        >
+        <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
           <SwitchControl name="Active" label="Active" control={control} />
           <InputControl name="Name" label="Buyer Name" control={control} isRequired />
           <SingleSelectControl

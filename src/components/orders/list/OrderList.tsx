@@ -1,7 +1,6 @@
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
 import {Box, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
-import Link from "next/link"
 import {Orders} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
 import {IOrder} from "types/ordercloud/IOrder"
@@ -9,6 +8,7 @@ import {dateHelper, priceHelper} from "utils"
 import OrderDeleteModal from "../modals/OrderDeleteModal"
 import OrderActionMenu from "./OrderActionMenu"
 import OrderListToolbar from "./OrderListToolbar"
+import {useAuth} from "hooks/useAuth"
 
 export const OrderStatusColorSchemeMap = {
   "": "gray",
@@ -58,6 +58,7 @@ const CustomerNameColumn: DataTableColumn<IOrder> = {
     </Text>
   )
 }
+
 const CustomerEmailColumn: DataTableColumn<IOrder> = {
   header: "Customer Email",
   accessor: "FromUser.Email",
@@ -99,19 +100,74 @@ const TotalColumn: DataTableColumn<IOrder> = {
   sortable: true
 }
 
-const OrderReturnTableOptions: ListViewTableOptions<IOrder> = {
-  responsive: {
-    base: [IdColumn, StatusColumn],
-    md: [IdColumn, StatusColumn, TotalColumn],
-    lg: [IdColumn, CustomerEmailColumn, StatusColumn, TotalColumn],
-    xl: [IdColumn, CustomerNameColumn, CustomerEmailColumn, StatusColumn, DateSubmittedColumn, TotalColumn]
-  }
+const SupplierIdColumn: DataTableColumn<IOrder> = {
+  header: "Supplier ID",
+  accessor: "ToCompanyID",
+  width: "5%",
+  align: "right",
+  sortable: true
+}
+
+const BuyerIdColumn: DataTableColumn<IOrder> = {
+  header: "Buyer ID",
+  accessor: "FromCompanyID",
+  width: "5%",
+  align: "right",
+  sortable: true
+}
+const NumLineItemsColumn: DataTableColumn<IOrder> = {
+  header: "# of line items",
+  accessor: "LineItemCount",
+  width: "5%",
+  align: "right",
+  sortable: false
 }
 
 const OrderList: FC = () => {
   const [actionOrder, setActionOrder] = useState<IOrder>()
   const editDisclosure = useDisclosure()
   const deleteDisclosure = useDisclosure()
+  const {isSupplier} = useAuth()
+
+  // For supplier orders, the order will always be from the admin user
+  // so its not very helpful to include the customer informtion, omitting for now
+  // we may add this once direct buyer => supplier orders are supported
+  const OrderReturnTableOptions: ListViewTableOptions<IOrder> = {
+    responsive: {
+      base: [IdColumn, StatusColumn],
+      md: [IdColumn, StatusColumn, TotalColumn],
+      lg: isSupplier
+        ? [IdColumn, DateSubmittedColumn, StatusColumn, TotalColumn]
+        : [IdColumn, CustomerEmailColumn, StatusColumn, TotalColumn],
+      xl: isSupplier
+        ? [IdColumn, DateSubmittedColumn, StatusColumn, TotalColumn, NumLineItemsColumn]
+        : [
+            IdColumn,
+            DateSubmittedColumn,
+            BuyerIdColumn,
+            SupplierIdColumn,
+            CustomerNameColumn,
+            CustomerEmailColumn,
+            StatusColumn,
+            TotalColumn,
+            NumLineItemsColumn
+          ]
+    },
+    hideColumns: (column, params) => {
+      const isAdmin = !isSupplier
+      if (isAdmin) {
+        if (params.routeParams.Direction === "Incoming") {
+          return column.accessor === SupplierIdColumn.accessor
+        } else {
+          return (
+            column.accessor === BuyerIdColumn.accessor ||
+            column.accessor === CustomerNameColumn.accessor ||
+            column.accessor === CustomerEmailColumn.accessor
+          )
+        }
+      }
+    }
+  }
 
   const renderOrderReturnActionMenu = useCallback(
     (order: IOrder) => {

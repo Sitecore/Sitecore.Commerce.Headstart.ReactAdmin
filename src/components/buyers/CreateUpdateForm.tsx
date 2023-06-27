@@ -1,6 +1,6 @@
 import * as Yup from "yup"
 import {Box, Button, ButtonGroup, Card, CardBody, CardHeader, Container, Flex, Stack} from "@chakra-ui/react"
-import {InputControl, NumberInputControl, SelectControl, SwitchControl} from "components/react-hook-form"
+import {InputControl, NumberInputControl, SingleSelectControl, SwitchControl} from "components/react-hook-form"
 import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
@@ -98,7 +98,7 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
         >
           <SwitchControl name="Active" label="Active" control={control} />
           <InputControl name="Name" label="Buyer Name" control={control} isRequired />
-          <SelectControl
+          <SingleSelectControl
             name="DefaultCatalogID"
             label="Default Catalog"
             selectProps={{placeholder: "Select option"}}
@@ -109,7 +109,7 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
                 {catalog.Name}
               </option>
             ))}
-          </SelectControl>
+          </SingleSelectControl>
           <NumberInputControl name="xp_MarkupPercent" label="Markup percent" control={control} />
           <InputControl name="xp_URL" label="Url" control={control} />
           {!isCreating && <InputControl name="DateCreated" label="Date Created" control={control} isReadOnly />}

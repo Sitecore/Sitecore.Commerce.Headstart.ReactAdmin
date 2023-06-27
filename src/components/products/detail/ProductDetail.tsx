@@ -70,7 +70,7 @@ interface ProductDetailProps {
   initialOverridePriceSchedules?: IPriceSchedule[]
   initialSpecs?: ISpec[]
   initialVariants?: IVariant[]
-  initialFacets?: IProductFacet[]
+  facets?: IProductFacet[]
 }
 export default function ProductDetail({
   showTabbedView,
@@ -80,7 +80,7 @@ export default function ProductDetail({
   initialOverridePriceSchedules,
   initialSpecs,
   initialVariants,
-  initialFacets
+  facets // facets won't change so we don't need to use state
 }: ProductDetailProps) {
   // setting initial values for state so we can update on submit when product is updated
   // this allows us to keep the form in sync with the product without having to refresh the page
@@ -89,7 +89,6 @@ export default function ProductDetail({
   const [overridePriceSchedules, setOverridePriceSchedules] = useState(initialOverridePriceSchedules)
   const [specs, setSpecs] = useState(initialSpecs)
   const [variants, setVariants] = useState(initialVariants)
-  const [facets, setFacets] = useState(initialFacets)
 
   const router = useRouter()
   const successToast = useSuccessToast()
@@ -112,32 +111,12 @@ export default function ProductDetail({
   const [xpPropertyNameToEdit, setXpPropertyNameToEdit] = useState<string>(null)
   const [xpPropertyValueToEdit, setXpPropertyValueToEdit] = useState<string>(null)
 
-  const createFormFacets = (facetList: IProductFacet[] = [], facetsOnProduct: any) => {
-    const formattedFacets = facetList.map((facet) => {
-      const {ID, Name} = facet
-      const Options = facet.xp?.Options || []
-      const optionsWithValues = Options.map((option) => ({
-        facetOptionName: option,
-        value: (facetsOnProduct && facetsOnProduct[ID] && facetsOnProduct[ID].includes(option)) || false
-      }))
-
-      return {
-        ID,
-        Name,
-        Options: optionsWithValues
-      }
-    })
-
-    return formattedFacets
-  }
-
   const initialValues = product
     ? withDefaultValuesFallback(
         {
           Product: cloneDeep(product),
           DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
           Specs: cloneDeep(specs),
-          Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
           Variants: cloneDeep(variants),
           OverridePriceSchedules: cloneDeep(overridePriceSchedules)
         },
@@ -170,7 +149,6 @@ export default function ProductDetail({
       fields.DefaultPriceSchedule,
       product,
       fields.Product,
-      fields.Facets,
       specs,
       fields.Specs,
       variants,
@@ -186,7 +164,7 @@ export default function ProductDetail({
     }
 
     if (isCreatingNew) {
-      router.push(`/products/${product.ID}`)
+      router.push(`/products/${updatedProduct.ID}`)
     } else {
       // Update the state with the new product data
       setProduct(updatedProduct)
@@ -203,7 +181,6 @@ export default function ProductDetail({
             DefaultPriceSchedule: cloneDeep(updatedDefaultPriceSchedule),
             Specs: cloneDeep(updatedSpecs),
             Variants: cloneDeep(updatedVariants),
-            Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
             OverridePriceSchedules: cloneDeep(updatedPriceOverrides)
           },
           defaultValues
@@ -224,7 +201,6 @@ export default function ProductDetail({
           DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
           Specs: cloneDeep(specs),
           Variants: cloneDeep(updatedVariants),
-          Facets: cloneDeep(createFormFacets(facets, product?.xp?.Facets)),
           OverridePriceSchedules: cloneDeep(overridePriceSchedules)
         },
         defaultValues
@@ -480,12 +456,7 @@ export default function ProductDetail({
               {viewVisibility.Facets && (
                 <TabPanel p={0} mt={6}>
                   <Card w="100%">
-                    <FacetsForm
-                      control={control}
-                      trigger={trigger}
-                      facetList={facets}
-                      productFacets={product?.xp?.Facets}
-                    />
+                    <FacetsForm control={control} facetList={facets} />
                   </Card>
                 </TabPanel>
               )}
@@ -574,12 +545,7 @@ export default function ProductDetail({
                     <Heading>Facets</Heading>
                   </CardHeader>
                   <CardBody>
-                    <FacetsForm
-                      control={control}
-                      trigger={trigger}
-                      facetList={facets}
-                      productFacets={product?.xp?.Facets}
-                    />
+                    <FacetsForm control={control} facetList={facets} />
                   </CardBody>
                 </Card>
               </Box>

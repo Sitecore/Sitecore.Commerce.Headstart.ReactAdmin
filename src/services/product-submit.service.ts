@@ -18,7 +18,6 @@ export async function submitProduct(
   newDefaultPriceSchedule: IPriceSchedule,
   oldProduct: IProduct,
   newProduct: IProduct,
-  newFacets: any[],
   oldSpecs: ISpec[],
   newSpecs: SpecFieldValues[],
   oldVariants: IVariant[],
@@ -34,13 +33,7 @@ export async function submitProduct(
   )
 
   // create/update product
-  const updatedProduct = await handleUpdateProduct(
-    oldProduct,
-    newProduct,
-    newFacets,
-    updatedDefaultPriceSchedule,
-    isCreatingNew
-  )
+  const updatedProduct = await handleUpdateProduct(oldProduct, newProduct, updatedDefaultPriceSchedule, isCreatingNew)
 
   // create/update/delete specs & spec options
   const {updatedSpecs, didUpdateSpecs} = await handleUpdateSpecs(oldSpecs, newSpecs, updatedProduct)
@@ -83,48 +76,19 @@ async function handleUpdateDefaultPriceSchedule(
   return updatedDefaultPriceSchedule
 }
 
-const generateUpdatedFacets = (facets = []) => {
-  const updatedFacetsOnProduct = {}
-
-  facets.forEach((facet) => {
-    const {ID, Options} = facet
-    const filteredOptions = Options.filter((option) => option.value === true)
-
-    if (filteredOptions.length > 0) {
-      updatedFacetsOnProduct[ID] = filteredOptions.map((option) => option.facetOptionName)
-    } else {
-      updatedFacetsOnProduct[ID] = []
-    }
-  })
-
-  return updatedFacetsOnProduct
-}
-
 async function handleUpdateProduct(
   oldProduct: IProduct,
   newProduct: IProduct,
-  newFacets: any[],
   updatedPriceSchedule: IPriceSchedule,
   isCreatingNew: boolean
 ): Promise<IProduct> {
   let updatedProduct: IProduct
-  const updatedFacetsOnProduct = generateUpdatedFacets(newFacets)
   if (isCreatingNew) {
     newProduct.DefaultPriceScheduleID = updatedPriceSchedule.ID
-    if (!newProduct.xp) {
-      newProduct.xp = {}
-    }
-    newProduct.xp.Facets = updatedFacetsOnProduct
     updatedProduct = await Products.Create<IProduct>(newProduct)
   } else {
     const diff = getObjectDiff(oldProduct, newProduct) as IProduct
-    if (updatedFacetsOnProduct) {
-      if (!diff.xp) {
-        diff.xp = {}
-      }
-      diff.xp.Facets = updatedFacetsOnProduct
-    }
-    updatedProduct = await Products.Patch<IProduct>(oldProduct.ID, diff)
+    updatedProduct = isEmpty(diff) ? oldProduct : await Products.Patch<IProduct>(oldProduct.ID, diff)
   }
   return updatedProduct
 }

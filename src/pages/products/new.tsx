@@ -1,5 +1,6 @@
 import ProtectedContent from "@/components/auth/ProtectedContent"
 import ProductDetail from "@/components/products/detail/ProductDetail"
+import {ProductDetailSkeleton} from "@/components/products/detail/ProductDetailSkeleton"
 import {appPermissions} from "constants/app-permissions.config"
 import {useProductDetail} from "hooks/useProductDetail"
 
@@ -19,13 +20,21 @@ export async function getServerSideProps() {
 }
 
 const ProductDetailPage = () => {
-  const {loading, showTabbedView, initialTab} = useProductDetail()
+  const {loading, showTabbedView, initialTab, facets} = useProductDetail()
 
   if (loading) {
-    return <div>Loading...</div>
+    return <ProductDetailSkeleton />
   }
 
-  return <ProductDetail showTabbedView={showTabbedView} initialTab={initialTab} />
+  return (
+    <ProductDetail
+      showTabbedView={showTabbedView}
+      initialTab={initialTab}
+      facets={facets}
+      initialSpecs={[]}
+      initialVariants={[]}
+    />
+  )
 }
 
 const ProtectedProductDetailPage = () => {

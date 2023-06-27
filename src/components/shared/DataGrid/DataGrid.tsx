@@ -1,6 +1,6 @@
 import {Box, Center, GridItem, Heading, ResponsiveObject, SimpleGrid, Spinner, Text, VStack} from "@chakra-ui/react"
 import {ReactElement} from "react"
-import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
+import {IDefaultResource, ListParams, ListViewTemplate} from "../ListView/ListView"
 import DefaultDataGridItemCard from "./DefaultDataGridItemCard"
 
 export interface IDataGrid<T extends IDefaultResource> {

@@ -1,9 +1,7 @@
-import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Card, CardBody, CardHeader, Container, Flex, Stack} from "@chakra-ui/react"
-import {InputControl, NumberInputControl, SingleSelectControl, SwitchControl} from "components/react-hook-form"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
+import {InputControl, SingleSelectControl, SwitchControl} from "components/react-hook-form"
 import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
-import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {useEffect, useState} from "react"
 import {ICatalog} from "types/ordercloud/ICatalog"
 import {IBuyer} from "types/ordercloud/IBuyer"
@@ -12,32 +10,50 @@ import {useForm} from "react-hook-form"
 import SubmitButton from "../react-hook-form/submit-button"
 import ResetButton from "../react-hook-form/reset-button"
 import {TbChevronLeft} from "react-icons/tb"
+import {boolean, number, object, string} from "yup"
+import {useSuccessToast} from "hooks/useToast"
+import {getObjectDiff} from "utils"
 
-export {CreateUpdateForm}
-
-interface CreateUpdateFormProps {
-  buyer?: Buyer
+interface CreateUpdateBuyerProps {
+  initialBuyer?: IBuyer
 }
-
-function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
+export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
+  const [buyer, setBuyer] = useState(initialBuyer)
+  const [isCreating, setIsCreating] = useState(!buyer?.ID)
   const router = useRouter()
-  const formShape = {
-    Name: Yup.string().required("Name is required"),
-    xp_MarkupPercent: Yup.number()
-  }
-  const {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<Buyer>(
-    buyer,
-    formShape,
-    createBuyer,
-    updateBuyer
-  )
+  const successToast = useSuccessToast()
+
+  useEffect(() => {
+    console.log("hit")
+    setIsCreating(!buyer?.ID)
+  }, [buyer?.ID])
+
+  const defaultValues = {
+    Active: true,
+    Name: "",
+    DefaultCatalogID: "",
+    xp: {
+      MarkupPercent: 0,
+      URL: ""
+    }
+  } as any
+
+  const validationSchema = object().shape({
+    Active: boolean(),
+    Name: string().required("Name is required"),
+    DefaultCatalogID: string(),
+    xp: object().shape({
+      MarkupPercent: number(),
+      URL: string()
+    })
+  })
 
   const {
     handleSubmit,
     control,
     formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues: buyer || defaultValues, mode: "onBlur"})
 
   const [catalogs, setCatalogs] = useState([] as Catalog[])
 
@@ -51,24 +67,34 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
   }
 
   async function createBuyer(fields: Buyer) {
-    await Buyers?.Create<IBuyer>(fields)
+    const createdBuyer = await Buyers?.Create<IBuyer>(fields)
     successToast({
       description: "Buyer created successfully."
     })
-    router.push(".")
+    router.push(`/buyers/${createdBuyer.ID}`)
   }
 
   async function updateBuyer(fields: Buyer) {
-    await Buyers.Save<IBuyer>(fields.ID, fields)
+    const diff = getObjectDiff(buyer, fields)
+    const updatedBuyer = await Buyers.Patch<IBuyer>(buyer.ID, diff)
     successToast({
       description: "Buyer updated successfully."
     })
-    router.push(".")
+    setBuyer(updatedBuyer)
+    reset(updatedBuyer)
+  }
+
+  async function onSubmit(buyer: IBuyer) {
+    if (isCreating) {
+      await createBuyer(buyer)
+    } else {
+      await updateBuyer(buyer)
+    }
   }
 
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-      <Card>
+      <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
           <Button
             onClick={() => router.push("/buyers")}
@@ -87,15 +113,7 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
             </SubmitButton>
           </ButtonGroup>
         </CardHeader>
-        <CardBody
-          display="flex"
-          flexDirection={"column"}
-          as="form"
-          noValidate
-          onSubmit={handleSubmit(onSubmit)}
-          gap={4}
-          maxW={{xl: "container.md"}}
-        >
+        <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
           <SwitchControl name="Active" label="Active" control={control} />
           <InputControl name="Name" label="Buyer Name" control={control} isRequired />
           <SingleSelectControl
@@ -110,8 +128,7 @@ function CreateUpdateForm({buyer}: CreateUpdateFormProps) {
               </option>
             ))}
           </SingleSelectControl>
-          <NumberInputControl name="xp_MarkupPercent" label="Markup percent" control={control} />
-          <InputControl name="xp_URL" label="Url" control={control} />
+
           {!isCreating && <InputControl name="DateCreated" label="Date Created" control={control} isReadOnly />}
         </CardBody>
       </Card>

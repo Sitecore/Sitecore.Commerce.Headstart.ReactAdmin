@@ -1,2 +1,2 @@
-export * from "./CreateUpdateForm"
+export * from "./CreateUpdateBuyer"
 export * from "./BuyerContextSwitch"

@@ -72,7 +72,8 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
   }
 
   async function updateUser(fields: User) {
-    await ocService.Save(parentId, router.query.userid, fields)
+    delete fields.Password // We're not allowing password to be set by admins
+    await ocService.Patch(parentId, router.query.userid, fields)
     successToast({
       description: "User updated successfully."
     })
@@ -82,7 +83,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
   return (
     <>
       <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-        <Card>
+        <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
             <Button
               onClick={() => router.back()}
@@ -101,15 +102,7 @@ function CreateUpdateForm({user, ocService}: CreateUpdateFormProps) {
               </SubmitButton>
             </ButtonGroup>
           </CardHeader>
-          <CardBody
-            display="flex"
-            flexDirection={"column"}
-            as="form"
-            noValidate
-            onSubmit={handleSubmit(onSubmit)}
-            gap={4}
-            maxW={{xl: "container.md"}}
-          >
+          <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
             <SwitchControl name="Active" label="Active" control={control} />
             <InputControl name="Username" label="Username" control={control} isRequired />
             <InputControl name="FirstName" label="First name" control={control} isRequired />

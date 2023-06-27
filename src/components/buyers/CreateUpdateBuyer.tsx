@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
-import {InputControl, NumberInputControl, SingleSelectControl, SwitchControl} from "components/react-hook-form"
+import {InputControl, SingleSelectControl, SwitchControl} from "components/react-hook-form"
 import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useEffect, useState} from "react"
@@ -12,14 +12,21 @@ import ResetButton from "../react-hook-form/reset-button"
 import {TbChevronLeft} from "react-icons/tb"
 import {boolean, number, object, string} from "yup"
 import {useSuccessToast} from "hooks/useToast"
+import {getObjectDiff} from "utils"
 
 interface CreateUpdateBuyerProps {
-  buyer?: IBuyer
+  initialBuyer?: IBuyer
 }
-export function CreateUpdateBuyer({buyer}: CreateUpdateBuyerProps) {
+export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
+  const [buyer, setBuyer] = useState(initialBuyer)
+  const [isCreating, setIsCreating] = useState(!buyer?.ID)
   const router = useRouter()
-  const isCreating = !buyer?.ID
   const successToast = useSuccessToast()
+
+  useEffect(() => {
+    console.log("hit")
+    setIsCreating(!buyer?.ID)
+  }, [buyer?.ID])
 
   const defaultValues = {
     Active: true,
@@ -46,7 +53,7 @@ export function CreateUpdateBuyer({buyer}: CreateUpdateBuyerProps) {
     control,
     formState: {isSubmitting},
     reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues: buyer || defaultValues, mode: "onBlur"})
 
   const [catalogs, setCatalogs] = useState([] as Catalog[])
 
@@ -60,19 +67,21 @@ export function CreateUpdateBuyer({buyer}: CreateUpdateBuyerProps) {
   }
 
   async function createBuyer(fields: Buyer) {
-    await Buyers?.Create<IBuyer>(fields)
+    const createdBuyer = await Buyers?.Create<IBuyer>(fields)
     successToast({
       description: "Buyer created successfully."
     })
-    router.push(".")
+    router.push(`/buyers/${createdBuyer.ID}`)
   }
 
   async function updateBuyer(fields: Buyer) {
-    await Buyers.Save<IBuyer>(fields.ID, fields)
+    const diff = getObjectDiff(buyer, fields)
+    const updatedBuyer = await Buyers.Patch<IBuyer>(buyer.ID, diff)
     successToast({
       description: "Buyer updated successfully."
     })
-    router.push(".")
+    setBuyer(updatedBuyer)
+    reset(updatedBuyer)
   }
 
   async function onSubmit(buyer: IBuyer) {
@@ -119,8 +128,7 @@ export function CreateUpdateBuyer({buyer}: CreateUpdateBuyerProps) {
               </option>
             ))}
           </SingleSelectControl>
-          <NumberInputControl name="xp_MarkupPercent" label="Markup percent" control={control} />
-          <InputControl name="xp_URL" label="Url" control={control} />
+
           {!isCreating && <InputControl name="DateCreated" label="Date Created" control={control} isReadOnly />}
         </CardBody>
       </Card>

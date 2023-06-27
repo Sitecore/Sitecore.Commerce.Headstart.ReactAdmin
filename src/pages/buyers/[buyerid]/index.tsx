@@ -35,7 +35,7 @@ const BuyerListItem = () => {
   return (
     <>
       {buyer?.ID ? (
-        <CreateUpdateBuyer buyer={buyer} />
+        <CreateUpdateBuyer initialBuyer={buyer} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />

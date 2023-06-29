@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
-import {InputControl, SingleSelectControl, SwitchControl} from "components/react-hook-form"
+import {InputControl, SelectControl, SwitchControl} from "components/react-hook-form"
 import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useEffect, useState} from "react"
@@ -116,18 +116,15 @@ export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
         <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
           <SwitchControl name="Active" label="Active" control={control} />
           <InputControl name="Name" label="Buyer Name" control={control} isRequired />
-          <SingleSelectControl
+          <SelectControl
             name="DefaultCatalogID"
             label="Default Catalog"
-            selectProps={{placeholder: "Select option"}}
+            selectProps={{
+              placeholder: "Select option",
+              options: catalogs.map(({ID, Name}) => ({value: ID, label: Name}))
+            }}
             control={control}
-          >
-            {catalogs.map((catalog) => (
-              <option value={catalog.ID} key={catalog.ID}>
-                {catalog.Name}
-              </option>
-            ))}
-          </SingleSelectControl>
+          />
 
           {!isCreating && <InputControl name="DateCreated" label="Date Created" control={control} isReadOnly />}
         </CardBody>

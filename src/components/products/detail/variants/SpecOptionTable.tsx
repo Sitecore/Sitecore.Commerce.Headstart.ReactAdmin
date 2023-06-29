@@ -17,7 +17,7 @@ import {get} from "lodash"
 import {Control, FieldValues, UseFormTrigger, useFieldArray, useFormState, useWatch} from "react-hook-form"
 import {specFormDefaultValues} from "./SpecUpdateModal"
 import {SpecOptionFieldValues} from "types/form/SpecFieldValues"
-import {InputControl, SingleSelectControl} from "@/components/react-hook-form"
+import {InputControl, SelectControl} from "@/components/react-hook-form"
 
 interface SpecOptionTableProps {
   control: Control<FieldValues, any>
@@ -89,12 +89,18 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
                     />
                   </Td>
                   <Td padding={tableCellPadding}>
-                    <SingleSelectControl name={`Options.${index}.PriceMarkupType`} control={control}>
-                      <option value="NoMarkup">None</option>
-                      <option value="Percentage">Percentage</option>
-                      <option value="AmountPerQuantity">Amount per quantity </option>
-                      <option value="AmountTotal">Amount total</option>
-                    </SingleSelectControl>
+                    <SelectControl
+                      name={`Options.${index}.PriceMarkupType`}
+                      control={control}
+                      selectProps={{
+                        options: [
+                          {label: "None", value: "NoMarkup"},
+                          {label: "Percentage", value: "Percentage"},
+                          {label: "Amount per quantity", value: "AmountPerQuantity"},
+                          {label: "Amount total", value: "AmountTotal"}
+                        ]
+                      }}
+                    />
                   </Td>
                   <Td padding={tableCellPadding}>
                     <PriceMarkupControl index={index} control={control} onKeyPress={handleKeyPress} />

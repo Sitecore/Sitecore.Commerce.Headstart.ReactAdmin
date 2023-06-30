@@ -1,6 +1,6 @@
 import {ProductDetailTab} from "@/components/products/detail/ProductDetail"
 import {useRouter} from "next/router"
-import {ProductFacets} from "ordercloud-javascript-sdk"
+import {ProductFacets, ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {useState, useEffect} from "react"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {IProduct} from "types/ordercloud/IProduct"
@@ -12,8 +12,12 @@ import {
   fetchDefaultPriceSchedule,
   fetchSpecs,
   fetchVariants,
-  fetchOverridePriceSchedules
+  fetchOverridePriceSchedules,
+  fetchProductCatalogAssignments,
+  fetchProductCategoryAssignments
 } from "services/product-data-fetcher.service"
+import { CategoryProductAssignmentAdmin } from "types/form/CategoryProductAssignmentAdmin"
+import { flatten } from "lodash"
 
 export function useProductDetail() {
   const {isReady, query, push} = useRouter()
@@ -26,11 +30,21 @@ export function useProductDetail() {
   const [showTabbedView, setShowTabbedView] = useState(true)
   const [loading, setLoading] = useState(true)
   const [initialTab, setInitialTab] = useState("Details" as ProductDetailTab)
+  const [productCatalogs, setProductCatalogs] = useState([] as ProductCatalogAssignment[])
+  const [productCategories, setProductCategories] = useState([] as CategoryProductAssignmentAdmin[])
 
   useEffect(() => {
     const getFacets = async () => {
       const _facets = await ProductFacets.List<IProductFacet>({pageSize: 100})
       setFacets(_facets.Items)
+    }
+
+    const getCatalogsAndCategories = async (_product: IProduct) => {
+      const catalogAssignments = await fetchProductCatalogAssignments(_product)
+      const fetchCategories = catalogAssignments.map(fetchProductCategoryAssignments)
+      const response = await Promise.all(fetchCategories)
+      setProductCategories(flatten(response))
+      setProductCatalogs(catalogAssignments)
     }
 
     const getProduct = async () => {
@@ -40,7 +54,8 @@ export function useProductDetail() {
           fetchDefaultPriceSchedule(_product).then((response) => setDefaultPriceSchedule(response)),
           fetchSpecs(_product).then((response) => setSpecs(response)),
           fetchVariants(_product).then((response) => setVariants(response)),
-          fetchOverridePriceSchedules(_product).then((response) => setOverridePriceSchedules(response))
+          fetchOverridePriceSchedules(_product).then((response) => setOverridePriceSchedules(response)),
+          getCatalogsAndCategories(_product)
         ])
         setProduct(_product)
       }
@@ -100,6 +115,8 @@ export function useProductDetail() {
     facets,
     loading,
     showTabbedView,
-    initialTab
+    initialTab,
+    productCatalogs,
+    productCategories
   }
 }

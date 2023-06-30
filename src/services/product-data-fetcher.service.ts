@@ -1,6 +1,8 @@
 import {ORIGINAL_ID} from "constants/original-id"
 import {uniq} from "lodash"
-import {PriceSchedules, Products, SpecProductAssignment, Specs} from "ordercloud-javascript-sdk"
+import {Catalogs, Categories, PriceSchedules, ProductCatalogAssignment, Products, SpecProductAssignment, Specs} from "ordercloud-javascript-sdk"
+import { CategoryProductAssignmentAdmin } from "types/form/CategoryProductAssignmentAdmin"
+import { ICatalog } from "types/ordercloud/ICatalog"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 
@@ -65,4 +67,29 @@ async function fetchSpecsFromAssignments(items: SpecProductAssignment[]) {
   const specIDs = uniq(items.map((assignment) => assignment.SpecID))
   const listResponse = await Specs.List<ISpec>({filters: {ID: specIDs.join("|")}})
   return listResponse.Items
+}
+
+export async function fetchProductCatalogAssignments(product: IProduct) {
+  const catalogs = await Catalogs.ListProductAssignments({productID: product.ID, pageSize: 100})
+  if (!catalogs.Items.length) {
+    return []
+  }
+  return catalogs.Items
+}
+
+export async function fetchProductCategoryAssignments(catalog: ProductCatalogAssignment) {
+  const categoryProductList = new Array<CategoryProductAssignmentAdmin>
+  const categories = await Categories.ListProductAssignments(catalog.CatalogID, {productID: catalog.ProductID})
+  if (!categories.Items.length) {
+    return []
+  }
+  categories.Items.forEach(category => {
+    const newCat: CategoryProductAssignmentAdmin = {
+      CatalogID : catalog.CatalogID,
+      ProductID: category.ProductID,
+      CategoryID: category.CategoryID
+    }
+    categoryProductList.push(newCat)
+  })
+  return categoryProductList
 }

@@ -10,6 +10,7 @@ import * as pricingForm from "./PricingForm"
 import * as facetsForm from "./FacetsForm"
 import * as mediaForm from "./MediaForm"
 import {ProductDetailTab} from "../ProductDetail"
+import * as catalogForm from "./CatalogForm"
 
 export const defaultValues = {
   ...descriptionForm.defaultValues,
@@ -21,7 +22,8 @@ export const defaultValues = {
   ...mapKeys(pricingForm.defaultValues, (value, key) => `DefaultPriceSchedule.${key}`),
   ...mapKeys(pricingForm.defaultValues, (value, key) => `OverridePriceSchedules.${key}`),
   ...facetsForm.defaultValues,
-  ...mediaForm.defaultValues
+  ...mediaForm.defaultValues,
+  ...mapKeys(catalogForm.defaultValues, (value, key) => `CatalogAssignments.${key}`)
 }
 
 export const validationSchema = yup.object().shape(
@@ -44,7 +46,8 @@ export const validationSchema = yup.object().shape(
       })
     ),
     ...facetsForm.formShape,
-    ...mediaForm.formShape
+    ...mediaForm.formShape,
+    CatalogAssignments: yup.array().of(yup.object().shape(catalogForm.formShape))
   })
 )
 
@@ -64,5 +67,6 @@ export const tabFieldNames: Record<ProductDetailTab, any[]> = {
   Variants: [],
   Media: [...values(mediaForm.fieldNames)],
   Facets: [...values(facetsForm.fieldNames)],
-  Customization: []
+  Customization: [],
+  Catalogs: [...values(catalogForm.fieldNames).map((fieldName) => `CatalogAssignments.${fieldName}`)]
 }

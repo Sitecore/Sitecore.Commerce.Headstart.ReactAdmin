@@ -8,6 +8,7 @@ import {
   Container,
   Divider,
   Flex,
+  Grid,
   Heading,
   Hide,
   IconButton,
@@ -23,7 +24,7 @@ import {yupResolver} from "@hookform/resolvers/yup"
 import {useRouter} from "hooks/useRouter"
 import {useErrorToast, useSuccessToast, useToast} from "hooks/useToast"
 import {cloneDeep, invert} from "lodash"
-import {Products} from "ordercloud-javascript-sdk"
+import {Products, ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 import {useForm} from "react-hook-form"
 import {TbEdit, TbTrash} from "react-icons/tb"
@@ -50,8 +51,10 @@ import {SpecTable} from "./variants/SpecTable"
 import {submitProduct} from "services/product-submit.service"
 import {VariantTable} from "./variants/VariantTable"
 import {fetchVariants} from "services/product-data-fetcher.service"
+import { CategoryProductAssignmentAdmin } from "types/form/CategoryProductAssignmentAdmin"
+import { CatalogForm } from "./forms/CatalogForm/CatalogForm"
 
-export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization"
+export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization" | "Catalogs"
 
 const tabIndexMap: Record<ProductDetailTab, number> = {
   Details: 0,
@@ -59,7 +62,8 @@ const tabIndexMap: Record<ProductDetailTab, number> = {
   Variants: 2,
   Media: 3,
   Facets: 4,
-  Customization: 5
+  Customization: 5,
+  Catalogs: 6
 }
 const inverseTabIndexMap = invert(tabIndexMap)
 interface ProductDetailProps {
@@ -71,6 +75,8 @@ interface ProductDetailProps {
   initialSpecs?: ISpec[]
   initialVariants?: IVariant[]
   facets?: IProductFacet[]
+  initialCatalogs?: ProductCatalogAssignment[]
+  initialCategories?: CategoryProductAssignmentAdmin[]
 }
 export default function ProductDetail({
   showTabbedView,
@@ -80,7 +86,9 @@ export default function ProductDetail({
   initialOverridePriceSchedules,
   initialSpecs,
   initialVariants,
-  facets // facets won't change so we don't need to use state
+  facets, // facets won't change so we don't need to use state
+  initialCatalogs,
+  initialCategories
 }: ProductDetailProps) {
   // setting initial values for state so we can update on submit when product is updated
   // this allows us to keep the form in sync with the product without having to refresh the page
@@ -105,11 +113,14 @@ export default function ProductDetail({
     Variants: true,
     Media: true,
     Facets: true,
-    Customization: true
+    Customization: true,
+    Catalogs: true
   }
   const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
   const [xpPropertyNameToEdit, setXpPropertyNameToEdit] = useState<string>(null)
   const [xpPropertyValueToEdit, setXpPropertyValueToEdit] = useState<string>(null)
+  const [productCatalogs, setProductCatalogs] = useState(initialCatalogs)
+  const [productCategories, setProductCategories] = useState(initialCategories)
 
   const initialValues = product
     ? withDefaultValuesFallback(
@@ -118,7 +129,8 @@ export default function ProductDetail({
           DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
           Specs: cloneDeep(specs),
           Variants: cloneDeep(variants),
-          OverridePriceSchedules: cloneDeep(overridePriceSchedules)
+          OverridePriceSchedules: cloneDeep(overridePriceSchedules),
+          CatalogAssignments: cloneDeep(productCatalogs)
         },
         defaultValues
       )
@@ -382,6 +394,7 @@ export default function ProductDetail({
               {viewVisibility.Media && <ProductDetailTab tab="Media" control={control} />}
               {viewVisibility.Facets && <ProductDetailTab tab="Facets" control={control} />}
               {viewVisibility.Customization && <ProductDetailTab tab="Customization" control={control} />}
+              {viewVisibility.Catalogs && <ProductDetailTab tab="Catalogs" control={control} />}
             </TabList>
 
             <TabPanels>
@@ -457,6 +470,15 @@ export default function ProductDetail({
               {viewVisibility.Customization && (
                 <TabPanel p={0} mt={6}>
                   {isCreatingNew ? creatingNewXpCard() : xpCard()}
+                </TabPanel>
+              )}
+              {viewVisibility.Catalogs && (
+                <TabPanel p={0} mt={6}>
+                  <CatalogForm
+                    control={control}
+                    trigger={trigger}
+                    productCatalogs={productCatalogs}
+                    productCategories={productCategories} />
                 </TabPanel>
               )}
             </TabPanels>
@@ -550,6 +572,18 @@ export default function ProductDetail({
                 {viewVisibility.Customization && isCreatingNew && creatingNewXpCard()}
               </Box>
             </Box>
+            {viewVisibility.Catalogs && (
+              <Box width="100%">
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Catalogs</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    hi!
+                  </CardBody>
+                </Card>
+              </Box>
+            )}
           </Flex>
         )}
         <ProductXpModal

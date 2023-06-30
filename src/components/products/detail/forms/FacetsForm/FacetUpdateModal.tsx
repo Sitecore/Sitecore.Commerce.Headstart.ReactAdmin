@@ -25,7 +25,6 @@ import {array, object, string} from "yup"
 import {SelectControl} from "@/components/react-hook-form"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {Link} from "@/components/navigation/Link"
-import {SelectOption} from "types/SelectOption"
 
 interface FacetUpdateModalProps {
   availableFacets: IProductFacet[]
@@ -36,36 +35,21 @@ interface FacetUpdateModalProps {
 export function FacetUpdateModal({availableFacets, facetIds = [], onUpdate, buttonProps}: FacetUpdateModalProps) {
   const {isOpen, onOpen, onClose} = useDisclosure()
   const cancelRef = useRef()
-
-  const selectedOptions = getDefaultSelectedOptions()
+  const selectedOptions = facetIds.filter((id) => availableFacets.find((facet) => facet.ID === id))
   const availableFacetFields = availableFacets.map((facet) => ({label: facet.Name, value: facet.ID}))
   const {handleSubmit, control, reset} = useForm({
     mode: "onBlur",
     resolver: yupResolver(
       object().shape({
-        SelectedFacets: array().of(
-          object().shape({
-            label: string().required(),
-            value: string().required()
-          })
-        )
+        SelectedFacets: array().of(string())
       })
     ),
     defaultValues: {SelectedFacets: selectedOptions} as any
   })
 
   useEffect(() => {
-    reset({SelectedFacets: getDefaultSelectedOptions()})
-  }, [facetIds])
-
-  function getDefaultSelectedOptions() {
-    return facetIds
-      .filter((id) => availableFacets.find((facet) => facet.ID === id))
-      .map((id) => {
-        const facet = availableFacets.find((facet) => facet.ID === id)
-        return {label: facet.Name, value: facet.ID}
-      })
-  }
+    reset({SelectedFacets: facetIds.filter((id) => availableFacets.find((facet) => facet.ID === id))})
+  }, [facetIds, reset, availableFacets])
 
   const handleSubmitPreventBubbling = (event: FormEvent) => {
     // a version of handleSubmit that prevents
@@ -80,10 +64,8 @@ export function FacetUpdateModal({availableFacets, facetIds = [], onUpdate, butt
     onClose()
   }
 
-  const onSubmit = (update: {SelectedFacets: SelectOption[]}) => {
-    onUpdate(update.SelectedFacets.map((option) => option.value))
-    // const selectedOptions = getDefaultSelectedOptions()
-    // reset({SelectedFacets: selectedOptions})
+  const onSubmit = (update: {SelectedFacets: string[]}) => {
+    onUpdate(update.SelectedFacets)
     onClose()
   }
 

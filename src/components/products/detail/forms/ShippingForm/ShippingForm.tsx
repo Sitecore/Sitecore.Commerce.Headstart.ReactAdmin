@@ -1,7 +1,7 @@
-import {CheckboxControl, InputControl, SingleSelectControl} from "@/components/react-hook-form"
+import {CheckboxControl, InputControl, SelectControl} from "@/components/react-hook-form"
 import {Divider, SimpleGrid} from "@chakra-ui/react"
 import {AdminAddresses, SupplierAddresses} from "ordercloud-javascript-sdk"
-import {useEffect, useState} from "react"
+import {useCallback} from "react"
 import {Control, FieldValues, useWatch} from "react-hook-form"
 import {getMySellerCompanyIds} from "services/currentUser"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
@@ -14,39 +14,30 @@ type ShippingFormProps = {
 }
 
 export function ShippingForm({control}: ShippingFormProps) {
-  const [sellerCompanyIds, setSellerCompanyIds] = useState([] as string[])
-  const [sellerAddress, setSellerAddresses] = useState([] as (IAdminAddress | ISupplierAddress)[])
-  const [loading, setLoading] = useState(false)
   const linearUnits = ["in", "mm", "cm", "ft", "yard"]
   const weightUnits = ["lb", "kg"]
-  const watchedCompanyId = useWatch({name: fieldNames.SHIP_FROM_COMPANYID, control})
+  const selectedShipFromCompanyId = useWatch({name: fieldNames.SHIP_FROM_COMPANYID, control})
 
-  useEffect(() => {
-    const getSellerCompanyIds = async () => {
-      setSellerCompanyIds(await getMySellerCompanyIds())
-    }
-    getSellerCompanyIds()
+  const getShipFromCompanyOptions = useCallback(async () => {
+    const sellerCompanyIds = await getMySellerCompanyIds()
+    return sellerCompanyIds.map((companyId) => ({
+      label: companyId === "Admin" ? "Admin" : `Supplier: ${companyId}`,
+      value: companyId
+    }))
   }, [])
 
-  useEffect(() => {
-    const getSellerAddresses = async (selectedSellerId: string) => {
-      try {
-        setLoading(true)
-        let addresses
-        if (selectedSellerId == "Admin") {
-          addresses = await AdminAddresses.List<IAdminAddress>()
-        } else {
-          addresses = await SupplierAddresses.List<ISupplierAddress>(selectedSellerId)
-        }
-        setSellerAddresses(addresses.Items)
-      } finally {
-        setLoading(false)
-      }
+  const getShipFromAddressOptions = useCallback(async () => {
+    if (!selectedShipFromCompanyId) {
+      return []
     }
-    if (watchedCompanyId) {
-      getSellerAddresses(watchedCompanyId)
+    let addresses
+    if (selectedShipFromCompanyId == "Admin") {
+      addresses = await AdminAddresses.List<IAdminAddress>()
+    } else {
+      addresses = await SupplierAddresses.List<ISupplierAddress>(selectedShipFromCompanyId)
     }
-  }, [watchedCompanyId])
+    return addresses.Items.map((address) => ({label: address.AddressName, value: address.ID}))
+  }, [selectedShipFromCompanyId])
 
   return (
     <>
@@ -79,18 +70,15 @@ export function ShippingForm({control}: ShippingFormProps) {
           validationSchema={validationSchema}
         />
 
-        <SingleSelectControl
+        <SelectControl
           label="&zwnj;"
           validationSchema={validationSchema}
           name={fieldNames.SHIP_LINEAR_UNIT}
           control={control}
-        >
-          {linearUnits.map((unit) => (
-            <option key={unit} value={unit}>
-              {unit}
-            </option>
-          ))}
-        </SingleSelectControl>
+          selectProps={{
+            options: linearUnits.map((unit) => ({label: unit, value: unit}))
+          }}
+        />
 
         <InputControl
           label="Weight"
@@ -100,18 +88,13 @@ export function ShippingForm({control}: ShippingFormProps) {
           validationSchema={validationSchema}
         />
 
-        <SingleSelectControl
+        <SelectControl
           label="&zwnj;"
           validationSchema={validationSchema}
           name={fieldNames.SHIP_LINEAR_UNIT}
           control={control}
-        >
-          {weightUnits.map((unit) => (
-            <option key={unit} value={unit}>
-              {unit}
-            </option>
-          ))}
-        </SingleSelectControl>
+          selectProps={{options: weightUnits.map((unit) => ({label: unit, value: unit}))}}
+        />
       </SimpleGrid>
 
       <Divider my={4} />
@@ -120,36 +103,27 @@ export function ShippingForm({control}: ShippingFormProps) {
         gridTemplateColumns={{base: "1fr", md: "1fr 1fr", xl: "repeat(auto-fit, minmax(400px, 1fr))"}}
         gap={4}
       >
-        <SingleSelectControl
+        <SelectControl
           selectProps={{
-            placeholder: "Select a company"
+            placeholder: "Select a company",
+            loadOptions: getShipFromCompanyOptions
           }}
           label="Ship From Company"
           validationSchema={validationSchema}
           name={fieldNames.SHIP_FROM_COMPANYID}
           control={control}
-        >
-          {sellerCompanyIds.map((companyId) => (
-            <option key={companyId} value={companyId}>
-              {companyId === "Admin" ? "Admin" : `Supplier: ${companyId}`}
-            </option>
-          ))}
-        </SingleSelectControl>
+        />
 
-        <SingleSelectControl
-          selectProps={{placeholder: "Select an address"}}
+        <SelectControl
+          selectProps={{
+            placeholder: "Select an address",
+            loadOptions: getShipFromAddressOptions
+          }}
           validationSchema={validationSchema}
           label="Ship From"
           name={fieldNames.SHIP_FROM}
           control={control}
-          isDisabled={loading}
-        >
-          {sellerAddress.map((address) => (
-            <option key={address.ID} value={address.ID}>
-              {address.AddressName}
-            </option>
-          ))}
-        </SingleSelectControl>
+        />
 
         <CheckboxControl
           label="This product is eligible for returns"

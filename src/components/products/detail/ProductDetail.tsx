@@ -227,13 +227,6 @@ export default function ProductDetail({
     setLiveXp(patchedProduct.xp)
   }
 
-  const SimpleCard = (props: {title?: string; children: React.ReactElement}) => (
-    <Card>
-      <CardHeader>{props.title && <Heading size="md">{props.title}</Heading>}</CardHeader>
-      <CardBody>{props.children}</CardBody>
-    </Card>
-  )
-
   const xpCard = (): JSX.Element => {
     return (
       <Card w="100%">
@@ -345,7 +338,7 @@ export default function ProductDetail({
   useEffect(() => {
     const productXp = getNonUiXp(product?.xp)
     setNonUiXp(productXp)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product])
 
   const getNonUiXp = (xp: {[key: string]: any}): {[key: string]: any} => {
@@ -576,5 +569,14 @@ export default function ProductDetail({
         />
       </Box>
     </Container>
+  )
+}
+
+function SimpleCard(props: {title?: string; children: React.ReactElement}) {
+  return (
+    <Card margin={3}>
+      <CardHeader>{props.title && <Heading size="md">{props.title}</Heading>}</CardHeader>
+      <CardBody>{props.children}</CardBody>
+    </Card>
   )
 }

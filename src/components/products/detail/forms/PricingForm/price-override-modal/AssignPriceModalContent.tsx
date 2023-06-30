@@ -1,6 +1,5 @@
 import SubmitButton from "@/components/react-hook-form/submit-button"
 import {
-  Badge,
   Box,
   Button,
   ButtonGroup,
@@ -17,15 +16,15 @@ import {
 import {yupResolver} from "@hookform/resolvers/yup"
 import {Control, FieldValues, useController, useForm, useFormState} from "react-hook-form"
 import {array, object, string} from "yup"
-import {FormEvent, useState} from "react"
+import {FormEvent, useCallback, useState} from "react"
 import {Buyers, ProductAssignment, UserGroups} from "ordercloud-javascript-sdk"
 import {compact, debounce, rest, uniq, uniqWith} from "lodash"
-import AsyncSelect from "react-select/async"
-import Select from "react-select"
-import SelectAsyncControl from "@/components/react-hook-form/select-async-control"
+import {AsyncSelect, Select} from "chakra-react-select"
 import {TbX} from "react-icons/tb"
 import {isRequiredField} from "utils"
 import FormControl from "@/components/react-hook-form/form-control"
+import {SelectControl} from "@/components/react-hook-form"
+import {IBuyer} from "types/ordercloud/IBuyer"
 
 interface AssignPriceModalContentProps {
   productAssignments: ProductAssignment[]
@@ -43,7 +42,7 @@ export function AssignPriceModalContent({
   const selectOptionSchemaRequired = object().shape({label: string().required(), value: string().required()})
   const validationSchema = object()
     .shape({
-      BuyerAssignments: array().of(selectOptionSchemaRequired),
+      BuyerAssignments: array().of(string()),
       UserGroupAssignments: array()
         .of(
           object().shape({
@@ -82,6 +81,9 @@ export function AssignPriceModalContent({
     // get buyer assignments data
     const buyerAssignments = productAssignments.filter((assignment) => !assignment.UserGroupID)
     const allBuyerIds = uniq(compact(productAssignments.map((assignment) => assignment.BuyerID)))
+    if (!allBuyerIds.length) {
+      return {BuyerAssignments: [], UserGroupAssignments: []}
+    }
     const allBuyers = await Buyers.List({filters: {ID: allBuyerIds.join("|")}})
 
     // get usergroup assignment data
@@ -114,8 +116,8 @@ export function AssignPriceModalContent({
   }
 
   const onSubmit = (data) => {
-    const buyerProductAssignments = data.BuyerAssignments.map((option) => ({
-      BuyerID: option.value
+    const buyerProductAssignments = data.BuyerAssignments.map((optionValue) => ({
+      BuyerID: optionValue
     }))
     const userGroupProductAssignments = data.UserGroupAssignments.map((option) => ({
       BuyerID: option.Buyer.value,
@@ -138,25 +140,31 @@ export function AssignPriceModalContent({
     reset()
   }
 
-  const loadBuyers = async (search: string) => {
+  const loadBuyers = useCallback(async (search: string) => {
     const buyers = await Buyers.List({search})
-    return buyers.Items.map((buyer) => ({label: buyer.Name, value: buyer.ID}))
-  }
+    return buyers.Items.map((buyer) => ({label: <BuyerLabel buyer={buyer} />, value: buyer.ID}))
+  }, [])
 
   return (
     <ModalContent as="form" noValidate onSubmit={handleSubmitPreventBubbling}>
       <ModalHeader>Assign Price</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
-        <Box marginBottom={5}>
-          <SelectAsyncControl
-            name="BuyerAssignments"
-            label="Assign to buyer organizations"
-            control={control}
-            maxWidth="50%"
-            selectProps={{isMulti: true, defaultOptions: true, loadOptions: loadBuyers}}
-          />
-        </Box>
+        <SelectControl
+          name="BuyerAssignments"
+          label="Assign to buyer organizations"
+          control={control}
+          maxWidth="50%"
+          selectProps={{
+            isMulti: true,
+            loadOptions: loadBuyers,
+            chakraStyles: {
+              container: (baseStyles) => ({...baseStyles, marginBottom: 5}),
+              multiValueLabel: (baseStyles) => ({...baseStyles, backgroundColor: "transparent"}),
+              multiValue: (baseStyles) => ({...baseStyles, backgroundColor: "transparent"})
+            }
+          }}
+        />
         <UserGroupSelect control={control} name="UserGroupAssignments" label="Assign to usergroups" />
       </ModalBody>
       <ModalFooter>
@@ -203,7 +211,10 @@ function UserGroupSelect({control, name, label, validationSchema}: UserGroupSele
 
   const loadBuyers = async (search: string) => {
     const buyers = await Buyers.List({search})
-    return buyers.Items.map((buyer) => ({label: buyer.Name, value: buyer.ID}))
+    return buyers.Items.map((buyer) => ({
+      label: buyer.Name,
+      value: buyer.ID
+    }))
   }
 
   const handleBuyerChange = (newBuyer) => {
@@ -248,7 +259,7 @@ function UserGroupSelect({control, name, label, validationSchema}: UserGroupSele
       <FormControl name={name} control={control} label={label} isRequired={isRequired} {...rest}>
         <HStack>
           <AsyncSelect
-            styles={{container: (baseStyles) => ({...baseStyles, width: "100%"})}}
+            chakraStyles={{container: (baseStyles) => ({...baseStyles, width: "100%"})}}
             isDisabled={isSubmitting}
             placeholder="Select buyer"
             defaultOptions
@@ -256,7 +267,7 @@ function UserGroupSelect({control, name, label, validationSchema}: UserGroupSele
             onChange={handleBuyerChange}
           />
           <Select
-            styles={{
+            chakraStyles={{
               container: (baseStyles) => ({...baseStyles, width: "100%"})
             }}
             options={userGroupOptions}
@@ -276,7 +287,7 @@ function UserGroupSelect({control, name, label, validationSchema}: UserGroupSele
         {(Array.isArray(field.value) ? field.value : []).map((option, index) => (
           <Button
             key={index}
-            leftIcon={<TbX />}
+            rightIcon={<TbX />}
             variant="solid"
             fontWeight={"normal"}
             size="sm"
@@ -290,5 +301,20 @@ function UserGroupSelect({control, name, label, validationSchema}: UserGroupSele
         ))}
       </ButtonGroup>
     </>
+  )
+}
+
+function BuyerLabel({buyer}: {buyer: IBuyer}) {
+  return (
+    <Button
+      variant="solid"
+      fontWeight={"normal"}
+      size="sm"
+      borderRadius={"full"}
+      backgroundColor="primary.100"
+      style={{margin: 0}}
+    >
+      <Text>{buyer.Name} </Text>
+    </Button>
   )
 }

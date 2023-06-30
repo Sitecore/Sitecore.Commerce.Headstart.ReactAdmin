@@ -1,39 +1,11 @@
-import React, {useEffect} from "react"
-import {Control, FieldValues, UseFormTrigger, useController, useWatch} from "react-hook-form"
-import {
-  Badge,
-  Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardHeader,
-  Flex,
-  FormControl,
-  FormLabel,
-  Grid,
-  Heading,
-  Icon,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  VStack
-} from "@chakra-ui/react"
+import React from "react"
+import {Control, FieldValues, useController} from "react-hook-form"
+import {Box, Card, CardBody, CardHeader, Heading, Icon, Text, VStack} from "@chakra-ui/react"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
-import FacetCheckboxControl from "@/components/react-hook-form/form-checkbox/facet-checkbox-control"
 import {TbCactus, TbX} from "react-icons/tb"
-import {SpecUpdateModal} from "../../variants/SpecUpdateModal"
-import {CheckIcon, CloseIcon} from "@chakra-ui/icons"
-import {cloneDeep, difference, remove, update} from "lodash"
-import {SpecActionsMenu} from "../../variants/SpecActionsMenu"
+import {cloneDeep, difference} from "lodash"
 import {FacetUpdateModal} from "./FacetUpdateModal"
 import {SelectControl} from "@/components/react-hook-form"
-import Select from "react-select"
 
 interface FacetFormProps {
   control: Control<FieldValues, any>
@@ -103,66 +75,20 @@ export function FacetsForm({control, facetList}: FacetFormProps) {
       </CardHeader>
       <CardBody>
         <VStack gap={3} align="start" maxWidth="md">
-          {productFacetIds.map((facetId) => (
-            <FacetOptionSelect key={facetId} facetId={facetId} control={control} facetList={facetList} />
-          ))}
+          {productFacetIds.map((facetId) => {
+            const facet = facetList.find((f) => f.ID === facetId)
+            const facetOptions = (facet.xp?.Options || []).map((option) => ({label: option, value: option}))
+            return (
+              <SelectControl
+                key={facetId}
+                name={`Product.xp.Facets.${facetId}`}
+                control={control}
+                selectProps={{options: facetOptions, isMulti: true}}
+              />
+            )
+          })}
         </VStack>
       </CardBody>
     </Card>
-  )
-}
-
-interface FacetOptionSelectProps {
-  facetId: string
-  control: Control<FieldValues, any>
-  facetList: IProductFacet[]
-}
-const FacetOptionSelect = ({facetId, control, facetList}: FacetOptionSelectProps) => {
-  const facet = facetList.find((f) => f.ID === facetId)
-  const {field} = useController({control, name: `Product.xp.Facets.${facetId}`})
-
-  const selectValues = (field.value || []).map((value) => ({label: value, value}))
-  const selectOptions = (facet.xp?.Options || []).map((option) => ({label: option, value: option}))
-
-  const handleSelectChange = (options) => {
-    const optionValues = options.map((o) => o.value)
-    field.onChange(optionValues)
-  }
-
-  const handleRemove = (index: number) => {
-    const update = field.value.filter((value, i) => i !== index)
-    field.onChange(update)
-  }
-
-  return (
-    <>
-      <FormControl>
-        <FormLabel>{facet.Name}</FormLabel>
-        <Select
-          isMulti={true}
-          value={selectValues}
-          options={selectOptions}
-          onChange={handleSelectChange}
-          controlShouldRenderValue={false}
-        />
-      </FormControl>
-      <ButtonGroup display="flex" flexWrap="wrap" gap={2}>
-        {selectValues.map((option, index) => (
-          <Button
-            key={index}
-            leftIcon={<TbX />}
-            variant="solid"
-            fontWeight={"normal"}
-            size="sm"
-            borderRadius={"full"}
-            onClick={() => handleRemove(index)}
-            backgroundColor="accent.100"
-            style={{margin: 0}}
-          >
-            {option.label}
-          </Button>
-        ))}
-      </ButtonGroup>
-    </>
   )
 }

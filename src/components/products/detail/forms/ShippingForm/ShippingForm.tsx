@@ -1,4 +1,4 @@
-import {CheckboxControl, InputControl, SelectControl} from "@/components/react-hook-form"
+import {CheckboxControl, InputControl, SingleSelectControl} from "@/components/react-hook-form"
 import {Divider, SimpleGrid} from "@chakra-ui/react"
 import {AdminAddresses, SupplierAddresses} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
@@ -79,7 +79,7 @@ export function ShippingForm({control}: ShippingFormProps) {
           validationSchema={validationSchema}
         />
 
-        <SelectControl
+        <SingleSelectControl
           label="&zwnj;"
           validationSchema={validationSchema}
           name={fieldNames.SHIP_LINEAR_UNIT}
@@ -90,7 +90,7 @@ export function ShippingForm({control}: ShippingFormProps) {
               {unit}
             </option>
           ))}
-        </SelectControl>
+        </SingleSelectControl>
 
         <InputControl
           label="Weight"
@@ -100,7 +100,7 @@ export function ShippingForm({control}: ShippingFormProps) {
           validationSchema={validationSchema}
         />
 
-        <SelectControl
+        <SingleSelectControl
           label="&zwnj;"
           validationSchema={validationSchema}
           name={fieldNames.SHIP_LINEAR_UNIT}
@@ -111,7 +111,7 @@ export function ShippingForm({control}: ShippingFormProps) {
               {unit}
             </option>
           ))}
-        </SelectControl>
+        </SingleSelectControl>
       </SimpleGrid>
 
       <Divider my={4} />
@@ -120,7 +120,7 @@ export function ShippingForm({control}: ShippingFormProps) {
         gridTemplateColumns={{base: "1fr", md: "1fr 1fr", xl: "repeat(auto-fit, minmax(400px, 1fr))"}}
         gap={4}
       >
-        <SelectControl
+        <SingleSelectControl
           selectProps={{
             placeholder: "Select a company"
           }}
@@ -134,9 +134,9 @@ export function ShippingForm({control}: ShippingFormProps) {
               {companyId === "Admin" ? "Admin" : `Supplier: ${companyId}`}
             </option>
           ))}
-        </SelectControl>
+        </SingleSelectControl>
 
-        <SelectControl
+        <SingleSelectControl
           selectProps={{placeholder: "Select an address"}}
           validationSchema={validationSchema}
           label="Ship From"
@@ -149,7 +149,7 @@ export function ShippingForm({control}: ShippingFormProps) {
               {address.AddressName}
             </option>
           ))}
-        </SelectControl>
+        </SingleSelectControl>
 
         <CheckboxControl
           label="This product is eligible for returns"

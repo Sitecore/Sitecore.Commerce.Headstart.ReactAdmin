@@ -53,7 +53,7 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
   return (
     <>
       <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-        <Card>
+        <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
           <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
             <Button
               onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
@@ -72,15 +72,7 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
               </SubmitButton>
             </ButtonGroup>
           </CardHeader>
-          <CardBody
-            display="flex"
-            flexDirection={"column"}
-            as="form"
-            noValidate
-            onSubmit={handleSubmit(onSubmit)}
-            gap={4}
-            maxW={{xl: "container.md"}}
-          >
+          <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
             <InputControl name="Name" label="Catalog Name" isRequired control={control} />
             <TextareaControl name="Description" label="Description" control={control} />
             <SwitchControl name="Active" label="Active" control={control} />

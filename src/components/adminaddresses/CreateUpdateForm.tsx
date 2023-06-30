@@ -65,7 +65,7 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
 
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-      <Card>
+      <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
           <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting} leftIcon={<TbChevronLeft />}>
             Back
@@ -82,10 +82,8 @@ function CreateUpdateForm({address}: CreateUpdateFormProps) {
         <CardBody
           display="flex"
           flexDirection={"column"}
-          as="form"
           alignItems={"flex-start"}
           justifyContent="space-between"
-          onSubmit={handleSubmit(onSubmit)}
           gap={6}
           maxW="container.lg"
         >

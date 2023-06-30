@@ -89,12 +89,18 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
                     />
                   </Td>
                   <Td padding={tableCellPadding}>
-                    <SelectControl name={`Options.${index}.PriceMarkupType`} control={control}>
-                      <option value="NoMarkup">None</option>
-                      <option value="Percentage">Percentage</option>
-                      <option value="AmountPerQuantity">Amount per quantity </option>
-                      <option value="AmountTotal">Amount total</option>
-                    </SelectControl>
+                    <SelectControl
+                      name={`Options.${index}.PriceMarkupType`}
+                      control={control}
+                      selectProps={{
+                        options: [
+                          {label: "None", value: "NoMarkup"},
+                          {label: "Percentage", value: "Percentage"},
+                          {label: "Amount per quantity", value: "AmountPerQuantity"},
+                          {label: "Amount total", value: "AmountTotal"}
+                        ]
+                      }}
+                    />
                   </Td>
                   <Td padding={tableCellPadding}>
                     <PriceMarkupControl index={index} control={control} onKeyPress={handleKeyPress} />

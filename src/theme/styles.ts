@@ -12,7 +12,27 @@ const styles = {
     ".my-commerce-logo_dark": {
       fill: "st.logoBaseColor"
     },
-
+    ".visa-logo-background": {
+      fill: "st.visaBackground"
+    },
+    ".visa-logo-foreground": {
+      fill: "st.visaForeground"
+    },
+    ".mastercard-logo-background": {
+      fill: "st.mastercardBackground"
+    },
+    ".amex-logo-background": {
+      fill: "st.amexBackground"
+    },
+    ".amex-logo-foreground": {
+      fill: "st.amexForeground"
+    },
+    ".discover-logo-background": {
+      fill: "st.discoverBackground"
+    },
+    ".discover-logo-foreground": {
+      fill: "st.discoverForeground"
+    },
     body: {
       fontSize: "md",
       "& #__next": {

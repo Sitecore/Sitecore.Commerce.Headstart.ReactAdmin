@@ -32,7 +32,7 @@ const DesktopSideBarMenu = ({isInDrawer, onLinkClick}: DesktopSideBarMenuProps) 
     {label: "products", icon: TbShoppingCartPlus, permisshies: appPermissions.ProductManager},
     {label: "promotions", icon: TbShoppingCartDiscount, permisshies: appPermissions.OrderManager},
     {label: "orders", icon: TbReceipt2, permisshies: appPermissions.OrderManager},
-    {label: "returns", icon: TbTruckReturn, permisshies: appPermissions.BuyerManager},
+    {label: "returns", icon: TbTruckReturn, permisshies: appPermissions.OrderManager},
     {label: "buyers", icon: TbUserCheck, permisshies: appPermissions.BuyerManager},
     {label: "suppliers", icon: TbBuildingWarehouse, permisshies: appPermissions.SupplierManager},
     {label: "settings", icon: TbSettings2, permisshies: appPermissions.SettingsManager}

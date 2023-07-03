@@ -16,6 +16,7 @@ import {
   fetchProductCatalogAssignments,
   fetchProductCategoryAssignments
 } from "services/product-data-fetcher.service"
+import {appSettings} from "constants/app-settings"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 
 export function useProductDetail() {
@@ -75,11 +76,8 @@ export function useProductDetail() {
       const queryStringTabbed = query?.tabbed?.toString()
       if (queryStringTabbed === "true" || queryStringTabbed === "false") {
         return queryStringTabbed === "true"
-      } else if (
-        process.env.NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED === "false" ||
-        process.env.NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED === "true"
-      ) {
-        return process.env.NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED === "true"
+      } else if (appSettings.defaultProductViewTabbed === "false" || appSettings.defaultProductViewTabbed === "true") {
+        return appSettings.defaultProductViewTabbed === "true"
       } else {
         return true
       }

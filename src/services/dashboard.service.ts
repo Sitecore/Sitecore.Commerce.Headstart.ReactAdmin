@@ -1,5 +1,8 @@
+import {appSettings} from "constants/app-settings"
 import {Orders} from "ordercloud-javascript-sdk"
 import {IOrder} from "types/ordercloud/IOrder"
+
+const shouldUseRealDashboardData = appSettings.useRealDashboardData === "true"
 
 const d = new Date()
 let day = d.getDate()
@@ -14,7 +17,7 @@ if (d.getMonth() === 0) {
   previousMonthYear = d.getFullYear() - 1
 }
 let mockData
-if (!process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+if (!shouldUseRealDashboardData) {
   mockData = require("../mockdata/dashboard_data.json")
 }
 
@@ -37,7 +40,7 @@ async function getTodaysMoney() {
   //console.log("dashboardService::getTodaysSales")
   let result
 
-  if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+  if (shouldUseRealDashboardData) {
     const ordersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + year + "-" + month + "-01", "<" + year + "-" + month + "-" + day]
@@ -57,7 +60,7 @@ async function getPreviousTodaysMoney() {
   // console.log("dashboardService::getPreviousTodaysSales")
   let result
 
-  if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+  if (shouldUseRealDashboardData) {
     const ordersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [
@@ -81,7 +84,7 @@ async function getTotalSales() {
   // console.log("dashboardService::getTotalSales")
   let result
 
-  if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+  if (shouldUseRealDashboardData) {
     const ordersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
@@ -102,7 +105,7 @@ async function getPreviousTotalSales() {
   // console.log("dashboardService::getPreviousTotalSales")
   let result
 
-  if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+  if (shouldUseRealDashboardData) {
     const ordersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + (year - 1) + "-01-01", "<" + (year - 1) + "-" + month + "-" + day]
@@ -154,7 +157,7 @@ async function getTotalUsers() {
   //console.log("dashboardService::getTotalUsers")
   let result
 
-  if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+  if (shouldUseRealDashboardData) {
     const usersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
@@ -172,7 +175,7 @@ async function getPreviousTotalUsers() {
   //console.log("dashboardService::getTotalUsers")
   let result
 
-  if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+  if (shouldUseRealDashboardData) {
     const usersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + (year - 1) + "-01-01", "<" + (year - 1) + "-" + month + "-" + day]
@@ -191,7 +194,7 @@ async function getTotalNewUsers() {
   //console.log("dashboardService::getTotalUsers")
   let result
 
-  if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+  if (shouldUseRealDashboardData) {
     const usersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
@@ -209,7 +212,7 @@ async function getPreviousTotalNewUsers() {
   //console.log("dashboardService::getTotalUsers")
   let result
 
-  if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+  if (shouldUseRealDashboardData) {
     const usersList = await Orders.List<IOrder>("All", {
       filters: {
         DateCreated: [

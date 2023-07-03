@@ -1,6 +1,7 @@
 import {uniq} from "lodash"
 import {ApiRole, CookieOptions} from "ordercloud-javascript-sdk"
 import {appPermissions} from "./app-permissions.config"
+import {appSettings} from "./app-settings"
 
 const appRoles = uniq(
   Object.keys(appPermissions)
@@ -18,9 +19,9 @@ export interface OcConfig {
 }
 
 const ocConfig: OcConfig = {
-  clientId: process.env.NEXT_PUBLIC_OC_CLIENT_ID || "4A9F0BAC-EC1D-4711-B01F-1A394F72F2B6",
-  marketplaceId: process.env.NEXT_PUBLIC_OC_MARKETPLACE_ID,
-  baseApiUrl: process.env.NEXT_PUBLIC_OC_API_URL || "https://sandboxapi.ordercloud.io",
+  clientId: appSettings.adminClientId,
+  marketplaceId: appSettings.marketplaceId,
+  baseApiUrl: appSettings.orderCloudApiUrl,
   scope: appRoles,
   allowAnonymous: false,
   cookieOptions: null

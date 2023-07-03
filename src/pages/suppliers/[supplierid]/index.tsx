@@ -16,7 +16,8 @@ export async function getServerSideProps() {
         title: "Edit supplier",
         metas: {
           hasBreadcrumbs: true,
-          hasSupplierContextSwitch: false
+          hasBuyerContextSwitch: false,
+          hasSupplierContextSwitch: true
         }
       },
       revalidate: 5 * 60

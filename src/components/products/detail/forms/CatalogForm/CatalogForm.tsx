@@ -10,8 +10,6 @@ import {
   AccordionPanel,
   Divider,
   Flex,
-  Box,
-  CardHeader,
   Grid
 } from "@chakra-ui/react"
 import { ProductCatalogAssignment } from "ordercloud-javascript-sdk"
@@ -24,8 +22,9 @@ interface CatalogFormProps {
   trigger: UseFormTrigger<any>
   productCatalogs?: ProductCatalogAssignment[]
   productCategories?: CategoryProductAssignmentAdmin[]
+  product?: string
 }
-export function CatalogForm({control, trigger, productCatalogs, productCategories}: CatalogFormProps) {
+export function CatalogForm({control, trigger, productCatalogs, productCategories, product}: CatalogFormProps) {
   const fieldArray = useFieldArray({
     control,
     name: `CatalogAssignments`
@@ -43,7 +42,7 @@ export function CatalogForm({control, trigger, productCatalogs, productCategorie
               <Divider />
               <AccordionPanel pb={4} px={0}>
                 <Flex flexDirection="column" gap={4} mt={4}>
-                    <CatalogsTable fieldArray={fieldArray} control={control} />
+                    <CatalogsTable fieldArray={fieldArray} control={control} product={product}/>
                 </Flex>
               </AccordionPanel>
             </AccordionItem>

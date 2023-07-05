@@ -1,5 +1,4 @@
-import ProductActionMenu from "@/components/products/list/ProductActionMenu"
-import {EditIcon, DeleteIcon} from "@chakra-ui/icons"
+import {EditIcon} from "@chakra-ui/icons"
 import {
   TableContainer,
   Table,
@@ -12,26 +11,23 @@ import {
   IconButton,
   Menu,
   MenuButton,
-  MenuDivider,
-  MenuItem,
   MenuList,
   Button,
-  ButtonGroup,
-  Text
-} from "@chakra-ui/react"
-import {Buyers, Catalogs, UserGroups} from "ordercloud-javascript-sdk"
+  ButtonGroup} from "@chakra-ui/react"
+import {Catalogs} from "ordercloud-javascript-sdk"
 import {Control, FieldValues, UseFieldArrayReturn, useWatch} from "react-hook-form"
 import {TbDotsVertical} from "react-icons/tb"
-import {priceHelper} from "utils"
 import {useEffect, useState} from "react"
 import {ProductCatalogAssignmentFieldValues} from "types/form/ProductCatalogAssignmentFieldValues"
+import CatalogAssignmentModal from "./catalog-assignment-modal/CatalogAssignmentModal"
 
 interface CatalogsTableProps {
   control: Control<FieldValues, any>
   fieldArray: UseFieldArrayReturn<FieldValues, "CatalogAssignments", "id">
+  product?: string
 }
 
-export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
+export function CatalogsTable({control, fieldArray, product}: CatalogsTableProps) {
   const {remove, update, append} = fieldArray
   const [catalogAssignments, setOverrideCatalogsAssignments] = useState<ProductCatalogAssignmentFieldValues[]>([])
   const watchedFields = useWatch({control, name: "CatalogAssignments"})
@@ -91,22 +87,59 @@ export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
         <Tbody>
             <Tr>
                 <Td>{getAssignedToDescription(catalogAssignments)}</Td>
-                {/* <Td>
-                  <PriceOverridesActionMenu
-                    priceSchedule={overrideCatalogsAssignment}
-                    onUpdate={(newCatalogsAssignment) => update(index, newCatalogsAssignment)}
-                    onDelete={() => remove(index)}
-                  />
-                </Td> */}
+                {<Td>
+                  {<CatalogsActionMenu
+                    catalogs={catalogAssignments}
+                    product={product}
+                    onUpdate={append}
+                    onRemove={remove}
+                  />}
+                </Td>}
             </Tr>
         </Tbody>
       </Table>
-      {/* <PriceOverrideModal
-        step="editprice"
+      <CatalogAssignmentModal
         onUpdate={append}
+        onRemove={remove}
+        catalogs={catalogAssignments}
+        product={product}
         as="button"
         buttonProps={{variant: "link", color: "accent.400", marginTop: 3}}
-      /> */}
+      />
     </TableContainer>
+  )
+}
+
+interface CatalogsActionMenuProps {
+  catalogs: ProductCatalogAssignmentFieldValues[]
+  onUpdate: (newCatalog: ProductCatalogAssignmentFieldValues[]) => void
+  onRemove: (index: number) => void
+  product?: string
+}
+
+function CatalogsActionMenu({catalogs, onUpdate, onRemove, product}: CatalogsActionMenuProps) {
+  return (
+    <Menu>
+      <MenuButton as={IconButton} aria-label={`Catalog Assignment action menu`} variant="ghost">
+        <Icon as={TbDotsVertical} mt={1} color="blackAlpha.400" />
+      </MenuButton>
+      <MenuList>
+        <CatalogAssignmentModal
+          catalogs={catalogs}
+          onUpdate={onUpdate}
+          onRemove={onRemove}
+          product={product}
+          as="menuitem"
+          menuItemProps={{
+            justifyContent: "space-between",
+            children: (
+              <>
+                Edit Assignments <EditIcon />
+              </>
+            )
+          }}
+        />
+      </MenuList>
+    </Menu>
   )
 }

@@ -476,6 +476,7 @@ export default function ProductDetail({
                 <TabPanel p={0} mt={6}>
                   <CatalogForm
                     control={control}
+                    product={product.ID}
                     trigger={trigger}
                     productCatalogs={productCatalogs}
                     productCategories={productCategories} />

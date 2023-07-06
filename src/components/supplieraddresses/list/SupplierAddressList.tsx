@@ -42,7 +42,7 @@ const AddressNameColumn: DataTableColumn<ISupplierAddress> = {
       {value}
     </Text>
   ),
-  sortable: true
+  sortable: false
 }
 
 const Street1Column: DataTableColumn<ISupplierAddress> = {

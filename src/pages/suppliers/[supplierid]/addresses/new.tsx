@@ -4,7 +4,7 @@ import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return {
     props: {
       header: {
@@ -20,7 +20,7 @@ export async function getStaticProps() {
 
 function ProtectedCreateUpdateForm() {
   return (
-    <ProtectedContent hasAccess={appPermissions.SettingsManager}>
+    <ProtectedContent hasAccess={appPermissions.SupplierManager}>
       <CreateUpdateForm />
     </ProtectedContent>
   )

@@ -14,11 +14,12 @@ import {
 } from "@chakra-ui/react"
 import {useEffect, useState} from "react"
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import {Supplier, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
+import {Supplier, SupplierAddresses, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {ISupplierUser} from "types/ordercloud/ISupplierUser"
 import {ISupplier} from "types/ordercloud/ISupplier"
 import {TbUser} from "react-icons/tb"
+import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 
 export default function SupplierContextSwitch({...props}) {
   const [currentSupplier, setCurrentSupplier] = useState({} as Supplier)
@@ -42,14 +43,17 @@ export default function SupplierContextSwitch({...props}) {
     let _supplierListMeta = {}
     const suppliersList = await Suppliers.List<ISupplier>()
     setSuppliers(suppliersList.Items)
-    const requests = suppliersList.Items.map(async (supplier) => {
-      const [userGroupsList, usersList] = await Promise.all([
+    const requests = suppliersList.Items.map(async (supplier, index) => {
+      const [userGroupsList, usersList, addressList] = await Promise.all([
         SupplierUserGroups.ListUserAssignments(supplier.ID),
-        SupplierUsers.List<ISupplierUser>(supplier.ID)
+        SupplierUsers.List<ISupplierUser>(supplier.ID),
+        SupplierAddresses.List<ISupplierAddress>(supplier.ID)
       ])
       _supplierListMeta[supplier.ID] = {}
       _supplierListMeta[supplier.ID]["userGroupsCount"] = userGroupsList.Meta.TotalCount
       _supplierListMeta[supplier.ID]["usersCount"] = usersList.Meta.TotalCount
+      _supplierListMeta[supplier.ID]["addressesCount"] = addressList.Meta.TotalCount
+      //_supplierListMeta[supplier.ID]["key"] = index
     })
     await Promise.all(requests)
     setSuppliersMeta(_supplierListMeta)
@@ -91,18 +95,16 @@ export default function SupplierContextSwitch({...props}) {
               </MenuButton>
               <MenuList>
                 {suppliers.map((supplier, index) => (
-                  <>
-                    <MenuItem key={index} minH="40px" onClick={() => router.push({query: {supplierid: supplier.ID}})}>
-                      <Image
-                        boxSize="2rem"
-                        borderRadius="full"
-                        src={`https://robohash.org/${supplier.ID}.png`}
-                        alt={supplier.Name}
-                        mr="12px"
-                      />
-                      <span>{supplier.Name}</span>
-                    </MenuItem>
-                  </>
+                  <MenuItem key={index} minH="40px" onClick={() => router.push({query: {supplierid: supplier.ID}})}>
+                    <Image
+                      boxSize="2rem"
+                      borderRadius="full"
+                      src={`https://robohash.org/${supplier.ID}.png`}
+                      alt={supplier.Name}
+                      mr="12px"
+                    />
+                    <span>{supplier.Name}</span>
+                  </MenuItem>
                 ))}
               </MenuList>
             </Menu>
@@ -113,6 +115,9 @@ export default function SupplierContextSwitch({...props}) {
             </Button>
             <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/users`)} variant="outline">
               Users ({suppliersMeta[supplierid]?.usersCount || "-"})
+            </Button>
+            <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/addresses`)} variant="outline">
+              Addresses ({suppliersMeta[supplierid]?.addressesCount || "-"})
             </Button>
           </ButtonGroup>
         </CardBody>

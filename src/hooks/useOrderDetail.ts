@@ -1,16 +1,12 @@
 import {useRouter} from "next/router"
 import {
   AdminAddresses,
-  ImpersonationConfigs,
   LineItems,
-  Me,
   Orders,
   Payments,
-  SecurityProfiles,
+  SpendingAccounts,
   SupplierAddresses,
-  Suppliers,
-  Tokens,
-  Users
+  Suppliers
 } from "ordercloud-javascript-sdk"
 import {useState, useEffect} from "react"
 import {IOrder} from "types/ordercloud/IOrder"
@@ -18,10 +14,7 @@ import {ILineItem} from "types/ordercloud/ILineItem"
 import {IOrderPromotion} from "types/ordercloud/IOrderPromotion"
 import {IPayment} from "types/ordercloud/IPayment"
 import {useAuth} from "./useAuth"
-import {IBuyerAddress} from "types/ordercloud/IBuyerAddress"
-import {appSettings} from "constants/app-settings"
 import {ISupplier} from "types/ordercloud/ISupplier"
-import {ICreditCard} from "types/ordercloud/ICreditCard"
 import {compact, groupBy, uniq} from "lodash"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
@@ -36,7 +29,6 @@ export function useOrderDetail() {
   const {isReady, query} = useRouter()
   const [order, setOrder] = useState(null as IOrder)
   const [promotions, setPromotions] = useState([] as IOrderPromotion[])
-  const [billingAddress, setBillingAddress] = useState(null as IBuyerAddress)
   const [payments, setPayments] = useState([] as IPayment[])
   const [lineItems, setLineItems] = useState([] as ILineItem[])
   const [loading, setLoading] = useState(true)
@@ -44,26 +36,6 @@ export function useOrderDetail() {
   const [shipFromAddresses, setShipFromAddresses] = useState({} as ShipFromAddressMap)
 
   useEffect(() => {
-    const fetchImpersonationToken = async (order: IOrder) => {
-      const buyerImpersonationProfile = await SecurityProfiles.Save("ImpersonationBuyer", {
-        ID: "ImpersonationBuyer",
-        Name: "ImpersonationBuyer",
-        Roles: ["Shopper"]
-      })
-      const buyerID = order.FromCompanyID
-      const impersonationConfigId = `admin-impersonating-${buyerID}`
-      await ImpersonationConfigs.Save(impersonationConfigId, {
-        ID: impersonationConfigId,
-        BuyerID: buyerID,
-        SecurityProfileID: buyerImpersonationProfile.ID,
-        ClientID: appSettings.buyerClientId
-      })
-      const authResponse = await Users.GetAccessToken(buyerID, order.FromUserID, {
-        ClientID: appSettings.buyerClientId,
-        Roles: ["Shopper"]
-      })
-      Tokens.SetImpersonationToken(authResponse.access_token)
-    }
     const fetchLineItems = async (order: IOrder) => {
       const lineItemList = await LineItems.List<ILineItem>("All", order.ID, {pageSize: 100})
       return lineItemList.Items
@@ -81,14 +53,21 @@ export function useOrderDetail() {
       }
       const paymentList = await Payments.List<IPayment>("All", order.ID)
       const enhancedPaymentRequests = paymentList.Items.map(async (payment) => {
-        // enhance payment with additional credit card and spending account data
-        // we need to use impersonation because the credit card and spending account may be personal
-        // and not visible via the admin endpoints alone
         if (payment.Type === "CreditCard") {
-          const creditCard = await Me.As().GetCreditCard<ICreditCard>(payment.CreditCardID)
-          payment["CreditCard"] = creditCard
+          // we need to mock the credit card here because if its a personal credit card the admin can't get it
+          // currently a feature request to make this readonly on the order
+          payment.CreditCard = {
+            ID: "mock-creditcard",
+            Token: "mock-token",
+            DateCreated: "2023-07-04",
+            CardholderName: "John Doe",
+            CardType: "Visa",
+            PartialAccountNumber: "1234",
+            ExpirationDate: "2025-07-04",
+            xp: {}
+          }
         } else if (payment.Type === "SpendingAccount") {
-          const spendingAccount = await Me.As().GetSpendingAccount(payment.SpendingAccountID)
+          const spendingAccount = await SpendingAccounts.Get(order.FromCompanyID, payment.SpendingAccountID)
           payment["SpendingAccount"] = spendingAccount
         }
         return payment
@@ -146,28 +125,9 @@ export function useOrderDetail() {
       return addressMap
     }
 
-    const fetchBillingAddress = async (order: IOrder) => {
-      if (!isAdmin) {
-        // Suppliers shouldn't see billing address
-        return
-      }
-      if (order.BillingAddress) {
-        // If they use a one time address, the full object will be available here
-        return order.BillingAddress
-      }
-      if (order.BillingAddressID) {
-        // If they use a saved address, we need to use impersonation to get it because they may be using a personal address
-        return await Me.As().GetAddress(order.BillingAddressID)
-      }
-      return null
-    }
-
     const getOrder = async () => {
       const orderId = query.orderid.toString()
       const _order = await Orders.Get<IOrder>("All", orderId)
-      if (isAdmin) {
-        await fetchImpersonationToken(_order)
-      }
       setOrder(_order)
       if (_order) {
         await Promise.all([
@@ -179,8 +139,7 @@ export function useOrderDetail() {
             ])
           }),
           fetchPromotions(_order).then((response) => setPromotions(response)),
-          fetchPayments(_order).then((response) => setPayments(response)),
-          fetchBillingAddress(_order).then((response) => setBillingAddress(response))
+          fetchPayments(_order).then((response) => setPayments(response))
         ])
       }
     }
@@ -200,7 +159,6 @@ export function useOrderDetail() {
     lineItems,
     promotions,
     payments,
-    billingAddress,
     loading,
     suppliers,
     shipFromAddresses

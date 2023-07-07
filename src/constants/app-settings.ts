@@ -21,8 +21,7 @@ const getEnvironmentVariable = (environmentVariable: string, defaultValue?: stri
 
 export const appSettings = {
   appname: getEnvironmentVariable("APP_NAME", "Sitecore.Commerce.Headstart.ReactAdmin"),
-  adminClientId: getEnvironmentVariable("OC_ADMIN_CLIENT_ID", "4A9F0BAC-EC1D-4711-B01F-1A394F72F2B6"),
-  buyerClientId: getEnvironmentVariable("OC_BUYER_CLIENT_ID", "DC5F663B-E2EB-4D23-B7B0-A18FCEEE4D44"),
+  clientId: getEnvironmentVariable("OC_CLIENT_ID", "4A9F0BAC-EC1D-4711-B01F-1A394F72F2B6"),
   orderCloudApiUrl: getEnvironmentVariable("OC_API_URL", "https://sandboxapi.ordercloud.io"),
   marketplaceId: getEnvironmentVariable("OC_MARKETPLACE_ID", "SitecoreCommerce"),
   marketplaceName: getEnvironmentVariable("OC_MARKETPLACE_NAME", "Sitecore Commerce"),

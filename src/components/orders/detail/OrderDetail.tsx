@@ -7,7 +7,6 @@ import {OrderCustomer} from "./order-customer/OrderCustomer"
 import {IOrderPromotion} from "types/ordercloud/IOrderPromotion"
 import {IPayment} from "types/ordercloud/IPayment"
 import {OrderPayments} from "./order-payments/OrderPayments"
-import {IBuyerAddress} from "types/ordercloud/IBuyerAddress"
 import {useAuth} from "hooks/useAuth"
 import {OrderLabel} from "./OrderLabel"
 import {OrderProducts} from "./order-products/OrderProducts"
@@ -20,20 +19,11 @@ interface OrderDetailProps {
   lineItems: ILineItem[]
   promotions: IOrderPromotion[]
   payments: IPayment[]
-  billingAddress: IBuyerAddress
   suppliers: ISupplier[]
   shipFromAddresses: ShipFromAddressMap
 }
 
-export function OrderDetail({
-  order,
-  lineItems,
-  promotions,
-  payments,
-  billingAddress,
-  suppliers,
-  shipFromAddresses
-}: OrderDetailProps) {
+export function OrderDetail({order, lineItems, promotions, payments, suppliers, shipFromAddresses}: OrderDetailProps) {
   const {isAdmin} = useAuth()
   const shippingAddress = lineItems?.length ? lineItems[0].ShippingAddress : null
   const orderDetailCardGap = 3
@@ -107,7 +97,7 @@ export function OrderDetail({
                 </CardHeader>
                 <CardBody>
                   <OrderPayments
-                    billingAddress={billingAddress}
+                    billingAddress={order.BillingAddress}
                     shippingAddress={shippingAddress}
                     payments={payments}
                   />

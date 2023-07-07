@@ -33,8 +33,6 @@ Objects:
       Roles:
         - OrderAdmin
         - SupplierAddressReader
-        - BuyerImpersonation
-        - SetSecurityProfile
       xp: {IsPermission: true}
     - ID: ReportViewer
       Name: Report Viewer

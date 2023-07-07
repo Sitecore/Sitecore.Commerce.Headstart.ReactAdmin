@@ -19,7 +19,7 @@ export interface OcConfig {
 }
 
 const ocConfig: OcConfig = {
-  clientId: appSettings.adminClientId,
+  clientId: appSettings.clientId,
   marketplaceId: appSettings.marketplaceId,
   baseApiUrl: appSettings.orderCloudApiUrl,
   scope: appRoles,

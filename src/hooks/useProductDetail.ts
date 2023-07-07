@@ -16,8 +16,7 @@ import {
   fetchProductCatalogAssignments,
   fetchProductCategoryAssignments
 } from "services/product-data-fetcher.service"
-import { CategoryProductAssignmentAdmin } from "types/form/CategoryProductAssignmentAdmin"
-import { flatten } from "lodash"
+import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 
 export function useProductDetail() {
   const {isReady, query, push} = useRouter()
@@ -30,8 +29,8 @@ export function useProductDetail() {
   const [showTabbedView, setShowTabbedView] = useState(true)
   const [loading, setLoading] = useState(true)
   const [initialTab, setInitialTab] = useState("Details" as ProductDetailTab)
-  const [productCatalogs, setProductCatalogs] = useState([] as ProductCatalogAssignment[])
-  const [productCategories, setProductCategories] = useState([] as CategoryProductAssignmentAdmin[])
+  const [catalogAssignments, setCatalogAssignments] = useState([] as ProductCatalogAssignment[])
+  const [categoryAssignments, setCategoryAssignments] = useState([] as ICategoryProductAssignment[])
 
   useEffect(() => {
     const getFacets = async () => {
@@ -41,10 +40,9 @@ export function useProductDetail() {
 
     const getCatalogsAndCategories = async (_product: IProduct) => {
       const catalogAssignments = await fetchProductCatalogAssignments(_product)
-      const fetchCategories = catalogAssignments.map(fetchProductCategoryAssignments)
-      const response = await Promise.all(fetchCategories)
-      setProductCategories(flatten(response))
-      setProductCatalogs(catalogAssignments)
+      const categoryAssignments = await fetchProductCategoryAssignments(catalogAssignments)
+      setCategoryAssignments(categoryAssignments)
+      setCatalogAssignments(catalogAssignments)
     }
 
     const getProduct = async () => {
@@ -116,7 +114,7 @@ export function useProductDetail() {
     loading,
     showTabbedView,
     initialTab,
-    productCatalogs,
-    productCategories
+    catalogAssignments,
+    categoryAssignments
   }
 }

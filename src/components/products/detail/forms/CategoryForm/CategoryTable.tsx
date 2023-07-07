@@ -13,47 +13,53 @@ import {
   MenuButton,
   MenuList,
   Button,
-  ButtonGroup
+  ButtonGroup,
+  Text
 } from "@chakra-ui/react"
-import {Catalogs, ProductCatalogAssignment} from "ordercloud-javascript-sdk"
+import {Catalogs, Categories} from "ordercloud-javascript-sdk"
 import {Control, FieldValues, UseFieldArrayReturn, useWatch} from "react-hook-form"
 import {TbDotsVertical} from "react-icons/tb"
 import {useEffect, useState} from "react"
-import {CatalogAssignmentModal} from "./catalog-assignment-modal/CatalogAssignmentModal"
+import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
+import {CategoryAssignmentModal} from "./category-assignment-modal/CategoryAssignmentModal"
 
-type EnhancedProductCatalogAssignment = ProductCatalogAssignment & {CatalogName: string}
+type EnhancedCategoryProductAssignment = ICategoryProductAssignment & {CatalogName: string; CategoryName: string}
 
-interface CatalogsTableProps {
+interface CategoryTableProps {
   control: Control<FieldValues, any>
-  fieldArray: UseFieldArrayReturn<FieldValues, "CatalogAssignments", "id">
+  fieldArray: UseFieldArrayReturn<FieldValues, any>
 }
-
-export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
+export function CategoryTable({control, fieldArray}: CategoryTableProps) {
   const {replace} = fieldArray
-  const [enhancedCatalogAssignments, setEnhancedCatalogAssignments] = useState<EnhancedProductCatalogAssignment[]>([])
-  const watchedFields = useWatch({control, name: "CatalogAssignments"}) as ProductCatalogAssignment[]
+  const [enhancedCategoryAssignments, setEnhancedCategoryAssignments] = useState<EnhancedCategoryProductAssignment[]>(
+    []
+  )
+  const watchedFields = useWatch({control, name: "CategoryAssignments"}) as ICategoryProductAssignment[]
 
   useEffect(() => {
-    // adds display name (CatalogName) to assignments
+    // adds display names (CatalogName and CategoryName) to assignments
     async function buildDisplayValues() {
       const allCatalogIds = watchedFields.map((assignment) => assignment.CatalogID)
       const allCatalogs = allCatalogIds.length
         ? (await Catalogs.List({filters: {ID: allCatalogIds.join("|")}})).Items
         : []
-      const responses = watchedFields.map((catalogAssignment) => {
+      const requests = watchedFields.map(async (catalogAssignment) => {
         const catalog = allCatalogs.find((c) => c.ID === catalogAssignment.CatalogID)
+        const category = await Categories.Get(catalogAssignment.CatalogID, catalogAssignment.CategoryID)
         return {
           ...catalogAssignment,
-          CatalogName: catalog?.Name
+          CatalogName: catalog?.Name,
+          CategoryName: category.Name
         }
       })
-      setEnhancedCatalogAssignments(responses)
+      const responses = await Promise.all(requests)
+      setEnhancedCategoryAssignments(responses)
     }
 
     buildDisplayValues()
   }, [watchedFields])
 
-  const getAssignmentsDisplay = (assignments: EnhancedProductCatalogAssignment[]) => {
+  const getAssignmentsDisplay = (assignments: EnhancedCategoryProductAssignment[]) => {
     return (
       <>
         {assignments.length > 0 && (
@@ -65,12 +71,12 @@ export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
                 fontWeight={"normal"}
                 size="sm"
                 borderRadius={"full"}
-                backgroundColor="primary.100"
+                backgroundColor="accent.100"
                 margin={0}
                 cursor="default"
-                _hover={{backgroundColor: "primary.100"}}
+                _hover={{backgroundColor: "accent.100"}}
               >
-                {assignment.CatalogName}
+                {assignment.CatalogName} <Text marginX={3}>|</Text> {assignment.CategoryName}
               </Button>
             ))}
           </ButtonGroup>
@@ -90,9 +96,9 @@ export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
         </Thead>
         <Tbody>
           <Tr>
-            <Td>{getAssignmentsDisplay(enhancedCatalogAssignments)}</Td>
+            <Td>{getAssignmentsDisplay(enhancedCategoryAssignments)}</Td>
             <Td>
-              <CatalogsActionMenu catalogAssignments={enhancedCatalogAssignments} onUpdate={replace} />
+              <CategoryActionMenu categoryAssignments={enhancedCategoryAssignments} onUpdate={replace} />
             </Td>
           </Tr>
         </Tbody>
@@ -101,20 +107,20 @@ export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
   )
 }
 
-interface CatalogsActionMenuProps {
-  catalogAssignments: ProductCatalogAssignment[]
-  onUpdate: (newCatalog: ProductCatalogAssignment[]) => void
+interface CategoryActionMenuProps {
+  categoryAssignments: ICategoryProductAssignment[]
+  onUpdate: (newAssignment: ICategoryProductAssignment[]) => void
 }
 
-function CatalogsActionMenu({catalogAssignments, onUpdate}: CatalogsActionMenuProps) {
+function CategoryActionMenu({categoryAssignments, onUpdate}: CategoryActionMenuProps) {
   return (
     <Menu>
       <MenuButton as={IconButton} aria-label={`Catalog Assignment action menu`} variant="ghost">
         <Icon as={TbDotsVertical} mt={1} color="blackAlpha.400" />
       </MenuButton>
       <MenuList>
-        <CatalogAssignmentModal
-          catalogAssignments={catalogAssignments}
+        <CategoryAssignmentModal
+          categoryAssignments={categoryAssignments}
           onUpdate={onUpdate}
           as="menuitem"
           menuItemProps={{

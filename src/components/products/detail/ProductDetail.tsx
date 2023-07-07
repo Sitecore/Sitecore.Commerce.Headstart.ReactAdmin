@@ -8,7 +8,6 @@ import {
   Container,
   Divider,
   Flex,
-  Grid,
   Heading,
   Hide,
   IconButton,
@@ -51,19 +50,20 @@ import {SpecTable} from "./variants/SpecTable"
 import {submitProduct} from "services/product-submit.service"
 import {VariantTable} from "./variants/VariantTable"
 import {fetchVariants} from "services/product-data-fetcher.service"
-import { CategoryProductAssignmentAdmin } from "types/form/CategoryProductAssignmentAdmin"
-import { CatalogForm } from "./forms/CatalogForm/CatalogForm"
+import {CatalogForm} from "./forms/CatalogForm/CatalogForm"
+import {CategoryForm} from "./forms/CategoryForm/CategoryForm"
+import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 
-export type ProductDetailTab = "Details" | "Pricing" | "Variants" | "Media" | "Facets" | "Customization" | "Catalogs"
+export type ProductDetailTab = "Details" | "Pricing" | "Catalogs" | "Variants" | "Media" | "Facets" | "Customization"
 
 const tabIndexMap: Record<ProductDetailTab, number> = {
   Details: 0,
   Pricing: 1,
-  Variants: 2,
-  Media: 3,
-  Facets: 4,
-  Customization: 5,
-  Catalogs: 6
+  Catalogs: 2,
+  Variants: 3,
+  Media: 4,
+  Facets: 5,
+  Customization: 6
 }
 const inverseTabIndexMap = invert(tabIndexMap)
 interface ProductDetailProps {
@@ -75,8 +75,8 @@ interface ProductDetailProps {
   initialSpecs?: ISpec[]
   initialVariants?: IVariant[]
   facets?: IProductFacet[]
-  initialCatalogs?: ProductCatalogAssignment[]
-  initialCategories?: CategoryProductAssignmentAdmin[]
+  initialCatalogAssignments?: ProductCatalogAssignment[]
+  initialCategoryAssignments?: ICategoryProductAssignment[]
 }
 export default function ProductDetail({
   showTabbedView,
@@ -87,8 +87,8 @@ export default function ProductDetail({
   initialSpecs,
   initialVariants,
   facets, // facets won't change so we don't need to use state
-  initialCatalogs,
-  initialCategories
+  initialCatalogAssignments,
+  initialCategoryAssignments
 }: ProductDetailProps) {
   // setting initial values for state so we can update on submit when product is updated
   // this allows us to keep the form in sync with the product without having to refresh the page
@@ -119,8 +119,8 @@ export default function ProductDetail({
   const [viewVisibility, setViewVisibility] = useState(initialViewVisibility)
   const [xpPropertyNameToEdit, setXpPropertyNameToEdit] = useState<string>(null)
   const [xpPropertyValueToEdit, setXpPropertyValueToEdit] = useState<string>(null)
-  const [productCatalogs, setProductCatalogs] = useState(initialCatalogs)
-  const [productCategories, setProductCategories] = useState(initialCategories)
+  const [catalogAssignments, setCatalogAssignments] = useState(initialCatalogAssignments)
+  const [categoryAssignments, setCategoryAssignments] = useState(initialCategoryAssignments)
 
   const initialValues = product
     ? withDefaultValuesFallback(
@@ -130,7 +130,8 @@ export default function ProductDetail({
           Specs: cloneDeep(specs),
           Variants: cloneDeep(variants),
           OverridePriceSchedules: cloneDeep(overridePriceSchedules),
-          CatalogAssignments: cloneDeep(productCatalogs)
+          CatalogAssignments: cloneDeep(catalogAssignments),
+          CategoryAssignments: cloneDeep(categoryAssignments)
         },
         defaultValues
       )
@@ -154,7 +155,9 @@ export default function ProductDetail({
       updatedPriceOverrides,
       updatedSpecs,
       didUpdateSpecs,
-      updatedVariants
+      updatedVariants,
+      updatedCatalogAssignments,
+      updatedCategoryAssignments
     } = await submitProduct(
       isCreatingNew,
       defaultPriceSchedule,
@@ -166,7 +169,11 @@ export default function ProductDetail({
       variants,
       fields.Variants,
       overridePriceSchedules,
-      fields.OverridePriceSchedules
+      fields.OverridePriceSchedules,
+      catalogAssignments,
+      fields.CatalogAssignments,
+      categoryAssignments,
+      fields.CategoryAssignments
     )
     successToast({
       description: isCreatingNew ? "Product Created" : "Product updated"
@@ -184,6 +191,8 @@ export default function ProductDetail({
       setOverridePriceSchedules(updatedPriceOverrides)
       setSpecs(updatedSpecs)
       setVariants(updatedVariants)
+      setCatalogAssignments(updatedCatalogAssignments)
+      setCategoryAssignments(updatedCategoryAssignments)
 
       // reset the form with new product data
       reset(
@@ -193,7 +202,9 @@ export default function ProductDetail({
             DefaultPriceSchedule: cloneDeep(updatedDefaultPriceSchedule),
             Specs: cloneDeep(updatedSpecs),
             Variants: cloneDeep(updatedVariants),
-            OverridePriceSchedules: cloneDeep(updatedPriceOverrides)
+            OverridePriceSchedules: cloneDeep(updatedPriceOverrides),
+            CatalogAssignments: cloneDeep(updatedCatalogAssignments),
+            CategoryAssignments: cloneDeep(updatedCategoryAssignments)
           },
           defaultValues
         )
@@ -390,11 +401,11 @@ export default function ProductDetail({
             <TabList flexWrap="wrap">
               {viewVisibility.Details && <ProductDetailTab tab="Details" control={control} />}
               {viewVisibility.Pricing && <ProductDetailTab tab="Pricing" control={control} />}
+              {viewVisibility.Catalogs && <ProductDetailTab tab="Catalogs" control={control} />}
               {viewVisibility.Variants && <ProductDetailTab tab="Variants" control={control} />}
               {viewVisibility.Media && <ProductDetailTab tab="Media" control={control} />}
               {viewVisibility.Facets && <ProductDetailTab tab="Facets" control={control} />}
               {viewVisibility.Customization && <ProductDetailTab tab="Customization" control={control} />}
-              {viewVisibility.Catalogs && <ProductDetailTab tab="Catalogs" control={control} />}
             </TabList>
 
             <TabPanels>
@@ -438,6 +449,12 @@ export default function ProductDetail({
                   />
                 </TabPanel>
               )}
+              {viewVisibility.Catalogs && (
+                <TabPanel p={0} mt={6}>
+                  <CatalogForm control={control} />
+                  <CategoryForm control={control} />
+                </TabPanel>
+              )}
               {viewVisibility.Variants && (
                 <TabPanel p={0} mt={6}>
                   <SpecTable control={control} />
@@ -470,16 +487,6 @@ export default function ProductDetail({
               {viewVisibility.Customization && (
                 <TabPanel p={0} mt={6}>
                   {isCreatingNew ? creatingNewXpCard() : xpCard()}
-                </TabPanel>
-              )}
-              {viewVisibility.Catalogs && (
-                <TabPanel p={0} mt={6}>
-                  <CatalogForm
-                    control={control}
-                    product={product.ID}
-                    trigger={trigger}
-                    productCatalogs={productCatalogs}
-                    productCategories={productCategories} />
                 </TabPanel>
               )}
             </TabPanels>
@@ -534,6 +541,19 @@ export default function ProductDetail({
                 </Card>
               </Box>
             )}
+            {viewVisibility.Catalogs && (
+              <Box width="100%">
+                <Card margin={3}>
+                  <CardHeader>
+                    <Heading>Catalogs</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <CatalogForm control={control} />
+                    <CategoryForm control={control} />
+                  </CardBody>
+                </Card>
+              </Box>
+            )}
             {viewVisibility.Variants && (
               <Box width={{base: "100%", xl: "50%"}}>
                 <Card margin={3}>
@@ -573,18 +593,6 @@ export default function ProductDetail({
                 {viewVisibility.Customization && isCreatingNew && creatingNewXpCard()}
               </Box>
             </Box>
-            {viewVisibility.Catalogs && (
-              <Box width="100%">
-                <Card margin={3}>
-                  <CardHeader>
-                    <Heading>Catalogs</Heading>
-                  </CardHeader>
-                  <CardBody>
-                    hi!
-                  </CardBody>
-                </Card>
-              </Box>
-            )}
           </Flex>
         )}
         <ProductXpModal

@@ -1,29 +1,29 @@
 import {Control, FieldValues, useFieldArray} from "react-hook-form"
 import {Card, CardBody, Heading, Box, CardHeader, Text, Icon, VStack} from "@chakra-ui/react"
-import {CatalogsTable} from "./CatalogsTable"
-import {CatalogAssignmentModal} from "./catalog-assignment-modal/CatalogAssignmentModal"
+import {CategoryTable} from "./CategoryTable"
+import {CategoryAssignmentModal} from "./category-assignment-modal/CategoryAssignmentModal"
 import {TbCactus} from "react-icons/tb"
-import {ProductCatalogAssignment} from "ordercloud-javascript-sdk"
+import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 
-interface CatalogFormProps {
+interface CategoryFormProps {
   control: Control<FieldValues, any>
 }
-export function CatalogForm({control}: CatalogFormProps) {
+export function CategoryForm({control}: CategoryFormProps) {
   const fieldArray = useFieldArray({
     control,
-    name: `CatalogAssignments`
+    name: `CategoryAssignments`
   })
 
-  const catalogAssignments = fieldArray.fields as ProductCatalogAssignment[]
+  const categoryAssignments = fieldArray.fields as any as ICategoryProductAssignment[]
 
-  if (!catalogAssignments.length) {
+  if (!categoryAssignments.length) {
     return (
       <Box p={6} display="flex" flexDirection={"column"} alignItems={"center"} justifyContent={"center"} minH={"xs"}>
         <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
         <Heading colorScheme="secondary" fontSize="xl">
           <VStack>
-            <Text>This product is not assigned to any catalogs</Text>
-            <CatalogAssignmentModal
+            <Text>This product is not assigned to any categories</Text>
+            <CategoryAssignmentModal
               onUpdate={fieldArray.replace}
               as="button"
               buttonProps={{
@@ -41,12 +41,12 @@ export function CatalogForm({control}: CatalogFormProps) {
     <Card mt={6}>
       <CardHeader display="flex" alignItems={"center"}>
         <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
-          Catalogs
+          Categories
           <Text fontSize="sm" color="gray.400" fontWeight="normal" marginTop={2}>
-            Define which catalogs this product is assigned to
+            Define which categories this product is assigned to
           </Text>
         </Heading>
-        <CatalogAssignmentModal
+        <CategoryAssignmentModal
           onUpdate={fieldArray.replace}
           as="button"
           buttonProps={{
@@ -57,7 +57,7 @@ export function CatalogForm({control}: CatalogFormProps) {
         />
       </CardHeader>
       <CardBody>
-        <CatalogsTable fieldArray={fieldArray} control={control} />
+        <CategoryTable fieldArray={fieldArray} control={control} />
       </CardBody>
     </Card>
   )

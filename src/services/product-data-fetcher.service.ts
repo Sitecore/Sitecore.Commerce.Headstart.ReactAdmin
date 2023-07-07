@@ -1,8 +1,16 @@
 import {ORIGINAL_ID} from "constants/original-id"
-import {uniq} from "lodash"
-import {Catalogs, Categories, PriceSchedules, ProductCatalogAssignment, Products, SpecProductAssignment, Specs} from "ordercloud-javascript-sdk"
-import { CategoryProductAssignmentAdmin } from "types/form/CategoryProductAssignmentAdmin"
-import { ICatalog } from "types/ordercloud/ICatalog"
+import {flatten, uniq} from "lodash"
+import {
+  Catalogs,
+  Categories,
+  PriceSchedules,
+  ProductCatalogAssignment,
+  Products,
+  SpecProductAssignment,
+  Specs
+} from "ordercloud-javascript-sdk"
+import {ICatalog} from "types/ordercloud/ICatalog"
+import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 
@@ -70,26 +78,24 @@ async function fetchSpecsFromAssignments(items: SpecProductAssignment[]) {
 }
 
 export async function fetchProductCatalogAssignments(product: IProduct) {
-  const catalogs = await Catalogs.ListProductAssignments({productID: product.ID, pageSize: 100})
-  if (!catalogs.Items.length) {
-    return []
-  }
-  return catalogs.Items
+  const catalogAssignments = await Catalogs.ListProductAssignments({productID: product.ID, pageSize: 100})
+  return catalogAssignments.Items
 }
 
-export async function fetchProductCategoryAssignments(catalog: ProductCatalogAssignment) {
-  const categoryProductList = new Array<CategoryProductAssignmentAdmin>
-  const categories = await Categories.ListProductAssignments(catalog.CatalogID, {productID: catalog.ProductID})
-  if (!categories.Items.length) {
-    return []
-  }
-  categories.Items.forEach(category => {
-    const newCat: CategoryProductAssignmentAdmin = {
-      CatalogID : catalog.CatalogID,
-      ProductID: category.ProductID,
-      CategoryID: category.CategoryID
-    }
-    categoryProductList.push(newCat)
+export async function fetchProductCategoryAssignments(catalogAssignments: ProductCatalogAssignment[]) {
+  const requests = catalogAssignments.map(async (catalogAssignment) => {
+    const categoryAssignments = await Categories.ListProductAssignments<ICategoryProductAssignment>(
+      catalogAssignment.CatalogID,
+      {
+        productID: catalogAssignment.ProductID
+      }
+    )
+    return categoryAssignments.Items.map((assignment) => {
+      // need in order to differentitate between category assignments of different catalogs
+      assignment.CatalogID = catalogAssignment.CatalogID
+      return assignment
+    })
   })
-  return categoryProductList
+  const responses = await Promise.all(requests)
+  return flatten(responses)
 }

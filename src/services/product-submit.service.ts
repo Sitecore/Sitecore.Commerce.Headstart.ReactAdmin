@@ -1,5 +1,13 @@
-import {isEmpty, omit} from "lodash"
-import {PriceSchedules, Products, ProductAssignment, Specs} from "ordercloud-javascript-sdk"
+import {differenceBy, isEmpty, omit} from "lodash"
+import {
+  PriceSchedules,
+  Products,
+  ProductAssignment,
+  Specs,
+  ProductCatalogAssignment,
+  Catalogs,
+  Categories
+} from "ordercloud-javascript-sdk"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {SpecFieldValues, SpecOptionFieldValues} from "types/form/SpecFieldValues"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
@@ -7,10 +15,16 @@ import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 import {getObjectDiff} from "utils"
 import {v4 as randomId} from "uuid"
-import {fetchOverridePriceSchedules, fetchSpecs} from "./product-data-fetcher.service"
+import {
+  fetchOverridePriceSchedules,
+  fetchProductCatalogAssignments,
+  fetchProductCategoryAssignments,
+  fetchSpecs
+} from "./product-data-fetcher.service"
 import {IVariant} from "types/ordercloud/IVariant"
 import {VariantFieldValues} from "types/form/VariantFieldValues"
 import {ORIGINAL_ID} from "constants/original-id"
+import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 
 export async function submitProduct(
   isCreatingNew: boolean,
@@ -23,7 +37,11 @@ export async function submitProduct(
   oldVariants: IVariant[],
   newVariants: VariantFieldValues[],
   oldOverridePriceSchedules: IPriceSchedule[],
-  newOverridePriceSchedules: OverridePriceScheduleFieldValues[]
+  newOverridePriceSchedules: OverridePriceScheduleFieldValues[],
+  oldCatalogAssignments: ProductCatalogAssignment[],
+  newCatalogAssignments: ProductCatalogAssignment[],
+  oldCategoryAssignments: ICategoryProductAssignment[],
+  newCategoryAssignments: ICategoryProductAssignment[]
 ) {
   // create/update price schedule
   const updatedDefaultPriceSchedule = await handleUpdateDefaultPriceSchedule(
@@ -48,14 +66,81 @@ export async function submitProduct(
     updatedProduct
   )
 
+  // create/update/delete category assignments
+  const updatedCategoryAssignments = await handleUpdateCategoryAssignments(
+    oldCategoryAssignments,
+    newCategoryAssignments,
+    updatedProduct
+  )
+
+  // create/update/delete catalog assignments
+  const updatedCatalogAssignments = await handleUpdateCatalogAssignments(
+    oldCatalogAssignments,
+    newCatalogAssignments,
+    updatedProduct
+  )
+
   return {
     updatedProduct,
     updatedSpecs,
     didUpdateSpecs,
     updatedVariants,
     updatedPriceOverrides,
-    updatedDefaultPriceSchedule
+    updatedDefaultPriceSchedule,
+    updatedCatalogAssignments,
+    updatedCategoryAssignments
   }
+}
+
+async function handleUpdateCatalogAssignments(
+  oldCatalogAssignments: ProductCatalogAssignment[],
+  newCatalogAssignments: ProductCatalogAssignment[],
+  product: IProduct
+) {
+  const addCatalogAssignments = differenceBy(newCatalogAssignments, oldCatalogAssignments, (ass) => ass.CatalogID)
+  const deleteCatalogAssignments = differenceBy(oldCatalogAssignments, newCatalogAssignments, (ass) => ass.CatalogID)
+
+  const addCatalogAssignmentRequests = addCatalogAssignments.map(async (assignment) =>
+    Catalogs.SaveProductAssignment({...assignment, ProductID: product.ID})
+  )
+  const deleteCatalogAssignmentRequests = deleteCatalogAssignments.map(async (assignment) =>
+    Catalogs.DeleteProductAssignment(assignment.CatalogID, product.ID)
+  )
+
+  await Promise.all([...addCatalogAssignmentRequests, ...deleteCatalogAssignmentRequests])
+  return await fetchProductCatalogAssignments(product)
+}
+
+async function handleUpdateCategoryAssignments(
+  oldCategoryAssignments: ICategoryProductAssignment[],
+  newCategoryAssignments: ICategoryProductAssignment[],
+  product: IProduct
+) {
+  const addCategoryAssignments = differenceBy(
+    newCategoryAssignments,
+    oldCategoryAssignments,
+    (ass) => ass.CatalogID + ass.CategoryID
+  )
+  const deleteCategoryAssignments = differenceBy(
+    oldCategoryAssignments,
+    newCategoryAssignments,
+    (ass) => ass.CatalogID + ass.CategoryID
+  )
+
+  const addCategoryAssignmentRequests = addCategoryAssignments.map(async (assignment) => {
+    await Categories.SaveProductAssignment(assignment.CatalogID, {...assignment, ProductID: product.ID})
+  })
+
+  const deleteCategoryAssignmentRequests = deleteCategoryAssignments.map(async (assignment) => {
+    await Categories.DeleteProductAssignment(assignment.CatalogID, assignment.CategoryID, product.ID)
+  })
+
+  await Promise.all([...addCategoryAssignmentRequests, ...deleteCategoryAssignmentRequests])
+  // If a category is assigned to a product, and previously that category had not been
+  // assigned to a catalog, then OrderCloud will implicitly create a catalog assignment
+  // thus we need to retrieve new catalog assignments here first
+  const catalogAssignments = await fetchProductCatalogAssignments(product)
+  return await fetchProductCategoryAssignments(catalogAssignments)
 }
 
 async function handleUpdateDefaultPriceSchedule(

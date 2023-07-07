@@ -1,29 +1,29 @@
 import {Button, ButtonProps, MenuItem, MenuItemProps, Modal, ModalOverlay, useDisclosure} from "@chakra-ui/react"
-import {CatalogAssignmentModalContent} from "./CatalogAssignmentModalContent"
-import {ProductCatalogAssignment} from "ordercloud-javascript-sdk"
+import {CategoryAssignmentModalContent} from "./CategoryAssignmentModalContent"
+import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 
-interface CatalogAssignmentModalProps {
-  onUpdate: (catalogAssignments: ProductCatalogAssignment[]) => void
-  catalogAssignments?: ProductCatalogAssignment[]
+interface CategoryAssignmentModalProps {
+  onUpdate: (categoryAssignments: ICategoryProductAssignment[]) => void
+  categoryAssignments?: ICategoryProductAssignment[]
   buttonProps?: ButtonProps
   menuItemProps?: MenuItemProps
   as: "button" | "menuitem"
 }
 
-export function CatalogAssignmentModal({
+export function CategoryAssignmentModal({
   buttonProps,
   menuItemProps,
   onUpdate,
-  catalogAssignments,
+  categoryAssignments,
   as
-}: CatalogAssignmentModalProps) {
+}: CategoryAssignmentModalProps) {
   const {isOpen, onOpen, onClose} = useDisclosure()
 
   const handleCancel = () => {
     onClose()
   }
 
-  const onSubmit = (data: ProductCatalogAssignment[]) => {
+  const onSubmit = (data: ICategoryProductAssignment[]) => {
     onUpdate(data)
     onClose()
   }
@@ -32,7 +32,7 @@ export function CatalogAssignmentModal({
     <>
       {as === "button" ? (
         <Button {...buttonProps} onClick={onOpen}>
-          {buttonProps.children || "Add catalog assignment"}
+          {buttonProps.children || "Add category assignment"}
         </Button>
       ) : (
         <MenuItem onClick={onOpen} {...menuItemProps} />
@@ -40,11 +40,11 @@ export function CatalogAssignmentModal({
 
       <Modal size="3xl" isOpen={isOpen} onClose={handleCancel}>
         <ModalOverlay />
-        <CatalogAssignmentModalContent
-          catalogAssignments={catalogAssignments}
+        <CategoryAssignmentModalContent
+          categoryAssignments={categoryAssignments}
           onUpdate={onSubmit}
           onCancelModal={handleCancel}
-        ></CatalogAssignmentModalContent>
+        ></CategoryAssignmentModalContent>
       </Modal>
     </>
   )

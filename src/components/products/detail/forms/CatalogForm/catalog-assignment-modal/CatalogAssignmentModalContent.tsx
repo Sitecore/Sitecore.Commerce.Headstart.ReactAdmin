@@ -1,7 +1,6 @@
 import SubmitButton from "@/components/react-hook-form/submit-button"
 import {
   Button,
-  ButtonGroup,
   FormErrorMessage,
   HStack,
   ModalBody,
@@ -14,62 +13,35 @@ import {
 } from "@chakra-ui/react"
 import {useForm, useFormState} from "react-hook-form"
 import {FormEvent, useCallback, useState} from "react"
-import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
-import {compact, uniq} from "lodash"
-import {TbX} from "react-icons/tb"
+import {Catalog, Catalogs, ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {SelectControl} from "@/components/react-hook-form"
-import {ProductCatalogAssignmentFieldValues} from "types/form/ProductCatalogAssignmentFieldValues"
-
 interface CatalogAssignmentModalContentProps {
-  catalogs: ProductCatalogAssignmentFieldValues[]
-  onUpdate: (data: ProductCatalogAssignmentFieldValues[]) => void
-  onRemove: (index: number) => void
+  catalogAssignments: ProductCatalogAssignment[]
+  onUpdate: (data: ProductCatalogAssignment[]) => void
   onCancelModal: () => void
-  product?: string
 }
 export function CatalogAssignmentModalContent({
-  catalogs = [],
+  catalogAssignments = [],
   onUpdate,
-  onRemove,
-  onCancelModal,
-  product
+  onCancelModal
 }: CatalogAssignmentModalContentProps) {
   const {handleSubmit, control, reset} = useForm({
     mode: "onBlur",
-    defaultValues: getAsyncDefaultValues as any
+    defaultValues: {CatalogAssignments: catalogAssignments.map((assignment) => assignment.CatalogID)} as any
   })
 
   const {errors} = useFormState({control})
   const [catalogList, setCatalogList] = useState<Catalog[]>([])
 
-  async function getAsyncDefaultValues() {
-    // get catalog assignments data
-    const catalogAssignments = catalogs.filter((assignment) => !assignment.CatalogID)
-    const allCatalogIds = uniq(compact(catalogAssignments.map((assignment) => assignment.CatalogID)))
-    if (!allCatalogIds.length) {
-      return {CatalogAssignments: []}
-    }
-    const allCatalogs = await Catalogs.List({filters: {ID: allCatalogIds.join("|")}})
-
-    const response = {
-      CatalogAssignments: catalogAssignments.map((assignment) => {
-        const catalog = allCatalogs.Items.find((catalog) => catalog.ID === assignment.CatalogID)
-        return {label: catalog.Name, value: catalog.ID}
-      })
-    }
-    return response
-  }
-
   const onSubmit = (data) => {
-    const catalogAssignments = data.CatalogAssignments.map((optionValue) => {
-      const selectedCatalog = catalogList.find((cat) => cat.ID === optionValue)
+    const catalogAssignments = data.CatalogAssignments.map((catalogId) => {
+      const selectedCatalog = catalogList.find((cat) => cat.ID === catalogId)
       return {
-        CatalogID: optionValue,
-        CatalogName: selectedCatalog.Name,
-        ProductID: product
+        CatalogID: catalogId,
+        CatalogName: selectedCatalog.Name
       }
     })
-    onUpdate([...catalogAssignments])
+    onUpdate(catalogAssignments)
   }
 
   const handleSubmitPreventBubbling = (event: FormEvent) => {
@@ -92,20 +64,15 @@ export function CatalogAssignmentModalContent({
     return allCatalogs.Items.map((catalog) => ({label: <CatalogLabel catalog={catalog} />, value: catalog.ID}))
   }, [])
 
-  const handleRemove = (index: number) => {
-    onRemove(index)
-  }
-
   return (
     <ModalContent as="form" noValidate onSubmit={handleSubmitPreventBubbling}>
-      <ModalHeader>Assign Catalog</ModalHeader>
+      <ModalHeader>Assign to catalog</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
         <SelectControl
           name="CatalogAssignments"
-          label="Assign to catalogs"
+          label=""
           control={control}
-          maxWidth="50%"
           selectProps={{
             isMulti: true,
             loadOptions: loadCatalogs,
@@ -116,23 +83,6 @@ export function CatalogAssignmentModalContent({
             }
           }}
         />
-        <ButtonGroup display="flex" flexWrap="wrap" gap={2} marginTop={2}>
-            {(Array.isArray(catalogs) ? catalogs : []).map((option, index) => (
-            <Button
-                key={index}
-                rightIcon={<TbX />}
-                variant="solid"
-                fontWeight={"normal"}
-                size="sm"
-                borderRadius={"full"}
-                onClick={() => handleRemove(index)}
-                backgroundColor="accent.100"
-                style={{margin: 0}}
-            >
-                {option.CatalogName}
-            </Button>
-            ))}
-        </ButtonGroup>
       </ModalBody>
       <ModalFooter>
         <HStack justifyContent="space-between" w="100%">

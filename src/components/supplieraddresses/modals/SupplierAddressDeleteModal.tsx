@@ -21,6 +21,7 @@ import {
   VStack
 } from "@chakra-ui/react"
 import {SupplierAddresses} from "ordercloud-javascript-sdk"
+import React from "react"
 import {FC, useCallback, useEffect, useState} from "react"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 
@@ -95,7 +96,7 @@ const SupplierAddressDeleteModal: FC<ISupplierAddressDeleteModal> = ({
           <Collapse in={showSupplierAddresses}>
             <List mb={5}>
               {supplierAddresses.map((supplierAddress, i) => (
-                <>
+                <React.Fragment key={supplierAddress.ID}>
                   <ListItem key={supplierAddress.ID} as={HStack}>
                     <HStack flexGrow={1} justifyContent="space-between">
                       <VStack alignItems="start">
@@ -114,7 +115,7 @@ const SupplierAddressDeleteModal: FC<ISupplierAddressDeleteModal> = ({
                     </HStack>
                   </ListItem>
                   {i < supplierAddresses.length - 1 && <Divider my={3} />}
-                </>
+                </React.Fragment>
               ))}
             </List>
           </Collapse>

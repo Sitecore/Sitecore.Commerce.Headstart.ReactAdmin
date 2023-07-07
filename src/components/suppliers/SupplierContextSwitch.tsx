@@ -45,7 +45,7 @@ export default function SupplierContextSwitch({...props}) {
     setSuppliers(suppliersList.Items)
     const requests = suppliersList.Items.map(async (supplier, index) => {
       const [userGroupsList, usersList, addressList] = await Promise.all([
-        SupplierUserGroups.ListUserAssignments(supplier.ID),
+        SupplierUserGroups.List(supplier.ID),
         SupplierUsers.List<ISupplierUser>(supplier.ID),
         SupplierAddresses.List<ISupplierAddress>(supplier.ID)
       ])

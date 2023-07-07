@@ -16,9 +16,11 @@ export interface IDefaultResource {
   LastName?: string
 }
 
-export interface ListViewTableOptions<T> extends Pick<IDataTable<T>, "columns" | "responsive" | "hideColumns"> {}
+export interface ListViewTableOptions<T>
+  extends Omit<IDataTable<T>, "data" | "selected" | "handleSelectionChange" | "rowActions" | "onSortChange"> {}
 
-export interface ListViewGridOptions<T> extends Pick<IDataGrid<T>, "renderGridItem"> {}
+export interface ListViewGridOptions<T>
+  extends Omit<IDataGrid<T>, "data" | "selected" | "handleSelectionChange" | "gridItemActions"> {}
 
 export type ListViewTemplate = ReactElement | ReactElement[] | string
 

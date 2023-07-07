@@ -177,6 +177,7 @@ const SupplierAddressList = () => {
           </Box>
           {renderContent}
           <SupplierAddressDeleteModal
+            supplierID={supplierid}
             onComplete={listViewChildProps.removeItems}
             supplierAddresses={
               actionSupplierAddress

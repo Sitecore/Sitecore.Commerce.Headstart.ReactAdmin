@@ -52,7 +52,7 @@ const SupplierAddressListItem = () => {
 
 const ProtectedSupplierAddressListItem = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SettingsManager}>
+    <ProtectedContent hasAccess={appPermissions.SupplierManager}>
       <SupplierAddressListItem />
     </ProtectedContent>
   )

@@ -269,90 +269,100 @@ export default function ProductDetail({
           justifyContent={"center"}
           minH={"xs"}
         >
-          {Object.values(nonUiXp).map((xp, idx) => {
-            return (
-              <Box
-                key={idx}
-                display="grid"
-                gridTemplateColumns={"auto 2fr 2fr"}
-                justifyContent="flex-start"
-                w={"full"}
-                maxW={{xl: "75%"}}
-              >
-                <Hide below="lg">
-                  <ButtonGroup size="xs" mr={2} alignItems="center">
-                    <Button
-                      onClick={() => {
-                        setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
-                        setXpPropertyValueToEdit(xp)
-                        xpDisclosure.onOpen()
-                      }}
+          {Object.values(nonUiXp)
+            .filter((xp) => typeof xp !== "object")
+            .map((xp, idx) => {
+              return (
+                <Box
+                  key={idx}
+                  display="grid"
+                  gridTemplateColumns={"auto 2fr 2fr"}
+                  justifyContent="flex-start"
+                  w={"full"}
+                  maxW={{xl: "75%"}}
+                >
+                  <Hide below="lg">
+                    <ButtonGroup size="xs" mr={2} alignItems="center">
+                      <Button
+                        onClick={() => {
+                          setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
+                          setXpPropertyValueToEdit(xp)
+                          xpDisclosure.onOpen()
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        colorScheme="red"
+                        onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
+                      >
+                        Delete
+                      </Button>
+                    </ButtonGroup>
+                  </Hide>
+                  <Hide above="lg">
+                    <ButtonGroup
+                      size="sm"
+                      mr={{base: 3, md: 6}}
+                      flexDirection={{base: "column", md: "row"}}
+                      padding={{base: 1, md: 0}}
+                      alignItems={{base: "flex-start", md: "center"}}
+                      gap={2}
+                      alignSelf="center"
                     >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      colorScheme="red"
-                      onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
+                      <IconButton
+                        icon={<TbEdit size="1rem" />}
+                        aria-label="edit"
+                        onClick={() => {
+                          setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
+                          setXpPropertyValueToEdit(xp)
+                          xpDisclosure.onOpen()
+                        }}
+                      >
+                        Edit
+                      </IconButton>
+                      <IconButton
+                        ml={"0 !important"}
+                        icon={<TbTrash size="1rem" />}
+                        variant="outline"
+                        borderColor="red.300"
+                        color="red.300"
+                        aria-label="delete"
+                        onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
+                      >
+                        Delete
+                      </IconButton>
+                    </ButtonGroup>
+                  </Hide>
+                  <Flex borderWidth={1} borderColor="gray.100" mt={"-1px"} px={4} py={2} alignItems="center">
+                    <Text
+                      fontSize="0.8rem"
+                      fontWeight="bold"
+                      color="blackAlpha.500"
+                      textTransform="uppercase"
+                      letterSpacing={1}
+                      wordBreak={"break-word"}
                     >
-                      Delete
-                    </Button>
-                  </ButtonGroup>
-                </Hide>
-                <Hide above="lg">
-                  <ButtonGroup
-                    size="sm"
-                    mr={{base: 3, md: 6}}
-                    flexDirection={{base: "column", md: "row"}}
-                    padding={{base: 1, md: 0}}
-                    alignItems={{base: "flex-start", md: "center"}}
-                    gap={2}
-                    alignSelf="center"
+                      {Object.keys(nonUiXp)[idx]}
+                    </Text>
+                  </Flex>
+                  <Flex
+                    borderWidth={1}
+                    borderColor="gray.100"
+                    px={4}
+                    py={2}
+                    mt={"-1px"}
+                    ml={"-1px"}
+                    alignItems="center"
                   >
-                    <IconButton
-                      icon={<TbEdit size="1rem" />}
-                      aria-label="edit"
-                      onClick={() => {
-                        setXpPropertyNameToEdit(Object.keys(nonUiXp)[idx])
-                        setXpPropertyValueToEdit(xp)
-                        xpDisclosure.onOpen()
-                      }}
-                    >
-                      Edit
-                    </IconButton>
-                    <IconButton
-                      ml={"0 !important"}
-                      icon={<TbTrash size="1rem" />}
-                      variant="outline"
-                      borderColor="red.300"
-                      color="red.300"
-                      aria-label="delete"
-                      onClick={() => handleXpRemoval(Object.keys(nonUiXp)[idx])}
-                    >
-                      Delete
-                    </IconButton>
-                  </ButtonGroup>
-                </Hide>
-                <Flex borderWidth={1} borderColor="gray.100" mt={"-1px"} px={4} py={2} alignItems="center">
-                  <Text
-                    fontSize="0.8rem"
-                    fontWeight="bold"
-                    color="blackAlpha.500"
-                    textTransform="uppercase"
-                    letterSpacing={1}
-                    wordBreak={"break-word"}
-                  >
-                    {Object.keys(nonUiXp)[idx]}
-                  </Text>
-                </Flex>
-                <Flex borderWidth={1} borderColor="gray.100" px={4} py={2} mt={"-1px"} ml={"-1px"} alignItems="center">
-                  <Text whiteSpace="pre-wrap" wordBreak="break-word">
-                    {xp}
-                  </Text>
-                </Flex>
-              </Box>
-            )
-          })}
+                    <Text whiteSpace="pre-wrap" wordBreak="break-word">
+                      {xp}
+                    </Text>
+                  </Flex>
+                </Box>
+              )
+            })}
         </CardBody>
       </Card>
     )

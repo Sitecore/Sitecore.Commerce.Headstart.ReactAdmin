@@ -15,7 +15,6 @@ export const SubmitButton: FC<SubmitButtonProps> = (props: SubmitButtonProps) =>
 
   return (
     <Box>
-      {JSON.stringify(errors)}
       <Button type="submit" isLoading={isSubmitting} outlineColor={!isEmpty(errors) && "red"} {...rest}>
         {children}
       </Button>

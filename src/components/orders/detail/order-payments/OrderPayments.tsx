@@ -52,7 +52,6 @@ export function OrderPayments({payments, billingAddress, shippingAddress}: Order
             direction={["column", "column", "row"]}
             gap={[5, 5, 0]}
             justifyContent="space-between"
-            // TODO: change maxWidth to pixels
             maxWidth={{xl: "80%"}}
           >
             <VStack alignItems="start">

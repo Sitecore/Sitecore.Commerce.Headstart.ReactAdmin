@@ -14,12 +14,12 @@ export function OrderPayment({payment}: OrderPaymentItemProps) {
     }
     return cardType
   }
-  if (payment.Type === "CreditCard" && payment.CreditCard) {
+  if (payment.Type === "CreditCard" && payment.xp?.CreditCard) {
     return (
       <HStack>
-        <CreditCardIcon fontSize="3xl" cardType={payment?.CreditCard?.CardType} />
+        <CreditCardIcon fontSize="3xl" cardType={payment?.xp.CreditCard.CardType} />
         <Text>
-          {displayCardType(payment.CreditCard?.CardType)} ending in {payment.CreditCard?.PartialAccountNumber}
+          {displayCardType(payment.xp.CreditCard.CardType)} ending in {payment.xp.CreditCard.PartialAccountNumber}
         </Text>
         <Text fontWeight="bold">-{priceHelper.formatPrice(payment.Amount)}</Text>
       </HStack>
@@ -34,7 +34,6 @@ export function OrderPayment({payment}: OrderPaymentItemProps) {
   } else {
     return (
       <HStack>
-        <Text>{payment.Type}</Text>
         <Text fontWeight="bold">-{priceHelper.formatPrice(payment.Amount)}</Text>
       </HStack>
     )

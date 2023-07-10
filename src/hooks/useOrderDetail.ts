@@ -53,20 +53,7 @@ export function useOrderDetail() {
       }
       const paymentList = await Payments.List<IPayment>("All", order.ID)
       const enhancedPaymentRequests = paymentList.Items.map(async (payment) => {
-        if (payment.Type === "CreditCard") {
-          // we need to mock the credit card here because if its a personal credit card the admin can't get it
-          // currently a feature request to make this readonly on the order
-          payment.CreditCard = {
-            ID: "mock-creditcard",
-            Token: "mock-token",
-            DateCreated: "2023-07-04",
-            CardholderName: "John Doe",
-            CardType: "Visa",
-            PartialAccountNumber: "1234",
-            ExpirationDate: "2025-07-04",
-            xp: {}
-          }
-        } else if (payment.Type === "SpendingAccount") {
+        if (payment.Type === "SpendingAccount") {
           const spendingAccount = await SpendingAccounts.Get(order.FromCompanyID, payment.SpendingAccountID)
           payment["SpendingAccount"] = spendingAccount
         }

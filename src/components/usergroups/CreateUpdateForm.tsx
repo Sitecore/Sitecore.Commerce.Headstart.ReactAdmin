@@ -1,10 +1,14 @@
 import * as Yup from "yup"
-import {Box, Button, ButtonGroup, Card, Flex, Stack} from "@chakra-ui/react"
-import {InputControl, TextareaControl} from "components/formik"
-import {Formik} from "formik"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
+import {InputControl, TextareaControl} from "components/react-hook-form"
 import {UserGroup} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {useForm} from "react-hook-form"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
+import {TbChevronLeft} from "react-icons/tb"
 
 export {CreateUpdateForm}
 
@@ -18,12 +22,19 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
     Name: Yup.string().max(100).required("Name is required"),
     Description: Yup.string().max(100)
   }
-  const {successToast, validationSchema, initialValues, onSubmit} = useCreateUpdateForm<UserGroup>(
+  const {successToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<UserGroup>(
     userGroup,
     formShape,
     createUserGroup,
     updateUserGroup
   )
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isSubmitting},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
 
   let parentId
   if (router.query.buyerid !== undefined) parentId = router.query.buyerid
@@ -46,57 +57,26 @@ function CreateUpdateForm({userGroup, ocService}: CreateUpdateFormProps) {
   }
 
   return (
-    <>
-      <Card variant="primaryCard">
-        <Flex flexDirection="column" p="10">
-          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-            {({
-              // most of the useful available Formik props
-              values,
-              errors,
-              touched,
-              dirty,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isValid,
-              isSubmitting,
-              setFieldValue,
-              resetForm
-            }) => (
-              <Box as="form" onSubmit={handleSubmit as any}>
-                <Stack spacing={5}>
-                  <InputControl name="Name" label="User Group Name" isRequired />
-                  <TextareaControl name="Description" label="Description" />
-                  <ButtonGroup>
-                    <Button
-                      variant="primaryButton"
-                      type="submit"
-                      isLoading={isSubmitting}
-                      isDisabled={!isValid || !dirty}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        resetForm()
-                      }}
-                      type="reset"
-                      variant="secondaryButton"
-                      isLoading={isSubmitting}
-                    >
-                      Reset
-                    </Button>
-                    <Button onClick={() => router.back()} variant="secondaryButton" isLoading={isSubmitting}>
-                      Cancel
-                    </Button>
-                  </ButtonGroup>
-                </Stack>
-              </Box>
-            )}
-          </Formik>
-        </Flex>
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+      <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
+        <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+          <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting} leftIcon={<TbChevronLeft />}>
+            Back
+          </Button>
+          <ButtonGroup>
+            <ResetButton control={control} reset={reset} variant="outline">
+              Discard Changes
+            </ResetButton>
+            <SubmitButton control={control} variant="solid" colorScheme="primary">
+              Save
+            </SubmitButton>
+          </ButtonGroup>
+        </CardHeader>
+        <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
+          <InputControl name="Name" label="User Group Name" control={control} isRequired />
+          <TextareaControl name="Description" label="Description" control={control} />
+        </CardBody>
       </Card>
-    </>
+    </Container>
   )
 }

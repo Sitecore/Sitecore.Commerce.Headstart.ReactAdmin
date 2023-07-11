@@ -120,22 +120,13 @@ export default function SupplierContextSwitch({...props}) {
 
           <Flex direction={{sm: "column", lg: "row"}} w={{sm: "100%", md: "50%", lg: "auto"}}>
             <ButtonGroup>
-              <Button
-                onClick={() => router.push(`/suppliers/${router.query.supplierid}/usergroups`)}
-                variant="secondaryButton"
-              >
+              <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/usergroups`)} variant="outline">
                 User Groups ({suppliersMeta[supplierid]?.userGroupsCount || "-"})
               </Button>
-              <Button
-                onClick={() => router.push(`/suppliers/${router.query.supplierid}/users`)}
-                variant="secondaryButton"
-              >
+              <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/users`)} variant="outline">
                 Users ({suppliersMeta[supplierid]?.usersCount || "-"})
               </Button>
-              <Button
-                onClick={() => router.push(`/suppliers/${router.query.supplierid}/catalogs`)}
-                variant="secondaryButton"
-              >
+              <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/catalogs`)} variant="outline">
                 Catalogs ({suppliersMeta[supplierid]?.catalogsCount || "-"})
               </Button>
             </ButtonGroup>

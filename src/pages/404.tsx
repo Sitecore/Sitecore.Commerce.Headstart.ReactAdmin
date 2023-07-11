@@ -15,7 +15,7 @@ const Page404 = () => {
         width={{base: "100%", sm: "70%", md: "60%"}}
         margin="0 auto"
       >
-        <Image src="/404 Error-pana.svg" alt="Error 404 not found Illustration" />
+        <Image src="/vector/404 Error-pana.svg" alt="Error 404 not found Illustration" />
       </MotionBox>
       <Text textAlign="center" fontSize="xs" color="gray">
         <Link href="https://stories.freepik.com/web" rel="noopener noreferrer">
@@ -33,7 +33,7 @@ const Page404 = () => {
             It&apos;s Okay!
           </Text>
           <Link href="/">
-            <Button backgroundColor={colorMode === "light" ? "gray.300" : "brand.500"} size="sm">
+            <Button backgroundColor={colorMode === "light" ? "gray.300" : "accent.500"} size="sm">
               Let&apos;s Head Back
             </Button>
           </Link>

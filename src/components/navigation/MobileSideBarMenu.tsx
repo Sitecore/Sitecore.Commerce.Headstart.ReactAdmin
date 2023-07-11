@@ -21,7 +21,7 @@ const MobileSideBarMenu = () => {
         ml="0"
         flexDir="column"
         justifyContent="flex-start"
-        background="brand.500"
+        background="accent.500"
         color="white"
       >
         <Flex p="5%" flexDir="column" w="100%" alignItems="center" as="nav">

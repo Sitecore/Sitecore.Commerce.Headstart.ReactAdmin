@@ -1,8 +1,11 @@
 import React, {useEffect, useState} from "react"
 import {useRouter} from "hooks/useRouter"
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink} from "@chakra-ui/react"
-import {Link} from "./Link"
+import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, useColorModeValue} from "@chakra-ui/react"
+import NextLink from "next/link"
 import {ChevronRightIcon} from "@chakra-ui/icons"
+import {TbDashboard, TbHome, TbLayout} from "react-icons/tb"
+import Dashboard from "@/pages/dashboard"
+import {Link} from "./Link"
 
 export interface Breadcrumb {
   text: string
@@ -15,7 +18,8 @@ export interface Breadcrumb {
 export const Breadcrumbs = () => {
   const router = useRouter()
   const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([])
-  const linkSecondaryColor = "gray.400"
+  const activeBreadcrumbColor = useColorModeValue("primary.400", "primary.100")
+  const inactiveBreadcrumbColor = useColorModeValue("gray.400", "gray.400")
 
   const getTextFromPath = (path: string) => {
     const text = path.split(/[?#]/)[0] // removes query params and hash params
@@ -44,10 +48,17 @@ export const Breadcrumbs = () => {
   }
 
   return (
-    <Breadcrumb separator={<ChevronRightIcon color={linkSecondaryColor} />}>
+    <Breadcrumb separator={<ChevronRightIcon mt="-3px" opacity=".35" />}>
       <BreadcrumbItem>
-        <BreadcrumbLink color={linkSecondaryColor} href="/" as={Link}>
-          Home
+        <BreadcrumbLink
+          as={Link}
+          href="/dashboard"
+          display="flex"
+          alignItems={"center"}
+          fontSize="sm"
+          color={inactiveBreadcrumbColor}
+        >
+          <TbLayout style={{marginRight: "5px"}} /> Dashboard
         </BreadcrumbLink>
       </BreadcrumbItem>
       {breadcrumbs
@@ -57,10 +68,12 @@ export const Breadcrumbs = () => {
           return (
             <BreadcrumbItem key={index}>
               <BreadcrumbLink
-                color={isLastBreadcrumb ? "initial" : linkSecondaryColor}
+                fontSize="sm"
+                as={Link}
+                href={breadcrumb.href}
+                color={isLastBreadcrumb ? activeBreadcrumbColor : inactiveBreadcrumbColor}
                 pointerEvents={isLastBreadcrumb ? "none" : "initial"}
                 isCurrentPage={isLastBreadcrumb}
-                href={breadcrumb.href}
               >
                 {breadcrumb.text}
               </BreadcrumbLink>

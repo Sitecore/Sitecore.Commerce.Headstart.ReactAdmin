@@ -1,4 +1,4 @@
-import NextLink from "next/link"
+import NextLink, {LinkProps} from "next/link"
 import {Link as ChakraLink, HTMLChakraProps, ThemingProps} from "@chakra-ui/react"
 
 interface ChakraLinkProps extends HTMLChakraProps<"a">, ThemingProps<"Link"> {

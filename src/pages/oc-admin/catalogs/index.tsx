@@ -74,13 +74,13 @@ const CatalogsList = () => {
         Cell: ({row}) => (
           <ButtonGroup>
             <Button
-              variant="secondaryButton"
+              variant="outline"
               onClick={() => router.push(`/buyers/${router.query.buyerid}/usergroups/${row.original.ID}`)}
               leftIcon={<EditIcon />}
             >
               Edit
             </Button>
-            <Button variant="secondaryButton" onClick={() => deleteCatalog(row.original.ID)} leftIcon={<DeleteIcon />}>
+            <Button variant="outline" onClick={() => deleteCatalog(row.original.ID)} leftIcon={<DeleteIcon />}>
               Delete
             </Button>
           </ButtonGroup>
@@ -95,7 +95,8 @@ const CatalogsList = () => {
       <HStack justifyContent="space-between" w="100%" mb={5}>
         <Button
           onClick={() => router.push(`/buyers/${router.query.buyerid}/usergroups/add`)}
-          variant="primaryButton"
+          variant="solid"
+          colorScheme="primary"
           leftIcon={<AddIcon />}
           size="lg"
         >

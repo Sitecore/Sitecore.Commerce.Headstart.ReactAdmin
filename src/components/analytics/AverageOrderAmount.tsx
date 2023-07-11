@@ -1,18 +1,49 @@
-import {Flex, Text, Box, useColorModeValue} from "@chakra-ui/react"
+import {
+  Flex,
+  Card,
+  Text,
+  Box,
+  useColorModeValue,
+  CardBody,
+  CardHeader,
+  Heading,
+  theme,
+  Icon,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  useDisclosure,
+  Collapse,
+  Button,
+  IconButton
+} from "@chakra-ui/react"
 import React, {useEffect, useState} from "react"
 import LineChart from "../charts/LineChart"
-import Card from "../card/Card"
 import {dashboardService} from "services/dashboard.service"
+import schraTheme from "theme/theme"
+import {
+  TbArrowBackUp,
+  TbCaretUp,
+  TbChevronUp,
+  TbCircleCaretUp,
+  TbSquareChevronUp,
+  TbSquareRoundedChevronUpFilled,
+  TbTriangle,
+  TbTriangleFilled
+} from "react-icons/tb"
+import {ChevronDownIcon, ChevronUpIcon, TriangleUpIcon} from "@chakra-ui/icons"
 
 export default function AverageOrderAmount() {
-  const boxBgColor = useColorModeValue("boxBgColor.100", "boxBgColor.600")
-  const color = useColorModeValue("boxTextColor.900", "boxTextColor.100")
   const headingColor = useColorModeValue("boxTextColor.400", "boxTextColor.300")
+  const labelColor = useColorModeValue("blackAlpha.400", "whiteAlpha.500")
   const [totalSales, settotalSales] = useState([Number])
   const [totalPreviousYearSales, settotalPreviousYearSales] = useState([Number])
+  const graphColor1 = useColorModeValue(schraTheme.colors.primary[500], schraTheme.colors.primary[300])
+  const graphColor2 = useColorModeValue(schraTheme.colors.accent[500], schraTheme.colors.accent[300])
   //const [chartData, setchartData] = useState()
   let chartData = require("../../mockdata/dashboard_data.json")
-  console.log(chartData)
   useEffect(() => {
     initData()
   }, [])
@@ -35,10 +66,15 @@ export default function AverageOrderAmount() {
   const d = new Date()
   let year = d.getFullYear()
   const options = {
+    colors: ["var(--schra-colors-primary-400)", "var(--schra-colors-accent-400)"],
+    stroke: {
+      lineCap: "round"
+    },
     chart: {
+      foreColor: useColorModeValue(schraTheme.colors.blackAlpha[500], schraTheme.colors.whiteAlpha[700]),
       height: "auto",
       toolbar: {
-        show: true,
+        show: false,
         tools: {
           download: true,
           selection: true,
@@ -55,11 +91,13 @@ export default function AverageOrderAmount() {
         type: "x",
         zoomedArea: {
           fill: {
-            color: "#90CAF9",
+            color: schraTheme.colors.primary[500],
             opacity: 0.4
           },
           stroke: {
-            color: "#0D47A1",
+            curve: "smooth",
+            lineCap: "round",
+            color: schraTheme.colors.primary[500],
             opacity: 0.4,
             width: 1
           }
@@ -86,22 +124,31 @@ export default function AverageOrderAmount() {
   ]
 
   return (
-    <Card p="28px 10px 15px 0px" mb={{sm: "26px", lg: "0px"}} bg={boxBgColor}>
-      <Flex direction="column" mb="GlobalPadding" ps="22px" alignSelf="flex-start">
-        <Text fontSize="lg" textTransform="uppercase" mb="6px" color={headingColor}>
+    <Card border=".5px solid" borderColor="st.borderColor" flex={"1 1 100%"}>
+      <CardHeader display="flex" flexDirection="column" mb="GlobalPadding" ps="22px" alignSelf="flex-start">
+        <Heading fontSize="lg" mb="6px" textTransform="capitalize" color={headingColor}>
           {chartData.salesoverview.title}
-        </Text>
-        <Text fontSize="sm" fontWeight="medium" color={color}>
-          <Text as="span" color="green.400" fontWeight="bold" pr="10px">
-            ({chartData.salesoverview.percentchangeindicator}
-            {chartData.salesoverview.percentchange}%) more
+        </Heading>
+        <Text
+          as="span"
+          fontSize="xs"
+          fontWeight="normal"
+          color={labelColor}
+          casing="uppercase"
+          display="inline-flex"
+          alignItems={"center"}
+          gap={1}
+        >
+          <Text as="span" color="green.400" fontWeight="bold" display="inline-flex" alignItems={"center"} gap={0.5}>
+            <TriangleUpIcon />
+            {chartData.salesoverview.percentchange}%
           </Text>
-          in {year}
+          {year}
         </Text>
-      </Flex>
-      <Box w="100%" h={{sm: "100%", xl: "265px"}} ps="8px">
+      </CardHeader>
+      <CardBody w="100%" minH={275} ps="8px">
         <LineChart chartData={series} chartOptions={options} />
-      </Box>
+      </CardBody>
     </Card>
   )
 }

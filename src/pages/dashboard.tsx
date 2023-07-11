@@ -1,23 +1,23 @@
 import {
-  Box,
-  Container,
-  Flex,
-  GridItem,
-  HStack,
-  Heading,
+  Card,
   Icon,
-  Image,
   SimpleGrid,
   Text,
   VStack,
   useColorMode,
-  useColorModeValue
+  useColorModeValue,
+  CardHeader,
+  CardBody,
+  Spinner,
+  IconButton,
+  Flex,
+  useMediaQuery,
+  theme,
+  Heading
 } from "@chakra-ui/react"
 import {HiOutlineCurrencyDollar, HiOutlineFolderOpen, HiOutlineUserAdd, HiOutlineUserCircle} from "react-icons/hi"
 import {useEffect, useState} from "react"
 import AverageOrderAmount from "components/analytics/AverageOrderAmount"
-import BrandedSpinner from "components/branding/BrandedSpinner"
-import Card from "components/card/Card"
 import NewClients from "components/analytics/PercentChangeTile"
 import {NextSeo} from "next-seo"
 import TodaysMoney from "components/analytics/PercentChangeTile"
@@ -32,6 +32,8 @@ import {IOrder} from "types/ordercloud/IOrder"
 import {IProduct} from "types/ordercloud/IProduct"
 import {IPromotion} from "types/ordercloud/IPromotion"
 import {dashboardService} from "services/dashboard.service"
+import schraTheme from "theme/theme"
+import {TbArrowsDiagonal} from "react-icons/tb"
 
 const Dashboard = () => {
   const {colorMode, toggleColorMode} = useColorMode()
@@ -54,10 +56,12 @@ const Dashboard = () => {
   const [percentNewUsersChange, setpercentNewUsersChange] = useState(String)
   const [canViewReports, setCanViewReports] = useState(false)
   const hasAccessToViewReports = useHasAccess(appPermissions.ReportViewer)
-
   const [dashboardListMeta, setDashboardMeta] = useState({})
 
-  const boxBgColor = useColorModeValue("boxBgColor.100", "boxBgColor.600")
+  const [above2xl] = useMediaQuery(`(min-width: ${theme.breakpoints["2xl"]})`, {
+    ssr: true,
+    fallback: false // return false on the server, and re-evaluate on the client side
+  })
 
   useEffect(() => {
     setCanViewReports(hasAccessToViewReports)
@@ -139,243 +143,146 @@ const Dashboard = () => {
     setUsers(usersList.Items)
   }
 
-  const gradient = colorMode === "light" ? "linear(to-t, brand.300, brand.400)" : "linear(to-t, brand.600, brand.500)"
-  const color = useColorModeValue("boxTextColor.900", "boxTextColor.100")
+  const gradient =
+    colorMode === "light" ? "linear(to-t, accent.300, accent.400)" : "linear(to-t, accent.600, accent.500)"
+  const color = useColorModeValue("blackAlpha.500", "whiteAlpha.500")
+  const labelColor = useColorModeValue("blackAlpha.400", "whiteAlpha.500")
 
+  // TODO: build skeleton for this
   if (!canViewReports) {
     return <div></div>
   }
 
-  return (
-    <Flex
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      minHeight="70vh"
-      gap={4}
-      mb={8}
-      w="full"
-      width="100%"
+  const productsLatestUpdated = new Date(
+    (products || [])
+      .filter((p) => p.Inventory !== null)
+      .map((i) => i?.Inventory)
+      .map((lu) => lu?.LastUpdated)
+      .reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
+  ).toLocaleDateString()
+  const ordersLatestUpdated = new Date(
+    orders?.map((lu) => lu?.LastUpdated)?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
+  ).toLocaleDateString()
+  const usersLatestUpdated = new Date(
+    users
+      ?.map((i) => i?.StartDate)
+      ?.filter((wtf) => wtf)
+      ?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
+  ).toLocaleDateString()
+  const promotionsLatestUpdated = new Date(
+    promotions
+      ?.map((i) => i?.StartDate)
+      ?.filter((wtf) => wtf)
+      ?.reduce((a, b) => (a.MeasureDate > b.MeasureDate ? a : b), {})
+  ).toLocaleDateString()
+
+  const data = [
+    {label: "products", labelSingular: "product", var: products, funFact: productsLatestUpdated},
+    {label: "orders", labelSingular: "order", var: orders, funFact: ordersLatestUpdated},
+    {label: "users", labelSingular: "user", var: users, funFact: usersLatestUpdated},
+    {label: "promotions", labelSingular: "promotion", var: promotions, funFact: promotionsLatestUpdated}
+  ]
+
+  const miniWidgets = data.map((item) => (
+    <Card
+      as={Link}
+      variant={"levitating"}
+      border={`.5px solid ${schraTheme.colors.blackAlpha[300]}`}
+      href={"/" + item.label}
+      key={item.label}
+      pos={"relative"}
     >
+      <IconButton
+        icon={<TbArrowsDiagonal />}
+        variant={"outline"}
+        size="xs"
+        aria-label={""}
+        pos="absolute"
+        right={2}
+        top={2}
+      />
+      <CardHeader py={0}>
+        {item.var != null ? (
+          <Text fontWeight={"light"} color={color} fontSize="5xl">
+            {item.var.length}
+          </Text>
+        ) : (
+          <Spinner mt={4} />
+        )}
+      </CardHeader>
+      <CardBody pt={0}>
+        <Heading fontSize="lg" mb="6px" textTransform="capitalize" mt={"auto"}>
+          {item.label}
+        </Heading>
+        <Text fontSize="xs" fontWeight="normal" color={labelColor} casing="uppercase">
+          latest {item.label.toString()} update:
+          <Text as={"span"} fontSize="xs" fontWeight={"semibold"}>
+            {" "}
+            {item.funFact}
+          </Text>
+        </Text>
+      </CardBody>
+    </Card>
+  ))
+
+  return (
+    <>
       <NextSeo title="Dashboard" />
-      <VStack as="section" width="full" align="center">
-        <HStack as="section" w="100%" p="3">
-          <Container maxW="full" fontSize="x-small" fontWeight="normal">
-            <SimpleGrid
-              columns={{xl: 2, lg: 2, md: 1, sm: 1, base: 1}}
-              gap={{xl: 6, lg: 4, md: 2, sm: 1, base: 1}}
-              mt={{xl: 4, lg: 4, md: 2, sm: 0, base: 0}}
-              mb={0}
-            >
-              <GridItem>
-                <SimpleGrid
-                  columns={{xl: 2, lg: 2, md: 1, sm: 1, base: 1}}
-                  gap={{xl: 6, lg: 4, md: 2, sm: 0, base: 0}}
-                  mt={{xl: 4, lg: 4, md: 2, sm: 0, base: 0}}
-                  mb={0}
-                >
-                  <GridItem>
-                    <Box w="full" width="100%">
-                      <Link href="#">
-                        <TodaysMoney
-                          title="todays money"
-                          totalamount={` ${priceHelper.formatShortPrice(totalTodaysSales)}`}
-                          percentchange={previousTodaysSales}
-                          percentchangetype={percentTodaysSalesChange}
-                          percentlabel="Compared to last month (mtd)"
-                          icon={<Icon as={HiOutlineFolderOpen} />}
-                        />
-                      </Link>
-                    </Box>
-                  </GridItem>
-                  <GridItem>
-                    <Box w="full" width="100%">
-                      <Link href="#">
-                        <TotalSales
-                          title="total sales"
-                          totalamount={` ${priceHelper.formatShortPrice(totalSales)}`}
-                          percentchange={percentSales}
-                          percentchangetype={percentSalesChange}
-                          percentlabel="Compared to last year  (ytd)"
-                          icon={<Icon as={HiOutlineCurrencyDollar} />}
-                        />
-                      </Link>
-                    </Box>
-                  </GridItem>
-                </SimpleGrid>
-                <SimpleGrid
-                  columns={{xl: 2, lg: 2, md: 1, sm: 1, base: 1}}
-                  gap={{xl: 6, lg: 4, md: 2, sm: 0, base: 0}}
-                  mt={{xl: 4, lg: 4, md: 2, sm: 0, base: 0}}
-                  mb={0}
-                >
-                  <GridItem>
-                    <Box w="full" width="100%">
-                      <Link href="#">
-                        <NewClients
-                          title="new users"
-                          totalamount={totalNewUsers}
-                          percentchange={percentNewUsers}
-                          percentchangetype={percentNewUsersChange}
-                          percentlabel="Compared to last month (mtd)"
-                          icon={<Icon as={HiOutlineUserAdd} />}
-                        />
-                      </Link>
-                    </Box>
-                  </GridItem>
-                  <GridItem>
-                    <Box w="full" width="100%">
-                      <Link href="#">
-                        <TodaysUsers
-                          title="total users"
-                          totalamount={totalUsers}
-                          percentchange={percentTotalUsers}
-                          percentchangetype={percentTotalUsersChange}
-                          percentlabel="Compared to last year  (ytd)"
-                          icon={<Icon as={HiOutlineUserCircle} />}
-                        />
-                      </Link>
-                    </Box>
-                  </GridItem>
-                </SimpleGrid>
-              </GridItem>
-              <GridItem mt={{xl: 4, lg: 4, md: 2, sm: 0, base: 0}} mb={{xl: 4, lg: 4, md: 2, sm: 4, base: 4}}>
-                <Link href="#">
-                  <AverageOrderAmount />
-                </Link>
-              </GridItem>
-            </SimpleGrid>
-            <SimpleGrid
-              columns={{xl: 4, lg: 2, md: 2, sm: 1, base: 1}}
-              gap={{xl: 6, lg: 4, md: 2, sm: 1, base: 1}}
-              mt={0}
-              mb={{xl: 4, lg: 4, md: 2, sm: 0, base: 0}}
-            >
-              <GridItem mb={{xl: 0, lg: 0, md: 2, sm: 2, base: 2}}>
-                <Link href="/products">
-                  <Card showclosebutton="false" p="0px" mb={{sm: "26px", lg: "0px"}} bg={boxBgColor} color={color}>
-                    <HStack justifyContent="space-around" w="100%" width="full">
-                      <Heading size="md">
-                        Products
-                        <Text
-                          as="span"
-                          pl={{
-                            xl: "8px",
-                            lg: "8px",
-                            md: "0px",
-                            sm: "0px",
-                            base: "0px"
-                          }}
-                        >
-                          {products != null ? (
-                            <i>({products.length})</i>
-                          ) : (
-                            <Box pt={2}>
-                              <BrandedSpinner />
-                            </Box>
-                          )}
-                        </Text>
-                      </Heading>
-                      <Image src="/images/icon_product.png" alt="Icon Products" />
-                    </HStack>
-                  </Card>
-                </Link>
-              </GridItem>
-              <GridItem mb={{xl: 0, lg: 0, md: 2, sm: 2, base: 2}}>
-                <Link href="/orders">
-                  <Card showclosebutton="false" p="0px" mb={{sm: "26px", lg: "0px"}} bg={boxBgColor} color={color}>
-                    <HStack justifyContent="space-around" w="100%" width="full">
-                      <Heading size="md">
-                        Orders
-                        <Text
-                          as="span"
-                          pl={{
-                            xl: "8px",
-                            lg: "8px",
-                            md: "0px",
-                            sm: "0px",
-                            base: "0px"
-                          }}
-                        >
-                          {orders != null ? (
-                            <i>({orders.length})</i>
-                          ) : (
-                            <Box pt={2}>
-                              <BrandedSpinner />
-                            </Box>
-                          )}
-                        </Text>
-                      </Heading>
-                      <Image src="/images/icon_order.png" alt="Icon Orders" />
-                    </HStack>
-                  </Card>
-                </Link>
-              </GridItem>
-              <GridItem mb={{xl: 0, lg: 0, md: 2, sm: 2, base: 2}}>
-                <Link href="/users">
-                  <Card showclosebutton="false" p="0px" mb={{sm: "26px", lg: "0px"}} bg={boxBgColor} color={color}>
-                    <HStack justifyContent="space-around" w="100%" width="full" direction={{base: "column", md: "row"}}>
-                      <Heading size="md">
-                        Users
-                        <Text
-                          as="span"
-                          pl={{
-                            xl: "8px",
-                            lg: "8px",
-                            md: "0px",
-                            sm: "0px",
-                            base: "0px"
-                          }}
-                        >
-                          {users != null ? (
-                            <i>({users.length})</i>
-                          ) : (
-                            <Box pt={2}>
-                              <BrandedSpinner />
-                            </Box>
-                          )}
-                        </Text>
-                      </Heading>
-                      <Image src="/images/icon_user.png" alt="Icon Users" />
-                    </HStack>
-                  </Card>
-                </Link>
-              </GridItem>
-              <GridItem mb={{xl: 0, lg: 0, md: 2, sm: 2, base: 2}}>
-                <Link href="/promotions">
-                  <Card showclosebutton="false" p="0px" mb={{sm: "26px", lg: "0px"}} bg={boxBgColor} color={color}>
-                    <HStack justifyContent="space-around" w="100%" width="full">
-                      <Heading size="md">
-                        Promotions
-                        <Text
-                          as="span"
-                          pl={{
-                            xl: "8px",
-                            lg: "8px",
-                            md: "0px",
-                            sm: "0px",
-                            base: "0px"
-                          }}
-                        >
-                          {promotions != null ? (
-                            <i>({promotions.length})</i>
-                          ) : (
-                            <Box pt={2}>
-                              <BrandedSpinner />
-                            </Box>
-                          )}
-                        </Text>
-                      </Heading>
-                      <Image src="/images/icon_promo.png" alt="Icon Promotions" />
-                    </HStack>
-                  </Card>
-                </Link>
-              </GridItem>
-            </SimpleGrid>
-          </Container>
-        </HStack>
+      <VStack flexGrow={1} gap={4} p={[4, 6, 8]} h="100%" w="100%" bg={"st.mainBackgroundColor"}>
+        <Flex w="100%" gap={4} direction={above2xl ? "row" : "column-reverse"}>
+          <SimpleGrid
+            w="100%"
+            gap={4}
+            templateRows={above2xl && "1fr 1fr"}
+            templateColumns={{
+              md: "1fr 1fr",
+              xl: "repeat(auto-fit, minmax(48%, 1fr))"
+            }}
+          >
+            <TodaysMoney
+              title="todays money"
+              totalamount={` ${priceHelper.formatShortPrice(totalTodaysSales)} `}
+              percentchange={previousTodaysSales}
+              percentchangetype={percentTodaysSalesChange}
+              percentlabel="Compared to last month (mtd)"
+              icon={<Icon as={HiOutlineFolderOpen} />}
+            />
+
+            <TotalSales
+              title="total sales"
+              totalamount={` ${priceHelper.formatShortPrice(totalSales)} `}
+              percentchange={percentSales}
+              percentchangetype={percentSalesChange}
+              percentlabel="Compared to last year  (ytd)"
+              icon={<Icon as={HiOutlineCurrencyDollar} />}
+            />
+
+            <NewClients
+              title="new users"
+              totalamount={totalNewUsers}
+              percentchange={percentNewUsers}
+              percentchangetype={percentNewUsersChange}
+              percentlabel="Compared to last month (mtd)"
+              icon={<Icon as={HiOutlineUserAdd} />}
+            />
+
+            <TodaysUsers
+              title="total users"
+              totalamount={totalUsers}
+              percentchange={percentTotalUsers}
+              percentchangetype={percentTotalUsersChange}
+              percentlabel="Compared to last year  (ytd)"
+              icon={<Icon as={HiOutlineUserCircle} />}
+            />
+          </SimpleGrid>
+          <AverageOrderAmount />
+        </Flex>
+
+        <SimpleGrid w="full" spacing={4} templateColumns="repeat(auto-fit, minmax(200px, 1fr))">
+          {miniWidgets}
+        </SimpleGrid>
       </VStack>
-    </Flex>
+    </>
   )
 }
 

@@ -1,7 +1,7 @@
 import * as ReactDnD from "react-dnd"
 import * as ReactDndHtml5Backend from "react-dnd-html5-backend"
 
-import {ChakraProvider, extendTheme} from "@chakra-ui/react"
+import {chakra, ChakraProvider, extendTheme} from "@chakra-ui/react"
 
 import {QueryBuilder} from "react-querybuilder"
 import {QueryBuilderChakra} from "@react-querybuilder/chakra"
@@ -9,8 +9,9 @@ import {QueryBuilderDnD} from "@react-querybuilder/dnd"
 import type {RuleGroupType} from "react-querybuilder"
 import {fields} from "./fileds"
 import {useState} from "react"
+import schraTheme from "theme/theme"
 
-const chakraTheme = extendTheme()
+const ChakraQueryBuilderDnD = chakra(QueryBuilderDnD)
 
 const initialQuery: RuleGroupType = {combinator: "and", rules: []}
 
@@ -18,8 +19,8 @@ export const ExpressionBuilder = () => {
   const [query, setQuery] = useState(initialQuery)
 
   return (
-    <QueryBuilderDnD dnd={{...ReactDnD, ...ReactDndHtml5Backend}}>
-      <ChakraProvider theme={chakraTheme}>
+    <ChakraQueryBuilderDnD dnd={{...ReactDnD, ...ReactDndHtml5Backend}}>
+      <ChakraProvider theme={schraTheme}>
         <QueryBuilderChakra>
           <QueryBuilder
             fields={fields}
@@ -30,6 +31,6 @@ export const ExpressionBuilder = () => {
           />
         </QueryBuilderChakra>
       </ChakraProvider>
-    </QueryBuilderDnD>
+    </ChakraQueryBuilderDnD>
   )
 }

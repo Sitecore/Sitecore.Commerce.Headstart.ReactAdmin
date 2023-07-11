@@ -2,7 +2,7 @@ import {useColorMode, useColorModeValue, Box, TableContainer, Table} from "@chak
 
 export default function BrandedTable({children}) {
   const tableHeaderBg = useColorModeValue("white.000", "gray.900")
-  const tableBg = useColorModeValue("brand.300", "brand.500")
+  const tableBg = useColorModeValue("accent.300", "accent.500")
   const tableColor = useColorModeValue("textColor.900", "textColor.100")
   const tableBorder = useColorModeValue("gray.400", "gray.400")
 

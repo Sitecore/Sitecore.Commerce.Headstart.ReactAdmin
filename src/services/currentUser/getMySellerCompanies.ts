@@ -2,7 +2,7 @@ import {Me, Suppliers} from "ordercloud-javascript-sdk"
 
 export async function getMySellerCompanyIds() {
   const me = await Me.Get()
-  const sellerId = me.Seller?.ID ? "Admin" : me?.Supplier?.ID
+  const sellerId = me?.Supplier?.ID || "Admin"
   if (sellerId === "Admin") {
     // an admin can see their own company and all suppliers
     const suppliers = await Suppliers.List()

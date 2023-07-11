@@ -263,7 +263,7 @@ const ListView = <T extends IDefaultResource>({
               onSelectChange={handleSelectChange}
             />
           </Box>
-          <Box hidden={viewMode !== "table"}>
+          <Box minHeight="600px" hidden={viewMode !== "table"}>
             <DataTable
               {...tableOptions}
               loading={loading}

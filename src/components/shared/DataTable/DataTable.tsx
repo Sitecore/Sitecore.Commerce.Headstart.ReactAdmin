@@ -141,7 +141,7 @@ const DataTable = <T extends IDefaultResource>({
       shadow="lg"
       overflowX="hidden"
       w="100%"
-      minH={100}
+      minH={400}
       rounded="md"
     >
       {loading && (

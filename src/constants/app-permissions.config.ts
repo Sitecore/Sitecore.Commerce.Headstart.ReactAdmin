@@ -11,7 +11,7 @@ type AppPermission =
 
 export const appPermissions: Record<AppPermission, ApiRole[]> = {
   OrderManager: ["OrderAdmin"],
-  ProductManager: ["ProductAdmin", "PromotionAdmin", "PriceScheduleAdmin"],
+  ProductManager: ["ProductAdmin", "PromotionAdmin", "PriceScheduleAdmin", "ProductFacetReader"],
   BuyerManager: ["BuyerAdmin", "BuyerUserAdmin", "CatalogAdmin", "UserGroupAdmin", "CategoryAdmin"],
   SupplierManager: ["SupplierAdmin", "SupplierAddressAdmin", "SupplierUserAdmin", "SupplierUserGroupAdmin"],
   ReportViewer: ["OrderAdmin", "ProductAdmin"],

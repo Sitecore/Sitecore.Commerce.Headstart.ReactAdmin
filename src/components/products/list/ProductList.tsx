@@ -1,5 +1,4 @@
-import {Box, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
-import Link from "next/link"
+import {Box, Button, Container, Heading, Icon, Tag, Text, VStack, useDisclosure} from "@chakra-ui/react"
 import {Products} from "ordercloud-javascript-sdk"
 import {useCallback, useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
@@ -13,6 +12,8 @@ import ProductActionMenu from "./ProductActionMenu"
 import ProductCard from "./ProductCard"
 import ProductListToolbar from "./ProductListToolbar"
 import ProductDefaultImage from "./ProductDefaultImage"
+import {TbCactus} from "react-icons/tb"
+import {Link} from "@/components/navigation/Link"
 
 const ProductQueryMap = {
   s: "Search",
@@ -131,6 +132,22 @@ const ProductList = () => {
     return `/products/${product.ID}?tab=Details`
   }
 
+  const noDataMessage = (
+    <Box p={6} display="flex" flexDirection={"column"} alignItems={"center"} justifyContent={"center"} minH={"xs"}>
+      <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
+      <Heading colorScheme="secondary" fontSize="xl">
+        <VStack>
+          <Text>No products yet</Text>
+          <Link href="/products/new">
+            <Button variant="solid" size="sm" colorScheme="primary">
+              Create one now
+            </Button>
+          </Link>
+        </VStack>
+      </Heading>
+    </Box>
+  )
+
   return (
     <ListView<IProduct>
       service={Products.List}
@@ -140,6 +157,7 @@ const ProductList = () => {
       itemHrefResolver={resolveProductDetailHref}
       tableOptions={ProductTableOptions}
       gridOptions={ProductGridOptions}
+      noDataMessage={noDataMessage}
     >
       {({renderContent, items, ...listViewChildProps}) => (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>

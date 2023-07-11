@@ -1,5 +1,5 @@
 import {Button, Flex, Hide, Icon, useColorModeValue, VStack} from "@chakra-ui/react"
-import React, {useState} from "react"
+import React from "react"
 import {
   TbBuildingWarehouse,
   TbLayout,
@@ -15,11 +15,12 @@ import {appPermissions} from "constants/app-permissions.config"
 import {Link} from "./Link"
 import schraTheme from "theme/theme"
 import {useRouter} from "next/router"
-import {useAuth} from "hooks/useAuth"
 
-const SideBarMenu = () => {
-  const {isSupplier} = useAuth()
-  const [navSize, changeNavSize] = useState("large")
+interface DesktopSideBarMenuProps {
+  isInDrawer?: boolean
+  onLinkClick?: () => void
+}
+const DesktopSideBarMenu = ({isInDrawer, onLinkClick}: DesktopSideBarMenuProps) => {
   let router = useRouter()
 
   // TODO: avoid component-specific one-off styles like this. Try to refactor these into a system of semantic-tokens.
@@ -27,26 +28,14 @@ const SideBarMenu = () => {
   const btnActiveBgColor = useColorModeValue("white", "whiteAlpha.200")
 
   const data = [
-    {label: "Dashboard", path: "/dashboard", icon: TbLayout, permisshies: appPermissions.ProductManager},
-    {label: "Products", path: "/products", icon: TbShoppingCartPlus, permisshies: appPermissions.ProductManager},
-    {label: "Promotions", path: "/promotions", icon: TbShoppingCartDiscount, permisshies: appPermissions.OrderManager},
-    {label: "Orders", path: "/orders", icon: TbReceipt2, permisshies: appPermissions.OrderManager},
-    {label: "Returns", path: "/returns", icon: TbTruckReturn, permisshies: appPermissions.OrderManager},
-    {label: "Buyers", path: "/buyers", icon: TbUserCheck, permisshies: appPermissions.BuyerManager},
-    isSupplier
-      ? {
-          label: "My Supplier",
-          path: "/mysupplier",
-          icon: TbBuildingWarehouse,
-          permisshies: appPermissions.SupplierManager
-        }
-      : {
-          label: "Suppliers",
-          path: "/suppliers",
-          icon: TbBuildingWarehouse,
-          permisshies: appPermissions.SupplierManager
-        },
-    {label: "settings", path: "/settings", icon: TbSettings2, permisshies: appPermissions.SettingsManager}
+    {label: "dashboard", icon: TbLayout, permisshies: appPermissions.ProductManager},
+    {label: "products", icon: TbShoppingCartPlus, permisshies: appPermissions.ProductManager},
+    {label: "promotions", icon: TbShoppingCartDiscount, permisshies: appPermissions.OrderManager},
+    {label: "orders", icon: TbReceipt2, permisshies: appPermissions.OrderManager},
+    {label: "returns", icon: TbTruckReturn, permisshies: appPermissions.OrderManager},
+    {label: "buyers", icon: TbUserCheck, permisshies: appPermissions.BuyerManager},
+    {label: "suppliers", icon: TbBuildingWarehouse, permisshies: appPermissions.SupplierManager},
+    {label: "settings", icon: TbSettings2, permisshies: appPermissions.SettingsManager}
   ]
 
   const links = data.map((item) => (
@@ -54,7 +43,8 @@ const SideBarMenu = () => {
       {/* TODO: This is excessive. Consider refactoring these styles into a button variant. */}
       <Button
         as={Link}
-        href={item.path}
+        onClick={onLinkClick}
+        href={`/${item.label}`}
         variant="ghost"
         leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}
         isActive={"/" + item.label === router?.pathname}
@@ -74,17 +64,20 @@ const SideBarMenu = () => {
         h={"unset"}
         w={"100%"}
         justifyContent="flex-start"
+        textTransform="capitalize"
       >
-        <Hide below="lg">{item.label}</Hide>
+        {isInDrawer ? item.label : <Hide below="lg">{item.label}</Hide>}
       </Button>
     </ProtectedContent>
   ))
 
+  const drawerBackground = useColorModeValue("gray.50", "gray.800")
+
   return (
     <Flex
-      w={["75px", "75px", "75px", "250px"]}
-      background={useColorModeValue("gray.50", "gray.800")}
-      borderRight={`.5px solid`}
+      w={isInDrawer ? "250px" : ["75px", "75px", "75px", "250px"]}
+      background={isInDrawer ? "transparent" : drawerBackground}
+      borderRight={isInDrawer ? "none" : ".5px solid"}
       borderColor="st.borderColor"
       minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight} * 2.5)`} // this prevents uneeded scrollbars: full viewport height - header and footer heights...plus a .5 saftey net
       h="100%"
@@ -106,4 +99,4 @@ const SideBarMenu = () => {
   )
 }
 
-export default SideBarMenu
+export default DesktopSideBarMenu

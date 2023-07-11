@@ -32,6 +32,7 @@ Objects:
       Name: Order Manager
       Roles:
         - OrderAdmin
+        - SupplierAddressReader
       xp: {IsPermission: true}
     - ID: ReportViewer
       Name: Report Viewer

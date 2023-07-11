@@ -1,6 +1,6 @@
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
-import {Box, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
+import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
 import {Orders} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
 import {IOrder} from "types/ordercloud/IOrder"
@@ -8,6 +8,7 @@ import {dateHelper, priceHelper} from "utils"
 import OrderDeleteModal from "../modals/OrderDeleteModal"
 import OrderActionMenu from "./OrderActionMenu"
 import OrderListToolbar from "./OrderListToolbar"
+import {OrderStatus} from "../OrderStatus"
 import {useAuth} from "hooks/useAuth"
 
 export const OrderStatusColorSchemeMap = {
@@ -96,8 +97,8 @@ const BuyerIdColumn: DataTableColumn<IOrder> = {
 const StatusColumn: DataTableColumn<IOrder> = {
   header: "Status",
   accessor: "Status",
-  width: "10%",
-  cell: ({value}) => <Tag colorScheme={OrderStatusColorSchemeMap[value] || "default"}>{value}</Tag>,
+  width: "15%",
+  cell: ({value}) => <OrderStatus status={value} />,
   sortable: true
 }
 

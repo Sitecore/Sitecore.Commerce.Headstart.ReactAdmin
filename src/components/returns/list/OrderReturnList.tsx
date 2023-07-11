@@ -1,7 +1,6 @@
-import {OrderStatusColorSchemeMap} from "@/components/orders/list/OrderList"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
-import {Box, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
+import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
 import Link from "next/link"
 import {OrderReturns} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
@@ -10,6 +9,7 @@ import {dateHelper, priceHelper} from "utils"
 import OrderReturnDeleteModal from "../modals/OrderReturnDeleteModal"
 import OrderReturnActionMenu from "./OrderReturnActionMenu"
 import OrderReturnListToolbar from "./OrderReturnListToolbar"
+import {OrderStatus} from "@/components/orders/OrderStatus"
 
 const OrderReturnQueryMap = {
   s: "Search",
@@ -59,9 +59,7 @@ const StatusColumn: DataTableColumn<IOrderReturn> = {
   width: "15%",
   cell: ({row, value}) => (
     <Link href={`/returns/${row.original.ID}`} passHref>
-      <Tag as="a" colorScheme={OrderStatusColorSchemeMap[value] || "default"}>
-        {value}
-      </Tag>
+      <OrderStatus as="a" status={value} />
     </Link>
   ),
   sortable: true

@@ -45,6 +45,7 @@ Objects:
         - ProductAdmin
         - PromotionAdmin
         - PriceScheduleAdmin
+        - ProductFacetReader
       xp: {IsPermission: true}
     - ID: SettingsManager
       Name: Settings Manager

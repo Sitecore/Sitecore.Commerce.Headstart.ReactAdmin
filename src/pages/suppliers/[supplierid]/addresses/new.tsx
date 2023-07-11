@@ -1,16 +1,14 @@
 import {Box} from "@chakra-ui/react"
-import {CreateUpdateForm} from "../../components/suppliers/CreateUpdateForm"
+import {CreateUpdateForm} from "components/supplieraddresses/CreateUpdateForm"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {ISupplier} from "types/ordercloud/ISupplier"
 
-const supplier = {Name: "", Active: false, AllBuyersCanOrder: false, DateCreated: ""} as ISupplier
 /* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return {
     props: {
       header: {
-        title: "Create a new supplier",
+        title: "Create a new supplier address",
         metas: {
           hasBreadcrumbs: true
         }
@@ -23,7 +21,7 @@ export async function getStaticProps() {
 function ProtectedCreateUpdateForm() {
   return (
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
-      <CreateUpdateForm supplier={supplier} />
+      <CreateUpdateForm />
     </ProtectedContent>
   )
 }

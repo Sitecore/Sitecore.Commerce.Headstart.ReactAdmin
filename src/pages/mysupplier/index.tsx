@@ -2,7 +2,7 @@ import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "components/suppliers"
 import {Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {Supplier, Suppliers} from "ordercloud-javascript-sdk"
+import {Me, Supplier, Suppliers} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ISupplier} from "types/ordercloud/ISupplier"
@@ -13,11 +13,10 @@ export async function getServerSideProps() {
   return {
     props: {
       header: {
-        title: "Edit supplier",
+        title: "My supplier",
         metas: {
           hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false,
-          hasSupplierContextSwitch: true
+          hasSupplierContextSwitch: false
         }
       },
       revalidate: 5 * 60
@@ -26,17 +25,15 @@ export async function getServerSideProps() {
 }
 
 const SupplierListItem = () => {
-  const router = useRouter()
   const [supplier, setSupplier] = useState({} as Supplier)
   useEffect(() => {
     const getSupplier = async () => {
-      const supplier = await Suppliers.Get<ISupplier>(router.query.supplierid as string)
+      const me = await Me.Get()
+      const supplier = await Suppliers.Get<ISupplier>(me.Supplier.ID)
       setSupplier(supplier)
     }
-    if (router.query.supplierid) {
-      getSupplier()
-    }
-  }, [router.query.supplierid])
+    getSupplier()
+  }, [])
   return (
     <>
       {supplier?.ID ? (

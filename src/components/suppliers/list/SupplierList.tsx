@@ -2,7 +2,7 @@ import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
 import {Box, Button, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
 import Link from "next/link"
-import {RequiredDeep, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
+import {RequiredDeep, SupplierAddresses, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
 import {ISupplier} from "types/ordercloud/ISupplier"
 import {ISupplierUser} from "types/ordercloud/ISupplierUser"
@@ -11,10 +11,12 @@ import {dateHelper} from "utils"
 import SupplierDeleteModal from "../modals/SupplierDeleteModal"
 import SupplierActionMenu from "./SupplierActionMenu"
 import SupplierListToolbar from "./SupplierListToolBar"
+import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 
 interface ISupplierListItem extends RequiredDeep<ISupplier> {
   userGroupsCount: number
   usersCount: number
+  addressCount: number
 }
 
 const SupplierQueryMap = {
@@ -85,12 +87,32 @@ const SupplierUsersColumn: DataTableColumn<ISupplierListItem> = {
   )
 }
 
+const SupplierAddressesColumn: DataTableColumn<ISupplierListItem> = {
+  header: "Addresses",
+  skipHref: true,
+  cell: ({row}) => (
+    <Link passHref href={`/suppliers/${row.original.ID}/addresses`}>
+      <Button as="a" variant="outline">
+        Addresses ({row.original.addressCount})
+      </Button>
+    </Link>
+  )
+}
+
 const SupplierTableOptions: ListViewTableOptions<ISupplierListItem> = {
   responsive: {
     base: [IdColumn, NameColumn],
     md: [IdColumn, NameColumn],
     lg: [IdColumn, NameColumn],
-    xl: [IdColumn, NameColumn, StatusColumn, CreatedDateColumn, UserGroupColumn, SupplierUsersColumn]
+    xl: [
+      IdColumn,
+      NameColumn,
+      StatusColumn,
+      CreatedDateColumn,
+      UserGroupColumn,
+      SupplierUsersColumn,
+      SupplierAddressesColumn
+    ]
   }
 }
 
@@ -102,12 +124,14 @@ const supplierListCall = async (listOptions: any) => {
     queue.push(
       Promise.all([
         SupplierUserGroups.List<ISupplierUserGroup>(supplier.ID),
-        SupplierUsers.List<ISupplierUser>(supplier.ID)
+        SupplierUsers.List<ISupplierUser>(supplier.ID),
+        SupplierAddresses.List<ISupplierAddress>(supplier.ID)
       ]).then((responses) => {
         const decoratedSupplier: ISupplierListItem = {
           ...supplier,
           userGroupsCount: responses[0].Meta.TotalCount,
-          usersCount: responses[1].Meta.TotalCount
+          usersCount: responses[1].Meta.TotalCount,
+          addressCount: responses[2].Meta.TotalCount
         }
         decoratedSupplierItems.push(decoratedSupplier)
       })

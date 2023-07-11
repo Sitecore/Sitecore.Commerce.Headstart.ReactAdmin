@@ -1,43 +1,24 @@
-import {EditIcon} from "@chakra-ui/icons"
-import {
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Icon,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  Button,
-  ButtonGroup,
-  Text
-} from "@chakra-ui/react"
+import {TableContainer, Table, Thead, Tr, Th, Tbody, Td, Heading} from "@chakra-ui/react"
 import {Catalogs, Categories} from "ordercloud-javascript-sdk"
 import {Control, FieldValues, UseFieldArrayReturn, useWatch} from "react-hook-form"
-import {TbDotsVertical} from "react-icons/tb"
 import {useEffect, useState} from "react"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
-import {CategoryAssignmentModal} from "./category-assignment-modal/CategoryAssignmentModal"
-
-type EnhancedCategoryProductAssignment = ICategoryProductAssignment & {CatalogName: string; CategoryName: string}
+import {ICatalog} from "types/ordercloud/ICatalog"
+import {ICategory} from "types/ordercloud/ICategoryXp"
+import {Dictionary, groupBy} from "lodash"
+import {CategoryActionMenu} from "./CategoryActionMenu"
 
 interface CategoryTableProps {
   control: Control<FieldValues, any>
   fieldArray: UseFieldArrayReturn<FieldValues, any>
 }
 export function CategoryTable({control, fieldArray}: CategoryTableProps) {
-  const {replace} = fieldArray
-  const [enhancedCategoryAssignments, setEnhancedCategoryAssignments] = useState<EnhancedCategoryProductAssignment[]>(
-    []
-  )
+  const {remove} = fieldArray
+  const [assignments, setAssignments] = useState<Dictionary<{Catalog: ICatalog; Category: ICategory}[]>>({})
   const watchedFields = useWatch({control, name: "CategoryAssignments"}) as ICategoryProductAssignment[]
 
   useEffect(() => {
-    // adds display names (CatalogName and CategoryName) to assignments
+    // build Category and Catalog objects for display purposes
     async function buildDisplayValues() {
       const allCatalogIds = watchedFields.map((assignment) => assignment.CatalogID)
       const allCatalogs = allCatalogIds.length
@@ -47,92 +28,67 @@ export function CategoryTable({control, fieldArray}: CategoryTableProps) {
         const catalog = allCatalogs.find((c) => c.ID === catalogAssignment.CatalogID)
         const category = await Categories.Get(catalogAssignment.CatalogID, catalogAssignment.CategoryID)
         return {
-          ...catalogAssignment,
-          CatalogName: catalog?.Name,
-          CategoryName: category.Name
+          Catalog: catalog,
+          Category: category
         }
       })
-      const responses = await Promise.all(requests)
-      setEnhancedCategoryAssignments(responses)
+      const results = await Promise.all(requests)
+      const groupedResults = groupBy(results, (assignment) => assignment.Catalog.ID)
+      setAssignments(groupedResults)
     }
 
     buildDisplayValues()
   }, [watchedFields])
 
-  const getAssignmentsDisplay = (assignments: EnhancedCategoryProductAssignment[]) => {
-    return (
-      <>
-        {assignments.length > 0 && (
-          <ButtonGroup display="flex" flexWrap="wrap" gap={2} marginTop={2}>
-            {assignments.map((assignment, index) => (
-              <Button
-                key={index}
-                variant="solid"
-                fontWeight={"normal"}
-                size="sm"
-                borderRadius={"full"}
-                backgroundColor="accent.100"
-                margin={0}
-                cursor="default"
-                _hover={{backgroundColor: "accent.100"}}
-              >
-                {assignment.CatalogName} <Text marginX={3}>|</Text> {assignment.CategoryName}
-              </Button>
-            ))}
-          </ButtonGroup>
-        )}
-      </>
-    )
-  }
-
   return (
-    <TableContainer whiteSpace="pre-wrap" maxWidth="fit-content" minWidth="350px">
-      <Table variant="striped">
-        <Thead>
-          <Tr>
-            <Th>Assigned To</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>{getAssignmentsDisplay(enhancedCategoryAssignments)}</Td>
-            <Td>
-              <CategoryActionMenu categoryAssignments={enhancedCategoryAssignments} onUpdate={replace} />
-            </Td>
-          </Tr>
-        </Tbody>
-      </Table>
-    </TableContainer>
-  )
-}
-
-interface CategoryActionMenuProps {
-  categoryAssignments: ICategoryProductAssignment[]
-  onUpdate: (newAssignment: ICategoryProductAssignment[]) => void
-}
-
-function CategoryActionMenu({categoryAssignments, onUpdate}: CategoryActionMenuProps) {
-  return (
-    <Menu>
-      <MenuButton as={IconButton} aria-label={`Catalog Assignment action menu`} variant="ghost">
-        <Icon as={TbDotsVertical} mt={1} color="blackAlpha.400" />
-      </MenuButton>
-      <MenuList>
-        <CategoryAssignmentModal
-          categoryAssignments={categoryAssignments}
-          onUpdate={onUpdate}
-          as="menuitem"
-          menuItemProps={{
-            justifyContent: "space-between",
-            children: (
-              <>
-                Edit Assignments <EditIcon />
-              </>
-            )
-          }}
-        />
-      </MenuList>
-    </Menu>
+    <>
+      {Object.entries(assignments).map(([catalogId, catalogAssignments]) => {
+        const catalog = catalogAssignments[0].Catalog
+        return (
+          <>
+            <Heading size="sm" marginBottom={3}>
+              {catalog.Name}
+            </Heading>
+            <TableContainer
+              whiteSpace="normal"
+              border=".5px solid"
+              borderColor="st.borderColor"
+              shadow="lg"
+              overflowX="hidden"
+              w="100%"
+              minH={100}
+              key={catalogId}
+              marginBottom={5}
+            >
+              <Table role="table" w="100%" variant="striped">
+                <Thead>
+                  <Tr role="row">
+                    <Th role="columnheader">Name</Th>
+                    <Th role="columnheader">ID</Th>
+                    <Th role="columnheader">Description</Th>
+                    <Th role="columnheader"></Th>
+                  </Tr>
+                </Thead>
+                <Tbody role="rowgroup">
+                  {catalogAssignments.map((assignment, index) => {
+                    const category = assignment.Category
+                    return (
+                      <Tr role="row" key={catalogId + category.ID}>
+                        <Td role="cell">{category.Name}</Td>
+                        <Td role="cell">{category.ID}</Td>
+                        <Td role="cell">{category.Description}</Td>
+                        <Td role="cell">
+                          <CategoryActionMenu onDeleteAssignment={() => remove(index)} />
+                        </Td>
+                      </Tr>
+                    )
+                  })}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </>
+        )
+      })}
+    </>
   )
 }

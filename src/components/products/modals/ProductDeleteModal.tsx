@@ -24,6 +24,7 @@ import {
 import {FC, useCallback, useEffect, useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
 import ProductDefaultImage from "../list/ProductDefaultImage"
+import {Products} from "ordercloud-javascript-sdk"
 
 interface IProductDeleteModal {
   products?: IProduct[]
@@ -43,12 +44,13 @@ const ProductDeleteModal: FC<IProductDeleteModal> = ({products, disclosure, onCo
     }
   }, [isOpen])
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     setLoading(true)
-    setTimeout(() => {
-      onComplete(products.map((p) => p.ID))
-      onClose()
-    }, 2000)
+    const productIds = products.map((p) => p.ID)
+    const productDeleteRequests = productIds.map((id) => Products.Delete(id))
+    await Promise.all(productDeleteRequests)
+    onComplete(productIds)
+    onClose()
   }, [onComplete, products, onClose])
 
   return (

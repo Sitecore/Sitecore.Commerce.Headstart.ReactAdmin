@@ -1,9 +1,8 @@
-import {Control, FieldValues, useFieldArray} from "react-hook-form"
-import {Card, CardBody, Heading, Box, CardHeader, Text, Icon, VStack} from "@chakra-ui/react"
-import {CatalogsTable} from "./CatalogsTable"
-import {CatalogAssignmentModal} from "./catalog-assignment-modal/CatalogAssignmentModal"
-import {TbCactus} from "react-icons/tb"
+import {Control, FieldValues, useFieldArray, useWatch} from "react-hook-form"
+import {Card, CardBody, Heading, CardHeader, Text, Flex} from "@chakra-ui/react"
+import {CatalogsTable} from "./CatalogTable"
 import {ProductCatalogAssignment} from "ordercloud-javascript-sdk"
+import {CatalogSelect} from "./CatalogSelect"
 
 interface CatalogFormProps {
   control: Control<FieldValues, any>
@@ -14,50 +13,36 @@ export function CatalogForm({control}: CatalogFormProps) {
     name: `CatalogAssignments`
   })
 
+  const fieldValues = useWatch({control, name: `CatalogAssignments`})
+
   const catalogAssignments = fieldArray.fields as ProductCatalogAssignment[]
 
-  if (!catalogAssignments.length) {
-    return (
-      <Box p={6} display="flex" flexDirection={"column"} alignItems={"center"} justifyContent={"center"} minH={"xs"}>
-        <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
-        <Heading colorScheme="secondary" fontSize="xl">
-          <VStack>
-            <Text>This product is not assigned to any catalogs</Text>
-            <CatalogAssignmentModal
-              onUpdate={fieldArray.replace}
-              as="button"
-              buttonProps={{
-                variant: "solid",
-                size: "sm",
-                colorScheme: "primary"
-              }}
-            />
-          </VStack>
-        </Heading>
-      </Box>
-    )
+  const handleCatalogAdd = (catalogIds: string[]) => {
+    const newCatalogAssignments = catalogIds.map((catalogId) => ({CatalogID: catalogId}))
+    fieldArray.append(newCatalogAssignments)
   }
+
   return (
     <Card mt={6}>
-      <CardHeader display="flex" alignItems={"center"}>
+      <CardHeader display="flex" justifyContent="space-between" alignItems={"center"}>
         <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
           Catalogs
           <Text fontSize="sm" color="gray.400" fontWeight="normal" marginTop={2}>
             Define which catalogs this product is assigned to
           </Text>
         </Heading>
-        <CatalogAssignmentModal
-          onUpdate={fieldArray.replace}
-          as="button"
-          buttonProps={{
-            variant: "outline",
-            colorScheme: "accent",
-            ml: "auto"
-          }}
-        />
+        <CatalogSelect onUpdate={handleCatalogAdd} existingAssignments={fieldValues} />
       </CardHeader>
       <CardBody>
-        <CatalogsTable fieldArray={fieldArray} control={control} />
+        {catalogAssignments.length > 0 ? (
+          <CatalogsTable fieldArray={fieldArray} control={control} />
+        ) : (
+          <Flex justifyContent="center">
+            <Text color="gray.400" fontSize="small">
+              This product is not assigned to any catalogs
+            </Text>
+          </Flex>
+        )}
       </CardBody>
     </Card>
   )

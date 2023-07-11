@@ -49,6 +49,12 @@ interface IListView<T, F = any> {
   noDataMessage?: ListViewTemplate
 }
 
+export interface ListParams {
+  routeParams: Record<string, string>
+  queryParams: Record<string, string>
+  filterParams: Record<string, string>
+}
+
 export interface ListViewChildrenProps {
   meta?: Meta
   items?: any[] //TODO can we make this strongly typed?
@@ -105,7 +111,7 @@ const ListView = <T extends IDefaultResource>({
   const {push, pathname, isReady, query} = useRouter()
 
   const mapRouterQuery = useCallback(
-    (map?: {[key: string]: string}) => {
+    (map?: Record<string, string>): Record<string, string> => {
       let result = {}
       if (!isReady) return result
       if (!map) return result
@@ -120,11 +126,12 @@ const ListView = <T extends IDefaultResource>({
   )
 
   const params = useMemo(() => {
-    return {
+    const mappedParams: ListParams = {
       routeParams: mapRouterQuery(paramMap),
       queryParams: mapRouterQuery(queryMap),
       filterParams: mapRouterQuery(filterMap)
     }
+    return mappedParams
   }, [paramMap, queryMap, filterMap, mapRouterQuery])
 
   const fetchData = useCallback(async () => {
@@ -136,8 +143,10 @@ const ListView = <T extends IDefaultResource>({
       ...params.queryParams,
       filters: params.filterParams
     }
-    if (Object.values(params.routeParams).length || defaultParameters.length) {
-      response = await service(...defaultParameters, ...Object.values(params.routeParams), listOptions)
+    if (Object.values(params.routeParams).length) {
+      response = await service(...Object.values(params.routeParams), listOptions)
+    } else if (defaultParameters.length) {
+      response = await service(...defaultParameters, listOptions)
     } else {
       response = await service(listOptions)
     }
@@ -266,6 +275,7 @@ const ListView = <T extends IDefaultResource>({
           <Box minHeight="600px" hidden={viewMode !== "table"}>
             <DataTable
               {...tableOptions}
+              params={params}
               loading={loading}
               itemHrefResolver={itemHrefResolver}
               rowActions={itemActions}

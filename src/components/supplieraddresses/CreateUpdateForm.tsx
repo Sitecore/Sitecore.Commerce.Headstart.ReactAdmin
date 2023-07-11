@@ -1,0 +1,116 @@
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container, SimpleGrid} from "@chakra-ui/react"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {InputControl} from "components/react-hook-form"
+import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
+import {useRouter} from "hooks/useRouter"
+import {pick} from "lodash"
+import {Address, SupplierAddresses} from "ordercloud-javascript-sdk"
+import {useForm} from "react-hook-form"
+import {TbChevronLeft} from "react-icons/tb"
+import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
+import * as Yup from "yup"
+import ResetButton from "../react-hook-form/reset-button"
+import SubmitButton from "../react-hook-form/submit-button"
+
+export {CreateUpdateForm}
+interface CreateUpdateFormProps {
+  address?: Address
+}
+function CreateUpdateForm({address}: CreateUpdateFormProps) {
+  let router = useRouter()
+  const supplierid = router.query.supplierid as string
+  const formShape = {
+    AddressName: Yup.string().max(100),
+    CompanyName: Yup.string().max(100),
+    FirstName: Yup.string().max(100),
+    LastName: Yup.string().max(100),
+    Street1: Yup.string().max(100).required(),
+    Street2: Yup.string().max(100),
+    City: Yup.string().max(100).required(),
+    State: Yup.string().max(100).required(),
+    Zip: Yup.string().max(100).required(),
+    Country: Yup.string().max(2).min(2).required(),
+    Phone: Yup.string().max(100)
+  }
+
+  const {successToast, validationSchema, defaultValues, onSubmit} = useCreateUpdateForm<Address>(
+    address,
+    formShape,
+    createAddress,
+    updateAddress
+  )
+
+  const {
+    handleSubmit,
+    control,
+    formState: {isSubmitting},
+    reset
+  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
+
+  async function createAddress(fields: Address) {
+    await SupplierAddresses.Create<ISupplierAddress>(supplierid, fields)
+    successToast({
+      description: "Address created successfully."
+    })
+    router.back()
+  }
+
+  async function updateAddress(fields: Address) {
+    const formFields = Object.keys(formShape)
+    await SupplierAddresses.Patch<ISupplierAddress>(supplierid, fields.ID, pick(fields, formFields))
+    successToast({
+      description: "Address updated successfully"
+    })
+    router.back()
+  }
+
+  return (
+    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+      <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
+        <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
+          <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting} leftIcon={<TbChevronLeft />}>
+            Back
+          </Button>
+          <ButtonGroup>
+            <ResetButton control={control} reset={reset} variant="outline">
+              Discard Changes
+            </ResetButton>
+            <SubmitButton control={control} variant="solid" colorScheme="primary">
+              Save
+            </SubmitButton>
+          </ButtonGroup>
+        </CardHeader>
+        <CardBody
+          display="flex"
+          flexDirection={"column"}
+          alignItems={"flex-start"}
+          justifyContent="space-between"
+          gap={6}
+          maxW="container.lg"
+        >
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+            <InputControl name="FirstName" label="First Name" control={control} />
+            <InputControl name="LastName" label="Last Name" control={control} />
+          </SimpleGrid>
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+            <InputControl name="AddressName" label="Address Name" control={control} />
+            <InputControl name="CompanyName" label="Company Name" control={control} />
+          </SimpleGrid>
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+            <InputControl name="Street1" label="Street 1" control={control} isRequired />
+            <InputControl name="Street2" label="Street 2" control={control} />
+          </SimpleGrid>
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr 1fr"}}>
+            <InputControl name="City" label="City" control={control} isRequired />
+            <InputControl name="State" label="State" control={control} isRequired />
+            <InputControl name="Zip" label="Zip" control={control} isRequired />
+          </SimpleGrid>
+          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+            <InputControl name="Country" label="Country" control={control} isRequired />
+            <InputControl name="Phone" label="Phone" control={control} />
+          </SimpleGrid>
+        </CardBody>
+      </Card>
+    </Container>
+  )
+}

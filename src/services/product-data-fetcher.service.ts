@@ -1,6 +1,16 @@
 import {ORIGINAL_ID} from "constants/original-id"
-import {uniq} from "lodash"
-import {PriceSchedules, Products, SpecProductAssignment, Specs} from "ordercloud-javascript-sdk"
+import {flatten, uniq} from "lodash"
+import {
+  Catalogs,
+  Categories,
+  PriceSchedules,
+  ProductCatalogAssignment,
+  Products,
+  SpecProductAssignment,
+  Specs
+} from "ordercloud-javascript-sdk"
+import {ICatalog} from "types/ordercloud/ICatalog"
+import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 
@@ -65,4 +75,27 @@ async function fetchSpecsFromAssignments(items: SpecProductAssignment[]) {
   const specIDs = uniq(items.map((assignment) => assignment.SpecID))
   const listResponse = await Specs.List<ISpec>({filters: {ID: specIDs.join("|")}})
   return listResponse.Items
+}
+
+export async function fetchProductCatalogAssignments(product: IProduct) {
+  const catalogAssignments = await Catalogs.ListProductAssignments({productID: product.ID, pageSize: 100})
+  return catalogAssignments.Items
+}
+
+export async function fetchProductCategoryAssignments(catalogAssignments: ProductCatalogAssignment[]) {
+  const requests = catalogAssignments.map(async (catalogAssignment) => {
+    const categoryAssignments = await Categories.ListProductAssignments<ICategoryProductAssignment>(
+      catalogAssignment.CatalogID,
+      {
+        productID: catalogAssignment.ProductID
+      }
+    )
+    return categoryAssignments.Items.map((assignment) => {
+      // need in order to differentitate between category assignments of different catalogs
+      assignment.CatalogID = catalogAssignment.CatalogID
+      return assignment
+    })
+  })
+  const responses = await Promise.all(requests)
+  return flatten(responses)
 }

@@ -19,9 +19,13 @@ export const defaultValues = {
   ...unitOfMeasureForm.defaultValues,
   // Pricing is a special case because its used for both default price schedule as well as override price schedules
   ...mapKeys(pricingForm.defaultValues, (value, key) => `DefaultPriceSchedule.${key}`),
-  ...mapKeys(pricingForm.defaultValues, (value, key) => `OverridePriceSchedules.${key}`),
   ...facetsForm.defaultValues,
-  ...mediaForm.defaultValues
+  ...mediaForm.defaultValues,
+  Specs: [],
+  Variants: [],
+  OverridePriceSchedules: [],
+  CatalogAssignments: [],
+  CategoryAssignments: []
 }
 
 export const validationSchema = yup.object().shape(
@@ -64,5 +68,6 @@ export const tabFieldNames: Record<ProductDetailTab, any[]> = {
   Variants: [],
   Media: [...values(mediaForm.fieldNames)],
   Facets: [...values(facetsForm.fieldNames)],
-  Customization: []
+  Customization: [],
+  Catalogs: []
 }

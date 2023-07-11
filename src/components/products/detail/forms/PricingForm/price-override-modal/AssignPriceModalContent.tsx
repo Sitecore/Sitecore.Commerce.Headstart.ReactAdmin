@@ -98,10 +98,7 @@ export function AssignPriceModalContent({
     const userGroupResponses = await Promise.all(userGroupRequests)
 
     const response = {
-      BuyerAssignments: buyerAssignments.map((assignment) => {
-        const buyer = allBuyers.Items.find((buyer) => buyer.ID === assignment.BuyerID)
-        return {label: buyer.Name, value: buyer.ID}
-      }),
+      BuyerAssignments: buyerAssignments.map((assignment) => assignment.BuyerID),
       UserGroupAssignments: userGroupAssignments.map((assignment) => {
         const response = userGroupResponses.find(
           (r) => r.UserGroup.ID === assignment.UserGroupID && r.Buyer.ID === assignment.BuyerID
@@ -222,11 +219,11 @@ function UserGroupSelect({control, name, label, validationSchema}: UserGroupSele
     loadUserGroups("", newBuyer.value)
   }
 
-  const loadUserGroups = async (search: string, buyer?: string) => {
+  const loadUserGroups = async (search: string, buyerId?: string) => {
     try {
       setIsLoadingUserGroupOptions(true)
-      if (!buyer && !currentBuyer.value) return []
-      const userGroups = await UserGroups.List(buyer || currentBuyer.value, {search})
+      if (!buyerId && !currentBuyer.value) return []
+      const userGroups = await UserGroups.List(buyerId || currentBuyer.value, {search})
       const options = userGroups.Items.filter((userGroup) => {
         const alreadyAssigned = (field.value || []).some((assignment) => assignment.UserGroup.value === userGroup.ID)
         return !alreadyAssigned

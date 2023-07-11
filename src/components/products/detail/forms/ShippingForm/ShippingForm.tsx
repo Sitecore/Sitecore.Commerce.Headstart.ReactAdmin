@@ -91,7 +91,7 @@ export function ShippingForm({control}: ShippingFormProps) {
         <SelectControl
           label="&zwnj;"
           validationSchema={validationSchema}
-          name={fieldNames.SHIP_LINEAR_UNIT}
+          name={fieldNames.SHIP_WEIGHT_UNIT}
           control={control}
           selectProps={{options: weightUnits.map((unit) => ({label: unit, value: unit}))}}
         />

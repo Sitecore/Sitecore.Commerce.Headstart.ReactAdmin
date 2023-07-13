@@ -1,4 +1,4 @@
 import {MeUser} from "ordercloud-javascript-sdk"
 import {IBuyerUserXp} from "./IBuyerUser"
 
-export type IMeUser = MeUser<IBuyerUserXp>
+export type IMeBuyerUser = MeUser<IBuyerUserXp>

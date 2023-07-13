@@ -21,19 +21,22 @@ Objects:
         - CatalogAdmin
         - CategoryAdmin
         - UserGroupAdmin
-      xp: {IsPermission: true}
     - ID: MeManager
       Name: Me Manager
       Roles:
         - MeAdmin
         - MeXpAdmin
-      xp: {IsPermission: true}
     - ID: OrderManager
       Name: Order Manager
       Roles:
         - OrderAdmin
         - SupplierAddressReader
-      xp: {IsPermission: true}
+        - BuyerImpersonation
+        - SetSecurityProfile
+    - ID: ShipmentManager
+      Name: Shipment Manager
+      Roles:
+        - ShipmentAdmin
     - ID: ReportViewer
       Name: Report Viewer
       Roles:
@@ -46,7 +49,6 @@ Objects:
         - PromotionAdmin
         - PriceScheduleAdmin
         - ProductFacetReader
-      xp: {IsPermission: true}
     - ID: SettingsManager
       Name: Settings Manager
       Roles:
@@ -54,7 +56,6 @@ Objects:
         - AdminUserAdmin
         - AdminUserGroupAdmin
         - AdminAddressAdmin
-      xp: {IsPermission: true}
     - ID: SupplierManager
       Name: Supplier Manager
       Roles:
@@ -62,7 +63,6 @@ Objects:
         - SupplierAddressAdmin
         - SupplierUserAdmin
         - SupplierUserGroupAdmin
-      xp: {IsPermission: true}
   ImpersonationConfigs:
     - ID: buyer1
       BuyerID: buyer1
@@ -108,24 +108,35 @@ Objects:
     - ID: BuyerManager
       Name: Buyer Manager
       Description: Associated with the BuyerManager security profile
+      xp: {IsPermission: true}
     - ID: MeManager
       Name: Me Manager
       Description: Associated with the MeManager security profile
+      xp: {IsPermission: true}
     - ID: OrderManager
       Name: Order Manager
       Description: Associated with the OrderManager security profile
+      xp: {IsPermission: true}
+    - ID: ShipmentManager
+      Name: Shipment Manager
+      Description: Associated with the ShipmentManager security profile
+      xp: {IsPermission: true}
     - ID: ProductManager
       Name: Product Manager
       Description: Associated with the ProductManager security profile
+      xp: {IsPermission: true}
     - ID: ReportViewer
       Name: Report Viewer
       Description: Associated with the ReportViewer security profile
+      xp: {IsPermission: true}
     - ID: SupplierManager
       Name: Supplier Manager
       Description: Associated with the SupplierManager security profile
+      xp: {IsPermission: true}
     - ID: SettingsManager
       Name: Settings Manager
       Description: Associated with the SettingsManager security profile
+      xp: {IsPermission: true}
   AdminAddresses: []
   MessageSenders: []
   ApiClients:
@@ -5018,6 +5029,11 @@ Assignments:
       SupplierID: null
       UserID: null
       UserGroupID: OrderManager
+    - SecurityProfileID: ShipmentManager
+      BuyerID: null
+      SupplierID: null
+      UserID: null
+      UserGroupID: ShipmentManager
     - SecurityProfileID: ProductManager
       BuyerID: null
       SupplierID: null
@@ -5044,6 +5060,8 @@ Assignments:
     - UserGroupID: MeManager
       UserID: initial-admin-user
     - UserGroupID: OrderManager
+      UserID: initial-admin-user
+    - UserGroupID: ShipmentManager
       UserID: initial-admin-user
     - UserGroupID: ProductManager
       UserID: initial-admin-user

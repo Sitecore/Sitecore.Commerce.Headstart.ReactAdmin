@@ -1,32 +1,59 @@
-import {Card, CardBody, Container, Stack, VStack, Text, CardHeader, Heading, Button, Flex} from "@chakra-ui/react"
-import {ILineItem} from "types/ordercloud/ILineItem"
-import {IOrder} from "types/ordercloud/IOrder"
+import {Card, CardBody, Container, Stack, VStack, Text, CardHeader, Heading, Flex} from "@chakra-ui/react"
 import {dateHelper} from "utils"
 import {OrderSummary} from "./order-summary/OrderSummary"
 import {OrderCustomer} from "./order-customer/OrderCustomer"
-import {IOrderPromotion} from "types/ordercloud/IOrderPromotion"
-import {IPayment} from "types/ordercloud/IPayment"
 import {OrderPayments} from "./order-payments/OrderPayments"
 import {useAuth} from "hooks/useAuth"
 import {OrderLabel} from "./OrderLabel"
 import {OrderProducts} from "./order-products/OrderProducts"
-import {ISupplier} from "types/ordercloud/ISupplier"
-import {ShipFromAddressMap} from "hooks/useOrderDetail"
+import {useOrderDetail} from "hooks/useOrderDetail"
 import {OrderStatus} from "../OrderStatus"
+import {ShipmentModal} from "./order-shipments/shipment-modal/ShipmentModal"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "constants/app-permissions.config"
+import {Shipments} from "ordercloud-javascript-sdk"
+import {OrderShipments} from "./order-shipments/OrderShipments"
 
-interface OrderDetailProps {
-  order: IOrder
-  lineItems: ILineItem[]
-  promotions: IOrderPromotion[]
-  payments: IPayment[]
-  suppliers: ISupplier[]
-  shipFromAddresses: ShipFromAddressMap
-}
+type OrderDetailProps = ReturnType<typeof useOrderDetail>
 
-export function OrderDetail({order, lineItems, promotions, payments, suppliers, shipFromAddresses}: OrderDetailProps) {
+export function OrderDetail({
+  order,
+  lineItems,
+  promotions,
+  payments,
+  suppliers,
+  shipFromAddresses,
+  shipments,
+  fetchOrder,
+  fetchShipments,
+  fetchLineItems
+}: OrderDetailProps) {
   const {isAdmin} = useAuth()
   const shippingAddress = lineItems?.length ? lineItems[0].ShippingAddress : null
   const orderDetailCardGap = 3
+
+  const handleShipmentUpdate = async () => {
+    await Promise.all([
+      fetchShipments(order), // refresh shipments
+      fetchOrder(order.ID), // refresh order in case status changed
+      fetchLineItems(order) // refresh line items for QuantityShipped changes
+    ])
+  }
+
+  const handleShipmentDelete = async (shipmentId) => {
+    await Shipments.Delete(shipmentId)
+    await handleShipmentUpdate()
+  }
+
+  const shippableLineItems = lineItems.filter((lineItem) => {
+    if (!isAdmin) {
+      // suppliers will only see their line items, and should be able to ship them all
+      return true
+    }
+    // admins will see all line items, but should only be able to ship those they are fulfilling (not from other suppliers)
+    return !lineItem.SupplierID
+  })
+
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Heading size="md" marginBottom={7}>
@@ -74,10 +101,18 @@ export function OrderDetail({order, lineItems, promotions, payments, suppliers, 
               <CardHeader>
                 <Stack direction={["column", "column", "row"]} justifyContent="space-between">
                   <Heading size="md">Products</Heading>
-                  {order.Status === "Open" && (
-                    <Button colorScheme="primary" size="sm">
-                      Create shipment
-                    </Button>
+                  {order.Status === "Open" && shippableLineItems?.length && (
+                    <ProtectedContent hasAccess={appPermissions.ShipmentManager}>
+                      <ShipmentModal
+                        order={order}
+                        lineItems={shippableLineItems}
+                        onUpdate={handleShipmentUpdate}
+                        as="button"
+                        buttonProps={{colorScheme: "primary", size: "sm"}}
+                      >
+                        Create shipment
+                      </ShipmentModal>
+                    </ProtectedContent>
                   )}
                 </Stack>
               </CardHeader>
@@ -100,6 +135,22 @@ export function OrderDetail({order, lineItems, promotions, payments, suppliers, 
                     billingAddress={order.BillingAddress}
                     shippingAddress={shippingAddress}
                     payments={payments}
+                  />
+                </CardBody>
+              </Card>
+            )}
+            {shipments?.length > 0 && (
+              <Card width="full">
+                <CardHeader>
+                  <Heading size="md">Shipments</Heading>
+                </CardHeader>
+                <CardBody>
+                  <OrderShipments
+                    shipments={shipments}
+                    lineItems={shippableLineItems}
+                    order={order}
+                    onUpdate={handleShipmentUpdate}
+                    onDelete={handleShipmentDelete}
                   />
                 </CardBody>
               </Card>

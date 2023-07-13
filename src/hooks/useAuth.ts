@@ -3,7 +3,8 @@ import {AuthContext} from "context/auth-context"
 import {useRouter} from "hooks/useRouter"
 import {Auth, Me} from "ordercloud-javascript-sdk"
 import {useContext} from "react"
-import {IMeUser} from "types/ordercloud/IMeUser"
+import {IMeAdminUser} from "types/ordercloud/IMeAdminUser"
+import {IMeSupplierUser} from "types/ordercloud/IMeSupplierUser"
 
 export function useAuth() {
   const {setUserTokens, removeUserTokens, isAuthenticated, assignedRoles, isAdmin, isSupplier} = useContext(AuthContext)
@@ -12,7 +13,7 @@ export function useAuth() {
   async function Login(username: string, password: string, remember: boolean): Promise<void> {
     const response = await Auth.Login(username, password, ocConfig.clientId, ocConfig.scope)
     setUserTokens(response.access_token, remember && response.refresh_token)
-    const me = await Me.Get<IMeUser>()
+    const me = await Me.Get<IMeAdminUser | IMeSupplierUser>()
     localStorage.setItem("usersToken", `${me.FirstName} ${me.LastName}`)
   }
 

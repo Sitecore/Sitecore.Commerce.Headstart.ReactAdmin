@@ -19,8 +19,8 @@ export async function getServerSideProps() {
   }
 }
 const OrderDetailPage = () => {
-  const {loading, ...orderDetailProps} = useOrderDetail()
-  if (loading) {
+  const orderDetailProps = useOrderDetail()
+  if (orderDetailProps.loading) {
     return <OrderDetailSkeleton />
   }
   return <OrderDetail {...orderDetailProps} />

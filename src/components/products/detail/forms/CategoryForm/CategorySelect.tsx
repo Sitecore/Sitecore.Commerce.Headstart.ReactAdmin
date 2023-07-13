@@ -67,7 +67,6 @@ export function CategorySelect({onUpdate, existingAssignments}: CategorySelectPr
   }
 
   const handleCatalogUpdate = (catalog: {ID: string; Name: string}) => {
-    debugger
     setCatalog(catalog)
   }
 

@@ -100,7 +100,7 @@ export function makeNestedValidationSchema(obj: any) {
 function wrapSchema(obj: any) {
   Object.keys(obj).forEach((key) => {
     const value = obj[key]
-    const isSchema = value instanceof yup.BaseSchema
+    const isSchema = value instanceof yup.Schema
     if (!isSchema) {
       const wrapped = wrapSchema(value)
       obj[key] = yup.object(wrapped)

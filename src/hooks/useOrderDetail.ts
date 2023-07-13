@@ -4,11 +4,12 @@ import {
   LineItems,
   Orders,
   Payments,
+  Shipments,
   SpendingAccounts,
   SupplierAddresses,
   Suppliers
 } from "ordercloud-javascript-sdk"
-import {useState, useEffect} from "react"
+import {useState, useEffect, useCallback} from "react"
 import {IOrder} from "types/ordercloud/IOrder"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IOrderPromotion} from "types/ordercloud/IOrderPromotion"
@@ -18,6 +19,8 @@ import {ISupplier} from "types/ordercloud/ISupplier"
 import {compact, groupBy, uniq} from "lodash"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
+import {IShipment} from "types/ordercloud/IShipment"
+import {IShipmentItem} from "types/ordercloud/IShipmentItem"
 
 // this two level map is used to store ship from addresses for each supplier
 // SupplierID will be null if it is an admin address
@@ -34,19 +37,24 @@ export function useOrderDetail() {
   const [loading, setLoading] = useState(true)
   const [suppliers, setSuppliers] = useState([] as ISupplier[])
   const [shipFromAddresses, setShipFromAddresses] = useState({} as ShipFromAddressMap)
+  const [shipments, setShipments] = useState([] as IShipment[])
 
-  useEffect(() => {
-    const fetchLineItems = async (order: IOrder) => {
-      const lineItemList = await LineItems.List<ILineItem>("All", order.ID, {pageSize: 100})
-      return lineItemList.Items
-    }
+  const fetchLineItems = useCallback(async (order: IOrder) => {
+    const lineItemList = await LineItems.List<ILineItem>("All", order.ID, {pageSize: 100})
+    const result = lineItemList.Items
+    setLineItems(result)
+    return result
+  }, [])
 
-    const fetchPromotions = async (order: IOrder) => {
-      const promotionList = await Orders.ListPromotions<IOrderPromotion>("All", order.ID)
-      return promotionList.Items
-    }
+  const fetchPromotions = useCallback(async (order: IOrder) => {
+    const promotionList = await Orders.ListPromotions<IOrderPromotion>("All", order.ID)
+    const result = promotionList.Items
+    setPromotions(result)
+    return result
+  }, [])
 
-    const fetchPayments = async (order: IOrder) => {
+  const fetchPayments = useCallback(
+    async (order: IOrder) => {
       if (!isAdmin) {
         // Suppliers shouldn't see payments
         return
@@ -59,10 +67,15 @@ export function useOrderDetail() {
         }
         return payment
       })
-      return await Promise.all(enhancedPaymentRequests)
-    }
+      const result = await Promise.all(enhancedPaymentRequests)
+      setPayments(result)
+      return result
+    },
+    [isAdmin]
+  )
 
-    const fetchSuppliers = async (lineItems: ILineItem[]) => {
+  const fetchSuppliers = useCallback(
+    async (lineItems: ILineItem[]) => {
       if (!isAdmin) {
         return []
       }
@@ -72,82 +85,125 @@ export function useOrderDetail() {
         return []
       }
       const supplierList = await Suppliers.List<ISupplier>({filters: {ID: uniqueSupplierIds.join("|")}, pageSize: 100})
-      return supplierList.Items
-    }
+      const result = supplierList.Items
+      setSuppliers(result)
+      return result
+    },
+    [isAdmin]
+  )
 
-    const fetchShipFromAddresses = async (lineItems: ILineItem[]) => {
-      const groupedLineItems = groupBy(lineItems, (li) => li.Product.DefaultSupplierID)
+  const fetchShipFromAddresses = useCallback(async (lineItems: ILineItem[]) => {
+    const groupedLineItems = groupBy(lineItems, (li) => li.Product.DefaultSupplierID)
 
-      const addressRequests = Object.entries(groupedLineItems).map(async ([supplierId, lineItems]) => {
-        const uniqueAddressIds = uniq(compact(lineItems.map((lineItem) => lineItem.ShipFromAddressID)))
-        if (!uniqueAddressIds.length) {
-          return {DefaultSupplierID: supplierId || null, Addresses: []}
-        }
+    const addressRequests = Object.entries(groupedLineItems).map(async ([supplierId, lineItems]) => {
+      const uniqueAddressIds = uniq(compact(lineItems.map((lineItem) => lineItem.ShipFromAddressID)))
+      if (!uniqueAddressIds.length) {
+        return {DefaultSupplierID: supplierId || null, Addresses: []}
+      }
 
-        const isSupplierAddresses = Boolean(supplierId)
-        if (isSupplierAddresses) {
-          const addressList = await SupplierAddresses.List<ISupplierAddress>(supplierId, {
-            filters: {ID: uniqueAddressIds.join("|")},
-            pageSize: 100
-          })
-          return {DefaultSupplierID: supplierId, Addresses: addressList.Items}
-        }
-        const addressList = await AdminAddresses.List<IAdminAddress>({
+      const isSupplierAddresses = Boolean(supplierId)
+      if (isSupplierAddresses) {
+        const addressList = await SupplierAddresses.List<ISupplierAddress>(supplierId, {
           filters: {ID: uniqueAddressIds.join("|")},
           pageSize: 100
         })
-        return {DefaultSupplierID: null, Addresses: addressList.Items}
-      })
-      const responses = await Promise.all(addressRequests)
-      const addressMap: ShipFromAddressMap = responses.reduce((acc, response) => {
-        if (!acc[response.DefaultSupplierID]) {
-          acc[response.DefaultSupplierID] = {}
-        }
-        response.Addresses.forEach((address) => {
-          acc[response.DefaultSupplierID][address.ID] = address
-        })
-        return acc
-      }, {})
-
-      return addressMap
-    }
-
-    const getOrder = async () => {
-      const orderId = query.orderid.toString()
-      const _order = await Orders.Get<IOrder>("All", orderId)
-      setOrder(_order)
-      if (_order) {
-        await Promise.all([
-          fetchLineItems(_order).then(async (lineItems) => {
-            setLineItems(lineItems)
-            return await Promise.all([
-              fetchSuppliers(lineItems).then((suppliers) => setSuppliers(suppliers)),
-              fetchShipFromAddresses(lineItems).then((addresses) => setShipFromAddresses(addresses))
-            ])
-          }),
-          fetchPromotions(_order).then((response) => setPromotions(response)),
-          fetchPayments(_order).then((response) => setPayments(response))
-        ])
+        return {DefaultSupplierID: supplierId, Addresses: addressList.Items}
       }
-    }
+      const addressList = await AdminAddresses.List<IAdminAddress>({
+        filters: {ID: uniqueAddressIds.join("|")},
+        pageSize: 100
+      })
+      return {DefaultSupplierID: null, Addresses: addressList.Items}
+    })
+    const responses = await Promise.all(addressRequests)
+    const addressMap: ShipFromAddressMap = responses.reduce((acc, response) => {
+      if (!acc[response.DefaultSupplierID]) {
+        acc[response.DefaultSupplierID] = {}
+      }
+      response.Addresses.forEach((address) => {
+        acc[response.DefaultSupplierID][address.ID] = address
+      })
+      return acc
+    }, {})
 
+    setShipFromAddresses(addressMap)
+    return addressMap
+  }, [])
+
+  const fetchOrder = useCallback(async (orderID: string) => {
+    const result = await Orders.Get<IOrder>("All", orderID)
+    setOrder(result)
+    return result
+  }, [])
+
+  const fetchShipments = useCallback(async (order: IOrder) => {
+    const shipmentList = await Orders.ListShipments<IShipment>("All", order.ID, {pageSize: 100})
+    const enhancedShipmentRequests = shipmentList.Items.map(async (shipment) => {
+      const shipmentItemsList = await Shipments.ListItems<IShipmentItem>(shipment.ID, {pageSize: 100})
+      shipment.ShipmentItems = shipmentItemsList.Items
+      return shipment
+    })
+    const result = await Promise.all(enhancedShipmentRequests)
+    setShipments(result)
+    return result
+  }, [])
+
+  const getOrderAndRelatedData = useCallback(async () => {
+    const orderId = query.orderid.toString()
+    const _order = await fetchOrder(orderId)
+    if (_order) {
+      await Promise.all([
+        fetchLineItems(_order).then(async (lineItems) => {
+          setLineItems(lineItems)
+          return await Promise.all([fetchSuppliers(lineItems), fetchShipFromAddresses(lineItems)])
+        }),
+        fetchPromotions(_order),
+        fetchPayments(_order),
+        fetchShipments(_order)
+      ])
+    }
+  }, [
+    query.orderid,
+    fetchOrder,
+    fetchLineItems,
+    fetchPromotions,
+    fetchPayments,
+    fetchSuppliers,
+    fetchShipFromAddresses,
+    fetchShipments
+  ])
+
+  useEffect(() => {
     const initializeData = async () => {
-      await getOrder()
+      await getOrderAndRelatedData()
       setLoading(false)
     }
 
     if (isReady) {
       initializeData()
     }
-  }, [query.orderid, isReady, isAdmin])
+  }, [isReady, getOrderAndRelatedData])
 
   return {
+    // powers loading indicator
+    loading,
+
+    // order detail data
     order,
     lineItems,
     promotions,
     payments,
-    loading,
     suppliers,
-    shipFromAddresses
+    shipFromAddresses,
+    shipments,
+
+    // order detail actions
+    fetchOrder,
+    fetchLineItems,
+    fetchPromotions,
+    fetchPayments,
+    fetchSuppliers,
+    fetchShipFromAddresses,
+    fetchShipments
   }
 }

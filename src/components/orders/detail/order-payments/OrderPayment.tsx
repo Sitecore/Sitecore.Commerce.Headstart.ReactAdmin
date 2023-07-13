@@ -28,13 +28,13 @@ export function OrderPayment({payment}: OrderPaymentItemProps) {
     return (
       <HStack>
         <Text>{payment.SpendingAccount?.Name}</Text>
-        <Text fontWeight="bold">-{priceHelper.formatPrice(payment.Amount)}</Text>
+        <Text fontWeight="bold">{priceHelper.formatPrice(payment.Amount)}</Text>
       </HStack>
     )
   } else {
     return (
       <HStack>
-        <Text fontWeight="bold">-{priceHelper.formatPrice(payment.Amount)}</Text>
+        <Text fontWeight="bold">{priceHelper.formatPrice(payment.Amount)}</Text>
       </HStack>
     )
   }

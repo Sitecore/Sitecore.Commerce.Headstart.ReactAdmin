@@ -13,7 +13,7 @@ import {SpecFieldValues, SpecOptionFieldValues} from "types/form/SpecFieldValues
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
-import {getObjectDiff} from "utils"
+import {getItemsToAdd, getItemsToDelete, getItemsToUpdate, getObjectDiff} from "utils"
 import {v4 as randomId} from "uuid"
 import {
   fetchOverridePriceSchedules,
@@ -343,50 +343,4 @@ async function handleUpdateSpecOptions(specId, newOptions: SpecOptionFieldValues
   const deleteOptionRequests = deleteOptions.map(async (option) => Specs.DeleteOption(specId, option.ID))
 
   await Promise.all([...addOptionRequests, ...updateOptionRequests, ...deleteOptionRequests])
-}
-
-/**
- *
- * @param newItems current list of items in their desired state (what we want them to be after updates)
- * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
- * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
- * @returns
- */
-function getItemsToAdd<TReturnType>(newItems: TReturnType[], keyId: string = "ID"): TReturnType[] {
-  return (newItems || []).filter((newObject) => !newObject[keyId])
-}
-
-/**
- *
- * @param oldItems list of items in their original state (before updates)
- * @param newItems current list of items in their desired state (what we want them to be after updates)
- * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
- * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
- * @returns
- */
-function getItemsToUpdate<TReturnType>(oldItems, newItems: TReturnType[], keyId: string = "ID"): TReturnType[] {
-  return (newItems || []).filter((newObject) => {
-    const oldObject = (oldItems || []).find((oldObject) => oldObject.ID === newObject[keyId])
-    if (oldObject) {
-      const diff = getObjectDiff(oldObject, newObject)
-      return !isEmpty(diff)
-    }
-  })
-}
-
-/**
- *
- * @param oldItems list of items in their original state (before updates)
- * @param newItems current list of items in their desired state (what we want them to be after updates)
- * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
- * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
- * @returns
- */
-function getItemsToDelete<TReturnType>(oldItems: TReturnType[], newItems, keyId: string = "ID"): TReturnType[] {
-  return (oldItems || []).filter((oldObject) => {
-    const newObject = (newItems || []).find((newObject) => newObject.ID === oldObject[keyId])
-    if (!newObject) {
-      return true
-    }
-  })
 }

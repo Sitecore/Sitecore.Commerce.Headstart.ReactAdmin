@@ -1,4 +1,3 @@
-import {Card, CardHeader, HStack, Heading, CardBody} from "@chakra-ui/react"
 import {ShipmentActionMenu} from "./ShipmentActionMenu"
 import {ShipmentSummary} from "./ShipmentSummary"
 import {IOrder} from "types/ordercloud/IOrder"
@@ -15,27 +14,17 @@ interface OrderShipmentsProps {
 export function OrderShipments({shipments, order, lineItems, onUpdate, onDelete}: OrderShipmentsProps) {
   return (
     <>
-      {shipments.map((shipment) => {
-        return (
-          <Card key={shipment.ID} marginBottom={5} backgroundColor="st.mainBackgroundColor">
-            <CardHeader>
-              <HStack justifyContent="space-between">
-                <Heading size="sm">Shipment #{shipment.ID}</Heading>
-                <ShipmentActionMenu
-                  shipment={shipment}
-                  order={order}
-                  lineItems={lineItems}
-                  onUpdate={onUpdate}
-                  onDelete={() => onDelete(shipment.ID)}
-                />
-              </HStack>
-            </CardHeader>
-            <CardBody>
-              <ShipmentSummary shipment={shipment} lineItems={lineItems} />
-            </CardBody>
-          </Card>
-        )
-      })}
+      {shipments.map((shipment) => (
+        <ShipmentSummary key={shipment.ID} shipment={shipment} lineItems={lineItems} marginBottom={5}>
+          <ShipmentActionMenu
+            shipment={shipment}
+            order={order}
+            lineItems={lineItems}
+            onUpdate={onUpdate}
+            onDelete={() => onDelete(shipment.ID)}
+          />
+        </ShipmentSummary>
+      ))}
     </>
   )
 }

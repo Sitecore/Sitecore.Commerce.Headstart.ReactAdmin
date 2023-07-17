@@ -11,7 +11,7 @@ import {
   useDisclosure,
   useSteps
 } from "@chakra-ui/react"
-import {PropsWithChildren, useState} from "react"
+import {PropsWithChildren, useEffect, useState} from "react"
 import {IShipment} from "types/ordercloud/IShipment"
 import {ShipmentDetailsModalContent} from "./ShipmentDetailsModalContent"
 import {ShipmentItemsModalContent} from "./ShipmentItemsModalContent"
@@ -35,7 +35,7 @@ interface ShipmentModalProps extends PropsWithChildren {
 }
 export function ShipmentModal({
   order,
-  shipment = {ShipmentItems: []},
+  shipment,
   lineItems,
   onUpdate,
   as,
@@ -49,6 +49,12 @@ export function ShipmentModal({
   const [currentShipment, setCurrentShipment] = useState<IShipment | null>(shipment)
   const {isOpen, onOpen, onClose} = useDisclosure()
 
+  useEffect(() => {
+    // if shipment data is refreshed from parent
+    // then update the current shipment
+    setCurrentShipment(shipment)
+  }, [shipment])
+
   const handleCancel = () => {
     onClose()
     setActiveStep(1) // reset to initial step
@@ -58,7 +64,7 @@ export function ShipmentModal({
   const setCurrentItems = (shipmentItems: IShipmentItem[]) => {
     setCurrentShipment({
       ...currentShipment,
-      ShipmentItems: shipmentItems
+      ShipmentItems: shipmentItems.filter((item) => item.QuantityShipped > 0)
     })
   }
 
@@ -78,7 +84,7 @@ export function ShipmentModal({
       const shipBody = omit(diff, "DateShipped")
       let updatedShipment: IShipment = shipment
       if (isUpdatingShipment) {
-        if (shipment.ID) {
+        if (shipment?.ID) {
           updatedShipment = await Shipments.Patch<IShipment>(shipment.ID, shipBody)
         } else {
           updatedShipment = await Shipments.Create<IShipment>(shipBody)
@@ -89,14 +95,14 @@ export function ShipmentModal({
       const isUpdatingShipmentItems = diff.ShipmentItems
       if (isUpdatingShipmentItems) {
         const removedShipmentItems = differenceBy(
-          shipment.ShipmentItems,
+          shipment?.ShipmentItems || [],
           currentShipment.ShipmentItems,
           (s) => s.LineItemID
         )
 
         const updateShipments = differenceBy(
           currentShipment.ShipmentItems,
-          shipment.ShipmentItems,
+          shipment?.ShipmentItems || [],
           (s) => s.LineItemID + s.QuantityShipped
         )
 
@@ -149,8 +155,8 @@ export function ShipmentModal({
             <ShipmentItemsModalContent
               isExistingShipment={Boolean(shipment?.ID)}
               orderID={order.ID}
-              originalShipmentItems={shipment?.ShipmentItems}
-              shipmentItems={currentShipment?.ShipmentItems}
+              originalShipmentItems={shipment?.ShipmentItems || []}
+              shipmentItems={currentShipment?.ShipmentItems || []}
               lineItems={lineItems}
               onStepChange={setActiveStep}
               onUpdate={setCurrentItems}

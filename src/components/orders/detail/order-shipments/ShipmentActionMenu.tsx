@@ -43,9 +43,12 @@ export function ShipmentActionMenu({shipment, order, lineItems, onUpdate, onDele
   return (
     <>
       <Menu>
-        <MenuButton as={IconButton} aria-label={`Shipment action menu for ${shipment.ID}`} variant="ghost">
-          <Icon as={TbDotsVertical} mt={1} color="blackAlpha.400" />
-        </MenuButton>
+        <MenuButton
+          as={IconButton}
+          icon={<TbDotsVertical />}
+          aria-label={`Shipment action menu for ${shipment.ID}`}
+          variant="ghost"
+        ></MenuButton>
         <MenuList>
           <ShipmentModal order={order} shipment={shipment} lineItems={lineItems} onUpdate={onUpdate} as="menuitem">
             <HStack width="full" justifyContent="space-between">

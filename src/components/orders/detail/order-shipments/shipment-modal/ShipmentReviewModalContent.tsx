@@ -1,4 +1,4 @@
-import {ModalBody, ModalFooter, HStack, Button, Box} from "@chakra-ui/react"
+import {ModalBody, ModalFooter, HStack, Button} from "@chakra-ui/react"
 import {ShipmentSummary} from "../ShipmentSummary"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IShipment} from "types/ordercloud/IShipment"

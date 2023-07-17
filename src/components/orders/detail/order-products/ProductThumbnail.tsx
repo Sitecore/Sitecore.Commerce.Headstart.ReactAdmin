@@ -14,7 +14,9 @@ export function ProductThumbnail({product, imageProps}: ProductThumbnailProps) {
     <Image
       boxSize="75px"
       objectFit="scale-down"
-      alt={"Product Image"}
+      rounded="sm"
+      shadow="sm"
+      alt={product.Name}
       src={image?.ThumbnailUrl || image?.Url || "/raster/dummy-image-square.jpg"}
       onError={loadFallbackImage}
       {...imageProps}

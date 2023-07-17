@@ -13,6 +13,7 @@ import ProtectedContent from "@/components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {Shipments} from "ordercloud-javascript-sdk"
 import {OrderShipments} from "./order-shipments/OrderShipments"
+import {OrderHeaderItem} from "./OrderHeaderItem"
 
 type OrderDetailProps = ReturnType<typeof useOrderDetail>
 
@@ -179,14 +180,5 @@ export function OrderDetail({
         </Stack>
       </VStack>
     </Container>
-  )
-}
-
-function OrderHeaderItem({label, value}) {
-  return (
-    <VStack alignItems="start" minWidth="250px" marginBottom={3}>
-      <OrderLabel>{label}</OrderLabel>
-      <Text>{value}</Text>
-    </VStack>
   )
 }

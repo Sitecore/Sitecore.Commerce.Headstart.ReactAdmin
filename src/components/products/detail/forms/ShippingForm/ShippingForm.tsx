@@ -43,7 +43,7 @@ export function ShippingForm({control}: ShippingFormProps) {
     <>
       <SimpleGrid
         gridAutoFlow={{base: "row", xl: "column"}}
-        gridTemplateColumns={{base: "1fr", md: "1fr 1fr", xl: "repeat(auto-fit, minmax(100px, 1fr))"}}
+        gridTemplateColumns={{base: "1fr", md: "1fr 1fr", xl: "repeat(auto-fit, minmax(150px, 1fr))"}}
         gap={4}
       >
         <InputControl

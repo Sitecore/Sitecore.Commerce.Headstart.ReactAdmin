@@ -41,7 +41,7 @@ export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
       rounded="md"
     >
       <Table role="table" w="100%" variant="striped">
-        <Thead>
+        <Thead role="rowgroup">
           <Tr role="row">
             <Th role="columnheader">Name</Th>
             <Th role="columnheader">ID</Th>

@@ -14,6 +14,7 @@ import {appPermissions} from "constants/app-permissions.config"
 import {Shipments} from "ordercloud-javascript-sdk"
 import {OrderShipments} from "./order-shipments/OrderShipments"
 import {OrderHeaderItem} from "./OrderHeaderItem"
+import {OrderReturns} from "./order-returns/OrderReturns"
 
 type OrderDetailProps = ReturnType<typeof useOrderDetail>
 
@@ -25,6 +26,7 @@ export function OrderDetail({
   suppliers,
   shipFromAddresses,
   shipments,
+  returns,
   fetchOrder,
   fetchShipments,
   fetchLineItems
@@ -156,6 +158,14 @@ export function OrderDetail({
                 </CardBody>
               </Card>
             )}
+            <Card width="full">
+              <CardHeader>
+                <Heading size="md">Returns</Heading>
+              </CardHeader>
+              <CardBody>
+                <OrderReturns returns={returns} />
+              </CardBody>
+            </Card>
           </VStack>
           <VStack width="full" maxWidth={{xl: "350px"}} flexGrow={1} gap={orderDetailCardGap}>
             {isAdmin && (

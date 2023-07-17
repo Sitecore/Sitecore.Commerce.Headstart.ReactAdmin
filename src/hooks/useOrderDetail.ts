@@ -2,6 +2,7 @@ import {useRouter} from "next/router"
 import {
   AdminAddresses,
   LineItems,
+  OrderReturns,
   Orders,
   Payments,
   Shipments,
@@ -21,6 +22,7 @@ import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 import {IShipment} from "types/ordercloud/IShipment"
 import {IShipmentItem} from "types/ordercloud/IShipmentItem"
+import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 
 // this two level map is used to store ship from addresses for each supplier
 // SupplierID will be null if it is an admin address
@@ -38,6 +40,7 @@ export function useOrderDetail() {
   const [suppliers, setSuppliers] = useState([] as ISupplier[])
   const [shipFromAddresses, setShipFromAddresses] = useState({} as ShipFromAddressMap)
   const [shipments, setShipments] = useState([] as IShipment[])
+  const [returns, setReturns] = useState([] as IOrderReturn[])
 
   const fetchLineItems = useCallback(async (order: IOrder) => {
     const lineItemList = await LineItems.List<ILineItem>("All", order.ID, {pageSize: 100})
@@ -148,6 +151,13 @@ export function useOrderDetail() {
     return result
   }, [])
 
+  const fetchReturns = useCallback(async (order: IOrder) => {
+    const orderReturns = await OrderReturns.List({filters: {OrderID: order.ID}})
+    const result = orderReturns.Items
+    setReturns(result)
+    return result
+  }, [])
+
   const getOrderAndRelatedData = useCallback(async () => {
     const orderId = query.orderid.toString()
     const _order = await fetchOrder(orderId)
@@ -159,7 +169,8 @@ export function useOrderDetail() {
         }),
         fetchPromotions(_order),
         fetchPayments(_order),
-        fetchShipments(_order)
+        fetchShipments(_order),
+        fetchReturns(_order)
       ])
     }
   }, [
@@ -170,7 +181,8 @@ export function useOrderDetail() {
     fetchPayments,
     fetchSuppliers,
     fetchShipFromAddresses,
-    fetchShipments
+    fetchShipments,
+    fetchReturns
   ])
 
   useEffect(() => {
@@ -196,6 +208,7 @@ export function useOrderDetail() {
     suppliers,
     shipFromAddresses,
     shipments,
+    returns,
 
     // order detail actions
     fetchOrder,
@@ -204,6 +217,7 @@ export function useOrderDetail() {
     fetchPayments,
     fetchSuppliers,
     fetchShipFromAddresses,
-    fetchShipments
+    fetchShipments,
+    fetchReturns
   }
 }

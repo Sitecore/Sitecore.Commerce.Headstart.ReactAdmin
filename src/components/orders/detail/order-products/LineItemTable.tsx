@@ -54,7 +54,7 @@ export function LineItemTable({lineItems}: LineItemTableProps) {
                       </Flex>
                       <Hide above="sm">
                         <HStack width="full" justifyContent="space-between">
-                          <Text fontSize="xs">Qty: 2</Text>
+                          <Text fontSize="xs">Qty: {lineItem.Quantity}</Text>
                           <Text fontSize="xs">{priceHelper.formatPrice(lineItem.LineTotal)}</Text>
                         </HStack>
                       </Hide>

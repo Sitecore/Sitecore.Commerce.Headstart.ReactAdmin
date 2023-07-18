@@ -29,8 +29,7 @@ const specFormSchema = object().shape({
   DefinesVariant: bool(),
   Required: bool().when("DefinesVariant", {
     is: true,
-    then: bool().oneOf([true], "Spec must be required if Defines Variant"),
-    otherwise: bool()
+    then: (schema) => schema.oneOf([true], "Spec must be required if Defines Variant")
   }),
   Options: array()
     .of(

@@ -3,11 +3,11 @@ import {Divider, SimpleGrid} from "@chakra-ui/react"
 import {AdminAddresses, SupplierAddresses} from "ordercloud-javascript-sdk"
 import {useCallback} from "react"
 import {Control, FieldValues, useWatch} from "react-hook-form"
-import {getMySellerCompanyIds} from "services/currentUser"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 import {validationSchema} from "../meta"
 import * as fieldNames from "./fieldNames"
+import {getMySellerCompanyIds} from "services/currentUser.service"
 
 type ShippingFormProps = {
   control: Control<FieldValues, any>
@@ -43,7 +43,7 @@ export function ShippingForm({control}: ShippingFormProps) {
     <>
       <SimpleGrid
         gridAutoFlow={{base: "row", xl: "column"}}
-        gridTemplateColumns={{base: "1fr", md: "1fr 1fr", xl: "repeat(auto-fit, minmax(100px, 1fr))"}}
+        gridTemplateColumns={{base: "1fr", md: "1fr 1fr", xl: "repeat(auto-fit, minmax(150px, 1fr))"}}
         gap={4}
       >
         <InputControl

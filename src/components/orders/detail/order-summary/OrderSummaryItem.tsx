@@ -1,9 +1,10 @@
 import {TextProps, HStack, Text} from "@chakra-ui/react"
 import {OrderLabel} from "../OrderLabel"
+import {ReactNode} from "react"
 
 interface OrderSummaryItemProps {
-  label: string
-  value: string
+  label: ReactNode
+  value: ReactNode
   labelProps?: TextProps
   valueProps?: TextProps
 }

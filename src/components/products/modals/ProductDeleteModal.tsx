@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react"
 import {FC, useCallback, useEffect, useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
-import ProductDefaultImage from "../list/ProductDefaultImage"
+import ProductDefaultImage from "../../shared/ProductDefaultImage"
 import {Products} from "ordercloud-javascript-sdk"
 
 interface IProductDeleteModal {

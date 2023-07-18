@@ -28,7 +28,7 @@ import {
 import {Products} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useEffect, useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
-import ProductDefaultImage from "../list/ProductDefaultImage"
+import ProductDefaultImage from "../../shared/ProductDefaultImage"
 
 interface IProductBulkEditModal {
   products?: IProduct[]

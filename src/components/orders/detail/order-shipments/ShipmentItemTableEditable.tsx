@@ -1,10 +1,10 @@
 import {TableContainer, Table, Thead, Tr, Th, Tbody, Td, VStack, Flex, HStack, Text} from "@chakra-ui/react"
 import {priceHelper} from "utils"
-import {ProductThumbnail} from "../order-products/ProductThumbnail"
 import {Control, FieldValues} from "react-hook-form"
 import {SelectControl} from "@/components/react-hook-form"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IShipmentItem} from "types/ordercloud/IShipmentItem"
+import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
 
 interface ShipmentItemTableProps {
   lineItems: ILineItem[]
@@ -56,7 +56,7 @@ export function ShipmentItemTableEditable({
               <Tr key={lineItem.ID}>
                 <Td>
                   <HStack alignItems="stretch">
-                    <ProductThumbnail imageProps={{boxSize: 75}} product={lineItem.Product} />
+                    <ProductDefaultImage product={lineItem.Product} />
                     <VStack justifyContent="space-between">
                       <Flex flexDirection="column">
                         <Text fontSize="sm">{lineItem.Product.Name}</Text>

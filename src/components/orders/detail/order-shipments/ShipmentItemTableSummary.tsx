@@ -1,11 +1,11 @@
 import {SimpleGrid, VStack, Flex, HStack, Text, Box, Divider, Stack} from "@chakra-ui/react"
 import {priceHelper} from "utils"
-import {ProductThumbnail} from "../order-products/ProductThumbnail"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {PropsWithChildren} from "react"
 import {OrderLabel} from "../OrderLabel"
 import {IShipment} from "types/ordercloud/IShipment"
 import {OrderHeaderItem} from "../OrderHeaderItem"
+import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
 
 interface ShipmentItemTableProps extends PropsWithChildren {
   lineItems: ILineItem[]
@@ -42,7 +42,7 @@ export function ShipmentItemTableSummary({lineItems, shipment, isInModal, isMobi
             gap={4}
           >
             <Stack direction={["column", "row"]} alignItems="center" gap={4}>
-              <ProductThumbnail imageProps={{boxSize: 75}} product={lineItem.Product} />
+              <ProductDefaultImage product={lineItem.Product} />
               {!isMobile && (
                 <VStack justifyContent="space-between">
                   <Flex flexDirection="column">

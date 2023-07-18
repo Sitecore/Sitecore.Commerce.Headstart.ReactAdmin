@@ -14,8 +14,8 @@ import {
   Flex
 } from "@chakra-ui/react"
 import {ILineItem} from "types/ordercloud/ILineItem"
-import {ProductThumbnail} from "./ProductThumbnail"
 import {priceHelper} from "utils"
+import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
 
 interface LineItemTableProps {
   lineItems: ILineItem[]
@@ -44,7 +44,7 @@ export function LineItemTable({lineItems}: LineItemTableProps) {
               <Tr key={lineItem.ID}>
                 <Td>
                   <Stack direction={["row", "column", "row"]} alignItems={["stretch", "start", "end"]}>
-                    <ProductThumbnail imageProps={{boxSize: [125, 75]}} product={lineItem.Product} />
+                    <ProductDefaultImage boxSize={[125, 75]} product={lineItem.Product} />
                     <VStack justifyContent="space-between">
                       <Flex flexDirection="column">
                         <Text fontSize="sm">{lineItem.Product.Name}</Text>

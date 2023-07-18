@@ -76,10 +76,7 @@ export function ShipmentItemTableEditable({
                     control={control}
                     name={`${name}.${index}.QuantityShipped`}
                     selectProps={{
-                      options: buildQuantityShippedOptions(lineItem),
-                      chakraStyles: {
-                        menu: (baseStyles) => ({...baseStyles, position: "absolute"})
-                      }
+                      options: buildQuantityShippedOptions(lineItem)
                     }}
                   />
                 </Td>

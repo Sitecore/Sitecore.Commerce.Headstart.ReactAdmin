@@ -20,22 +20,18 @@ export function OrderReturns({returns}: OrderReturnsProps) {
             <Th role="columnheader">ID</Th>
             <Th role="columnheader">Status</Th>
             <Th role="columnheader">Refund Amount</Th>
-            <Th role="columnheader"></Th>
           </Tr>
         </Thead>
         <Tbody role="rowgroup">
           {returns.map((orderReturn) => (
             <Tr key={orderReturn.ID} role="row">
-              <Td role="cell">{orderReturn.ID}</Td>
+              <Td role="cell">
+                <Link href={`/returns/${orderReturn.ID}`}>{orderReturn.ID}</Link>
+              </Td>
               <Td role="cell">
                 <OrderStatus status={orderReturn.Status} />
               </Td>
               <Td role="cell">{priceHelper.formatPrice(orderReturn.RefundAmount)}</Td>
-              <Td role="cell">
-                <Link href={`/returns/${orderReturn.ID}`}>
-                  <Button colorScheme="primary">View</Button>
-                </Link>
-              </Td>
             </Tr>
           ))}
         </Tbody>

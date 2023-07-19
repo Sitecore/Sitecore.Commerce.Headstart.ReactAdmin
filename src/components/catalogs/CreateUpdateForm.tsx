@@ -10,6 +10,7 @@ import {ICatalog} from "types/ordercloud/ICatalog"
 import * as Yup from "yup"
 import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
+import Link from "next/link"
 
 export {CreateUpdateForm}
 
@@ -75,11 +76,13 @@ function CreateUpdateForm({catalog}: CreateUpdateFormProps) {
           <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
             <InputControl name="Name" label="Catalog Name" isRequired control={control} />
             <TextareaControl name="Description" label="Description" control={control} />
+            <Link passHref href={`/buyers/${router.query.buyerid}/catalogs/${catalog.ID}/categories`}>
+              <Button as="a" variant="outline">
+                Categories ({catalog.CategoryCount})
+              </Button>
+            </Link>
             <SwitchControl name="Active" label="Active" control={control} />
           </CardBody>
-        </Card>
-        <Card mt={6}>
-          <Text>Under construction</Text>
         </Card>
       </Container>
     </>

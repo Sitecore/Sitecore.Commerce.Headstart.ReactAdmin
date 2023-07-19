@@ -166,7 +166,11 @@ export function ReturnModal({
     if (updatedReturn?.ID) {
       await OrderReturns.Patch(currentOrderReturn.ID, diff)
     } else {
-      await OrderReturns.Create(diff as IOrderReturn)
+      const createdReturn = await OrderReturns.Create(diff as IOrderReturn)
+      // Here we're combining create/submit into one step
+      // it is possible to add a seller approval rule here as well
+      // but we're skipping that for now to keep things simple
+      await OrderReturns.Submit(createdReturn.ID)
     }
 
     onUpdate()

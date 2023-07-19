@@ -19,8 +19,8 @@ interface IBuyerCatalogList {
   buyerid: string
 }
 
-const buyerCategoryListCall = async (listOptions: any) => {
-  const assignments = await Catalogs.ListAssignments(listOptions)
+const buyerCategoryListCall = async (buyerID: any) => {
+  const assignments = await Catalogs.ListAssignments({buyerID: buyerID})
   const catalogIds = assignments.Items.map((assignment) => assignment.CatalogID)
   const response = await Catalogs.List<ICatalog>({filters: {ID: catalogIds.join("|")}})
   return response

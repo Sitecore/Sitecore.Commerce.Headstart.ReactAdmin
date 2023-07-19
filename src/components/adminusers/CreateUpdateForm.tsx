@@ -1,4 +1,3 @@
-import * as Yup from "yup"
 import {
   Box,
   Button,
@@ -7,18 +6,8 @@ import {
   CardBody,
   CardHeader,
   Container,
-  Flex,
-  Heading,
   SimpleGrid,
-  Stack,
-  Switch,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
   theme,
-  Tr,
   VStack
 } from "@chakra-ui/react"
 import {InputControl, SwitchControl} from "components/react-hook-form"
@@ -26,8 +15,6 @@ import {AdminUserGroups, AdminUsers, User} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {useState} from "react"
-import {textHelper} from "utils"
-import {appPermissions} from "constants/app-permissions.config"
 import {isEqual, sortBy, difference, pick} from "lodash"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
 import {useForm} from "react-hook-form"
@@ -35,52 +22,9 @@ import {yupResolver} from "@hookform/resolvers/yup"
 import SubmitButton from "../react-hook-form/submit-button"
 import ResetButton from "../react-hook-form/reset-button"
 import {TbChevronLeft} from "react-icons/tb"
-
-interface PermissionTableProps {
-  assignedPermissions?: string[]
-  onPermissionChange: (permissions: string[]) => void
-}
-const PermissionsTable = (props: PermissionTableProps) => {
-  const allPermissions = Object.keys(appPermissions)
-  const [assignedPermissions, setAssignedPermissions] = useState(props.assignedPermissions || [])
-
-  const handlePermissionChange = (permission: string) => {
-    let updatedPermissions = []
-    if (assignedPermissions.includes(permission)) {
-      updatedPermissions = assignedPermissions.filter((p) => p !== permission)
-    } else {
-      updatedPermissions = [...assignedPermissions, permission]
-    }
-    setAssignedPermissions(updatedPermissions)
-    props.onPermissionChange(updatedPermissions)
-  }
-
-  return (
-    <TableContainer padding={4} maxWidth={"lg"}>
-      <Table>
-        <Tbody>
-          <Tr>
-            <Td colSpan={2}>
-              <Heading size="md">Permissions</Heading>
-            </Td>
-          </Tr>
-          {allPermissions.map((permission) => (
-            <Tr key={permission}>
-              <Td>{textHelper.camelCaseToTitleCase(permission)}</Td>
-              <Td textAlign="right">
-                <Switch
-                  colorScheme={"primary"}
-                  isChecked={assignedPermissions.includes(permission)}
-                  onChange={() => handlePermissionChange(permission)}
-                ></Switch>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
-  )
-}
+import {AdminPermissionTable} from "./AdminPermissionTable"
+import {string, boolean} from "yup"
+import {getObjectDiff} from "utils"
 
 export {CreateUpdateForm}
 interface CreateUpdateFormProps {
@@ -88,14 +32,16 @@ interface CreateUpdateFormProps {
   assignedPermissions?: string[]
 }
 function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
+  const [originaluser, setOriginalUser] = useState(user)
+
   let router = useRouter()
   const formShape = {
-    Username: Yup.string().max(100).required("Username is required"),
-    FirstName: Yup.string().required("First Name is required"),
-    LastName: Yup.string().required("Last Name is required"),
-    Email: Yup.string().email("Email is invalid").required("Email is required"),
-    Phone: Yup.string(),
-    Active: Yup.boolean()
+    Username: string().max(100).required("Username is required"),
+    FirstName: string().required("First Name is required"),
+    LastName: string().required("Last Name is required"),
+    Email: string().email("Email is invalid").required("Email is required"),
+    Phone: string(),
+    Active: boolean()
   }
 
   const [permissions, setPermissions] = useState(assignedPermissions || [])
@@ -120,6 +66,7 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
 
   async function createUser(fields: User) {
     const createdUser = await AdminUsers.Create<IAdminUser>(fields)
+    setOriginalUser(createdUser)
     const permissionsToAdd = permissions.map((permission) =>
       AdminUserGroups.SaveUserAssignment({UserGroupID: permission, UserID: createdUser.ID})
     )
@@ -132,7 +79,9 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
 
   async function updateUser(fields: User) {
     const formFields = Object.keys(formShape)
-    const updatedUser = await AdminUsers.Patch<IAdminUser>(fields.ID, pick(fields, formFields))
+    const diff = getObjectDiff(originaluser, pick(fields, formFields))
+    const updatedUser = await AdminUsers.Patch<IAdminUser>(fields.ID, diff)
+    setOriginalUser(updatedUser)
     const permissionsChanged = !isEqual(sortBy(assignedPermissions), sortBy(permissions))
     let successMessage = "User updated successfully."
     if (permissionsChanged) {
@@ -154,7 +103,7 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
 
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-      <Card>
+      <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
           <Button onClick={() => router.back()} variant="outline" isLoading={isSubmitting} leftIcon={<TbChevronLeft />}>
             Back
@@ -171,14 +120,11 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
         <CardBody
           display="flex"
           flexWrap={{base: "wrap", lg: "nowrap"}}
-          as="form"
-          noValidate
           alignItems={"flex-start"}
           justifyContent="space-between"
-          onSubmit={handleSubmit(onSubmit)}
           gap={6}
         >
-          <VStack flexBasis={"container.lg"} gap={4}>
+          <VStack flexBasis={"container.lg"} gap={4} maxW={{xl: "container.md"}}>
             <SwitchControl name="Active" label="Active" control={control} />
             <InputControl name="Username" label="Username" control={control} isRequired />
             <SimpleGrid gap={4} w="100%" gridTemplateColumns={{lg: "1fr 1fr"}}>
@@ -189,15 +135,12 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
             </SimpleGrid>
           </VStack>
           <Box border={`1px solid ${theme.colors.gray[200]}`} flexGrow="1" borderRadius="md">
-            <PermissionsTable
+            <AdminPermissionTable
               onPermissionChange={handlePermissionChange}
               assignedPermissions={assignedPermissions || []}
             />
           </Box>
         </CardBody>
-      </Card>
-      <Card mt={6}>
-        <Text>Under construction</Text>
       </Card>
     </Container>
   )

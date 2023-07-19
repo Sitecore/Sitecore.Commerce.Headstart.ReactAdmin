@@ -1,12 +1,10 @@
-import { Box, Flex, Grid, HStack } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-
+import {Flex, Grid, Hide} from "@chakra-ui/react"
+import {useEffect, useState} from "react"
 import ContentFooter from "./ContentFooter"
 import ContentHeader from "./ContentHeader"
 import Footer from "./Footer"
 import Header from "./Header"
-import LeftNavigation from "components/navigation/SideNavigation"
-import { useAuth } from "hooks/useAuth"
+import {useAuth} from "hooks/useAuth"
 import DesktopSideBarMenu from "../navigation/DesktopSideBarMenu"
 
 const Layout = (props) => {
@@ -25,8 +23,10 @@ const Layout = (props) => {
   return (
     <>
       <Header />
-      <Grid as="main" gridTemplateColumns={["75px auto", "75px auto", "75px auto", "250px auto"]} flexGrow="1">
-        <DesktopSideBarMenu />
+      <Grid as="main" gridTemplateColumns={["auto", "75px auto", "75px auto", "250px auto"]} flexGrow="1">
+        <Hide below="sm">
+          <DesktopSideBarMenu />
+        </Hide>
         <Flex flexFlow={"column nowrap"} overflowX="hidden">
           <ContentHeader {...props} />
           {props.children}

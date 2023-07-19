@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 import {CreateUpdateForm} from "components/suppliers"
-import {Box, Container, Skeleton} from "@chakra-ui/react"
+import {Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {Supplier, Suppliers} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
@@ -16,7 +16,8 @@ export async function getServerSideProps() {
         title: "Edit supplier",
         metas: {
           hasBreadcrumbs: true,
-          hasSupplierContextSwitch: false
+          hasBuyerContextSwitch: false,
+          hasSupplierContextSwitch: true
         }
       },
       revalidate: 5 * 60

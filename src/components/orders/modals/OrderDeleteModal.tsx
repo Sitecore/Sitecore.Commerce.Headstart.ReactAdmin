@@ -16,7 +16,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  Tag,
   Text,
   UseDisclosureProps,
   VStack
@@ -24,7 +23,7 @@ import {
 import {FC, Fragment, useCallback, useEffect, useState} from "react"
 import {IOrder} from "types/ordercloud/IOrder"
 import {priceHelper} from "utils"
-import {OrderStatusColorSchemeMap} from "../list/OrderList"
+import {OrderStatus} from "../OrderStatus"
 
 interface IOrderDeleteModal {
   orders?: IOrder[]
@@ -82,7 +81,7 @@ const OrderDeleteModal: FC<IOrderDeleteModal> = ({orders, disclosure, onComplete
                         <Badge>{o.ID}</Badge>
                         <Text fontSize="sm">{`Order Total: ${priceHelper.formatPrice(o.Total)}`}</Text>
                       </VStack>
-                      <Tag colorScheme={OrderStatusColorSchemeMap[o.Status] || "default"}>{o.Status}</Tag>
+                      <OrderStatus status={o.Status} />
                     </HStack>
                   </ListItem>
                   {i < orders.length - 1 && <Divider my={3} />}

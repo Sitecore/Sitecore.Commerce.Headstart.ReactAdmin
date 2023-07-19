@@ -31,7 +31,6 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
   }
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const update = {...visibility, [event.target.value]: event.target.checked}
-    console.log(update)
     setVisibility(update)
   }
   return (
@@ -55,6 +54,9 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
                 <Checkbox value="Pricing" isChecked={visibility.Pricing} onChange={handleChange}>
                   Pricing
                 </Checkbox>
+                <Checkbox value="Catalogs" isChecked={visibility.Catalogs} onChange={handleChange}>
+                  Catalogs
+                </Checkbox>
                 <Checkbox value="Variants" isChecked={visibility.Variants} onChange={handleChange}>
                   Variants
                 </Checkbox>
@@ -66,9 +68,6 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
                 </Checkbox>
                 <Checkbox value="Customization" isChecked={visibility.Customization} onChange={handleChange}>
                   Customization
-                </Checkbox>
-                <Checkbox value="Catalogs" isChecked={visibility.Catalogs} onChange={handleChange}>
-                  Catalogs
                 </Checkbox>
               </SimpleGrid>
             </PopoverBody>

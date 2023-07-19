@@ -24,7 +24,6 @@ export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
   const successToast = useSuccessToast()
 
   useEffect(() => {
-    console.log("hit")
     setIsCreating(!buyer?.ID)
   }, [buyer?.ID])
 

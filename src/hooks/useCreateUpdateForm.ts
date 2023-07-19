@@ -1,6 +1,6 @@
 import {xpHelper} from "utils"
 import {object} from "yup"
-import {ObjectShape} from "yup/lib/object"
+import {ObjectShape} from "yup"
 import {useErrorToast, useSuccessToast} from "./useToast"
 
 /**

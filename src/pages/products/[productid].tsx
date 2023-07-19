@@ -30,8 +30,8 @@ const ProductDetailPage = () => {
     loading,
     showTabbedView,
     initialTab,
-    productCatalogs,
-    productCategories
+    catalogAssignments,
+    categoryAssignments
   } = useProductDetail()
 
   if (loading) {
@@ -48,8 +48,8 @@ const ProductDetailPage = () => {
       initialSpecs={specs}
       initialVariants={variants}
       facets={facets}
-      initialCatalogs={productCatalogs}
-      initialCategories={productCategories}
+      initialCatalogAssignments={catalogAssignments}
+      initialCategoryAssignments={categoryAssignments}
     />
   )
 }

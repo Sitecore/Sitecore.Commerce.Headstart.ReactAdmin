@@ -1,4 +1,4 @@
-import {OrderStatusColorSchemeMap} from "@/components/orders/list/OrderList"
+import {OrderStatus} from "@/components/orders/OrderStatus"
 import {
   Badge,
   Button,
@@ -17,7 +17,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  Tag,
   Text,
   UseDisclosureProps,
   VStack
@@ -91,7 +90,7 @@ const OrderReturnDeleteModal: FC<IOrderReturnDeleteModal> = ({orderReturns, disc
                         <Badge>{or.ID}</Badge>
                         <Text fontSize="sm">{`Refund Amount: ${priceHelper.formatPrice(or.RefundAmount)}`}</Text>
                       </VStack>
-                      <Tag colorScheme={OrderStatusColorSchemeMap[or.Status] || "default"}>{or.Status}</Tag>
+                      <OrderStatus status={or.Status} />
                     </HStack>
                   </ListItem>
                   {i < orderReturns.length - 1 && <Divider my={3} />}

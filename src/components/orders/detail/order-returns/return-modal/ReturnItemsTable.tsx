@@ -19,9 +19,9 @@ import {
 import {Control, FieldValues} from "react-hook-form"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
-import {ProductThumbnail} from "../../order-products/ProductThumbnail"
 import {Link} from "@/components/navigation/Link"
 import {getMaxReturnQuantity} from "services/returns.service"
+import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
 
 interface ReturnItemsTableProps {
   control: Control<FieldValues, any>
@@ -82,7 +82,7 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
                   flex="1"
                   w="max-content"
                 >
-                  <ProductThumbnail imageProps={{boxSize: {base: 75, sm: 50}}} product={lineItem.Product} />
+                  <ProductDefaultImage boxSize={{base: 75, sm: 50}} product={lineItem.Product} />
                   <VStack justifyContent="space-between">
                     <Text fontSize={{base: "md", sm: "sm"}}>{lineItem.Product.Name}</Text>
                     <Link href={`/products/${lineItem.Product.ID}`}>

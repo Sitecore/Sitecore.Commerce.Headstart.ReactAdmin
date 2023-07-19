@@ -11,7 +11,7 @@ import ProductPromotionModal from "../modals/ProductPromotionModal"
 import ProductActionMenu from "./ProductActionMenu"
 import ProductCard from "./ProductCard"
 import ProductListToolbar from "./ProductListToolbar"
-import ProductDefaultImage from "./ProductDefaultImage"
+import ProductDefaultImage from "../../shared/ProductDefaultImage"
 import {TbCactus} from "react-icons/tb"
 import {Link} from "@/components/navigation/Link"
 

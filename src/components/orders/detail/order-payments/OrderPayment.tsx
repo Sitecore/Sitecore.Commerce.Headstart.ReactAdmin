@@ -3,6 +3,7 @@ import {ICreditCard} from "types/ordercloud/ICreditCard"
 import {IPayment} from "types/ordercloud/IPayment"
 import {priceHelper} from "utils"
 import {CreditCardIcon} from "./CreditCardIcon"
+import {Link} from "@/components/navigation/Link"
 
 interface OrderPaymentItemProps {
   payment: IPayment
@@ -14,6 +15,13 @@ export function OrderPayment({payment}: OrderPaymentItemProps) {
     }
     return cardType
   }
+
+  const refundPayment = payment.OrderReturnID && (
+    <Link href={`/returns/${payment.OrderReturnID}`}>
+      <Text color="gray.400">Refund</Text>
+    </Link>
+  )
+
   if (payment.Type === "CreditCard" && payment.xp?.CreditCard) {
     return (
       <HStack>
@@ -22,6 +30,7 @@ export function OrderPayment({payment}: OrderPaymentItemProps) {
           {displayCardType(payment.xp.CreditCard.CardType)} ending in {payment.xp.CreditCard.PartialAccountNumber}
         </Text>
         <Text fontWeight="bold">-{priceHelper.formatPrice(payment.Amount)}</Text>
+        {refundPayment}
       </HStack>
     )
   } else if (payment.Type === "SpendingAccount" && payment.SpendingAccount) {
@@ -29,12 +38,14 @@ export function OrderPayment({payment}: OrderPaymentItemProps) {
       <HStack>
         <Text>{payment.SpendingAccount?.Name}</Text>
         <Text fontWeight="bold">{priceHelper.formatPrice(payment.Amount)}</Text>
+        {refundPayment}
       </HStack>
     )
   } else {
     return (
       <HStack>
         <Text fontWeight="bold">{priceHelper.formatPrice(payment.Amount)}</Text>
+        {refundPayment}
       </HStack>
     )
   }

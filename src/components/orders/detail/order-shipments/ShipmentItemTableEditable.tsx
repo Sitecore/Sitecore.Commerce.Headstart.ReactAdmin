@@ -5,6 +5,7 @@ import {Control, FieldValues} from "react-hook-form"
 import {SelectControl} from "@/components/react-hook-form"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IShipmentItem} from "types/ordercloud/IShipmentItem"
+import {Link} from "@/components/navigation/Link"
 
 interface ShipmentItemTableProps {
   lineItems: ILineItem[]
@@ -60,9 +61,11 @@ export function ShipmentItemTableEditable({
                     <VStack justifyContent="space-between">
                       <Flex flexDirection="column">
                         <Text fontSize="sm">{lineItem.Product.Name}</Text>
-                        <Text fontSize="xs" color="gray.400">
-                          SKU: {lineItem.Product.ID}
-                        </Text>
+                        <Link href={`/products/${lineItem.Product.ID}`}>
+                          <Text fontSize="xs" color="gray.400">
+                            SKU: {lineItem.Product.ID}
+                          </Text>
+                        </Link>
                       </Flex>
                       <HStack width="full" justifyContent="space-between">
                         <Text fontSize="xs">Qty: {lineItem.Quantity}</Text>
@@ -76,10 +79,7 @@ export function ShipmentItemTableEditable({
                     control={control}
                     name={`${name}.${index}.QuantityShipped`}
                     selectProps={{
-                      options: buildQuantityShippedOptions(lineItem),
-                      chakraStyles: {
-                        menu: (baseStyles) => ({...baseStyles, position: "absolute"})
-                      }
+                      options: buildQuantityShippedOptions(lineItem)
                     }}
                   />
                 </Td>

@@ -1,4 +1,16 @@
-import {Card, CardBody, Container, Stack, VStack, Text, CardHeader, Heading, Flex} from "@chakra-ui/react"
+import {
+  Card,
+  CardBody,
+  Container,
+  Stack,
+  VStack,
+  Text,
+  CardHeader,
+  Heading,
+  Flex,
+  HStack,
+  Button
+} from "@chakra-ui/react"
 import {dateHelper} from "utils"
 import {OrderSummary} from "./order-summary/OrderSummary"
 import {OrderCustomer} from "./order-customer/OrderCustomer"
@@ -14,6 +26,9 @@ import {appPermissions} from "constants/app-permissions.config"
 import {Shipments} from "ordercloud-javascript-sdk"
 import {OrderShipments} from "./order-shipments/OrderShipments"
 import {OrderHeaderItem} from "./OrderHeaderItem"
+import {OrderReturns} from "./order-returns/OrderReturns"
+import {ReturnModal} from "./order-returns/return-modal/ReturnModal"
+import {getMaxReturnQuantity} from "services/returns.service"
 
 type OrderDetailProps = ReturnType<typeof useOrderDetail>
 
@@ -25,9 +40,11 @@ export function OrderDetail({
   suppliers,
   shipFromAddresses,
   shipments,
+  returns,
   fetchOrder,
   fetchShipments,
-  fetchLineItems
+  fetchLineItems,
+  fetchReturns
 }: OrderDetailProps) {
   const {isAdmin} = useAuth()
   const shippingAddress = lineItems?.length ? lineItems[0].ShippingAddress : null
@@ -39,6 +56,10 @@ export function OrderDetail({
       fetchOrder(order.ID), // refresh order in case status changed
       fetchLineItems(order) // refresh line items for QuantityShipped changes
     ])
+  }
+
+  const handleReturnUpdate = async () => {
+    await fetchReturns(order)
   }
 
   const handleShipmentDelete = async (shipmentId) => {
@@ -53,6 +74,10 @@ export function OrderDetail({
     }
     // admins will see all line items, but should only be able to ship those they are fulfilling (not from other suppliers)
     return !lineItem.SupplierID
+  })
+
+  const refundableLineItems = lineItems.filter((lineItem) => {
+    return lineItem.QuantityShipped && lineItem.Product.Returnable && getMaxReturnQuantity(lineItem, returns)
   })
 
   return (
@@ -156,6 +181,28 @@ export function OrderDetail({
                 </CardBody>
               </Card>
             )}
+            <Card width="full">
+              <CardHeader>
+                <Stack direction={["column", "column", "row"]} justifyContent="space-between">
+                  <Heading size="md">Returns</Heading>
+                  {(order.Status === "Open" || order.Status === "Completed") && refundableLineItems?.length && (
+                    <ReturnModal
+                      order={order}
+                      lineItems={refundableLineItems}
+                      allOrderReturns={returns}
+                      onUpdate={handleReturnUpdate}
+                      as="button"
+                      buttonProps={{colorScheme: "primary", size: "sm"}}
+                    >
+                      Create return
+                    </ReturnModal>
+                  )}
+                </Stack>
+              </CardHeader>
+              <CardBody>
+                <OrderReturns returns={returns} />
+              </CardBody>
+            </Card>
           </VStack>
           <VStack width="full" maxWidth={{xl: "350px"}} flexGrow={1} gap={orderDetailCardGap}>
             {isAdmin && (

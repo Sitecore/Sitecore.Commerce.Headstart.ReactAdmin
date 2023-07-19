@@ -41,7 +41,7 @@ export function OrderPayments({payments, billingAddress, shippingAddress}: Order
     )
   }
 
-  const showBillingAddress = !hasSameShippingAndBillingAddress()
+  const isSameBillingAsShipping = !hasSameShippingAndBillingAddress()
 
   return (
     <>
@@ -60,10 +60,14 @@ export function OrderPayments({payments, billingAddress, shippingAddress}: Order
             </VStack>
             <VStack alignItems="start">
               <OrderLabel>Billing Address</OrderLabel>
-              {showBillingAddress ? (
-                <SingleLineAddress address={billingAddress} />
+              {billingAddress ? (
+                isSameBillingAsShipping ? (
+                  <SingleLineAddress address={billingAddress} />
+                ) : (
+                  <Text>Same as shipping address</Text>
+                )
               ) : (
-                <Text>Same as shipping address</Text>
+                <Text>No billing address</Text>
               )}
             </VStack>
           </Stack>

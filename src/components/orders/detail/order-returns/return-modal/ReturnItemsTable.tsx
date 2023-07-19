@@ -1,7 +1,5 @@
 import {InputControl, SelectControl} from "@/components/react-hook-form"
 import {
-  Flex,
-  HStack,
   FormControl,
   Hide,
   Stack,
@@ -18,12 +16,12 @@ import {
   FormLabel,
   Divider
 } from "@chakra-ui/react"
-import {flatten} from "lodash"
 import {Control, FieldValues} from "react-hook-form"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 import {ProductThumbnail} from "../../order-products/ProductThumbnail"
 import {Link} from "@/components/navigation/Link"
+import {getMaxReturnQuantity} from "services/returns.service"
 
 interface ReturnItemsTableProps {
   control: Control<FieldValues, any>
@@ -37,19 +35,12 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
     ssr: true,
     fallback: false // return false on the server, and re-evaluate on the client side
   })
-  const maxReturnQuantity = (lineItem: ILineItem) => {
-    const otherReturnItems = flatten(
-      allOrderReturns
-        .filter((orderReturn) => orderReturn.ID !== existingReturn?.ID)
-        .filter((orderReturn) => orderReturn.ItemsToReturn.some((returnItem) => returnItem.LineItemID === lineItem.ID))
-        .map((orderReturn) => orderReturn.ItemsToReturn.filter((returnItem) => returnItem.LineItemID === lineItem.ID))
-    )
-    const quantityAlreadyReturned = otherReturnItems.reduce((acc, returnItem) => acc + returnItem.Quantity || 0, 0)
-    return lineItem.QuantityShipped - quantityAlreadyReturned
-  }
 
   const buildQuantityOptions = (lineItem: ILineItem) => {
-    const max = maxReturnQuantity(lineItem)
+    const max = getMaxReturnQuantity(
+      lineItem,
+      allOrderReturns.filter((r) => r.ID !== existingReturn?.ID)
+    )
     const numberArray = Array(max)
       .fill("")
       .map((_, i) => {

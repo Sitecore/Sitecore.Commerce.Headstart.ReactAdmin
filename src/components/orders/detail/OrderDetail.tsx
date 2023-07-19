@@ -28,6 +28,7 @@ import {OrderShipments} from "./order-shipments/OrderShipments"
 import {OrderHeaderItem} from "./OrderHeaderItem"
 import {OrderReturns} from "./order-returns/OrderReturns"
 import {ReturnModal} from "./order-returns/return-modal/ReturnModal"
+import {getMaxReturnQuantity} from "services/returns.service"
 
 type OrderDetailProps = ReturnType<typeof useOrderDetail>
 
@@ -76,7 +77,7 @@ export function OrderDetail({
   })
 
   const refundableLineItems = lineItems.filter((lineItem) => {
-    return lineItem.QuantityShipped && lineItem.Product.Returnable
+    return lineItem.QuantityShipped && lineItem.Product.Returnable && getMaxReturnQuantity(lineItem, returns)
   })
 
   return (

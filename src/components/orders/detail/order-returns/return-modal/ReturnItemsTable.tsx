@@ -23,6 +23,7 @@ import {Control, FieldValues} from "react-hook-form"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 import {ProductThumbnail} from "../../order-products/ProductThumbnail"
+import {Link} from "@/components/navigation/Link"
 
 interface ReturnItemsTableProps {
   control: Control<FieldValues, any>
@@ -93,9 +94,11 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
                   <ProductThumbnail imageProps={{boxSize: {base: 75, sm: 50}}} product={lineItem.Product} />
                   <VStack justifyContent="space-between">
                     <Text fontSize={{base: "md", sm: "sm"}}>{lineItem.Product.Name}</Text>
-                    <Text fontSize="xs" color="gray.400">
-                      SKU: {lineItem.Product.ID}
-                    </Text>
+                    <Link href={`/products/${lineItem.Product.ID}`}>
+                      <Text fontSize="xs" color="gray.400">
+                        SKU: {lineItem.Product.ID}
+                      </Text>
+                    </Link>
                   </VStack>
                 </Stack>
               </Td>

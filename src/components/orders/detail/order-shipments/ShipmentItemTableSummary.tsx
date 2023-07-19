@@ -6,6 +6,7 @@ import {PropsWithChildren} from "react"
 import {OrderLabel} from "../OrderLabel"
 import {IShipment} from "types/ordercloud/IShipment"
 import {OrderHeaderItem} from "../OrderHeaderItem"
+import {Link} from "@/components/navigation/Link"
 
 interface ShipmentItemTableProps extends PropsWithChildren {
   lineItems: ILineItem[]
@@ -47,9 +48,11 @@ export function ShipmentItemTableSummary({lineItems, shipment, isInModal, isMobi
                 <VStack justifyContent="space-between">
                   <Flex flexDirection="column">
                     <Text fontSize="sm">{lineItem.Product.Name}</Text>
-                    <Text fontSize="xs" color="gray.400">
-                      SKU: {lineItem.Product.ID}
-                    </Text>
+                    <Link href={`/products/${lineItem.Product.ID}`}>
+                      <Text fontSize="xs" color="gray.400">
+                        SKU: {lineItem.Product.ID}
+                      </Text>
+                    </Link>
                   </Flex>
                 </VStack>
               )}

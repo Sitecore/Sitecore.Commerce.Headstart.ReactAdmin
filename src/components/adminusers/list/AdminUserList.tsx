@@ -1,13 +1,11 @@
 import {Box, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
-import Link from "next/link"
 import {AdminUsers} from "ordercloud-javascript-sdk"
 import {useCallback, useState} from "react"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
 import {DataTableColumn} from "../../shared/DataTable/DataTable"
-import ListView, {ListViewGridOptions, ListViewTableOptions} from "../../shared/ListView/ListView"
+import ListView, {ListViewTableOptions} from "../../shared/ListView/ListView"
 import AdminUserDeleteModal from "../modals/AdminUserDeleteModal"
 import AdminUserActionMenu from "./AdminUserActionMenu"
-import AdminUserCard from "./AdminUserCard"
 import AdminUserListToolbar from "./AdminUserListToolbar"
 
 const AdminUserQueryMap = {
@@ -44,6 +42,13 @@ const LastNameColumn: DataTableColumn<IAdminUser> = {
   sortable: true
 }
 
+const UsernameColumn: DataTableColumn<IAdminUser> = {
+  header: "Username",
+  accessor: "Username",
+  width: "15%",
+  sortable: true
+}
+
 const EmailColumn: DataTableColumn<IAdminUser> = {
   header: "Email",
   accessor: "Email",
@@ -67,10 +72,9 @@ const StatusColumn: DataTableColumn<IAdminUser> = {
 
 const AdminUserTableOptions: ListViewTableOptions<IAdminUser> = {
   responsive: {
-    base: [FirstNameColumn, LastNameColumn],
-    md: [FirstNameColumn, LastNameColumn, StatusColumn],
-    lg: [FirstNameColumn, LastNameColumn, StatusColumn],
-    xl: [FirstNameColumn, LastNameColumn, EmailColumn, StatusColumn]
+    base: [UsernameColumn, FirstNameColumn, LastNameColumn],
+    md: [UsernameColumn, FirstNameColumn, LastNameColumn, StatusColumn],
+    xl: [UsernameColumn, FirstNameColumn, LastNameColumn, EmailColumn, StatusColumn]
   }
 }
 

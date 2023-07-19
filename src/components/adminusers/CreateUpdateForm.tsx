@@ -24,6 +24,7 @@ import ResetButton from "../react-hook-form/reset-button"
 import {TbChevronLeft} from "react-icons/tb"
 import {AdminPermissionTable} from "./AdminPermissionTable"
 import {string, boolean} from "yup"
+import {getObjectDiff} from "utils"
 
 export {CreateUpdateForm}
 interface CreateUpdateFormProps {
@@ -31,6 +32,8 @@ interface CreateUpdateFormProps {
   assignedPermissions?: string[]
 }
 function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
+  const [originaluser, setOriginalUser] = useState(user)
+
   let router = useRouter()
   const formShape = {
     Username: string().max(100).required("Username is required"),
@@ -63,6 +66,7 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
 
   async function createUser(fields: User) {
     const createdUser = await AdminUsers.Create<IAdminUser>(fields)
+    setOriginalUser(createdUser)
     const permissionsToAdd = permissions.map((permission) =>
       AdminUserGroups.SaveUserAssignment({UserGroupID: permission, UserID: createdUser.ID})
     )
@@ -75,7 +79,9 @@ function CreateUpdateForm({user, assignedPermissions}: CreateUpdateFormProps) {
 
   async function updateUser(fields: User) {
     const formFields = Object.keys(formShape)
-    const updatedUser = await AdminUsers.Patch<IAdminUser>(fields.ID, pick(fields, formFields))
+    const diff = getObjectDiff(originaluser, pick(fields, formFields))
+    const updatedUser = await AdminUsers.Patch<IAdminUser>(fields.ID, diff)
+    setOriginalUser(updatedUser)
     const permissionsChanged = !isEqual(sortBy(assignedPermissions), sortBy(permissions))
     let successMessage = "User updated successfully."
     if (permissionsChanged) {

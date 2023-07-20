@@ -52,7 +52,7 @@ export function OrderPayments({payments, billingAddress, shippingAddress}: Order
             direction={["column", "column", "row"]}
             gap={[5, 5, 0]}
             justifyContent="space-between"
-            maxWidth={{xl: "80%"}}
+            maxWidth={{xl: "container.xl"}}
           >
             <VStack alignItems="start">
               <TextLabel>{paymentTypeMap[payment.Type]}</TextLabel>

@@ -26,7 +26,7 @@ export function OrderDetailSkeleton({}: OrderDetailSkeletonProps) {
             gap={orderDetailCardGap}
           >
             <VStack width="full" flexGrow={1} gap={orderDetailCardGap}>
-              {/* Order Header */}
+              {/* Products */}
               <Skeleton borderRadius="md" w="100%" h="500px" />
               {/* Payment Card */}
               {isAdmin && <Skeleton borderRadius="md" w="100%" h="160px" />}

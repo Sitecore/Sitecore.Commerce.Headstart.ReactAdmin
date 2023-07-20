@@ -63,10 +63,10 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
         <Hide below="md">
           <Thead>
             <Tr>
-              <Td>Lineitem</Td>
-              <Td>Quantity</Td>
-              <Td>Refund Amount</Td>
-              <Td>Comments</Td>
+              <Td padding={tableCellPadding}>Lineitem</Td>
+              <Td padding={tableCellPadding}>Quantity</Td>
+              <Td padding={tableCellPadding}>Refund Amount</Td>
+              <Td padding={tableCellPadding}>Comments</Td>
             </Tr>
           </Thead>
         </Hide>
@@ -95,7 +95,7 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
               </Td>
               <Td padding={tableCellPadding} w={{base: "100%", sm: "initial"}}>
                 <FormControl justifyContent="space-between">
-                  <Hide above="sm">
+                  <Hide above="md">
                     <FormLabel fontSize="sm">Quantity</FormLabel>
                   </Hide>
                   <SelectControl
@@ -109,7 +109,7 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
               </Td>
               <Td padding={tableCellPadding} w={{base: "100%", sm: "initial"}}>
                 <FormControl justifyContent="space-between">
-                  <Hide above="sm">
+                  <Hide above="md">
                     <FormLabel fontSize="sm">Refund Amount</FormLabel>
                   </Hide>
                   <InputControl
@@ -122,12 +122,12 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
               </Td>
               <Td padding={tableCellPadding} w={{base: "100%", sm: "initial"}}>
                 <FormControl>
-                  <Hide above="sm">
+                  <Hide above="md">
                     <FormLabel fontSize="sm">Comments</FormLabel>
                   </Hide>
                   <InputControl name={`ItemsToReturn.${index}.Comments`} control={control} />
                 </FormControl>
-                <Hide above="sm">
+                <Hide above="md">
                   <Divider mt={8} />
                 </Hide>
               </Td>

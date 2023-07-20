@@ -86,17 +86,18 @@ export function OrderDetail({
       </Heading>
       <VStack gap={orderDetailCardGap} width="full">
         <Card width="full">
-          <CardBody maxWidth={{xl: "80%"}}>
-            <Flex
+          <CardBody maxWidth={{xl: "container.xl"}}>
+            <Stack
+              direction={["column", "column", "row"]}
+              gap={5}
               justifyContent="space-between"
               alignItems="start"
-              flexWrap="wrap"
               marginBottom={order.Comments ? 5 : 0}
             >
               <HeaderItem label="Placed on" value={dateHelper.formatDate(order.DateSubmitted)} />
               <HeaderItem label="Order Status" value={<OrderStatus status={order.Status} />} />
               <HeaderItem label="Last Modified" value={dateHelper.formatDate(order.LastUpdated)} />
-            </Flex>
+            </Stack>
             {order.Comments && (
               <Stack
                 direction={{base: "column", md: "row"}}

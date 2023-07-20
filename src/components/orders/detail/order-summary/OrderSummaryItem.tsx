@@ -1,6 +1,6 @@
 import {TextProps, HStack, Text} from "@chakra-ui/react"
-import {OrderLabel} from "../OrderLabel"
 import {ReactNode} from "react"
+import {TextLabel} from "@/components/shared/TextLabel"
 
 interface OrderSummaryItemProps {
   label: ReactNode
@@ -11,7 +11,7 @@ interface OrderSummaryItemProps {
 export function OrderSummaryItem({label, value, labelProps, valueProps}: OrderSummaryItemProps) {
   return (
     <HStack justifyContent="space-between">
-      <OrderLabel {...labelProps}>{label}</OrderLabel>
+      <TextLabel {...labelProps}>{label}</TextLabel>
       <Text {...valueProps}>{value}</Text>
     </HStack>
   )

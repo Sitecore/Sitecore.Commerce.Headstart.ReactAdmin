@@ -13,12 +13,13 @@ import {
 } from "@chakra-ui/react"
 import {useToast} from "hooks/useToast"
 import {useRef, useState} from "react"
-import {Control, FieldValues, useFormState} from "react-hook-form"
+import {Control, useFormState} from "react-hook-form"
 import {ISpec} from "types/ordercloud/ISpec"
+import {ProductDetailFormFields} from "../form-meta"
 
 interface GenerateVariantsButtonProps {
   specs: ISpec[]
-  control: Control<FieldValues, any>
+  control: Control<ProductDetailFormFields>
   buttonProps: ButtonProps
   onGenerate: (shouldOverwrite: boolean) => void
 }

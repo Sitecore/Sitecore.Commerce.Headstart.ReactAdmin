@@ -14,21 +14,24 @@ import {
 } from "@chakra-ui/react"
 import {useErrorToast} from "hooks/useToast"
 import {get} from "lodash"
-import {Control, FieldValues, UseFormTrigger, useFieldArray, useFormState, useWatch} from "react-hook-form"
+import {Control, UseFormTrigger, useFieldArray, useFormState, useWatch} from "react-hook-form"
 import {specFormDefaultValues} from "./SpecUpdateModal"
-import {SpecOptionFieldValues} from "types/form/SpecFieldValues"
+import {SpecFieldValues} from "types/form/SpecFieldValues"
 import {InputControl, SelectControl} from "@/components/react-hook-form"
 
 interface SpecOptionTableProps {
-  control: Control<FieldValues, any>
+  control: Control<SpecFieldValues>
   trigger: UseFormTrigger<any>
 }
 export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
-  const {fields, append, remove} = useFieldArray({
+  const {
+    fields: options,
+    append,
+    remove
+  } = useFieldArray({
     control,
     name: "Options"
   })
-  const options = fields as SpecOptionFieldValues[]
   const {errors} = useFormState({control, name: "Options"})
   const errorMessage = getOptionsErrorMessage(errors)
   const errorToast = useErrorToast()
@@ -136,13 +139,16 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
 }
 
 interface PriceMarkupControlProps {
-  control: Control<FieldValues, any>
+  control: Control<SpecFieldValues>
   index: number
   onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 // Isolating this component to limit rerenders caused by useWatch (best practice)
 function PriceMarkupControl({control, index, onKeyPress}: PriceMarkupControlProps) {
-  const markupType = useWatch({control, name: `Options.${index}.PriceMarkupType`})
+  const markupType = useWatch({
+    control,
+    name: `Options.${index}.MarkupType`
+  })
 
   const isDisabled = markupType === "NoMarkup"
   const leftAddon = markupType === "AmountTotal" ? "$" : null

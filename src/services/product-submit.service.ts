@@ -1,4 +1,4 @@
-import {differenceBy, isEmpty, omit} from "lodash"
+import {clone, difference, differenceBy, isEmpty, omit} from "lodash"
 import {
   PriceSchedules,
   Products,
@@ -25,6 +25,7 @@ import {IVariant} from "types/ordercloud/IVariant"
 import {VariantFieldValues} from "types/form/VariantFieldValues"
 import {ORIGINAL_ID} from "constants/original-id"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
+import {defaultValues} from "@/components/products/detail/form-meta"
 
 export async function submitProduct(
   isCreatingNew: boolean,
@@ -166,14 +167,26 @@ async function handleUpdateProduct(
   newProduct: IProduct,
   updatedPriceSchedule: IPriceSchedule,
   isCreatingNew: boolean
-): Promise<IProduct> {
+) {
   let updatedProduct: IProduct
   if (isCreatingNew) {
     newProduct.DefaultPriceScheduleID = updatedPriceSchedule.ID
     updatedProduct = await Products.Create<IProduct>(newProduct)
   } else {
     const diff = getObjectDiff(oldProduct, newProduct) as IProduct
-    updatedProduct = isEmpty(diff) ? oldProduct : await Products.Patch<IProduct>(oldProduct.ID, diff)
+    const reverseXpDiff = getObjectDiff(newProduct.xp, oldProduct.xp)
+    const didDeleteCustomXp = difference(Object.keys(reverseXpDiff || {}), Object.keys(diff.xp || {})).length > 0
+    if (isEmpty(diff) && !didDeleteCustomXp) {
+      updatedProduct = oldProduct
+    } else {
+      if (didDeleteCustomXp) {
+        // Its not possible to delete extended properties with a single PATCH
+        // so we must perform a PUT with the full product object instead
+        updatedProduct = await Products.Save<IProduct>(oldProduct.ID, newProduct)
+      } else {
+        updatedProduct = await Products.Patch<IProduct>(oldProduct.ID, diff)
+      }
+    }
   }
   return updatedProduct
 }
@@ -205,7 +218,9 @@ async function handleUpdatePriceOverrides(
   const updatePriceScheduleRequests = updatePriceSchedules.map(async (priceOverride) => {
     const oldPriceSchedule = oldPriceSchedules.find((oldPriceSchedule) => oldPriceSchedule.ID === priceOverride.ID)
     const diff = getObjectDiff(oldPriceSchedule, priceOverride)
-    const priceSchedule = await PriceSchedules.Patch<IPriceSchedule>(priceOverride.ID, diff)
+    const priceSchedule = isEmpty(diff)
+      ? oldPriceSchedule
+      : await PriceSchedules.Patch<IPriceSchedule>(priceOverride.ID, diff)
     await updateProductAssignments(priceSchedule.ID, priceOverride.ProductAssignments, product)
   })
 

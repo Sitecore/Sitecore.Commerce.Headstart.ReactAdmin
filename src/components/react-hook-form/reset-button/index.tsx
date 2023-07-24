@@ -4,7 +4,7 @@ import {Control, FieldValues, UseFormReset, useFormState} from "react-hook-form"
 import {TbArrowBackUp, TbTableExport, TbTrash} from "react-icons/tb"
 
 export type ResetButtonProps = ButtonProps & {
-  control: Control<FieldValues, any>
+  control: any
   reset: UseFormReset<any>
 }
 

@@ -25,6 +25,5 @@ export const appSettings = {
   orderCloudApiUrl: getEnvironmentVariable("OC_API_URL", "https://sandboxapi.ordercloud.io"),
   marketplaceId: getEnvironmentVariable("OC_MARKETPLACE_ID", "SitecoreCommerce"),
   marketplaceName: getEnvironmentVariable("OC_MARKETPLACE_NAME", "Sitecore Commerce"),
-  defaultProductViewTabbed: getEnvironmentVariable("DEFAULT_PRODUCT_VIEW_TABBED", "true"),
   useRealDashboardData: getEnvironmentVariable("USE_REAL_DASHBOARD_DATA", "false")
 }

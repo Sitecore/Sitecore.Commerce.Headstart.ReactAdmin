@@ -21,12 +21,13 @@ import {
 import {TbCactus} from "react-icons/tb"
 import {SpecActionsMenu} from "./SpecActionsMenu"
 import {SpecUpdateModal} from "./SpecUpdateModal"
-import {Control, FieldValues, useFieldArray} from "react-hook-form"
+import {Control, useFieldArray} from "react-hook-form"
 import {SpecFieldValues} from "types/form/SpecFieldValues"
 import {uniq, flatten} from "lodash"
+import {ProductDetailFormFields} from "../form-meta"
 
 interface SpecTableProps {
-  control: Control<FieldValues, any>
+  control: Control<ProductDetailFormFields>
 }
 
 export function SpecTable({control}: SpecTableProps) {

@@ -24,7 +24,14 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
     <FormControl name={name} control={control} label={label} {...rest} isRequired={isRequired}>
       <InputGroup>
         {leftAddon && <InputLeftAddon>{leftAddon}</InputLeftAddon>}
-        <Input isRequired={isRequired} {...field} id={name} isDisabled={isSubmitting} {...inputProps} />
+        <Input
+          isRequired={isRequired}
+          {...field}
+          id={name}
+          isDisabled={isSubmitting || props.isDisabled}
+          {...inputProps}
+          value={field.value ?? ""}
+        />
         {rightAddon && <InputRightAddon>{rightAddon}</InputRightAddon>}
       </InputGroup>
     </FormControl>

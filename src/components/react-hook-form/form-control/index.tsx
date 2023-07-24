@@ -15,7 +15,7 @@ import {Control, FieldValues, useController} from "react-hook-form"
 
 export interface BaseProps extends Omit<FormControlProps, "label"> {
   name: string
-  control: Control<FieldValues, any>
+  control: any
   validationSchema?: any
   label?: React.ReactNode
   labelProps?: FormLabelProps

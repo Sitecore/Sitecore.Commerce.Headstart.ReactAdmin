@@ -51,11 +51,12 @@ export const NumberInputControl: FC<NumberInputControlProps> = (props: NumberInp
       <InputGroup>
         {leftAddon && <InputLeftAddon>{leftAddon}</InputLeftAddon>}
         <NumberInput
-          {...field}
           id={name}
           isInvalid={!!error && isTouched}
           isDisabled={isSubmitting}
+          {...field}
           {...numberInputProps}
+          value={field.value ?? ""}
         >
           <NumberInputField name={name} ref={field.ref} />
           {showStepper && (

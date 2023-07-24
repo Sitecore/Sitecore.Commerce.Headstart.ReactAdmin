@@ -16,7 +16,6 @@ import {
   fetchProductCatalogAssignments,
   fetchProductCategoryAssignments
 } from "services/product-data-fetcher.service"
-import {appSettings} from "constants/app-settings"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 
 export function useProductDetail() {
@@ -27,7 +26,6 @@ export function useProductDetail() {
   const [specs, setSpecs] = useState([] as ISpec[])
   const [variants, setVariants] = useState([] as IVariant[])
   const [facets, setFacets] = useState([] as IProductFacet[])
-  const [showTabbedView, setShowTabbedView] = useState(true)
   const [loading, setLoading] = useState(true)
   const [initialTab, setInitialTab] = useState("Details" as ProductDetailTab)
   const [catalogAssignments, setCatalogAssignments] = useState([] as ProductCatalogAssignment[])
@@ -72,17 +70,6 @@ export function useProductDetail() {
   }, [query.productid])
 
   useEffect(() => {
-    const shouldShowTabbedView = () => {
-      const queryStringTabbed = query?.tabbed?.toString()
-      if (queryStringTabbed === "true" || queryStringTabbed === "false") {
-        return queryStringTabbed === "true"
-      } else if (appSettings.defaultProductViewTabbed === "false" || appSettings.defaultProductViewTabbed === "true") {
-        return appSettings.defaultProductViewTabbed === "true"
-      } else {
-        return true
-      }
-    }
-
     const setCurrentTabQueryParam = async () => {
       if (!query["tab"]) {
         await push({query: {...query, tab: "Details"}}, undefined, {shallow: true})
@@ -93,9 +80,7 @@ export function useProductDetail() {
     }
 
     const checkQueryParams = async () => {
-      const showTabbedView = shouldShowTabbedView()
       await setCurrentTabQueryParam()
-      setShowTabbedView(showTabbedView)
     }
     if (isReady) {
       checkQueryParams()
@@ -110,7 +95,6 @@ export function useProductDetail() {
     variants,
     facets,
     loading,
-    showTabbedView,
     initialTab,
     catalogAssignments,
     categoryAssignments

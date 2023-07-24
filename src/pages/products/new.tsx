@@ -20,21 +20,13 @@ export async function getServerSideProps() {
 }
 
 const ProductDetailPage = () => {
-  const {loading, showTabbedView, initialTab, facets} = useProductDetail()
+  const {loading, initialTab, facets} = useProductDetail()
 
   if (loading) {
     return <ProductDetailSkeleton />
   }
 
-  return (
-    <ProductDetail
-      showTabbedView={showTabbedView}
-      initialTab={initialTab}
-      facets={facets}
-      initialSpecs={[]}
-      initialVariants={[]}
-    />
-  )
+  return <ProductDetail initialTab={initialTab} facets={facets} initialSpecs={[]} initialVariants={[]} />
 }
 
 const ProtectedProductDetailPage = () => {

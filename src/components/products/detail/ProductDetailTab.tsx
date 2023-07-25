@@ -1,13 +1,13 @@
 import {InfoOutlineIcon} from "@chakra-ui/icons"
 import {Tab} from "@chakra-ui/react"
 import {isEmpty, get} from "lodash"
-import {Control, FieldValues, useFormState, FieldErrors} from "react-hook-form"
-import {tabFieldNames} from "./forms/meta"
+import {Control, useFormState, FieldErrors} from "react-hook-form"
+import {ProductDetailFormFields, tabFieldNames} from "./form-meta"
 import {ProductDetailTab} from "./ProductDetail"
 
 interface ProductDetailTabProps {
   tab: ProductDetailTab
-  control: Control<FieldValues, any>
+  control: Control<ProductDetailFormFields>
 }
 
 export function ProductDetailTab({control, tab}: ProductDetailTabProps) {

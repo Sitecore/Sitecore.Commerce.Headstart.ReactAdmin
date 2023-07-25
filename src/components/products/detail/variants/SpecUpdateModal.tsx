@@ -23,6 +23,7 @@ import {InputControl, SwitchControl} from "@/components/react-hook-form"
 import {SpecOptionTable} from "./SpecOptionTable"
 import {compact, uniqBy} from "lodash"
 import {SpecFieldValues} from "types/form/SpecFieldValues"
+import {ISpec} from "types/ordercloud/ISpec"
 
 const specFormSchema = object().shape({
   Name: string().required(),
@@ -78,10 +79,10 @@ export function SpecUpdateModal({
 }: SpecUpdateModalProps) {
   const [spec, setSpec] = useState<SpecFieldValues | null>(initialSpec)
   const {isOpen, onOpen, onClose} = useDisclosure()
-  const {handleSubmit, control, trigger, reset} = useForm({
+  const {handleSubmit, control, trigger, reset} = useForm<SpecFieldValues>({
     mode: "onBlur",
     resolver: yupResolver(specFormSchema),
-    defaultValues: (spec || specFormDefaultValues) as any
+    defaultValues: spec || specFormDefaultValues
   })
 
   const handleSubmitPreventBubbling = (event: FormEvent) => {

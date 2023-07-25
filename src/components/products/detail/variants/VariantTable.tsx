@@ -16,24 +16,26 @@ import {
   Text,
   VStack,
   Badge,
-  HStack
+  HStack,
+  BoxProps
 } from "@chakra-ui/react"
 import {TbCactus} from "react-icons/tb"
-import {Control, FieldValues} from "react-hook-form"
+import {Control} from "react-hook-form"
 import {IVariant} from "types/ordercloud/IVariant"
 import {CheckboxSingleControl, InputControl} from "@/components/react-hook-form"
 import {GenerateVariantsButton} from "./GenerateVariantsButton"
 import {ISpec} from "types/ordercloud/ISpec"
 import {flatten, uniq} from "lodash"
+import {ProductDetailFormFields} from "../form-meta"
 
-interface VariantTableProps {
-  control: Control<FieldValues, any>
+interface VariantTableProps extends BoxProps {
+  control: Control<ProductDetailFormFields>
   variants: IVariant[]
   specs: ISpec[]
   onGenerateVariants: (shouldOverwrite: boolean) => void
 }
 
-export function VariantTable({control, variants, specs, onGenerateVariants}: VariantTableProps) {
+export function VariantTable({control, variants, specs, onGenerateVariants, ...boxProps}: VariantTableProps) {
   // if you change the color codes here make sure to change in SpecTable.tsx
   const colorCodes = [
     "primary.500",
@@ -53,7 +55,15 @@ export function VariantTable({control, variants, specs, onGenerateVariants}: Var
 
   if (!variants.length) {
     return (
-      <Box p={6} display="flex" flexDirection={"column"} alignItems={"center"} justifyContent={"center"} minH={"xs"}>
+      <Box
+        p={6}
+        display="flex"
+        flexDirection={"column"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        minH={"xs"}
+        {...boxProps}
+      >
         <Icon as={TbCactus} fontSize={"5xl"} strokeWidth={"2px"} color="accent.500" />
         <Heading colorScheme="secondary" fontSize="xl">
           <VStack>

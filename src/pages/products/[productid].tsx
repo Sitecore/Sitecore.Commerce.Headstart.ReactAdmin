@@ -28,7 +28,6 @@ const ProductDetailPage = () => {
     variants,
     facets,
     loading,
-    showTabbedView,
     initialTab,
     catalogAssignments,
     categoryAssignments
@@ -40,7 +39,6 @@ const ProductDetailPage = () => {
 
   return (
     <ProductDetail
-      showTabbedView={showTabbedView}
       initialTab={initialTab}
       initialProduct={product}
       initialDefaultPriceSchedule={defaultPriceSchedule}

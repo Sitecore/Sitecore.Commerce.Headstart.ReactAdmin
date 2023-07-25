@@ -6,7 +6,7 @@ import {Control, FieldValues} from "react-hook-form"
 import {useFormState} from "react-hook-form"
 
 export type SubmitButtonProps = ButtonProps & {
-  control: Control<FieldValues, any>
+  control: any
 }
 
 export const SubmitButton: FC<SubmitButtonProps> = (props: SubmitButtonProps) => {

@@ -6,14 +6,12 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
-  Hide,
   HStack,
   MenuItem,
   useDisclosure
 } from "@chakra-ui/react"
 import {useRef} from "react"
-import {TbTableExport, TbTrash} from "react-icons/tb"
-import BrandedSpinner from "../branding/BrandedSpinner"
+import {TbTrash} from "react-icons/tb"
 
 interface ConfirmDeleteDialogProps {
   onDelete: () => Promise<void>
@@ -57,7 +55,7 @@ export default function ConfirmDelete({
                 <Button variant="outline" onClick={onClose} ref={cancelRef}>
                   {alertCancelButtonText}
                 </Button>
-                <Button variant="solid" colorScheme="red" onClick={onDelete} ml={3}>
+                <Button variant="solid" colorScheme="red" onClick={onDelete} ml={3} isLoading={loading}>
                   {alertDeleteButtonText}
                 </Button>
               </HStack>

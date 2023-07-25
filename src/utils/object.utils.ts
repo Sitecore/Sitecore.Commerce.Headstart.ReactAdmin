@@ -6,7 +6,7 @@ import {get, isArray, isEqual, isObject, set} from "lodash"
  * @param oldObj The original object to be compared
  * @param newObj The new object with updates
  */
-export function getObjectDiff(oldObj, newObj) {
+export function getObjectDiff(oldObj = {}, newObj = {}) {
   const diff = {}
   const diffKeys = getObjectDiffKeys(oldObj, newObj)
   if (!diffKeys?.length) {

@@ -24,9 +24,9 @@ const ProductDefaultImage: FC<IProductDefaultImage> = ({product, preferThumbnail
   const sourceUrl = useMemo(() => {
     if (!firstImage) return PRODUCT_DEFAULT_IMAGE__FALLBACK_URL
     if (preferThumbnail) {
-      return firstImage?.ThumbnailUrl ?? firstImage?.Url ?? PRODUCT_DEFAULT_IMAGE__FALLBACK_URL
+      return firstImage?.ThumbnailUrl || firstImage?.Url || PRODUCT_DEFAULT_IMAGE__FALLBACK_URL
     } else {
-      return firstImage?.Url ?? firstImage?.ThumbnailUrl ?? PRODUCT_DEFAULT_IMAGE__FALLBACK_URL
+      return firstImage?.Url || firstImage?.ThumbnailUrl || PRODUCT_DEFAULT_IMAGE__FALLBACK_URL
     }
   }, [firstImage, preferThumbnail])
 

@@ -16,7 +16,6 @@ import {OrderSummary} from "./order-summary/OrderSummary"
 import {OrderCustomer} from "./order-customer/OrderCustomer"
 import {OrderPayments} from "./order-payments/OrderPayments"
 import {useAuth} from "hooks/useAuth"
-import {OrderLabel} from "./OrderLabel"
 import {OrderProducts} from "./order-products/OrderProducts"
 import {useOrderDetail} from "hooks/useOrderDetail"
 import {OrderStatus} from "../OrderStatus"
@@ -25,10 +24,10 @@ import ProtectedContent from "@/components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {Shipments} from "ordercloud-javascript-sdk"
 import {OrderShipments} from "./order-shipments/OrderShipments"
-import {OrderHeaderItem} from "./OrderHeaderItem"
 import {OrderReturns} from "./order-returns/OrderReturns"
 import {ReturnModal} from "./order-returns/return-modal/ReturnModal"
 import {getMaxReturnQuantity} from "services/returns.service"
+import {HeaderItem} from "@/components/shared/HeaderItem"
 
 type OrderDetailProps = ReturnType<typeof useOrderDetail>
 
@@ -87,17 +86,18 @@ export function OrderDetail({
       </Heading>
       <VStack gap={orderDetailCardGap} width="full">
         <Card width="full">
-          <CardBody maxWidth={{xl: "80%"}}>
-            <Flex
+          <CardBody maxWidth={{xl: "container.xl"}}>
+            <Stack
+              direction={["column", "column", "row"]}
+              gap={5}
               justifyContent="space-between"
               alignItems="start"
-              flexWrap="wrap"
               marginBottom={order.Comments ? 5 : 0}
             >
-              <OrderHeaderItem label="Placed on" value={dateHelper.formatDate(order.DateSubmitted)} />
-              <OrderHeaderItem label="Order Status" value={<OrderStatus status={order.Status} />} />
-              <OrderHeaderItem label="Last Modified" value={dateHelper.formatDate(order.LastUpdated)} />
-            </Flex>
+              <HeaderItem label="Placed on" value={dateHelper.formatDate(order.DateSubmitted)} />
+              <HeaderItem label="Order Status" value={<OrderStatus status={order.Status} />} />
+              <HeaderItem label="Last Modified" value={dateHelper.formatDate(order.LastUpdated)} />
+            </Stack>
             {order.Comments && (
               <Stack
                 direction={{base: "column", md: "row"}}

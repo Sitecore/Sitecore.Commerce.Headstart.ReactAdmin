@@ -17,8 +17,8 @@ import {ShipmentItemTableSummary} from "./ShipmentItemTableSummary"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {dateHelper} from "utils"
 import {PropsWithChildren} from "react"
-import {OrderHeaderItem} from "../OrderHeaderItem"
 import theme from "theme/theme"
+import {HeaderItem} from "@/components/shared/HeaderItem"
 
 interface ShipmentSummaryProps extends PropsWithChildren, AccordionProps {
   shipment: IShipment
@@ -46,25 +46,25 @@ export function ShipmentSummary({lineItems, shipment, children, ...containerProp
               gridTemplateColumns={isInModal && !isMobile ? "1fr 1fr" : "repeat(auto-fit, minmax(150px, 1fr))"}
               gap={4}
             >
-              <OrderHeaderItem
+              <HeaderItem
                 direction={isInModal || isMobile ? "row" : "column"}
                 alignItems={isInModal || isMobile ? "center" : "start"}
                 label="Shipping Date"
                 value={shipment?.DateShipped ? dateHelper.formatShortDate(shipment.DateShipped) : "N/A"}
               />
-              <OrderHeaderItem
+              <HeaderItem
                 direction={isInModal || isMobile ? "row" : "column"}
                 alignItems={isInModal || isMobile ? "center" : "start"}
                 label="Tracking Number"
                 value={shipment?.TrackingNumber || "N/A"}
               />
-              <OrderHeaderItem
+              <HeaderItem
                 direction={isInModal || isMobile ? "row" : "column"}
                 alignItems={isInModal || isMobile ? "center" : "start"}
                 label="Carrier"
                 value={shipment?.Shipper || "N/A"}
               />
-              <OrderHeaderItem
+              <HeaderItem
                 direction={isInModal || isMobile ? "row" : "column"}
                 alignItems={isInModal || isMobile ? "center" : "start"}
                 label="Shipping Method"

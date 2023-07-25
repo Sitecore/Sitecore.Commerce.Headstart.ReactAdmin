@@ -2,11 +2,11 @@ import {SimpleGrid, VStack, Flex, HStack, Text, Box, Divider, Stack} from "@chak
 import {priceHelper} from "utils"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {PropsWithChildren} from "react"
-import {OrderLabel} from "../OrderLabel"
 import {IShipment} from "types/ordercloud/IShipment"
-import {OrderHeaderItem} from "../OrderHeaderItem"
 import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
 import {Link} from "@/components/navigation/Link"
+import {TextLabel} from "@/components/shared/TextLabel"
+import {HeaderItem} from "@/components/shared/HeaderItem"
 
 interface ShipmentItemTableProps extends PropsWithChildren {
   lineItems: ILineItem[]
@@ -26,9 +26,9 @@ export function ShipmentItemTableSummary({lineItems, shipment, isInModal, isMobi
   return (
     <VStack width="full">
       <SimpleGrid w="full" gridTemplateColumns={isMobile ? "1fr" : isInModal ? "1fr 1fr" : "1fr 1fr 2fr"} gap={3}>
-        <OrderHeaderItem label="Shipment ID" value={shipment.ID} />
-        <OrderHeaderItem label="Cost" value={priceHelper.formatPrice(shipment.Cost)} />
-        {shipment.xp?.Comments && <OrderHeaderItem flexGrow={1} label="Comments" value={comments} />}
+        <HeaderItem label="Shipment ID" value={shipment.ID} />
+        <HeaderItem label="Cost" value={priceHelper.formatPrice(shipment.Cost)} />
+        {shipment.xp?.Comments && <HeaderItem flexGrow={1} label="Comments" value={comments} />}
       </SimpleGrid>
       <Divider marginY={4} borderColor="gray.300" />
       {shipment.ShipmentItems.map((shipmentItem) => {
@@ -67,13 +67,13 @@ export function ShipmentItemTableSummary({lineItems, shipment, isInModal, isMobi
             {!isMobile && (
               <VStack alignItems="flex-start" justifyContent="center">
                 <HStack>
-                  <OrderLabel>QTY: </OrderLabel>
+                  <TextLabel>QTY: </TextLabel>
                   <Text fontSize="sm" marginLeft={2}>
                     {lineItem.Quantity}
                   </Text>
                 </HStack>
                 <HStack>
-                  <OrderLabel>TOTAL:</OrderLabel>
+                  <TextLabel>TOTAL:</TextLabel>
                   <Text fontSize="sm" marginLeft={2}>
                     {priceHelper.formatPrice(lineItem.LineTotal)}
                   </Text>
@@ -81,7 +81,7 @@ export function ShipmentItemTableSummary({lineItems, shipment, isInModal, isMobi
               </VStack>
             )}
             <Stack direction={["column", "row"]} ml={!isInModal && "auto"}>
-              <OrderLabel>QTY SHIPPED:</OrderLabel>
+              <TextLabel>QTY SHIPPED:</TextLabel>
               <Text fontSize="sm" marginLeft={2}>
                 {shipmentItem.QuantityShipped}
               </Text>

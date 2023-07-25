@@ -1,9 +1,9 @@
-import {HStack, VStack, Text, Stack} from "@chakra-ui/react"
+import {VStack, Text, Stack} from "@chakra-ui/react"
 import {IPayment} from "types/ordercloud/IPayment"
 import {IBuyerAddress} from "types/ordercloud/IBuyerAddress"
 import {SingleLineAddress} from "../SingleLineAddress"
-import {OrderLabel} from "../OrderLabel"
 import {OrderPayment} from "./OrderPayment"
+import {TextLabel} from "@/components/shared/TextLabel"
 
 const paymentTypeMap = {
   CreditCard: "Credit Card",
@@ -52,14 +52,14 @@ export function OrderPayments({payments, billingAddress, shippingAddress}: Order
             direction={["column", "column", "row"]}
             gap={[5, 5, 0]}
             justifyContent="space-between"
-            maxWidth={{xl: "80%"}}
+            maxWidth={{xl: "container.xl"}}
           >
             <VStack alignItems="start">
-              <OrderLabel>{paymentTypeMap[payment.Type]}</OrderLabel>
+              <TextLabel>{paymentTypeMap[payment.Type]}</TextLabel>
               <OrderPayment payment={payment} />
             </VStack>
             <VStack alignItems="start">
-              <OrderLabel>Billing Address</OrderLabel>
+              <TextLabel>Billing Address</TextLabel>
               {billingAddress ? (
                 isSameBillingAsShipping ? (
                   <SingleLineAddress address={billingAddress} />

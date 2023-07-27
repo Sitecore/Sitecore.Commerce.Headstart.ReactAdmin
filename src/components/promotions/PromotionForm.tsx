@@ -1,12 +1,8 @@
-import * as Yup from "yup"
 import {
   Box,
   Button,
   ButtonGroup,
-  Divider,
   FormLabel,
-  Grid,
-  GridItem,
   HStack,
   Heading,
   InputGroup,
@@ -27,97 +23,62 @@ import {
   Container,
   Flex,
   FormControl,
-  VStack,
-  Text
+  VStack
 } from "@chakra-ui/react"
 import {DeleteIcon} from "@chakra-ui/icons"
 import {InputControl, RadioGroupControl, SwitchControl, TextareaControl} from "components/react-hook-form"
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react"
 import {useEffect, useState} from "react"
-// import Card from "../card/Card"
 import DatePicker from "../datepicker/DatePicker"
 import {ExpressionBuilder} from "./ExpressionBuilder"
-import {Promotion, Promotions} from "ordercloud-javascript-sdk"
+import {Promotions} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
-import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {IPromotion} from "types/ordercloud/IPromotion"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
 import {emptyStringToNull} from "utils"
 import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
+import {string, date, number, object} from "yup"
+import {useErrorToast, useSuccessToast} from "hooks/useToast"
 
-export {CreateUpdateForm}
-
-interface CreateUpdateFormProps {
-  promotion?: Promotion
+interface PromotionFormProps {
+  promotion?: IPromotion
 }
 
 const EligibleExpressionField = (props) => {
-  // TODO: fix this
-  // const {values, touched, setFieldValue} = useFormikContext()
-  // const [field, meta] = useField(props)
-
-  // useEffect(() => {
-  //   const eligibleExpression = async () => {
-  //     const elExpression = await buildEligibleExpression(values as any)
-  //     setFieldValue(props.name, elExpression)
-  //   }
-  //   eligibleExpression()
-  // }, [props.name, setFieldValue, touched, values])
-
-  // // Simplistic Example to close the loop - then we will use the dnd Expression UI Builder and match to this
-  // async function buildEligibleExpression(fields) {
-  //   let eligibleExpression = "" //Default value when no condition has been specified.
-  //   // Minimum Requirements has been selected
-  //   switch (fields.xp_MinimumReq) {
-  //     case "min-amount": {
-  //       eligibleExpression = `order.Subtotal>= ${fields.xp_MinReqValue}`
-  //       break
-  //     }
-  //     case "min-qty": {
-  //       eligibleExpression = `items.quantity()>= ${fields.xp_MinReqValue}`
-  //       break
-  //     }
-  //     default: {
-  //       eligibleExpression = "true"
-  //       break
-  //     }
-  //   }
-
-  //   return eligibleExpression
-  // }
-
-  // return (
-  //   <>
-  //     <TextareaControl {...props} {...field} />
-  //     {!!meta.touched && !!meta.error && <div>{meta.error}</div>}
-  //   </>
-  // )
   return <div></div>
 }
 
-function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
-  const formShape = {
-    Name: Yup.string().max(100),
-    Code: Yup.string().max(100).required("Code is required"),
-    StartDate: Yup.date(),
-    ExpirationDate: Yup.date(),
-    EligibleExpression: Yup.string().max(400).required("Eligible Expression is required"),
-    ValueExpression: Yup.string().max(400).required("Value Expression is required"),
-    Description: Yup.string().max(100),
-    xp_MinReqValue: Yup.number().transform(emptyStringToNull).nullable().typeError("You must specify a number")
-  }
-  const {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit} =
-    useCreateUpdateForm<Promotion>(promotion, formShape, createPromotion, updatePromotion)
+export function PromotionForm({promotion}: PromotionFormProps) {
+  const [currentPromotion, setCurrentPromotion] = useState(promotion)
+  const [isCreating, setIsCreating] = useState(!promotion?.ID)
+  const successToast = useSuccessToast()
+  const errorToast = useErrorToast()
 
-  const {
-    watch,
-    handleSubmit,
-    control,
-    formState: {isSubmitting},
-    reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
+  useEffect(() => {
+    setIsCreating(!currentPromotion?.ID)
+  }, [currentPromotion?.ID])
+
+  const defaultValues = {}
+  const validationSchema = object().shape({
+    Name: string().max(100),
+    Code: string().max(100).required("Code is required"),
+    StartDate: date(),
+    ExpirationDate: date(),
+    EligibleExpression: string().max(400).required("Eligible Expression is required"),
+    ValueExpression: string().max(400).required("Value Expression is required"),
+    Description: string().max(100),
+    xp: object().shape({
+      MinReqValue: number().transform(emptyStringToNull).nullable().typeError("You must specify a number")
+    })
+  })
+
+  const {watch, handleSubmit, control, reset} = useForm<IPromotion>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: promotion || defaultValues,
+    mode: "onBlur"
+  })
 
   // TODO: this is not very performant, do we really need the values displayed?
   const values = watch() as any
@@ -126,25 +87,27 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
   const [endDate, setEndDate] = useState(new Date())
   const router = useRouter()
 
-  async function createPromotion(fields: Promotion) {
-    await Promotions.Create<IPromotion>(fields)
+  async function createPromotion(fields: IPromotion) {
+    const createdPromotion = await Promotions.Create<IPromotion>(fields)
     successToast({
       description: "Promotion created successfully."
     })
-    router.push(`/promotions`)
+    setCurrentPromotion(createdPromotion)
+    reset(createdPromotion)
   }
 
-  async function updatePromotion(fields: Promotion) {
-    await Promotions.Save<IPromotion>(fields.ID, fields)
+  async function updatePromotion(fields: IPromotion) {
+    const updatedPromotion = await Promotions.Save<IPromotion>(fields.ID, fields)
     successToast({
       description: "Promotion updated successfully."
     })
-    router.push(`/promotions`)
+    setCurrentPromotion(updatedPromotion)
+    reset(updatedPromotion)
   }
 
-  async function deletePromotion(promotionid) {
+  async function deletePromotion(promotionId: string) {
     try {
-      await Promotions.Delete(promotionid)
+      await Promotions.Delete(promotionId)
       successToast({
         description: "Promotion deleted successfully."
       })
@@ -152,6 +115,14 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
       errorToast({
         description: "Promotion delete failed"
       })
+    }
+  }
+
+  async function onSubmit(fields: IPromotion) {
+    if (isCreating) {
+      await createPromotion(fields)
+    } else {
+      await updatePromotion(fields)
     }
   }
 
@@ -174,7 +145,7 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
               <ResetButton control={control} reset={reset} variant="outline">
                 Discard Changes
               </ResetButton>
-              <Button onClick={() => router.push(`/promotions`)} variant="outline" isLoading={isSubmitting}>
+              <Button onClick={() => router.push(`/promotions`)} variant="outline">
                 Cancel
               </Button>
               {!isCreating && (
@@ -200,8 +171,19 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                     <Card p={6}>
                       <SimpleGrid columns={2} spacing={10}>
                         <Flex flexFlow="column nowrap" gap={4}>
-                          <InputControl name="Name" label="Promotion Name" helperText="" control={control} />
-                          <TextareaControl name="Description" label="Description" control={control} />
+                          <InputControl
+                            name="Name"
+                            label="Promotion Name"
+                            helperText=""
+                            control={control}
+                            validationSchema={validationSchema}
+                          />
+                          <TextareaControl
+                            name="Description"
+                            label="Description"
+                            control={control}
+                            validationSchema={validationSchema}
+                          />
                           <FormControl>
                             <FormLabel>Start Date</FormLabel>
                             <DatePicker selectedDate={startDate} onChange={setStartDate} />
@@ -217,8 +199,18 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                           </NumberInput>
 
                           <HStack spacing={6}>
-                            <SwitchControl name="Active" label="Active" control={control} />
-                            <SwitchControl name="AutoApply" label="Auto Apply" control={control} />
+                            <SwitchControl
+                              name="Active"
+                              label="Active"
+                              control={control}
+                              validationSchema={validationSchema}
+                            />
+                            <SwitchControl
+                              name="AutoApply"
+                              label="Auto Apply"
+                              control={control}
+                              validationSchema={validationSchema}
+                            />
                           </HStack>
 
                           <label htmlFor="Priority">Priority</label>
@@ -231,9 +223,20 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                           </NumberInput>
                         </Flex>
                         <Box>
-                          <InputControl name="Code" label="Coupon Code" helperText="" control={control} isRequired />
+                          <InputControl
+                            name="Code"
+                            label="Coupon Code"
+                            helperText=""
+                            control={control}
+                            validationSchema={validationSchema}
+                          />
 
-                          <TextareaControl name="FinePrint" label="Fine Print" control={control} />
+                          <TextareaControl
+                            name="FinePrint"
+                            label="Fine Print"
+                            control={control}
+                            validationSchema={validationSchema}
+                          />
 
                           <FormLabel>End Date</FormLabel>
                           <DatePicker selectedDate={endDate} onChange={setEndDate} />
@@ -249,9 +252,24 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                           </NumberInput>
 
                           <VStack mt={6} spacing={6}>
-                            <SwitchControl name="LineItemLevel" label="Line Item Level" control={control} />
-                            <SwitchControl name="CanCombine" label="Can be combined" control={control} />
-                            <SwitchControl name="AllowAllBuyers" label="Allow all buyers" control={control} />
+                            <SwitchControl
+                              name="LineItemLevel"
+                              label="Line Item Level"
+                              control={control}
+                              validationSchema={validationSchema}
+                            />
+                            <SwitchControl
+                              name="CanCombine"
+                              label="Can be combined"
+                              control={control}
+                              validationSchema={validationSchema}
+                            />
+                            <SwitchControl
+                              name="AllowAllBuyers"
+                              label="Allow all buyers"
+                              control={control}
+                              validationSchema={validationSchema}
+                            />
                           </VStack>
                         </Box>
                       </SimpleGrid>
@@ -261,14 +279,24 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                     <Card p={6}>
                       <SimpleGrid columns={2} spacing={10}>
                         <VStack>
-                          <RadioGroupControl name="xp_MinimumReq" label="Minimum requirment" control={control}>
+                          <RadioGroupControl
+                            name="xp_MinimumReq"
+                            label="Minimum requirment"
+                            control={control}
+                            validationSchema={validationSchema}
+                          >
                             <VStack alignItems={"flex-start"}>
                               <Radio value="none">None</Radio>
                               <Radio value="min-amount">Minimum purchase amount</Radio>
                               <Radio value="min-qty">Minimum quantity of items</Radio>
                             </VStack>
                           </RadioGroupControl>
-                          <InputControl name="xp_MinReqValue" placeholder="Enter amount" control={control} />
+                          <InputControl
+                            name="xp_MinReqValue"
+                            placeholder="Enter amount"
+                            control={control}
+                            validationSchema={validationSchema}
+                          />
                           <FormControl>
                             <FormLabel htmlFor="xp_ScopeTo">Eligibility / Scope to</FormLabel>
                             <Select name="xp_ScopeTo" id="xp_ScopeTo" placeholder="Select option">
@@ -281,7 +309,12 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                           </FormControl>
                         </VStack>
                         <Box>
-                          <RadioGroupControl name="xp_Type" label="Promotion Type" control={control}>
+                          <RadioGroupControl
+                            name="xp_Type"
+                            label="Promotion Type"
+                            control={control}
+                            validationSchema={validationSchema}
+                          >
                             <Radio value="Percentage">Percentage</Radio>
                             <Radio value="Fixed">Fixed Amount</Radio>
                             <Radio value="Free-shipping">Free Shipping</Radio>
@@ -293,7 +326,12 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                               <InputLeftElement pointerEvents="none" color="gray.300" fontSize="1.2em">
                                 {values.xp_Type === "Percentage" ? "%" : "$"}
                               </InputLeftElement>
-                              <InputControl name="xp_Value" placeholder="Enter amount" control={control} />
+                              <InputControl
+                                name="xp_Value"
+                                placeholder="Enter amount"
+                                control={control}
+                                validationSchema={validationSchema}
+                              />
                             </InputGroup>
                           )}
                         </Box>
@@ -303,18 +341,16 @@ function CreateUpdateForm({promotion}: CreateUpdateFormProps) {
                   <TabPanel p={0}>
                     <Card p={6} gap={6}>
                       <SimpleGrid columns={2} spacing={10}>
-                        <EligibleExpressionField name="EligibleExpression" label="Eligible Expression" isRequired />
-                        <TextareaControl name="ValueExpression" label="Value Expression" control={control} isRequired />
+                        <EligibleExpressionField name="EligibleExpression" label="Eligible Expression" />
+                        <TextareaControl
+                          name="ValueExpression"
+                          label="Value Expression"
+                          control={control}
+                          validationSchema={validationSchema}
+                        />
                       </SimpleGrid>
                       <ExpressionBuilder />
                     </Card>
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    <Text>Under construction</Text>
-                    {/* <Card p={6}>
-                      <SimpleGrid columns={2} spacing={10}>
-                      </SimpleGrid>
-                    </Card> */}
                   </TabPanel>
                 </TabPanels>
                 {/* OVERVIEW */}

@@ -1,4 +1,4 @@
-import {CreateUpdateForm} from "components/catalogs"
+import {CatalogForm} from "components/catalogs"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 
@@ -18,12 +18,12 @@ export async function getServerSideProps() {
   }
 }
 
-const ProtectedCreateUpdateForm = () => {
+const ProtectedNewCatalogPage = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <CreateUpdateForm />
+      <CatalogForm />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewCatalogPage

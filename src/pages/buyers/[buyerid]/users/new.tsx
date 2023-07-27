@@ -1,5 +1,4 @@
-import {CreateUpdateForm} from "../../../../components/users"
-import {Box} from "@chakra-ui/react"
+import {UserForm} from "../../../../components/users"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 import {Users} from "ordercloud-javascript-sdk"
@@ -20,12 +19,12 @@ export async function getServerSideProps() {
   }
 }
 
-const ProtectedCreateUpdateForm = () => {
+const ProtectedNewBuyerUserPage = () => {
   return (
     <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <CreateUpdateForm ocService={Users} />
+      <UserForm userService={Users} />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewBuyerUserPage

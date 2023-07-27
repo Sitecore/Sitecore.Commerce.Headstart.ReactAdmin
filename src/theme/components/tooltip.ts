@@ -1,2 +1,2 @@
-const Tooltip = {};
-export default Tooltip;
+const Tooltip = {}
+export default Tooltip

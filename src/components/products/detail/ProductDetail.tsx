@@ -223,6 +223,7 @@ export default function ProductDetail({
               <TabPanel p={0} mt={6}>
                 <VariantsTab
                   control={control}
+                  validationSchema={validationSchema}
                   variants={variants}
                   specs={specs}
                   onGenerateVariants={handleGenerateVariants}
@@ -236,7 +237,7 @@ export default function ProductDetail({
             )}
             {viewVisibility.Facets && (
               <TabPanel p={0} mt={6}>
-                <FacetTab control={control} facetList={facets} width="100%" />
+                <FacetTab control={control} validationSchema={validationSchema} facetList={facets} width="100%" />
               </TabPanel>
             )}
             {viewVisibility.Customization && (

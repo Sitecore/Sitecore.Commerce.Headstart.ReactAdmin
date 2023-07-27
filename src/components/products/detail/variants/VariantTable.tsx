@@ -26,10 +26,11 @@ import {CheckboxSingleControl, InputControl} from "@/components/react-hook-form"
 import {GenerateVariantsButton} from "./GenerateVariantsButton"
 import {ISpec} from "types/ordercloud/ISpec"
 import {flatten, uniq} from "lodash"
-import {ProductDetailFormFields} from "../form-meta"
+import {ProductDetailFormFields, validationSchema} from "../form-meta"
 
 interface VariantTableProps extends BoxProps {
   control: Control<ProductDetailFormFields>
+  validationSchema: any
   variants: IVariant[]
   specs: ISpec[]
   onGenerateVariants: (shouldOverwrite: boolean) => void
@@ -109,7 +110,7 @@ export function VariantTable({control, variants, specs, onGenerateVariants, ...b
               {variants.map((variant, index) => (
                 <Tr key={variant.ID}>
                   <Td>
-                    <InputControl name={`Variants.${index}.ID`} control={control} />
+                    <InputControl name={`Variants.${index}.ID`} control={control} validationSchema={validationSchema} />
                   </Td>
                   <Td>
                     <HStack>
@@ -133,7 +134,11 @@ export function VariantTable({control, variants, specs, onGenerateVariants, ...b
                     </HStack>
                   </Td>
                   <Td>
-                    <CheckboxSingleControl name={`Variants.${index}.Active`} control={control} />
+                    <CheckboxSingleControl
+                      name={`Variants.${index}.Active`}
+                      control={control}
+                      validationSchema={validationSchema}
+                    />
                   </Td>
                 </Tr>
               ))}

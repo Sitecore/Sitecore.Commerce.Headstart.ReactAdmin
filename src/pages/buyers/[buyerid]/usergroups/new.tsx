@@ -1,8 +1,7 @@
-import {CreateUpdateForm} from "../../../../components/usergroups"
-import {Box} from "@chakra-ui/react"
+import {UserGroupFormForm} from "../../../../components/usergroups"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
-import {SupplierUserGroups} from "ordercloud-javascript-sdk"
+import {UserGroups} from "ordercloud-javascript-sdk"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -12,7 +11,7 @@ export async function getServerSideProps() {
         title: "Create a new user group",
         metas: {
           hasBreadcrumbs: true,
-          hasSupplierContextSwitch: true
+          hasBuyerContextSwitch: true
         }
       },
       revalidate: 5 * 60
@@ -20,12 +19,12 @@ export async function getServerSideProps() {
   }
 }
 
-const ProtectedCreateUpdateForm = () => {
+const ProtectedNewUserGroupPage = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SupplierManager}>
-      <CreateUpdateForm ocService={SupplierUserGroups} />
+    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+      <UserGroupFormForm userGroupService={UserGroups} />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewUserGroupPage

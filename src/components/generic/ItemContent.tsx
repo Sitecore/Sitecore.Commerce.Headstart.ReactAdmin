@@ -1,6 +1,6 @@
-import { Avatar, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react"
+import {Avatar, Flex, Icon, Text, useColorModeValue} from "@chakra-ui/react"
 import React from "react"
-import { HiOutlineClock } from "react-icons/hi"
+import {HiOutlineClock} from "react-icons/hi"
 
 export function ItemContent(props) {
   const navbarIcon = useColorModeValue("gray.500", "gray.200")

@@ -7,17 +7,19 @@ import {ISpec} from "types/ordercloud/ISpec"
 
 interface VariantsTabProps {
   control: Control<ProductDetailFormFields>
+  validationSchema: any
   variants: IVariant[]
   specs: ISpec[]
   onGenerateVariants: (shouldOverwrite: boolean) => void
 }
-export function VariantsTab({control, variants, specs, onGenerateVariants}: VariantsTabProps) {
+export function VariantsTab({control, validationSchema, variants, specs, onGenerateVariants}: VariantsTabProps) {
   return (
     <>
       <SpecTable control={control} />
       <VariantTable
         onGenerateVariants={onGenerateVariants}
         control={control}
+        validationSchema={validationSchema}
         variants={variants}
         specs={specs}
         mt={6}

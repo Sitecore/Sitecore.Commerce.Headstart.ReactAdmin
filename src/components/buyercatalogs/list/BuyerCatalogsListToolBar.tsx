@@ -27,7 +27,7 @@ const BuyerCatalogsListToolbar: FC<BuyerCatalogsListToolbarProps> = ({
             {viewModeToggle}
           </Stack>
           <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/buyers/${buyerid}/catalogs/add`}>
+            <Link passHref href={`/buyers/${buyerid}/catalogs/new`}>
               <Button variant="solid" colorScheme="primary" as="a" mb={3}>
                 Create Catalog
               </Button>

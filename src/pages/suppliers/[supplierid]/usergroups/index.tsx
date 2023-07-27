@@ -1,5 +1,4 @@
-
-import { useRouter } from "hooks/useRouter"
+import {useRouter} from "hooks/useRouter"
 import SupplierUserGroupList from "@/components/supplierusergroups/list/SupplierUserGroupList"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */

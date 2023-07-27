@@ -26,6 +26,7 @@ export const SwitchControl: FC<SwitchControlProps> = (props: SwitchControlProps)
       control={control}
       label={label}
       isRequired={isRequired}
+      validationSchema={validationSchema}
       {...rest}
       display="grid"
       gridTemplateColumns={"1fr 1fr"}

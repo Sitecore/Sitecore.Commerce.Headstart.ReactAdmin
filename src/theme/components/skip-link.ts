@@ -1,2 +1,2 @@
 const SkipLink = {}
-export default SkipLink;
+export default SkipLink

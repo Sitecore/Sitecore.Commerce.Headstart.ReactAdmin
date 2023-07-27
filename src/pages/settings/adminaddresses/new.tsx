@@ -1,5 +1,4 @@
-import {Box} from "@chakra-ui/react"
-import {CreateUpdateForm} from "components/adminaddresses/CreateUpdateForm"
+import {AdminAddressForm} from "@/components/adminaddresses/AdminAddressForm"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 
@@ -18,12 +17,12 @@ export async function getStaticProps() {
   }
 }
 
-function ProtectedCreateUpdateForm() {
+function ProtectedNewAdminAddressPage() {
   return (
     <ProtectedContent hasAccess={appPermissions.SettingsManager}>
-      <CreateUpdateForm />
+      <AdminAddressForm />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewAdminAddressPage

@@ -1,2 +1,2 @@
-const Kbd = {};
-export default Kbd;
+const Kbd = {}
+export default Kbd

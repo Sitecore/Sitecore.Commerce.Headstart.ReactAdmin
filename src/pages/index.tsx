@@ -1,11 +1,11 @@
-import { Flex, Grid, useColorMode } from "@chakra-ui/react"
-import { NextSeo } from "next-seo"
+import {Flex, Grid, useColorMode} from "@chakra-ui/react"
+import {NextSeo} from "next-seo"
 import Login from "../components/account/Login"
-import { useRouter } from "hooks/useRouter"
+import {useRouter} from "hooks/useRouter"
 
 const Home = () => {
-  const { push } = useRouter()
-  const { colorMode, toggleColorMode } = useColorMode()
+  const {push} = useRouter()
+  const {colorMode, toggleColorMode} = useColorMode()
   const handleOnLoggedIn = () => {
     push("/dashboard")
   }

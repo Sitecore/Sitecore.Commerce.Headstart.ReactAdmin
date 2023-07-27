@@ -1,4 +1,4 @@
-import {CreateUpdateBuyer} from "@/components/buyers/CreateUpdateBuyer"
+import {PromotionForm} from "../../components/promotions/PromotionForm"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 
@@ -7,9 +7,10 @@ export async function getStaticProps() {
   return {
     props: {
       header: {
-        title: "Create a new buyer",
+        title: "Create a new promotion",
         metas: {
-          hasBreadcrumbs: true
+          hasBreadcrumbs: true,
+          hasBuyerContextSwitcher: false
         }
       },
       revalidate: 5 * 60
@@ -17,12 +18,12 @@ export async function getStaticProps() {
   }
 }
 
-function ProtectedCreateUpdateForm() {
+function ProtectedNewPromotionPage() {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <CreateUpdateBuyer />
+    <ProtectedContent hasAccess={appPermissions.OrderManager}>
+      <PromotionForm />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewPromotionPage

@@ -21,7 +21,14 @@ export const TextareaControl: FC<TextareaControlProps> = (props: TextareaControl
   const isRequired = isRequiredField(props.validationSchema, field.name)
 
   return (
-    <FormControl name={name} control={control} label={label} isRequired={isRequired} {...rest}>
+    <FormControl
+      name={name}
+      control={control}
+      label={label}
+      isRequired={isRequired}
+      validationSchema={validationSchema}
+      {...rest}
+    >
       <Textarea {...field} id={name} isDisabled={isSubmitting} {...textareaProps} />
     </FormControl>
   )

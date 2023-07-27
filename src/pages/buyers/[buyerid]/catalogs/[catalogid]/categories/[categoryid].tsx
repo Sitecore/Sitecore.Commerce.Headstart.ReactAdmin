@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "components/categories/CreateUpdateForm"
+import {CategoryForm} from "@/components/categories/CategoryForm"
 import {Box, Container, Skeleton} from "@chakra-ui/react"
 import {Categories, Category} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
@@ -36,7 +36,7 @@ const CategoryListItem = (props) => {
   return (
     <>
       {category?.ID ? (
-        <CreateUpdateForm category={category} />
+        <CategoryForm category={category} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />

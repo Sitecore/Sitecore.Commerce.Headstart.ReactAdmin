@@ -38,7 +38,7 @@ const PromotionListToolbar: FC<PromotionListToolbarProps> = ({
             {viewModeToggle}
           </Stack>
           <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href="promotions/add">
+            <Link passHref href="promotions/new">
               <Button variant="solid" colorScheme="primary" as="a" mb={3}>
                 Create Promotion
               </Button>

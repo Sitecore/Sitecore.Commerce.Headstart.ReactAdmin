@@ -1,6 +1,6 @@
 import {Checkbox, CheckboxProps} from "@chakra-ui/react"
 import React, {FC} from "react"
-import {Control, FieldValues, useController} from "react-hook-form"
+import {useController} from "react-hook-form"
 import {isRequiredField} from "utils"
 
 type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U

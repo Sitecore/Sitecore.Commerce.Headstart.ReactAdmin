@@ -1,4 +1,4 @@
-import { OrderStatus } from "@/components/orders/OrderStatus"
+import {OrderStatus} from "@/components/orders/OrderStatus"
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {Button, HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Text} from "@chakra-ui/react"
 import {FC} from "react"

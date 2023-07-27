@@ -1,9 +1,7 @@
-import * as Yup from "yup"
 import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
 import {InputControl} from "components/react-hook-form"
-import {ProductFacet, ProductFacets} from "ordercloud-javascript-sdk"
+import {ProductFacets} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
-import {useCreateUpdateForm} from "hooks/useCreateUpdateForm"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useForm} from "react-hook-form"
@@ -11,43 +9,65 @@ import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
 import {TbChevronLeft} from "react-icons/tb"
 import ChipInputControl from "../react-hook-form/chip-input-control"
+import {useEffect, useState} from "react"
+import {useErrorToast, useSuccessToast} from "hooks/useToast"
+import {array, object, string} from "yup"
+import {getObjectDiff} from "utils"
 
-export {CreateUpdateForm}
-
-interface CreateUpdateFormProps {
-  productfacet?: ProductFacet
+interface ProductFacetFormProps {
+  productFacet?: IProductFacet
 }
 
-function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
+export function ProductFacetForm({productFacet}: ProductFacetFormProps) {
+  const [currentProductFacet, setCurrentProductFacet] = useState(productFacet)
+  const [isCreating, setIsCreating] = useState(!productFacet?.ID)
   const router = useRouter()
-  const formShape = {
-    Name: Yup.string().required("Name is required"),
-    xp_Options: Yup.array().min(1, "Must have at least one option").required("Options are required")
-  }
-  const {isCreating, successToast, errorToast, validationSchema, defaultValues, onSubmit} =
-    useCreateUpdateForm<ProductFacet>(productfacet, formShape, createProductFacet, updateProductFacet)
+  const successToast = useSuccessToast()
+  const errorToast = useErrorToast()
 
-  const {
-    handleSubmit,
-    control,
-    formState: {isSubmitting},
-    reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues, mode: "onBlur"})
+  useEffect(() => {
+    setIsCreating(!currentProductFacet?.ID)
+  }, [currentProductFacet?.ID])
 
-  async function createProductFacet(fields: ProductFacet) {
-    await ProductFacets.Create<IProductFacet>(fields)
+  const defaultValues: Partial<IProductFacet> = {}
+
+  const validationSchema = object().shape({
+    Name: string().required("Name is required"),
+    xp: object().shape({
+      Options: array().min(1, "Must have at least one option").required("Options are required")
+    })
+  })
+
+  const {handleSubmit, control, reset} = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: productFacet || defaultValues,
+    mode: "onBlur"
+  })
+
+  async function createProductFacet(fields: IProductFacet) {
+    const createdProductFacet = await ProductFacets.Create<IProductFacet>(fields)
     successToast({
       description: "Product Facet created successfully."
     })
-    router.push(".")
+    router.push(`/settings/productfacets/${createdProductFacet.ID}`)
   }
 
-  async function updateProductFacet(fields: ProductFacet) {
-    await ProductFacets.Save<IProductFacet>(fields.ID, fields)
+  async function updateProductFacet(fields: IProductFacet) {
+    const diff = getObjectDiff(currentProductFacet, fields)
+    const updatedProductFacet = await ProductFacets.Patch<IProductFacet>(fields.ID, diff)
     successToast({
       description: "Product Facet updated successfully."
     })
-    router.push(".")
+    setCurrentProductFacet(updatedProductFacet)
+    reset(updatedProductFacet)
+  }
+
+  async function onSubmit(fields: IProductFacet) {
+    if (isCreating) {
+      await createProductFacet(fields)
+    } else {
+      await updateProductFacet(fields)
+    }
   }
 
   async function deleteProductFacet() {
@@ -68,22 +88,11 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
-          <Button
-            onClick={() => router.push("/settings/productfacets")}
-            variant="outline"
-            isLoading={isSubmitting}
-            leftIcon={<TbChevronLeft />}
-          >
+          <Button onClick={() => router.push("/settings/productfacets")} variant="outline" leftIcon={<TbChevronLeft />}>
             Back
           </Button>
           <ButtonGroup>
-            <Button
-              onClick={() => deleteProductFacet()}
-              variant="outline"
-              colorScheme={"danger"}
-              isLoading={isSubmitting}
-              hidden={isCreating}
-            >
+            <Button onClick={() => deleteProductFacet()} variant="outline" colorScheme={"danger"} hidden={isCreating}>
               Delete
             </Button>
             <ResetButton control={control} reset={reset} variant="outline">
@@ -111,7 +120,7 @@ function CreateUpdateForm({productfacet}: CreateUpdateFormProps) {
           />
           <ChipInputControl
             maxW="sm"
-            name="xp_Options"
+            name="xp.Options"
             label="Options"
             helperText="Create options for this facet group"
             inputProps={{placeholder: "Add a facet option..."}}

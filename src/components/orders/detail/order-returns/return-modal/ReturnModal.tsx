@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react"
 import {FormEvent, PropsWithChildren, useEffect, useState} from "react"
 import {ILineItem} from "types/ordercloud/ILineItem"
-import {emptyStringToNull, getObjectDiff, priceHelper, withDefaultValuesFallback} from "utils"
+import {emptyStringToNull, getObjectDiff, priceHelper} from "utils"
 import {IOrder} from "types/ordercloud/IOrder"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 import {array, number, object, string} from "yup"
@@ -130,10 +130,10 @@ export function ReturnModal({
     control,
     reset,
     formState: {errors}
-  } = useForm({
+  } = useForm<any>({
     mode: "onBlur",
     resolver: yupResolver(validationSchema),
-    defaultValues: currentOrderReturn ? withDefaultValuesFallback(currentOrderReturn, defaultValues) : defaultValues
+    defaultValues: currentOrderReturn || defaultValues
   })
   const itemsToReturnErrors = get(errors, "ItemsToReturn") as any
   const returnType = useWatch({name: "ReturnType", control})
@@ -204,7 +204,7 @@ export function ReturnModal({
           <ModalCloseButton />
           <ModalBody>
             <VStack gap={3}>
-              <RadioGroupControl name="ReturnType" control={control}>
+              <RadioGroupControl name="ReturnType" control={control} validationSchema={validationSchema}>
                 <Radio value="ReturnItems">Return Items</Radio>
                 <Radio value="CsRefund">Customer service Refund</Radio>
               </RadioGroupControl>
@@ -214,6 +214,7 @@ export function ReturnModal({
                   name="RefundAmount"
                   label="Refund Amount"
                   control={control}
+                  validationSchema={validationSchema}
                   inputProps={{type: "number"}}
                   leftAddon="$"
                 />
@@ -221,13 +222,14 @@ export function ReturnModal({
               {returnType === "ReturnItems" && (
                 <ReturnItemsTable
                   control={control}
+                  validationSchema={validationSchema}
                   lineItems={lineItems}
                   allOrderReturns={allOrderReturns}
                   existingReturn={currentOrderReturn}
                 />
               )}
 
-              <TextareaControl name="Comments" label="Comments" control={control} />
+              <TextareaControl name="Comments" label="Comments" control={control} validationSchema={validationSchema} />
             </VStack>
           </ModalBody>
           <ModalFooter>

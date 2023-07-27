@@ -1,6 +1,6 @@
 import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
 import {InputControl, SelectControl, SwitchControl} from "components/react-hook-form"
-import {Buyer, Buyers, Catalog, Catalogs} from "ordercloud-javascript-sdk"
+import {Buyers, Catalogs} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {useEffect, useState} from "react"
 import {ICatalog} from "types/ordercloud/ICatalog"
@@ -14,28 +14,22 @@ import {boolean, number, object, string} from "yup"
 import {useSuccessToast} from "hooks/useToast"
 import {getObjectDiff} from "utils"
 
-interface CreateUpdateBuyerProps {
-  initialBuyer?: IBuyer
+interface BuyerFormProps {
+  buyer?: IBuyer
 }
-export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
-  const [buyer, setBuyer] = useState(initialBuyer)
+export function BuyerForm({buyer}: BuyerFormProps) {
+  const [currentBuyer, setCurrentBuyer] = useState(buyer)
   const [isCreating, setIsCreating] = useState(!buyer?.ID)
   const router = useRouter()
   const successToast = useSuccessToast()
 
   useEffect(() => {
-    setIsCreating(!buyer?.ID)
-  }, [buyer?.ID])
+    setIsCreating(!currentBuyer?.ID)
+  }, [currentBuyer?.ID])
 
-  const defaultValues = {
-    Active: true,
-    Name: "",
-    DefaultCatalogID: "",
-    xp: {
-      MarkupPercent: 0,
-      URL: ""
-    }
-  } as any
+  const defaultValues: Partial<IBuyer> = {
+    Active: true
+  }
 
   const validationSchema = object().shape({
     Active: boolean(),
@@ -47,14 +41,13 @@ export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
     })
   })
 
-  const {
-    handleSubmit,
-    control,
-    formState: {isSubmitting},
-    reset
-  } = useForm({resolver: yupResolver(validationSchema), defaultValues: buyer || defaultValues, mode: "onBlur"})
+  const {handleSubmit, control, reset} = useForm<IBuyer>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: buyer || defaultValues,
+    mode: "onBlur"
+  })
 
-  const [catalogs, setCatalogs] = useState([] as Catalog[])
+  const [catalogs, setCatalogs] = useState([] as ICatalog[])
 
   useEffect(() => {
     initCatalogsData()
@@ -65,7 +58,7 @@ export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
     setCatalogs(response?.Items)
   }
 
-  async function createBuyer(fields: Buyer) {
+  async function createBuyer(fields: IBuyer) {
     const createdBuyer = await Buyers?.Create<IBuyer>(fields)
     successToast({
       description: "Buyer created successfully."
@@ -73,21 +66,21 @@ export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
     router.push(`/buyers/${createdBuyer.ID}`)
   }
 
-  async function updateBuyer(fields: Buyer) {
-    const diff = getObjectDiff(buyer, fields)
-    const updatedBuyer = await Buyers.Patch<IBuyer>(buyer.ID, diff)
+  async function updateBuyer(fields: IBuyer) {
+    const diff = getObjectDiff(currentBuyer, fields)
+    const updatedBuyer = await Buyers.Patch<IBuyer>(currentBuyer.ID, diff)
     successToast({
       description: "Buyer updated successfully."
     })
-    setBuyer(updatedBuyer)
+    setCurrentBuyer(updatedBuyer)
     reset(updatedBuyer)
   }
 
-  async function onSubmit(buyer: IBuyer) {
+  async function onSubmit(fields: IBuyer) {
     if (isCreating) {
-      await createBuyer(buyer)
+      await createBuyer(fields)
     } else {
-      await updateBuyer(buyer)
+      await updateBuyer(fields)
     }
   }
 
@@ -95,12 +88,7 @@ export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
-          <Button
-            onClick={() => router.push("/buyers")}
-            variant="outline"
-            isLoading={isSubmitting}
-            leftIcon={<TbChevronLeft />}
-          >
+          <Button onClick={() => router.push("/buyers")} variant="outline" leftIcon={<TbChevronLeft />}>
             Back
           </Button>
           <ButtonGroup>
@@ -113,8 +101,8 @@ export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
           </ButtonGroup>
         </CardHeader>
         <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
-          <SwitchControl name="Active" label="Active" control={control} />
-          <InputControl name="Name" label="Buyer Name" control={control} isRequired />
+          <SwitchControl name="Active" label="Active" control={control} validationSchema={validationSchema} />
+          <InputControl name="Name" label="Buyer Name" control={control} validationSchema={validationSchema} />
           <SelectControl
             name="DefaultCatalogID"
             label="Default Catalog"
@@ -123,9 +111,18 @@ export function CreateUpdateBuyer({initialBuyer}: CreateUpdateBuyerProps) {
               options: catalogs.map(({ID, Name}) => ({value: ID, label: Name}))
             }}
             control={control}
+            validationSchema={validationSchema}
           />
 
-          {!isCreating && <InputControl name="DateCreated" label="Date Created" control={control} isReadOnly />}
+          {!isCreating && (
+            <InputControl
+              name="DateCreated"
+              label="Date Created"
+              control={control}
+              validationSchema={validationSchema}
+              isReadOnly
+            />
+          )}
         </CardBody>
       </Card>
     </Container>

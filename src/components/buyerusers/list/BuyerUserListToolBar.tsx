@@ -41,7 +41,7 @@ const BuyerUserListToolbar: FC<BuyerUserListToolbarProps> = ({
             {viewModeToggle}
           </Stack>
           <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/buyers/${buyerid}/users/add`}>
+            <Link passHref href={`/buyers/${buyerid}/users/new`}>
               <Button variant="solid" colorScheme="primary" as="a" mb={3}>
                 Create User
               </Button>

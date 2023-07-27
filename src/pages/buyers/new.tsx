@@ -1,5 +1,4 @@
-import {Box} from "@chakra-ui/react"
-import {CreateUpdateForm} from "../../components/promotions/CreateUpdateForm"
+import {BuyerForm} from "@/components/buyers/BuyerForm"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
 
@@ -8,10 +7,9 @@ export async function getStaticProps() {
   return {
     props: {
       header: {
-        title: "Create a new promotion",
+        title: "Create a new buyer",
         metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitcher: false
+          hasBreadcrumbs: true
         }
       },
       revalidate: 5 * 60
@@ -19,12 +17,12 @@ export async function getStaticProps() {
   }
 }
 
-function ProtectedCreateUpdateForm() {
+function ProtectedNewBuyerUserPage() {
   return (
-    <ProtectedContent hasAccess={appPermissions.OrderManager}>
-      <CreateUpdateForm />
+    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+      <BuyerForm />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewBuyerUserPage

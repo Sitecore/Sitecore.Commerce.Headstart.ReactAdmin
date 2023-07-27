@@ -25,12 +25,19 @@ import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
 
 interface ReturnItemsTableProps {
   control: Control<FieldValues, any>
+  validationSchema: any
   lineItems: ILineItem[]
   allOrderReturns: IOrderReturn[]
   existingReturn: IOrderReturn
 }
 
-export function ReturnItemsTable({control, lineItems, allOrderReturns, existingReturn}: ReturnItemsTableProps) {
+export function ReturnItemsTable({
+  control,
+  validationSchema,
+  lineItems,
+  allOrderReturns,
+  existingReturn
+}: ReturnItemsTableProps) {
   const [isMobile] = useMediaQuery(`(max-width: ${theme.breakpoints["md"]})`, {
     ssr: true,
     fallback: false // return false on the server, and re-evaluate on the client side
@@ -100,6 +107,7 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
                   </Hide>
                   <SelectControl
                     control={control}
+                    validationSchema={validationSchema}
                     name={`ItemsToReturn.${index}.Quantity`}
                     selectProps={{
                       options: buildQuantityOptions(lineItem)
@@ -115,6 +123,7 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
                   <InputControl
                     name={`ItemsToReturn.${index}.RefundAmount`}
                     control={control}
+                    validationSchema={validationSchema}
                     inputProps={{type: "number"}}
                     leftAddon="$"
                   />
@@ -125,7 +134,11 @@ export function ReturnItemsTable({control, lineItems, allOrderReturns, existingR
                   <Hide above="md">
                     <FormLabel fontSize="sm">Comments</FormLabel>
                   </Hide>
-                  <InputControl name={`ItemsToReturn.${index}.Comments`} control={control} />
+                  <InputControl
+                    name={`ItemsToReturn.${index}.Comments`}
+                    control={control}
+                    validationSchema={validationSchema}
+                  />
                 </FormControl>
                 <Hide above="md">
                   <Divider mt={8} />

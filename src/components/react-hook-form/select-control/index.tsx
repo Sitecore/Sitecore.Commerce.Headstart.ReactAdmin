@@ -81,7 +81,7 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
 
   return (
     <>
-      <FormControl name={name} control={control} label={label} isRequired={isRequired} {...rest}>
+      <FormControl name={name} control={control} label={label} isRequired={isRequired} validationSchema={validationSchema} {...rest}>
         <Select
           {...field}
           {...selectProps}

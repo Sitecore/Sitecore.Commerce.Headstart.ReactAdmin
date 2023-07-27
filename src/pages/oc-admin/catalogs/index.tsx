@@ -94,7 +94,7 @@ const CatalogsList = () => {
     <>
       <HStack justifyContent="space-between" w="100%" mb={5}>
         <Button
-          onClick={() => router.push(`/buyers/${router.query.buyerid}/usergroups/add`)}
+          onClick={() => router.push(`/buyers/${router.query.buyerid}/usergroups/new`)}
           variant="solid"
           colorScheme="primary"
           leftIcon={<AddIcon />}

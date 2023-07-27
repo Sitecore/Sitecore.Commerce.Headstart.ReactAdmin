@@ -5,7 +5,7 @@ import {yupResolver} from "@hookform/resolvers/yup"
 import {FormEvent} from "react"
 import {useForm} from "react-hook-form"
 import {IShipment} from "types/ordercloud/IShipment"
-import {withDefaultValuesFallback, makeNestedObject, emptyStringToNull} from "utils"
+import {emptyStringToNull} from "utils"
 import {number, object, string} from "yup"
 
 interface ShipmentDetailsModalContentProps {
@@ -22,16 +22,9 @@ export function ShipmentDetailsModalContent({
   onCancelModal,
   buyerId
 }: ShipmentDetailsModalContentProps) {
-  const defaultValues = {
-    TrackingNumber: "",
-    Shipper: "",
-    Cost: "",
-    DateShipped: "",
+  const defaultValues: Partial<IShipment> = {
     BuyerID: buyerId, // this should not be required, and is a bug in the API
-    xp: {
-      ShippingMethod: "",
-      Comments: ""
-    }
+    xp: {}
   }
   const validationSchema = object().shape({
     TrackingNumber: string()
@@ -46,10 +39,10 @@ export function ShipmentDetailsModalContent({
     })
   })
 
-  const {handleSubmit, control, reset} = useForm({
+  const {handleSubmit, control, reset} = useForm<IShipment>({
     mode: "onBlur",
     resolver: yupResolver(validationSchema),
-    defaultValues: shipment ? withDefaultValuesFallback(shipment, defaultValues) : makeNestedObject(defaultValues)
+    defaultValues: shipment || defaultValues
   })
 
   const onSubmit = (data: IShipment) => {

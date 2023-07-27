@@ -1,2 +1,2 @@
-const Drawer = {};
-export default Drawer;
+const Drawer = {}
+export default Drawer

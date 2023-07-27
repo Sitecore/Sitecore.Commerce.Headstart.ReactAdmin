@@ -22,7 +22,7 @@ export const RadioGroupControl: FC<RadioGroupControlProps> = (props: RadioGroupC
   const isRequired = isRequiredField(props.validationSchema, field.name)
 
   return (
-    <FormControl name={name} control={control} label={label} isRequired={isRequired} {...rest}>
+    <FormControl name={name} control={control} label={label} isRequired={isRequired} validationSchema={validationSchema} {...rest}>
       <RadioGroup colorScheme="primary" {...field} isDisabled={isSubmitting} {...radioGroupProps}>
         <Stack direction="row" {...stackProps}>
           {children}

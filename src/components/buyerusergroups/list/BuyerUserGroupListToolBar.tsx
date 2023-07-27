@@ -37,7 +37,7 @@ const BuyerUserGroupListToolbar: FC<BuyerUserGroupListToolbarProps> = ({
             {viewModeToggle}
           </Stack>
           <Box order={[0, 0, 0, 1]}>
-            <Link passHref href={`/buyers/${buyerid}/usergroups/add`}>
+            <Link passHref href={`/buyers/${buyerid}/usergroups/new`}>
               <Button variant="solid" colorScheme="primary" as="a">
                 Create User Group
               </Button>

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "../../../../components/users/CreateUpdateForm"
-import {Box, Container, Skeleton} from "@chakra-ui/react"
+import {UserForm} from "../../../../components/users/UserForm"
+import {Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {SupplierUsers, User} from "ordercloud-javascript-sdk"
 import {appPermissions} from "constants/app-permissions.config"
@@ -41,7 +41,7 @@ const UserListItem = () => {
   return (
     <>
       {user?.ID ? (
-        <CreateUpdateForm user={user} ocService={SupplierUsers} />
+        <UserForm user={user} userService={SupplierUsers} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />

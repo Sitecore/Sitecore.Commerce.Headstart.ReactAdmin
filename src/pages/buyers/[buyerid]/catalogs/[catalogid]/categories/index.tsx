@@ -16,7 +16,7 @@ import {Categories, Category} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useState} from "react"
 
 import Card from "components/card/Card"
-import {CreateUpdateForm} from "components/categories"
+import {CategoryForm} from "components/categories"
 import ExportToCsv from "components/demo/ExportToCsv"
 import {ICategory} from "types/ordercloud/ICategoryXp"
 import React from "react"
@@ -132,7 +132,7 @@ const CategoriesList = (props) => {
             </GridItem>
             <GridItem pl="2" area={"main"}>
               {selectedNode ? (
-                <CreateUpdateForm
+                <CategoryForm
                   category={selectedNode.data}
                   onSuccess={onCategoryCreateSuccess}
                   headerComponent={
@@ -142,7 +142,7 @@ const CategoriesList = (props) => {
                   }
                 />
               ) : (
-                <CreateUpdateForm
+                <CategoryForm
                   onSuccess={onCategoryCreateSuccess}
                   category={{Name: "", Description: "", Active: false, ParentID: ""}}
                   headerComponent={
@@ -163,7 +163,7 @@ const CategoriesList = (props) => {
           <ModalHeader>Create category</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <CreateUpdateForm parentId={parentIdToCreate} onSuccess={onCategoryCreateSuccess} />
+            <CategoryForm parentId={parentIdToCreate} onSuccess={onCategoryCreateSuccess} />
           </ModalBody>
         </ModalContent>
       </Modal>

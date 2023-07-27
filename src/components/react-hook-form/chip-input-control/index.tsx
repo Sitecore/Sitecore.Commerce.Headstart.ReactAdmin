@@ -1,7 +1,6 @@
 import {Input, InputProps, InputGroup, InputRightElement, Button, ButtonGroup} from "@chakra-ui/react"
 import React, {FC, useState, KeyboardEvent} from "react"
 import {useController} from "react-hook-form"
-import {isRequiredField} from "utils"
 import {BaseProps, FormControl} from "../form-control"
 import {TbX} from "react-icons/tb"
 
@@ -19,7 +18,6 @@ export const ChipInputControl: FC<ChipInputControlProps> = (props: ChipInputCont
     control
   })
   const [inputValue, setInputValue] = useState("")
-  const isRequired = isRequiredField(props.validationSchema, field.name)
 
   const handleAdd = () => {
     if (Array.isArray(field.value)) {
@@ -44,7 +42,7 @@ export const ChipInputControl: FC<ChipInputControlProps> = (props: ChipInputCont
 
   return (
     <>
-      <FormControl name={name} control={control} label={label} {...rest} isRequired={isRequired}>
+      <FormControl name={name} control={control} label={label} {...rest} validationSchema={validationSchema}>
         <InputGroup>
           <Input
             value={inputValue}

@@ -38,7 +38,7 @@ const SupplierUserGroupListToolbar: FC<SupplierUserGroupListToolbarProps> = ({
             {viewModeToggle}
           </Stack>
           <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/suppliers/${supplierid}/usergroups/add`}>
+            <Link passHref href={`/suppliers/${supplierid}/usergroups/new`}>
               <Button variant="solid" colorScheme="primary" as="a" mb={3}>
                 Create User Group
               </Button>

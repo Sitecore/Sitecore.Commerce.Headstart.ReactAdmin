@@ -1,17 +1,17 @@
-import {CreateUpdateForm} from "components/categories"
-import {Box} from "@chakra-ui/react"
+import {UserForm} from "../../../../components/users"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
+import {SupplierUsers} from "ordercloud-javascript-sdk"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
   return {
     props: {
       header: {
-        title: "Create a new category",
+        title: "Create a new user",
         metas: {
           hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
+          hasSupplierContextSwitch: true
         }
       },
       revalidate: 5 * 60
@@ -19,14 +19,12 @@ export async function getServerSideProps() {
   }
 }
 
-const ProtectedCreateUpdateForm = () => {
+const ProtectedNewSupplierUser = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
-      <Box pl="GlobalPadding">
-        <CreateUpdateForm />
-      </Box>
+    <ProtectedContent hasAccess={appPermissions.SupplierManager}>
+      <UserForm userService={SupplierUsers} />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewSupplierUser

@@ -155,6 +155,7 @@ export function AssignPriceModalContent({
           name="BuyerAssignments"
           label="Assign to buyer organizations"
           control={control}
+          validationSchema={validationSchema}
           maxWidth="50%"
           selectProps={{
             isMulti: true,
@@ -257,7 +258,13 @@ function UserGroupSelect({control, label, validationSchema}: UserGroupSelectProp
 
   return (
     <>
-      <FormControl name={inputName} control={control} label={label} isRequired={isRequired} {...rest}>
+      <FormControl
+        name={inputName}
+        control={control}
+        label={label}
+        validationSchema={validationSchema}
+        {...rest}
+      >
         <HStack>
           <AsyncSelect
             chakraStyles={{container: (baseStyles) => ({...baseStyles, width: "100%"})}}

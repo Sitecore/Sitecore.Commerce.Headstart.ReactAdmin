@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "components/supplieraddresses"
-import {Box, Container, Skeleton} from "@chakra-ui/react"
+import {SupplierAddressForm} from "components/supplieraddresses"
+import {Container, Skeleton} from "@chakra-ui/react"
 import {Address, SupplierAddresses} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "constants/app-permissions.config"
@@ -40,7 +40,7 @@ const SupplierAddressListItem = () => {
   return (
     <>
       {supplierAddress?.ID ? (
-        <CreateUpdateForm address={supplierAddress} />
+        <SupplierAddressForm address={supplierAddress} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />

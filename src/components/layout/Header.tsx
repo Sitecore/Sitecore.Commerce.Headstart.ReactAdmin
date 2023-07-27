@@ -1,7 +1,7 @@
 import {HStack, useColorModeValue, Container, Show} from "@chakra-ui/react"
 import AcountNavigation from "components/navigation/AcountNavigation"
-import {MyCommerceLogo} from "../branding/MyCommerceLogo"
 import {NavMenuDrawer} from "../navigation/NavMenuDrawer"
+import {HeaderLogo} from "../branding/HeaderLogo"
 
 const Header = () => {
   return (
@@ -20,7 +20,7 @@ const Header = () => {
         <Show below="sm">
           <NavMenuDrawer />
         </Show>
-        <MyCommerceLogo width={["150px", "auto"]} />
+        <HeaderLogo width={["150px", "auto"]} />
         <AcountNavigation />
       </HStack>
     </Container>

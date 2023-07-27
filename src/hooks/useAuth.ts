@@ -1,4 +1,4 @@
-import ocConfig from "constants/ordercloud-config"
+import ocConfig from "config/ordercloud-config"
 import {AuthContext} from "context/auth-context"
 import {useRouter} from "hooks/useRouter"
 import {Auth, Me} from "ordercloud-javascript-sdk"

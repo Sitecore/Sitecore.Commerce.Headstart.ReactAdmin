@@ -1,5 +1,5 @@
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useOrderReturnDetail} from "hooks/useOrderReturnDetail"
 import {OrderReturnDetail} from "@/components/returns/detail/OrderReturnDetail"
 import {OrderReturnDetailSkeleton} from "@/components/returns/detail/OrderReturnDetailSkeleton"

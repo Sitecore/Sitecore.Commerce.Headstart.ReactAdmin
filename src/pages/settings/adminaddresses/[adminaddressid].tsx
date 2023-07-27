@@ -3,7 +3,7 @@ import {AdminAddressForm} from "components/adminaddresses"
 import {Container, Skeleton} from "@chakra-ui/react"
 import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 

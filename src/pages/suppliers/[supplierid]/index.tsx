@@ -3,7 +3,7 @@ import {SupplierForm} from "components/suppliers"
 import {Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {Supplier, Suppliers} from "ordercloud-javascript-sdk"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ISupplier} from "types/ordercloud/ISupplier"
 

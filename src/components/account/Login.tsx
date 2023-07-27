@@ -18,7 +18,7 @@ import {ChangeEvent, FormEvent, FunctionComponent, useCallback, useState} from "
 
 import {useAuth} from "hooks/useAuth"
 import schraTheme from "theme/theme"
-import HeaderLogo from "../branding/HeaderLogo"
+import {HeaderLogo} from "../branding/HeaderLogo"
 
 interface OcLoginFormProps {
   title?: string

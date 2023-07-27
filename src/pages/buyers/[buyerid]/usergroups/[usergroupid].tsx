@@ -5,7 +5,7 @@ import {Box, Container, Skeleton} from "@chakra-ui/react"
 import {UserGroupFormForm} from "../../../../components/usergroups/UserGroupForm"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */

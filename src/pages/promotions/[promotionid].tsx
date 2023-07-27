@@ -3,7 +3,7 @@ import {PromotionForm} from "../../components/promotions/PromotionForm"
 import {Box, Container, Skeleton} from "@chakra-ui/react"
 import {Promotion, Promotions} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IPromotion} from "types/ordercloud/IPromotion"
 

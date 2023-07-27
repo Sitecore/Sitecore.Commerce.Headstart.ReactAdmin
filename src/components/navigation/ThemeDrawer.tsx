@@ -15,7 +15,7 @@ import {
   useColorModeValue,
   useModalContext
 } from "@chakra-ui/react"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useContext, useState} from "react"
 import Cookies from "universal-cookie"
 import ProtectedContent from "../auth/ProtectedContent"

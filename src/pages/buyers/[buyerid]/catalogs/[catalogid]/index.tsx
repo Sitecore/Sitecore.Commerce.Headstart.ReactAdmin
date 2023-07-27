@@ -4,7 +4,7 @@ import {useEffect, useState} from "react"
 import {CatalogForm} from "@/components/catalogs/CatalogForm"
 import {ICatalog} from "types/ordercloud/ICatalog"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {Container, Skeleton} from "@chakra-ui/react"
 

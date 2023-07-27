@@ -36,8 +36,6 @@ export interface DataTableColumn<T> {
 
 export type DataTableRowActionsCallback<T> = (data: T) => ReactElement
 
-export type ColumnIndex = number
-
 export interface IDataTable<T> {
   columns?: DataTableColumn<T>[]
   responsive?: ResponsiveObject<DataTableColumn<T>[]>

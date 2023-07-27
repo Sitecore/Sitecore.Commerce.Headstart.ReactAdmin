@@ -3,7 +3,7 @@ import {UserGroupFormForm} from "../../../../components/usergroups/UserGroupForm
 import {Box, Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {SupplierUserGroups, UserGroup} from "ordercloud-javascript-sdk"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
 

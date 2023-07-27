@@ -3,7 +3,7 @@ import {AdminUserForm} from "components/adminusers"
 import {Container, Skeleton} from "@chakra-ui/react"
 import {AdminUserGroups, AdminUsers, User} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
 

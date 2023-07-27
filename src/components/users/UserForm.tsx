@@ -118,7 +118,7 @@ export function UserForm({user, userService}: UserFormProps) {
           </CardBody>
         </Card>
         {!isCreating && user?.AvailableRoles && (
-          <Card variant="primaryCard">
+          <Card>
             <CardHeader>
               <Heading as="h5" size="md">
                 Available Roles

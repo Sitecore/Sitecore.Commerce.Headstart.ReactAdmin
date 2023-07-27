@@ -3,7 +3,7 @@ import {CategoryForm} from "@/components/categories/CategoryForm"
 import {Box, Container, Skeleton} from "@chakra-ui/react"
 import {Categories, Category} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ICategory} from "types/ordercloud/ICategoryXp"
 

@@ -16,14 +16,14 @@ import {
   useColorModeValue,
   useDisclosure
 } from "@chakra-ui/react"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useAuth} from "hooks/useAuth"
 import React, {useState} from "react"
 import {TbDoorExit, TbInbox, TbPalette, TbUserCircle} from "react-icons/tb"
 import Cookies from "universal-cookie"
 import ProtectedContent from "../auth/ProtectedContent"
-import {ItemContent} from "../generic/ItemContent"
 import {ThemeDrawer} from "./ThemeDrawer"
+import {ItemContent} from "./ItemContent"
 
 const MobileNavigation = () => {
   const {Logout} = useAuth()

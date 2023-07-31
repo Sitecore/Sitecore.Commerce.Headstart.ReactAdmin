@@ -8,22 +8,47 @@
  * 3. Create a strongly typed interface for the environment variables
  */
 
-const getEnvironmentVariable = (environmentVariable: string, defaultValue?: string): string => {
-  const unvalidatedEnvironmentVariable = process.env[`NEXT_PUBLIC_${environmentVariable}`]
-  if (!unvalidatedEnvironmentVariable && !defaultValue) {
-    throw new Error(`Couldn't find environment variable: NEXT_PUBLIC_${environmentVariable}`)
-  } else if (!unvalidatedEnvironmentVariable) {
+// We can't use a dynamic key for process.env because it's not supported by NextJS due to how webpack's DefinePlugin works
+// So we must pass along both the name, and the value separately
+const getEnvironmentVariable = (name: string, value?: string, defaultValue?: string): string => {
+  if (!value && !defaultValue) {
+    throw new Error(`Couldn't find environment variable: ${name}`)
+  } else if (!value) {
     return defaultValue
   } else {
-    return unvalidatedEnvironmentVariable
+    return value
   }
 }
 
 export const appSettings = {
-  appname: getEnvironmentVariable("APP_NAME", "Sitecore.Commerce.Headstart.ReactAdmin"),
-  clientId: getEnvironmentVariable("OC_CLIENT_ID", "4A9F0BAC-EC1D-4711-B01F-1A394F72F2B6"),
-  orderCloudApiUrl: getEnvironmentVariable("OC_API_URL", "https://sandboxapi.ordercloud.io"),
-  marketplaceId: getEnvironmentVariable("OC_MARKETPLACE_ID", "SitecoreCommerce"),
-  marketplaceName: getEnvironmentVariable("OC_MARKETPLACE_NAME", "Sitecore Commerce"),
-  useRealDashboardData: getEnvironmentVariable("USE_REAL_DASHBOARD_DATA", "false")
+  appname: getEnvironmentVariable(
+    "NEXT_PUBLIC_APP_NAME",
+    process.env.NEXT_PUBLIC_APP_NAME,
+    "Sitecore.Commerce.Headstart.ReactAdmin"
+  ),
+  clientId: getEnvironmentVariable(
+    "NEXT_PUBLIC_OC_CLIENT_ID",
+    process.env.NEXT_PUBLIC_OC_CLIENT_ID,
+    "4A9F0BAC-EC1D-4711-B01F-1A394F72F2B6"
+  ),
+  orderCloudApiUrl: getEnvironmentVariable(
+    "NEXT_PUBLIC_OC_API_URL",
+    process.env.NEXT_PUBLIC_OC_API_URL,
+    "https://sandboxapi.ordercloud.io"
+  ),
+  marketplaceId: getEnvironmentVariable(
+    "NEXT_PUBLIC_OC_MARKETPLACE_ID",
+    process.env.NEXT_PUBLIC_OC_MARKETPLACE_ID,
+    "SitecoreCommerce"
+  ),
+  marketplaceName: getEnvironmentVariable(
+    "NEXT_PUBLIC_OC_MARKETPLACE_NAME",
+    process.env.NEXT_PUBLIC_OC_MARKETPLACE_NAME,
+    "Sitecore Commerce"
+  ),
+  useRealDashboardData: getEnvironmentVariable(
+    "NEXT_PUBLIC_USE_REAL_DASHBOARD_DATA",
+    process.env.NEXT_PUBLIC_USE_REAL_DASHBOARD_DATA,
+    "false"
+  )
 }

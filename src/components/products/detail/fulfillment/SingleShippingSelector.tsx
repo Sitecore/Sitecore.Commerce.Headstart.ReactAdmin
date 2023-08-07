@@ -12,11 +12,13 @@ interface SingleShippingSelectorProps extends Omit<SelectControlProps, "name"> {
   control: Control<any>
   validationSchema: any
   showLabels?: boolean
+  existingAddressIds?: string[]
 }
 export function SingleShippingSelector({
   control,
   validationSchema,
   showLabels = true,
+  existingAddressIds,
   ...containerProps
 }: SingleShippingSelectorProps) {
   const ownerId = useWatch({name: "Product.OwnerID", control})
@@ -25,12 +27,17 @@ export function SingleShippingSelector({
     if (!ownerId) {
       return []
     }
+
+    const excludeExistingAddressFilter = existingAddressIds?.length
+      ? {filters: {ID: existingAddressIds.map((addressId) => `!${addressId}`)}}
+      : undefined
+
     const sellerId = ownerId
     let addresses: ListPage<IAdminAddress | ISupplierAddress>
     if (sellerId === appSettings.marketplaceId) {
-      addresses = await AdminAddresses.List()
+      addresses = await AdminAddresses.List(excludeExistingAddressFilter)
     } else {
-      addresses = await SupplierAddresses.List(sellerId)
+      addresses = await SupplierAddresses.List(sellerId, excludeExistingAddressFilter)
     }
     return addresses.Items.map((address) => ({
       label: (
@@ -41,11 +48,12 @@ export function SingleShippingSelector({
       ),
       value: address.ID
     }))
-  }, [ownerId])
+  }, [ownerId, existingAddressIds])
 
   return (
     <SelectControl
       selectProps={{
+        noOptionsMessage: () => (!existingAddressIds?.length ? "No locations" : "All locations added"),
         placeholder: "Select address",
         loadOptions: getShipFromAddressOptions,
         chakraStyles: {

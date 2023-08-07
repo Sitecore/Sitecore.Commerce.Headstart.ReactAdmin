@@ -122,6 +122,7 @@ export function ShipmentItemsModalContent({
           lineItems={lineItems}
           originalShipmentItems={originalShipmentItems}
           control={control}
+          validationSchema={validationSchema}
           name="ShipmentItems"
         />
         <FormControl isInvalid={shipmentItemsErrorMessage} maxWidth="max-content">

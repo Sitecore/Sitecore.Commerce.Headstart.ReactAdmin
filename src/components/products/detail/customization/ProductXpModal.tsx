@@ -119,12 +119,19 @@ export const ProductXpModal = ({
           <ModalCloseButton />
           <ModalBody>
             <VStack gap={3}>
-              <InputControl isDisabled={!isCreatingNew} label="Property name" name="propertyName" control={control} />
+              <InputControl
+                isDisabled={!isCreatingNew}
+                label="Property name"
+                name="propertyName"
+                control={control}
+                validationSchema={validationSchema}
+              />
               <SelectControl
                 isDisabled={!isCreatingNew}
                 label="Property type"
                 name="dataType"
                 control={control}
+                validationSchema={validationSchema}
                 selectProps={{
                   options: [
                     {label: "String", value: "string"},
@@ -132,7 +139,12 @@ export const ProductXpModal = ({
                   ]
                 }}
               />
-              <InputControl label="Property value" name="propertyValue" control={control} />
+              <InputControl
+                label="Property value"
+                name="propertyValue"
+                control={control}
+                validationSchema={validationSchema}
+              />
             </VStack>
           </ModalBody>
           <ModalFooter as={HStack} justifyContent="space-between">

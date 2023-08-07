@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "components/adminusers"
-import {Box, Container, Skeleton} from "@chakra-ui/react"
+import {AdminUserForm} from "components/adminusers"
+import {Container, Skeleton} from "@chakra-ui/react"
 import {AdminUserGroups, AdminUsers, User} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
 
@@ -40,7 +40,7 @@ const AdminUserListItem = () => {
   return (
     <>
       {adminUser?.ID ? (
-        <CreateUpdateForm user={adminUser} assignedPermissions={permissions} />
+        <AdminUserForm user={adminUser} assignedPermissions={permissions} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />

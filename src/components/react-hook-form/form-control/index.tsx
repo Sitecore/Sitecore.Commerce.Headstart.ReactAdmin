@@ -1,4 +1,4 @@
-import {InfoIcon, InfoOutlineIcon} from "@chakra-ui/icons"
+import {InfoOutlineIcon} from "@chakra-ui/icons"
 import {
   FormControl as ChakraFormControl,
   FormControlProps,
@@ -11,12 +11,12 @@ import {
 } from "@chakra-ui/react"
 import {get} from "lodash"
 import React, {FC} from "react"
-import {Control, FieldValues, useController} from "react-hook-form"
+import {useController} from "react-hook-form"
 
 export interface BaseProps extends Omit<FormControlProps, "label"> {
   name: string
   control: any
-  validationSchema?: any
+  validationSchema: any // used to determine if field is required
   label?: React.ReactNode
   labelProps?: FormLabelProps
   helperText?: React.ReactNode

@@ -1,2 +1,2 @@
-const Editable = {};
-export default Editable;
+const Editable = {}
+export default Editable

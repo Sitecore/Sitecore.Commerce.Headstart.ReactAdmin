@@ -1,4 +1,4 @@
-import {appSettings} from "constants/app-settings"
+import {appSettings} from "config/app-settings"
 import {Orders} from "ordercloud-javascript-sdk"
 import {IOrder} from "types/ordercloud/IOrder"
 

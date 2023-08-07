@@ -1,7 +1,7 @@
-import {Box, Container} from "@chakra-ui/react"
-import {CreateUpdateForm} from "../../../components/productfacets/CreateUpdateForm"
+import {Container} from "@chakra-ui/react"
+import {ProductFacetForm} from "../../../components/productfacets/ProductFacetForm"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {NextSeo} from "next-seo"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
@@ -23,7 +23,7 @@ const NewProductFacetsPage = () => {
   return (
     <Container maxW="full">
       <NextSeo title="New Product Facets" />
-      <CreateUpdateForm />
+      <ProductFacetForm />
     </Container>
   )
 }

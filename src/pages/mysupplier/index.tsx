@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "components/suppliers"
+import {SupplierForm} from "components/suppliers"
 import {Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {Me, Supplier, Suppliers} from "ordercloud-javascript-sdk"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ISupplier} from "types/ordercloud/ISupplier"
 
@@ -37,7 +37,7 @@ const SupplierListItem = () => {
   return (
     <>
       {supplier?.ID ? (
-        <CreateUpdateForm supplier={supplier} />
+        <SupplierForm supplier={supplier} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="344px" borderRadius="md" />

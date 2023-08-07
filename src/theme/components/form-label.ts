@@ -1,2 +1,2 @@
 const FormLabel = {}
-export default FormLabel;
+export default FormLabel

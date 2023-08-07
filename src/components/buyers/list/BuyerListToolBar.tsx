@@ -26,7 +26,7 @@ const BuyerListToolbar: FC<BuyerListToolbarProps> = ({
         {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
         <Box as="span" width="2"></Box>
         {viewModeToggle}
-        <Link passHref href="/buyers/add">
+        <Link passHref href="/buyers/new">
           <Button variant="solid" colorScheme="primary" as="a" mb={3}>
             Create Buyer
           </Button>

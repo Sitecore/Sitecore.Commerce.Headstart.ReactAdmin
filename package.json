@@ -16,7 +16,7 @@
     "up-latest": "npm run up --latest",
     "release": "cross-env HUSKY=0 standard-version",
     "push-release": "git push --follow-tags origin main",
-    "pre-commit": "npm run lint && tsc --noEmit",
+    "pre-commit": "npm run lint && npm run type-check",
     "seed": "seeding seed playshop-marketplace.yml",
     "prepare": "husky install",
     "test": "jest"

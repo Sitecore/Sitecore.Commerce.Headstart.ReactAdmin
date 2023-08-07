@@ -4,7 +4,7 @@ import {FaAddressBook} from "react-icons/fa"
 import {NextSeo} from "next-seo"
 import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {Link} from "components/navigation/Link"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */

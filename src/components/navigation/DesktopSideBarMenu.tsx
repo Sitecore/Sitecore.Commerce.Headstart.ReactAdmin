@@ -11,7 +11,7 @@ import {
   TbUserCheck
 } from "react-icons/tb"
 import ProtectedContent from "../auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {Link} from "./Link"
 import schraTheme from "theme/theme"
 import {useRouter} from "next/router"

@@ -1,7 +1,6 @@
-import {Box} from "@chakra-ui/react"
-import {CreateUpdateForm} from "components/supplieraddresses/CreateUpdateForm"
+import {SupplierAddressForm} from "@/components/supplieraddresses/SupplierAddressForm"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -18,12 +17,12 @@ export async function getServerSideProps() {
   }
 }
 
-function ProtectedCreateUpdateForm() {
+function ProtectedNewSupplierAddressPage() {
   return (
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
-      <CreateUpdateForm />
+      <SupplierAddressForm />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewSupplierAddressPage

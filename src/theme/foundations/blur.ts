@@ -1,2 +1,2 @@
 const blur = {}
-export default blur;
+export default blur

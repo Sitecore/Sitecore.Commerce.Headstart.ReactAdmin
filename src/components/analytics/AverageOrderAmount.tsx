@@ -34,7 +34,7 @@ import {
   TbTriangleFilled
 } from "react-icons/tb"
 import {ChevronDownIcon, ChevronUpIcon, TriangleUpIcon} from "@chakra-ui/icons"
-import {appSettings} from "constants/app-settings"
+import {appSettings} from "config/app-settings"
 
 export default function AverageOrderAmount() {
   const headingColor = useColorModeValue("boxTextColor.400", "boxTextColor.300")

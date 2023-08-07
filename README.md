@@ -51,7 +51,6 @@ Then set each variable on `.env.local`:
 `NEXT_PUBLIC_OC_API_URL`='https://sandboxapi.ordercloud.io' Sandbox URL from portal.ordercloud.io  
 `NEXT_PUBLIC_OC_MARKETPLACE_ID` 
 `NEXT_PUBLIC_OC_MARKETPLACE_NAME`
-`NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED`='true' Whether product detail should used tabbed UI or single page UI
 
 Your `.env.local` file should look like this:
 
@@ -61,7 +60,6 @@ NEXT_PUBLIC_OC_CLIENT_ID='****0BAC-****-4711-B01F-1A**4F7*****'
 NEXT_PUBLIC_OC_API_URL='https://sandboxapi.ordercloud.io'
 NEXT_PUBLIC_OC_MARKETPLACE_ID='SitecoreCommerce'
 NEXT_PUBLIC_OC_MARKETPLACE_NAME='Sitecore Commerce'
-NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED='true'
 ```
 
 3. Run Next.js in development mode

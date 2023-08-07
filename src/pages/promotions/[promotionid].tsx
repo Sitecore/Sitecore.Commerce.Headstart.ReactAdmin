@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "../../components/promotions/CreateUpdateForm"
+import {PromotionForm} from "../../components/promotions/PromotionForm"
 import {Box, Container, Skeleton} from "@chakra-ui/react"
 import {Promotion, Promotions} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IPromotion} from "types/ordercloud/IPromotion"
 
@@ -39,7 +39,7 @@ const PromotionItem = (props) => {
   return (
     <>
       {promotion?.ID ? (
-        <CreateUpdateForm promotion={promotion} />
+        <PromotionForm promotion={promotion} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />

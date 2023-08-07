@@ -21,9 +21,10 @@ import {InputControl, SelectControl} from "@/components/react-hook-form"
 
 interface SpecOptionTableProps {
   control: Control<SpecFieldValues>
+  validationSchema: any
   trigger: UseFormTrigger<any>
 }
-export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
+export function SpecOptionTable({control, validationSchema, trigger}: SpecOptionTableProps) {
   const {
     fields: options,
     append,
@@ -88,13 +89,15 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
                     <InputControl
                       name={`Options.${index}.Value`}
                       control={control}
-                      inputProps={{isRequired: true, onKeyPress: handleKeyPress}}
+                      validationSchema={validationSchema}
+                      inputProps={{onKeyPress: handleKeyPress}}
                     />
                   </Td>
                   <Td padding={tableCellPadding}>
                     <SelectControl
                       name={`Options.${index}.PriceMarkupType`}
                       control={control}
+                      validationSchema={validationSchema}
                       selectProps={{
                         options: [
                           {label: "None", value: "NoMarkup"},
@@ -106,7 +109,12 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
                     />
                   </Td>
                   <Td padding={tableCellPadding}>
-                    <PriceMarkupControl index={index} control={control} onKeyPress={handleKeyPress} />
+                    <PriceMarkupControl
+                      index={index}
+                      control={control}
+                      validationSchema={validationSchema}
+                      onKeyPress={handleKeyPress}
+                    />
                   </Td>
                   <Td
                     _hover={{cursor: "pointer"}}
@@ -140,11 +148,12 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
 
 interface PriceMarkupControlProps {
   control: Control<SpecFieldValues>
+  validationSchema: any
   index: number
   onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 // Isolating this component to limit rerenders caused by useWatch (best practice)
-function PriceMarkupControl({control, index, onKeyPress}: PriceMarkupControlProps) {
+function PriceMarkupControl({control, validationSchema, index, onKeyPress}: PriceMarkupControlProps) {
   const markupType = useWatch({
     control,
     name: `Options.${index}.MarkupType`
@@ -161,6 +170,7 @@ function PriceMarkupControl({control, index, onKeyPress}: PriceMarkupControlProp
       rightAddon={rightAddon}
       name={`Options.${index}.PriceMarkup`}
       control={control}
+      validationSchema={validationSchema}
     />
   )
 }

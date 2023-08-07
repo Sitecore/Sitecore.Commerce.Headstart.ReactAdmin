@@ -37,13 +37,12 @@ export function FacetUpdateModal({availableFacets, facetIds = [], onUpdate, butt
   const cancelRef = useRef()
   const selectedOptions = facetIds.filter((id) => availableFacets.find((facet) => facet.ID === id))
   const availableFacetFields = availableFacets.map((facet) => ({label: facet.Name, value: facet.ID}))
+  const validationSchema = object().shape({
+    SelectedFacets: array().of(string())
+  })
   const {handleSubmit, control, reset} = useForm({
     mode: "onBlur",
-    resolver: yupResolver(
-      object().shape({
-        SelectedFacets: array().of(string())
-      })
-    ),
+    resolver: yupResolver(validationSchema),
     defaultValues: {SelectedFacets: selectedOptions} as any
   })
 
@@ -85,6 +84,7 @@ export function FacetUpdateModal({availableFacets, facetIds = [], onUpdate, butt
               <SelectControl
                 name="SelectedFacets"
                 control={control}
+                validationSchema={validationSchema}
                 selectProps={{
                   isMulti: true,
                   options: availableFacetFields

@@ -12,8 +12,3 @@ export async function getMySellerCompanyIds() {
     return [sellerId]
   }
 }
-
-export async function getMySellerId() {
-  const me = await Me.Get()
-  return me.Seller?.ID || me?.Supplier?.ID
-}

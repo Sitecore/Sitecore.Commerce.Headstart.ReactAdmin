@@ -2,10 +2,10 @@ import {UserGroup, UserGroups} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
 
 import {Box, Container, Skeleton} from "@chakra-ui/react"
-import {CreateUpdateForm} from "../../../../components/usergroups/CreateUpdateForm"
+import {UserGroupFormForm} from "../../../../components/usergroups/UserGroupForm"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
@@ -42,7 +42,7 @@ const UserGroupListItem = () => {
   return (
     <>
       {userGroup?.ID ? (
-        <CreateUpdateForm userGroup={userGroup} ocService={UserGroups} />
+        <UserGroupFormForm userGroup={userGroup} userGroupService={UserGroups} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />

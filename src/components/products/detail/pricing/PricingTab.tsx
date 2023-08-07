@@ -3,7 +3,7 @@ import {PriceForm} from "./PriceForm"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import ProtectedContent from "@/components/auth/ProtectedContent"
 import {PriceOverrideForm} from "./PriceOverrideForm"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {ProductDetailFormFields} from "../form-meta"
 
 interface PricingTabProps {

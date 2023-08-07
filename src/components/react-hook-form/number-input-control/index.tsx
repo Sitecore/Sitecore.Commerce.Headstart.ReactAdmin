@@ -47,7 +47,14 @@ export const NumberInputControl: FC<NumberInputControlProps> = (props: NumberInp
   const isRequired = isRequiredField(props.validationSchema, field.name)
 
   return (
-    <FormControl isRequired={isRequired} name={name} control={control} label={label} {...rest}>
+    <FormControl
+      isRequired={isRequired}
+      name={name}
+      control={control}
+      label={label}
+      validationSchema={validationSchema}
+      {...rest}
+    >
       <InputGroup>
         {leftAddon && <InputLeftAddon>{leftAddon}</InputLeftAddon>}
         <NumberInput

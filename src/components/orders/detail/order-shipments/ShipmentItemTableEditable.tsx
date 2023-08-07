@@ -11,12 +11,14 @@ interface ShipmentItemTableProps {
   lineItems: ILineItem[]
   originalShipmentItems: IShipmentItem[]
   control: Control<FieldValues, any>
+  validationSchema: any
   name: string
   isExistingShipment: boolean
 }
 export function ShipmentItemTableEditable({
   lineItems,
   control,
+  validationSchema,
   name,
   originalShipmentItems,
   isExistingShipment
@@ -77,6 +79,7 @@ export function ShipmentItemTableEditable({
                 <Td>
                   <SelectControl
                     control={control}
+                    validationSchema={validationSchema}
                     name={`${name}.${index}.QuantityShipped`}
                     selectProps={{
                       options: buildQuantityShippedOptions(lineItem)

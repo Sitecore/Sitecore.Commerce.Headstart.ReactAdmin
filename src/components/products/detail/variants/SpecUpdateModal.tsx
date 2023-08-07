@@ -143,7 +143,7 @@ export function SpecUpdateModal({
                 control={control}
                 validationSchema={specFormSchema}
               />
-              <SpecOptionTable control={control} trigger={trigger} />
+              <SpecOptionTable control={control} validationSchema={specFormSchema} trigger={trigger} />
             </VStack>
           </ModalBody>
           <ModalFooter>

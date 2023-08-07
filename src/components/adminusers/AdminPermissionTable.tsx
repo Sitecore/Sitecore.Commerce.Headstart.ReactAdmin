@@ -1,5 +1,5 @@
 import {TableContainer, Table, Tbody, Tr, Td, Heading, Switch} from "@chakra-ui/react"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useState} from "react"
 import {textHelper} from "utils"
 

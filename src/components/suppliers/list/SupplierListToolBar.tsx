@@ -26,7 +26,7 @@ const SupplierListToolbar: FC<SupplierListToolbarProps> = ({
         {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
         <Box as="span" width="2"></Box>
         {viewModeToggle}
-        <Link passHref href="/suppliers/add">
+        <Link passHref href="/suppliers/new">
           <Button variant="solid" colorScheme="primary" as="a" mb={3}>
             Create Supplier
           </Button>

@@ -1,2 +1,2 @@
 const Progress = {}
-export default Progress;
+export default Progress

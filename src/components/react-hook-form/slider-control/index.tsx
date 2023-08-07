@@ -31,7 +31,7 @@ export const SliderControl: FC<SliderControlProps> = (props: SliderControlProps)
   const isRequired = isRequiredField(props.validationSchema, field.name)
 
   return (
-    <FormControl name={name} control={control} label={label} isRequired={isRequired} {...rest}>
+    <FormControl name={name} control={control} label={label} isRequired={isRequired} validationSchema={validationSchema} {...rest}>
       <Slider {...field} id={name} isDisabled={isSubmitting} {...sliderProps}>
         <SliderTrack {...sliderTrackProps}>
           <SliderFilledTrack />

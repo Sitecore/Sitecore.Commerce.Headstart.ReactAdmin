@@ -1,7 +1,6 @@
-import {Box} from "@chakra-ui/react"
-import {CreateUpdateForm} from "components/adminusers/CreateUpdateForm"
+import {AdminUserForm} from "@/components/adminusers/AdminUserForm"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getStaticProps() {
@@ -18,12 +17,12 @@ export async function getStaticProps() {
   }
 }
 
-function ProtectedCreateUpdateForm() {
+function ProtectedNewAdminUserPage() {
   return (
     <ProtectedContent hasAccess={appPermissions.SettingsManager}>
-      <CreateUpdateForm />
+      <AdminUserForm />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewAdminUserPage

@@ -1,15 +1,15 @@
 const styles = {
   global: {
-    ".my-commerce-logo_accent": {
+    ".my-commerce-icon_accent": {
       fill: "accent.400"
     },
-    ".my-commerce-logo_primary": {
+    ".my-commerce-icon_primary": {
       fill: "primary.400"
     },
-    ".my-commerce-logo_primary-alt": {
+    ".my-commerce-icon_primary-alt": {
       fill: "primary.900"
     },
-    ".my-commerce-logo_dark": {
+    ".my-commerce-icon_dark": {
       fill: "st.logoBaseColor"
     },
     ".visa-logo-background": {

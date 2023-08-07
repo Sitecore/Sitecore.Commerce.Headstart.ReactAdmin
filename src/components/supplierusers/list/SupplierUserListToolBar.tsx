@@ -23,11 +23,7 @@ const SupplierUserListToolbar: FC<SupplierUserListToolbarProps> = ({
     <>
       <Stack direction="row" mb={5}>
         <Stack direction={["column", "column", "column", "row"]}>
-          <DebouncedSearchInput
-            label="Search user"
-            value={queryParams["Search"]}
-            onSearch={updateQuery("s", true)}
-          />
+          <DebouncedSearchInput label="Search user" value={queryParams["Search"]} onSearch={updateQuery("s", true)} />
         </Stack>
         <Stack direction="row">
           <SupplierUserListActions />
@@ -41,7 +37,7 @@ const SupplierUserListToolbar: FC<SupplierUserListToolbarProps> = ({
             {viewModeToggle}
           </Stack>
           <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/suppliers/${supplierid}/users/add`}>
+            <Link passHref href={`/suppliers/${supplierid}/users/new`}>
               <Button variant="solid" colorScheme="primary" as="a" mb={3}>
                 Create User
               </Button>

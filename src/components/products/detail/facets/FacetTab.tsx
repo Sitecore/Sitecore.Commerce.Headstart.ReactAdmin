@@ -10,10 +10,11 @@ import {ProductDetailFormFields} from "../form-meta"
 
 interface FacetTabProps extends CardProps {
   control: Control<ProductDetailFormFields>
+  validationSchema: any
   facetList: IProductFacet[]
 }
 
-export function FacetTab({control, facetList, ...cardProps}: FacetTabProps) {
+export function FacetTab({control, validationSchema, facetList, ...cardProps}: FacetTabProps) {
   const {field} = useController({control, name: "Product.xp.Facets"})
   const productFacetIds = Object.keys(field.value || {})
     .filter((key) => field.value[key]) // exclude facets with empty values
@@ -84,6 +85,7 @@ export function FacetTab({control, facetList, ...cardProps}: FacetTabProps) {
                 key={facetId}
                 name={`Product.xp.Facets.${facetId}`}
                 control={control}
+                validationSchema={validationSchema}
                 selectProps={{options: facetOptions, isMulti: true}}
               />
             )

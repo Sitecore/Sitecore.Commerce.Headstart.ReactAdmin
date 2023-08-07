@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "../../../../components/usergroups/CreateUpdateForm"
+import {UserGroupFormForm} from "../../../../components/usergroups/UserGroupForm"
 import {Box, Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {SupplierUserGroups, UserGroup} from "ordercloud-javascript-sdk"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ISupplierUserGroup} from "types/ordercloud/ISupplierUserGroup"
 
@@ -41,7 +41,7 @@ const UserGroupListItem = () => {
   return (
     <>
       {userGroup?.ID ? (
-        <CreateUpdateForm userGroup={userGroup} ocService={SupplierUserGroups} />
+        <UserGroupFormForm userGroup={userGroup} userGroupService={SupplierUserGroups} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />

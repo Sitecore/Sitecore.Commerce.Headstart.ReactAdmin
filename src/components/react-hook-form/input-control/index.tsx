@@ -21,7 +21,14 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
   })
   const isRequired = isRequiredField(props.validationSchema, field.name)
   return (
-    <FormControl name={name} control={control} label={label} {...rest} isRequired={isRequired}>
+    <FormControl
+      name={name}
+      control={control}
+      label={label}
+      {...rest}
+      validationSchema={validationSchema}
+      isRequired={isRequired}
+    >
       <InputGroup>
         {leftAddon && <InputLeftAddon>{leftAddon}</InputLeftAddon>}
         <Input

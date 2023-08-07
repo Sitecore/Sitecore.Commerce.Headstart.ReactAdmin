@@ -1,5 +1,4 @@
 import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
-import Link from "next/link"
 import {SupplierAddresses} from "ordercloud-javascript-sdk"
 import {useCallback, useState} from "react"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
@@ -10,6 +9,7 @@ import SupplierAddressActionMenu from "./SupplierAddressActionMenu"
 import SupplierAddressCard from "./SupplierAddressCard"
 import SupplierAddressListToolbar from "./SupplierAddressListToolbar"
 import {useRouter} from "next/router"
+import {SingleLineAddress} from "@/components/orders/detail/SingleLineAddress"
 
 const SupplierAddressQueryMap = {
   s: "Search",
@@ -45,84 +45,18 @@ const AddressNameColumn: DataTableColumn<ISupplierAddress> = {
   sortable: false
 }
 
-const Street1Column: DataTableColumn<ISupplierAddress> = {
-  header: "Street 1",
-  accessor: "Street1",
-  width: "25%",
-  cell: ({row, value}) => (
-    <Text noOfLines={2} title={value}>
-      {value}
-    </Text>
-  ),
-  sortable: true
-}
-
-const Street2Column: DataTableColumn<ISupplierAddress> = {
-  header: "Street 2",
-  accessor: "Street2",
+const AddressColumn: DataTableColumn<ISupplierAddress> = {
+  header: "Address",
   width: "15%",
-  cell: ({row, value}) => (
-    <Text noOfLines={2} title={value}>
-      {value}
-    </Text>
-  ),
-  sortable: true
-}
-
-const CityColumn: DataTableColumn<ISupplierAddress> = {
-  header: "City",
-  accessor: "City",
-  width: "15%",
-  cell: ({row, value}) => (
-    <Text noOfLines={2} title={value}>
-      {value}
-    </Text>
-  ),
-  sortable: true
-}
-
-const StateColumn: DataTableColumn<ISupplierAddress> = {
-  header: "State",
-  accessor: "State",
-  width: "5%",
-  cell: ({row, value}) => (
-    <Text noOfLines={2} title={value}>
-      {value}
-    </Text>
-  ),
-  sortable: true
-}
-
-const ZipColumn: DataTableColumn<ISupplierAddress> = {
-  header: "Zip",
-  accessor: "Zip",
-  width: "10%",
-  cell: ({row, value}) => (
-    <Text noOfLines={2} title={value}>
-      {value}
-    </Text>
-  ),
-  sortable: true
-}
-
-const CountryColumn: DataTableColumn<ISupplierAddress> = {
-  header: "Country",
-  accessor: "Country",
-  width: "5%",
-  cell: ({row, value}) => (
-    <Text noOfLines={2} title={value}>
-      {value}
-    </Text>
-  ),
-  sortable: true
+  cell: ({row, value}) => <SingleLineAddress address={row.original} />
 }
 
 const SupplierAddressTableOptions: ListViewTableOptions<ISupplierAddress> = {
   responsive: {
     base: [IDColumn, AddressNameColumn],
-    md: [IDColumn, AddressNameColumn, Street1Column, Street2Column, CityColumn, StateColumn],
-    lg: [IDColumn, AddressNameColumn, Street1Column, Street2Column, CityColumn, StateColumn],
-    xl: [IDColumn, AddressNameColumn, Street1Column, Street2Column, CityColumn, StateColumn, ZipColumn, CountryColumn]
+    md: [IDColumn, AddressNameColumn, AddressColumn],
+    lg: [IDColumn, AddressNameColumn, AddressColumn],
+    xl: [IDColumn, AddressNameColumn, AddressColumn]
   }
 }
 

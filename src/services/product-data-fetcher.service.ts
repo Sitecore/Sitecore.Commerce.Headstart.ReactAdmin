@@ -3,14 +3,15 @@ import {flatten, uniq} from "lodash"
 import {
   Catalogs,
   Categories,
+  InventoryRecords,
   PriceSchedules,
   ProductCatalogAssignment,
   Products,
   SpecProductAssignment,
   Specs
 } from "ordercloud-javascript-sdk"
-import {ICatalog} from "types/ordercloud/ICatalog"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
+import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 
@@ -27,6 +28,11 @@ import {ISpec} from "types/ordercloud/ISpec"
 
 export async function fetchProduct(productId: string) {
   return await Products.Get<IProduct>(productId)
+}
+
+export async function fetchInventoryRecords(product: IProduct) {
+  const response = await InventoryRecords.List<IInventoryRecord>(product.ID, {pageSize: 100})
+  return response.Items
 }
 
 export async function fetchDefaultPriceSchedule(product: IProduct) {

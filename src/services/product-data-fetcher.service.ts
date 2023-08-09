@@ -1,5 +1,5 @@
 import {ORIGINAL_ID} from "constants/original-id"
-import {flatten, uniq} from "lodash"
+import {compact, flatten, uniq} from "lodash"
 import {
   Catalogs,
   Categories,
@@ -64,7 +64,10 @@ export async function fetchOverridePriceSchedules(product: IProduct) {
   if (!assignments.Items.length) {
     return []
   }
-  const priceScheduleIDs = uniq(assignments.Items.map((assignment) => assignment.PriceScheduleID))
+  const priceScheduleIDs = compact(uniq(assignments.Items.map((assignment) => assignment.PriceScheduleID)))
+  if (!priceScheduleIDs.length) {
+    return []
+  }
   const priceSchedules = await PriceSchedules.List({filters: {ID: priceScheduleIDs.join("|")}})
   return priceSchedules.Items.map((priceSchedule) => {
     priceSchedule["ProductAssignments"] = assignments.Items.filter(
@@ -79,6 +82,9 @@ async function fetchSpecsFromAssignments(items: SpecProductAssignment[]) {
     return []
   }
   const specIDs = uniq(items.map((assignment) => assignment.SpecID))
+  if (!specIDs.length) {
+    return []
+  }
   const listResponse = await Specs.List<ISpec>({filters: {ID: specIDs.join("|")}})
   return listResponse.Items
 }

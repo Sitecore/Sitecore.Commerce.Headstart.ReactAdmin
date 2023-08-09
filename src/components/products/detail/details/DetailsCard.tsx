@@ -18,13 +18,6 @@ export function DetailsCard({control, validationSchema, isCreatingNew}: DetailsC
       </CardHeader>
       <CardBody>
         <SwitchControl label="Active" name="Product.Active" control={control} validationSchema={validationSchema} />
-        <OwnerIdSelect
-          marginTop={6}
-          maxWidth="50%"
-          control={control}
-          validationSchema={validationSchema}
-          isCreatingNew={isCreatingNew}
-        />
         <HStack flexWrap={{base: "wrap", md: "nowrap"}} gap={6} mt={6}>
           <InputControl label="Name" name="Product.Name" control={control} validationSchema={validationSchema} />
           <InputControl
@@ -35,6 +28,13 @@ export function DetailsCard({control, validationSchema, isCreatingNew}: DetailsC
             validationSchema={validationSchema}
           />
         </HStack>
+        <OwnerIdSelect
+          marginTop={6}
+          maxWidth="50%"
+          control={control}
+          validationSchema={validationSchema}
+          isCreatingNew={isCreatingNew}
+        />
       </CardBody>
     </Card>
   )

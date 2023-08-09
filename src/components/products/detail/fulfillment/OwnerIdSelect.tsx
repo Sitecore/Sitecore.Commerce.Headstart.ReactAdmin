@@ -29,8 +29,9 @@ export function OwnerIdSelect({control, validationSchema, isCreatingNew, ...base
     ]
   }, [])
 
-  if (!isAdmin || !isCreatingNew) {
-    // Only admins can change the owner, and only on create
+  if (!isAdmin) {
+    // Viewing the owner is only relevant for admins because suppliers
+    // can only ever see their own products
     return
   }
   return (
@@ -46,6 +47,7 @@ export function OwnerIdSelect({control, validationSchema, isCreatingNew, ...base
       validationSchema={validationSchema}
       name="Product.OwnerID"
       control={control}
+      isDisabled={!isCreatingNew}
       {...baseProps}
     />
   )

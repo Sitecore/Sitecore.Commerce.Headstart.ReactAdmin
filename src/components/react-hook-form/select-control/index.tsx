@@ -33,15 +33,16 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
   const isRequired = isRequiredField(props.validationSchema, field.name)
 
   const handleChange = useCallback(
-    (options: ReactSelectOption[] | ReactSelectOption) => {
+    (options: ReactSelectOption[] | ReactSelectOption, actionMeta) => {
       if (isMulti) {
         const updatedOptions = (options as ReactSelectOption[]).map((o) => o.value)
         onFieldChange(updatedOptions)
       } else {
         onFieldChange((options as ReactSelectOption).value)
       }
+      if (props.selectProps?.onChange) props.selectProps.onChange(options, actionMeta)
     },
-    [isMulti, onFieldChange]
+    [isMulti, onFieldChange, props]
   )
 
   const value = useMemo(() => {

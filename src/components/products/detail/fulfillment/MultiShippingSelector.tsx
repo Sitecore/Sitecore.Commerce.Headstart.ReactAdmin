@@ -3,7 +3,7 @@ import {ProductDetailFormFields} from "../form-meta"
 import {Button, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr} from "@chakra-ui/react"
 import {SingleLineAddress} from "@/components/orders/detail/SingleLineAddress"
 import {InputControl, SwitchControl} from "@/components/react-hook-form"
-import {AddLocationButton} from "./AddLocationButton"
+import {AddLocation} from "./AddLocation"
 import {useState} from "react"
 import {AdminAddresses, SupplierAddresses} from "ordercloud-javascript-sdk"
 import {appSettings} from "config/app-settings"
@@ -96,7 +96,7 @@ export function MultiShippingSelector({control, validationSchema}: MultiShipping
           </Tbody>
         </Table>
       </TableContainer>
-      <AddLocationButton
+      <AddLocation
         control={control}
         validationSchema={validationSchema}
         inventoryRecords={inventoryRecords}

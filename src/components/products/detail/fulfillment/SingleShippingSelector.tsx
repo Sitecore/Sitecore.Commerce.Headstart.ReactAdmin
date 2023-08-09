@@ -2,7 +2,7 @@ import {SelectControl, SelectControlProps} from "@/components/react-hook-form"
 import {AdminAddresses, ListPage, SupplierAddresses} from "ordercloud-javascript-sdk"
 import {useCallback} from "react"
 import {Control, useWatch} from "react-hook-form"
-import {Text, VStack} from "@chakra-ui/react"
+import {Text, VStack, useDisclosure} from "@chakra-ui/react"
 import {SingleLineAddress} from "@/components/orders/detail/SingleLineAddress"
 import {appSettings} from "config/app-settings"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
@@ -19,7 +19,7 @@ export function SingleShippingSelector({
   validationSchema,
   showLabels = true,
   existingAddressIds,
-  ...containerProps
+  ...allSelectControlProps
 }: SingleShippingSelectorProps) {
   const ownerId = useWatch({name: "Product.OwnerID", control})
 
@@ -50,6 +50,8 @@ export function SingleShippingSelector({
     }))
   }, [ownerId, existingAddressIds])
 
+  const {selectProps, ...selectControlProps} = allSelectControlProps
+
   return (
     <SelectControl
       selectProps={{
@@ -62,13 +64,14 @@ export function SingleShippingSelector({
             ...baseStyles,
             ".single-line-address": {display: "none"}
           })
-        }
+        },
+        ...selectProps
       }}
       validationSchema={validationSchema}
       label={showLabels && "Ship From"}
       name="Product.ShipFromAddressID"
       control={control}
-      {...containerProps}
+      {...selectControlProps}
     />
   )
 }

@@ -1,4 +1,19 @@
-import {Button, ButtonGroup, Card, CardBody, CardHeader, Container, SimpleGrid} from "@chakra-ui/react"
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardHeader,
+  Container,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  SimpleGrid
+} from "@chakra-ui/react"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {InputControl} from "components/react-hook-form"
 import {useRouter} from "hooks/useRouter"
@@ -8,15 +23,29 @@ import {TbChevronLeft} from "react-icons/tb"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 import ResetButton from "../react-hook-form/reset-button"
 import SubmitButton from "../react-hook-form/submit-button"
-import {useEffect, useState} from "react"
+import {FormEvent, useEffect, useState} from "react"
 import {object, string} from "yup"
 import {useSuccessToast} from "hooks/useToast"
 import {getObjectDiff} from "utils"
 
 interface AdminAddressFormProps {
   address?: Address
+  onCreate?: (address: IAdminAddress) => void
+  onUpdate?: (address: IAdminAddress) => void
+  variant?: "default" | "modal"
+  isOpen?: boolean // only used when variant === "modal"
+  onClose?: () => void // only used when variant === "modal"
+  modalTitle?: string // only used when variant === "modal"
 }
-export function AdminAddressForm({address}: AdminAddressFormProps) {
+export function AdminAddressForm({
+  address,
+  onCreate,
+  onUpdate,
+  variant = "default",
+  isOpen,
+  onClose,
+  modalTitle
+}: AdminAddressFormProps) {
   const [currentAddress, setCurrentAddress] = useState(address)
   const [isCreating, setIsCreating] = useState(!address?.ID)
   let router = useRouter()
@@ -50,18 +79,28 @@ export function AdminAddressForm({address}: AdminAddressFormProps) {
 
   async function createAddress(fields: IAdminAddress) {
     const createdAddress = await AdminAddresses.Create<IAdminAddress>(fields)
-    successToast({
-      description: "Address created successfully."
-    })
-    router.push(`/settings/adminaddresses/${createdAddress.ID}`)
+    if (onCreate) {
+      await onCreate(createdAddress)
+      setCurrentAddress(address)
+      reset(address)
+    } else {
+      successToast({
+        description: "Address created successfully."
+      })
+      router.push(`/settings/adminaddresses/${createdAddress.ID}`)
+    }
   }
 
   async function updateAddress(fields: IAdminAddress) {
     const diff = getObjectDiff(currentAddress, fields)
     const updatedAddress = await AdminAddresses.Patch<IAdminAddress>(fields.ID, diff)
-    successToast({
-      description: "Address updated successfully"
-    })
+    if (onUpdate) {
+      await onUpdate(updatedAddress)
+    } else {
+      successToast({
+        description: "Address updated successfully"
+      })
+    }
     setCurrentAddress(updatedAddress)
     reset(updatedAddress)
   }
@@ -74,7 +113,42 @@ export function AdminAddressForm({address}: AdminAddressFormProps) {
     }
   }
 
-  return (
+  const handleSubmitPreventBubbling = async (event: FormEvent) => {
+    // a version of handleSubmit that prevents
+    // the parent form from being submitted
+    // which would actually try to save the product (not desired)
+    event.preventDefault()
+    event.stopPropagation()
+    await handleSubmit(onSubmit)(event)
+  }
+
+  const formFields = (
+    <>
+      <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+        <InputControl name="FirstName" label="First Name" control={control} validationSchema={validationSchema} />
+        <InputControl name="LastName" label="Last Name" control={control} validationSchema={validationSchema} />
+      </SimpleGrid>
+      <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+        <InputControl name="AddressName" label="Address Name" control={control} validationSchema={validationSchema} />
+        <InputControl name="CompanyName" label="Company Name" control={control} validationSchema={validationSchema} />
+      </SimpleGrid>
+      <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+        <InputControl name="Street1" label="Street 1" control={control} validationSchema={validationSchema} />
+        <InputControl name="Street2" label="Street 2" control={control} validationSchema={validationSchema} />
+      </SimpleGrid>
+      <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr 1fr"}}>
+        <InputControl name="City" label="City" control={control} validationSchema={validationSchema} />
+        <InputControl name="State" label="State" control={control} validationSchema={validationSchema} />
+        <InputControl name="Zip" label="Zip" control={control} validationSchema={validationSchema} />
+      </SimpleGrid>
+      <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
+        <InputControl name="Country" label="Country" control={control} validationSchema={validationSchema} />
+        <InputControl name="Phone" label="Phone" control={control} validationSchema={validationSchema} />
+      </SimpleGrid>
+    </>
+  )
+
+  return variant === "default" ? (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
@@ -98,39 +172,29 @@ export function AdminAddressForm({address}: AdminAddressFormProps) {
           gap={6}
           maxW="container.lg"
         >
-          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
-            <InputControl name="FirstName" label="First Name" control={control} validationSchema={validationSchema} />
-            <InputControl name="LastName" label="Last Name" control={control} validationSchema={validationSchema} />
-          </SimpleGrid>
-          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
-            <InputControl
-              name="AddressName"
-              label="Address Name"
-              control={control}
-              validationSchema={validationSchema}
-            />
-            <InputControl
-              name="CompanyName"
-              label="Company Name"
-              control={control}
-              validationSchema={validationSchema}
-            />
-          </SimpleGrid>
-          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
-            <InputControl name="Street1" label="Street 1" control={control} validationSchema={validationSchema} />
-            <InputControl name="Street2" label="Street 2" control={control} validationSchema={validationSchema} />
-          </SimpleGrid>
-          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr 1fr"}}>
-            <InputControl name="City" label="City" control={control} validationSchema={validationSchema} />
-            <InputControl name="State" label="State" control={control} validationSchema={validationSchema} />
-            <InputControl name="Zip" label="Zip" control={control} validationSchema={validationSchema} />
-          </SimpleGrid>
-          <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
-            <InputControl name="Country" label="Country" control={control} validationSchema={validationSchema} />
-            <InputControl name="Phone" label="Phone" control={control} validationSchema={validationSchema} />
-          </SimpleGrid>
+          {formFields}
         </CardBody>
       </Card>
     </Container>
+  ) : (
+    <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+      <ModalOverlay />
+      <ModalContent as="form" noValidate onSubmit={handleSubmitPreventBubbling}>
+        <ModalHeader>{modalTitle}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>{formFields}</ModalBody>
+        <ModalFooter display="flex" justifyContent="space-between">
+          <Button onClick={onClose}>Cancel</Button>
+          <ButtonGroup>
+            <ResetButton control={control} reset={reset} variant="outline">
+              Discard Changes
+            </ResetButton>
+            <SubmitButton control={control} variant="solid" colorScheme="primary">
+              Submit
+            </SubmitButton>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   )
 }

@@ -7,20 +7,6 @@ import React from "react"
 import {appPermissions} from "config/app-permissions.config"
 import {Link} from "components/navigation/Link"
 
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Settings",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      }
-    }
-  }
-}
 const SettingsPage = () => {
   const color = useColorModeValue("boxTextColor.900", "boxTextColor.100")
   const boxBgColor = useColorModeValue("boxBgColor.100", "boxBgColor.600")

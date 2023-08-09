@@ -9,6 +9,7 @@
     "postbuild": "next-sitemap --config next-sitemap.config.js",
     "start": "next start",
     "lint": "next lint",
+    "export": "next export",
     "lint:fix": "eslint src --fix && npm run format",
     "type-check": "tsc --noEmit",
     "format": "prettier --write src",

@@ -1,28 +1,11 @@
 import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
-
 import {CatalogForm} from "@/components/catalogs/CatalogForm"
 import {ICatalog} from "types/ordercloud/ICatalog"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {Container, Skeleton} from "@chakra-ui/react"
-
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit catalog",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: true
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
 
 const CatalogListItem = () => {
   const router = useRouter()

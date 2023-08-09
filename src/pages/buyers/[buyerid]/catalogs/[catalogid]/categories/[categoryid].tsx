@@ -1,27 +1,11 @@
 import {useEffect, useState} from "react"
 import {CategoryForm} from "@/components/categories/CategoryForm"
-import {Box, Container, Skeleton} from "@chakra-ui/react"
+import {Container, Skeleton} from "@chakra-ui/react"
 import {Categories, Category} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ICategory} from "types/ordercloud/ICategoryXp"
-
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit category",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
 
 const CategoryListItem = (props) => {
   const router = useRouter()

@@ -7,22 +7,6 @@ import {ProductFacetForm} from "components/productfacets"
 import {useRouter} from "hooks/useRouter"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit product facet",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
-
 const ProductFacetsListItem = () => {
   const router = useRouter()
   const [productfacet, setProductFacet] = useState({} as ProductFacet)

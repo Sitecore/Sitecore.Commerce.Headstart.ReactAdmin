@@ -7,21 +7,6 @@ import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
 
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit supplier address",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
-
 const SupplierAddressListItem = () => {
   const router = useRouter()
   const [supplierAddress, setSupplierAddress] = useState({} as Address)

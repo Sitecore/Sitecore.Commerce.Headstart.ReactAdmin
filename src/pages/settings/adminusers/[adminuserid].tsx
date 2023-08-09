@@ -7,21 +7,6 @@ import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IAdminUser} from "types/ordercloud/IAdminUser"
 
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit admin user",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
-
 const AdminUserListItem = () => {
   const router = useRouter()
   const [adminUser, setAdminUser] = useState({} as User)

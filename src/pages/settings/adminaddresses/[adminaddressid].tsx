@@ -7,21 +7,6 @@ import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit admin address",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
-
 const AdminAddressListItem = () => {
   const router = useRouter()
   const [adminAddress, setAdminAddress] = useState({} as Address)

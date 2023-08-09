@@ -135,7 +135,7 @@ export const validationSchema = object().shape({
     ShipWidth: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
     ShipHeight: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
     ShipWeight: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
-    ShipFromAddressID: string(),
+    ShipFromAddressID: string().nullable(),
     Returnable: boolean(),
     QuantityMultiplier: number()
       .transform(emptyStringToNull)

@@ -5,7 +5,7 @@ import ContentHeader from "./ContentHeader"
 import Footer from "./Footer"
 import Header from "./Header"
 import {useAuth} from "hooks/useAuth"
-import DesktopSideBarMenu from "../navigation/DesktopSideBarMenu"
+import SideBarMenu from "../navigation/SideBarMenu"
 
 const Layout = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -25,7 +25,7 @@ const Layout = (props) => {
       <Header />
       <Grid as="main" gridTemplateColumns={["auto", "75px auto", "75px auto", "250px auto"]} flexGrow="1">
         <Hide below="sm">
-          <DesktopSideBarMenu />
+          <SideBarMenu />
         </Hide>
         <Flex flexFlow={"column nowrap"} overflowX="hidden">
           <ContentHeader />

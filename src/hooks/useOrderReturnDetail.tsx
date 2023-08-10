@@ -14,11 +14,15 @@ export function useOrderReturnDetail() {
 
   const fetchLineItems = useCallback(async (orderReturn: IOrderReturn) => {
     const lineItemIds = orderReturn.ItemsToReturn.map((item) => item.LineItemID)
-    const lineItemList = await LineItems.List<ILineItem>("All", orderReturn.OrderID, {
-      pageSize: 100,
-      filters: {ID: lineItemIds.join("|")}
-    })
-    setLineItems(lineItemList.Items)
+    if (!lineItemIds.length) {
+      setLineItems([])
+    } else {
+      const lineItemList = await LineItems.List<ILineItem>("All", orderReturn.OrderID, {
+        pageSize: 100,
+        filters: {ID: lineItemIds.join("|")}
+      })
+      setLineItems(lineItemList.Items)
+    }
   }, [])
 
   const fetchOrderReturn = useCallback(async (orderReturnId) => {

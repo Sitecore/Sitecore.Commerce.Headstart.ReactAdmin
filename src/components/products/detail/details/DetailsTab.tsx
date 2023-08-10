@@ -1,10 +1,7 @@
-import {Flex, SimpleGrid, FlexProps} from "@chakra-ui/react"
+import {Flex, FlexProps} from "@chakra-ui/react"
 import {DescriptionCard} from "./DescriptionCard"
 import {DetailsCard} from "./DetailsCard"
 import {ImagePreviewCard} from "./ImagePreviewCard"
-import {InventoryCard} from "./InventoryCard"
-import {ShippingCard} from "./ShippingCard"
-import {UnitOfMeasureCard} from "./UnitOfMeasureCard"
 import {ProductDetailFormFields} from "../form-meta"
 import {Control} from "react-hook-form"
 import {IProduct} from "types/ordercloud/IProduct"
@@ -12,19 +9,16 @@ import {IProduct} from "types/ordercloud/IProduct"
 interface DetailsTabProps extends FlexProps {
   product: IProduct
   control: Control<ProductDetailFormFields>
+  validationSchema: any
+  isCreatingNew?: boolean
 }
 
-export function DetailsTab({product, control, ...flexProps}: DetailsTabProps) {
+export function DetailsTab({product, control, validationSchema, isCreatingNew, ...flexProps}: DetailsTabProps) {
   return (
     <Flex gap={6} flexFlow={{base: "column", xl: "row nowrap"}} {...flexProps}>
       <Flex flexFlow="column" flexGrow="1" gap={6} flexWrap="wrap">
-        <DetailsCard control={control} />
+        <DetailsCard control={control} validationSchema={validationSchema} isCreatingNew={isCreatingNew} />
         <DescriptionCard control={control} />
-        <SimpleGrid gridTemplateColumns={{md: "1fr 1fr"}} gap={6}>
-          <UnitOfMeasureCard control={control} />
-          <InventoryCard control={control} />
-        </SimpleGrid>
-        <ShippingCard control={control} />
       </Flex>
       <ImagePreviewCard images={product?.xp?.Images} />
     </Flex>

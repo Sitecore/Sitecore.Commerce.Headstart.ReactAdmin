@@ -10,6 +10,7 @@ import {array, bool, boolean, number, object, string} from "yup"
 import {emptyStringToNull} from "utils"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {compact, uniqBy} from "lodash"
+import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
 
 export interface ProductDetailFormFields {
   Product: IProduct
@@ -19,6 +20,7 @@ export interface ProductDetailFormFields {
   Variants: IVariant[]
   CatalogAssignments: ProductCatalogAssignment[]
   CategoryAssignments: ICategoryProductAssignment[]
+  InventoryRecords: IInventoryRecord[]
 }
 
 // undefined causes issues because the input is not considered controlled
@@ -34,6 +36,7 @@ export const defaultValues: ProductDetailFormFields = {
       QuantityAvailable: null,
       OrderCanExceed: false
     },
+    AutoForward: true, // default value, not captured in form
     ShipLength: null,
     ShipWidth: null,
     ShipHeight: null,
@@ -47,7 +50,8 @@ export const defaultValues: ProductDetailFormFields = {
       ShipLinearUnit: "in",
       ShipWeightUnit: "lb",
       ShipFromCompanyID: "",
-      UnitOfMeasure: "each"
+      UnitOfMeasure: "each",
+      ShipsFromMultipleLocations: false
     }
   },
   DefaultPriceSchedule: {
@@ -63,7 +67,8 @@ export const defaultValues: ProductDetailFormFields = {
   Specs: [],
   Variants: [],
   CatalogAssignments: [],
-  CategoryAssignments: []
+  CategoryAssignments: [],
+  InventoryRecords: []
 }
 
 // Not all fields are validated on the main form (for example when input is captured in a modal)
@@ -126,11 +131,11 @@ export const validationSchema = object().shape({
       QuantityAvailable: number().integer().transform(emptyStringToNull).nullable(),
       OrderCanExceed: boolean()
     }),
-    ShipLength: number().transform(emptyStringToNull).nullable().typeError("You must specify a number"),
-    ShipWidth: number().transform(emptyStringToNull).nullable().typeError("You must specify a number"),
-    ShipHeight: number().transform(emptyStringToNull).nullable().typeError("You must specify a number"),
-    ShipWeight: number().transform(emptyStringToNull).nullable().typeError("You must specify a number"),
-    ShipFromAddressID: string(),
+    ShipLength: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
+    ShipWidth: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
+    ShipHeight: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
+    ShipWeight: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
+    ShipFromAddressID: string().nullable(),
     Returnable: boolean(),
     QuantityMultiplier: number()
       .transform(emptyStringToNull)
@@ -141,7 +146,8 @@ export const validationSchema = object().shape({
       ShipLinearUnit: string(),
       ShipWeightUnit: string(),
       ShipFromCompanyID: string(),
-      UnitOfMeasure: string().max(50)
+      UnitOfMeasure: string().max(50),
+      ShipsFromMultipleLocations: boolean()
     })
   }),
   DefaultPriceSchedule: priceScheduleSchema,
@@ -159,16 +165,7 @@ export const validationSchema = object().shape({
 // this lets us display an error indicator at the tab level if any of the fields in that tab are invalid
 // similar to validationSchema not all fields are validated on the main form
 export const tabFieldNames: Record<ProductDetailTab, any[]> = {
-  Details: [
-    "Product.Description",
-    "Product.Active",
-    "Product.Name",
-    "Product.ID",
-    "Product.Inventory.Enabled",
-    "Product.Inventory.VariantLevelTracking",
-    "Product.Inventory.QuantityAvailable",
-    "Product.Inventory.OrderCanExceed"
-  ],
+  Details: ["Product.Description", "Product.Active", "Product.Name", "Product.ID"],
   Pricing: [
     "DefaultPriceSchedule.SaleStart",
     "DefaultPriceSchedule.SaleEnd",
@@ -176,6 +173,19 @@ export const tabFieldNames: Record<ProductDetailTab, any[]> = {
     "DefaultPriceSchedule.PriceBreaks",
     "DefaultPriceSchedule.MinQuantity",
     "DefaultPriceSchedule.MaxQuantity"
+  ],
+  Fulfillment: [
+    "Product.Inventory.Enabled",
+    "Product.Inventory.QuantityAvailable",
+    "Product.Inventory.OrderCanExceed",
+    "Product.ShipLength",
+    "Product.ShipWidth",
+    "Product.ShipHeight",
+    "Product.xp.ShipLinearUnit",
+    "Product.ShipWeight",
+    "Product.xp.ShipWeightUnit",
+    "Product.Returnable",
+    "Product.xp.UnitOfMeasure"
   ],
   Variants: [],
   Media: [],

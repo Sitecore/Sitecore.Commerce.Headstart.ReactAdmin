@@ -12,7 +12,9 @@
 // So we must pass along both the name, and the value separately
 const getEnvironmentVariable = (name: string, value?: string, defaultValue?: string): string => {
   if (!value && !defaultValue) {
-    throw new Error(`Couldn't find environment variable: ${name}`)
+    throw new Error(
+      `Please provide value for required environment variable: ${name} and then restart the dev server so that the changes can take effect`
+    )
   } else if (!value) {
     return defaultValue
   } else {
@@ -26,25 +28,16 @@ export const appSettings = {
     process.env.NEXT_PUBLIC_APP_NAME,
     "Sitecore.Commerce.Headstart.ReactAdmin"
   ),
-  clientId: getEnvironmentVariable(
-    "NEXT_PUBLIC_OC_CLIENT_ID",
-    process.env.NEXT_PUBLIC_OC_CLIENT_ID,
-    "4A9F0BAC-EC1D-4711-B01F-1A394F72F2B6"
-  ),
+  clientId: getEnvironmentVariable("NEXT_PUBLIC_OC_CLIENT_ID", process.env.NEXT_PUBLIC_OC_CLIENT_ID),
   orderCloudApiUrl: getEnvironmentVariable(
     "NEXT_PUBLIC_OC_API_URL",
     process.env.NEXT_PUBLIC_OC_API_URL,
     "https://sandboxapi.ordercloud.io"
   ),
-  marketplaceId: getEnvironmentVariable(
-    "NEXT_PUBLIC_OC_MARKETPLACE_ID",
-    process.env.NEXT_PUBLIC_OC_MARKETPLACE_ID,
-    "SitecoreCommerce"
-  ),
+  marketplaceId: getEnvironmentVariable("NEXT_PUBLIC_OC_MARKETPLACE_ID", process.env.NEXT_PUBLIC_OC_MARKETPLACE_ID),
   marketplaceName: getEnvironmentVariable(
     "NEXT_PUBLIC_OC_MARKETPLACE_NAME",
-    process.env.NEXT_PUBLIC_OC_MARKETPLACE_NAME,
-    "Sitecore Commerce"
+    process.env.NEXT_PUBLIC_OC_MARKETPLACE_NAME
   ),
   useRealDashboardData: getEnvironmentVariable(
     "NEXT_PUBLIC_USE_REAL_DASHBOARD_DATA",

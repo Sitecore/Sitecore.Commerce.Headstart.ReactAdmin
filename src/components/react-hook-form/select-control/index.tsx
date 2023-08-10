@@ -22,6 +22,7 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
   } = props
   const [options, setOptions] = useState<ReactSelectOption[]>((props.selectProps?.options as ReactSelectOption[]) || [])
   const [isLoading, setIsLoading] = useState(false)
+  const [optionsLoaded, setOptionsLoaded] = useState(false)
   const {
     field: {onChange: onFieldChange, value: fieldValue, ...field},
     formState: {isSubmitting}
@@ -32,15 +33,16 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
   const isRequired = isRequiredField(props.validationSchema, field.name)
 
   const handleChange = useCallback(
-    (options: ReactSelectOption[] | ReactSelectOption) => {
+    (options: ReactSelectOption[] | ReactSelectOption, actionMeta) => {
       if (isMulti) {
         const updatedOptions = (options as ReactSelectOption[]).map((o) => o.value)
         onFieldChange(updatedOptions)
       } else {
         onFieldChange((options as ReactSelectOption).value)
       }
+      if (props.selectProps?.onChange) props.selectProps.onChange(options, actionMeta)
     },
-    [isMulti, onFieldChange]
+    [isMulti, onFieldChange, props]
   )
 
   const value = useMemo(() => {
@@ -58,8 +60,13 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
         "Unexpected array value consider setting isMulti=true on <SelectControl /> if multi value is needed"
       )
     }
-    return options.find((option) => option.value === fieldValue)
-  }, [fieldValue, options, isMulti])
+    const singleVal = options.find((option) => option.value === fieldValue)
+    if ((!options.length && optionsLoaded) || (options.length && !singleVal)) {
+      // option not found, so clear it from selection
+      onFieldChange("")
+    }
+    return singleVal
+  }, [fieldValue, options, isMulti, onFieldChange, optionsLoaded])
 
   const loadOptionsCallback = useCallback(
     async (search: string) => {
@@ -68,6 +75,7 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
         setIsLoading(true)
         const _options = await loadOptions(search)
         setOptions(_options)
+        setOptionsLoaded(true)
       } finally {
         setIsLoading(false)
       }
@@ -81,7 +89,14 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
 
   return (
     <>
-      <FormControl name={name} control={control} label={label} isRequired={isRequired} validationSchema={validationSchema} {...rest}>
+      <FormControl
+        name={name}
+        control={control}
+        label={label}
+        isRequired={isRequired}
+        validationSchema={validationSchema}
+        {...rest}
+      >
         <Select
           {...field}
           {...selectProps}

@@ -2,7 +2,7 @@ import {Box, Container, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/rea
 import {yupResolver} from "@hookform/resolvers/yup"
 import {useRouter} from "hooks/useRouter"
 import {useErrorToast, useSuccessToast, useToast} from "hooks/useToast"
-import {cloneDeep, invert, zipObject} from "lodash"
+import {cloneDeep, invert, merge, zipObject} from "lodash"
 import {Products, ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {useState} from "react"
 import {useForm} from "react-hook-form"
@@ -24,8 +24,10 @@ import {DetailsTab} from "./details/DetailsTab"
 import {CatalogsTab} from "./catalogs/CatalogsTab"
 import {VariantsTab} from "./variants/VariantsTab"
 import {CustomizationTab} from "./customization/CustomizationTab"
+import {FulfillmentTab} from "./fulfillment/FulfillmentTab"
+import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
 
-const tabs = ["Details", "Pricing", "Catalogs", "Variants", "Media", "Facets", "Customization"] as const
+const tabs = ["Details", "Pricing", "Fulfillment", "Catalogs", "Variants", "Media", "Facets", "Customization"] as const
 
 export type ProductDetailTab = (typeof tabs)[number]
 
@@ -36,8 +38,10 @@ const tabIndexMap = zipObject(
 const inverseTabIndexMap = invert(tabIndexMap)
 
 interface ProductDetailProps {
+  defaultOwnerId: string
   initialTab: ProductDetailTab
   initialProduct?: IProduct
+  initialInventoryRecords: IInventoryRecord[]
   initialDefaultPriceSchedule?: IPriceSchedule
   initialOverridePriceSchedules?: IPriceSchedule[]
   initialSpecs?: ISpec[]
@@ -49,17 +53,20 @@ interface ProductDetailProps {
 export default function ProductDetail({
   initialTab,
   initialProduct,
+  initialInventoryRecords,
   initialDefaultPriceSchedule = {} as IPriceSchedule,
   initialOverridePriceSchedules,
   initialSpecs,
   initialVariants,
   facets, // facets won't change so we don't need to use state
   initialCatalogAssignments,
-  initialCategoryAssignments
+  initialCategoryAssignments,
+  defaultOwnerId
 }: ProductDetailProps) {
   // setting initial values for state so we can update on submit when product is updated
   // this allows us to keep the form in sync with the product without having to refresh the page
   const [product, setProduct] = useState(initialProduct)
+  const [inventoryRecords, setInventoryRecords] = useState(initialInventoryRecords)
   const [defaultPriceSchedule, setDefaultPriceSchedule] = useState(initialDefaultPriceSchedule)
   const [overridePriceSchedules, setOverridePriceSchedules] = useState(initialOverridePriceSchedules)
   const [specs, setSpecs] = useState(initialSpecs)
@@ -82,6 +89,7 @@ export default function ProductDetail({
   const initialValues = product
     ? {
         Product: cloneDeep(product),
+        InventoryRecords: cloneDeep(inventoryRecords),
         DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
         Specs: cloneDeep(specs),
         Variants: cloneDeep(variants),
@@ -89,7 +97,7 @@ export default function ProductDetail({
         CatalogAssignments: cloneDeep(catalogAssignments),
         CategoryAssignments: cloneDeep(categoryAssignments)
       }
-    : defaultValues
+    : merge(defaultValues, {Product: {OwnerID: defaultOwnerId}})
 
   const {handleSubmit, control, reset, trigger} = useForm<ProductDetailFormFields>({
     resolver: yupResolver(validationSchema),
@@ -105,6 +113,7 @@ export default function ProductDetail({
   const onSubmit = async (fields) => {
     const {
       updatedProduct,
+      updatedInventoryRecords,
       updatedDefaultPriceSchedule,
       updatedPriceOverrides,
       updatedSpecs,
@@ -118,6 +127,8 @@ export default function ProductDetail({
       fields.DefaultPriceSchedule,
       product,
       fields.Product,
+      inventoryRecords,
+      fields.InventoryRecords,
       specs,
       fields.Specs,
       variants,
@@ -141,6 +152,7 @@ export default function ProductDetail({
     } else {
       // Update the state with the new product data
       setProduct(updatedProduct)
+      setInventoryRecords(updatedInventoryRecords)
       setDefaultPriceSchedule(updatedDefaultPriceSchedule)
       setOverridePriceSchedules(updatedPriceOverrides)
       setSpecs(updatedSpecs)
@@ -151,6 +163,7 @@ export default function ProductDetail({
       // reset the form with new product data
       reset({
         Product: cloneDeep(updatedProduct),
+        InventoryRecords: cloneDeep(updatedInventoryRecords),
         DefaultPriceSchedule: cloneDeep(updatedDefaultPriceSchedule),
         Specs: cloneDeep(updatedSpecs),
         Variants: cloneDeep(updatedVariants),
@@ -168,6 +181,7 @@ export default function ProductDetail({
     // reset the form with new product data
     reset({
       Product: cloneDeep(updatedProduct),
+      InventoryRecords: cloneDeep(inventoryRecords),
       DefaultPriceSchedule: cloneDeep(defaultPriceSchedule),
       Specs: cloneDeep(specs),
       Variants: cloneDeep(updatedVariants),
@@ -201,7 +215,12 @@ export default function ProductDetail({
           <TabPanels>
             {viewVisibility.Details && (
               <TabPanel p={0} mt={6}>
-                <DetailsTab product={product} control={control} />
+                <DetailsTab
+                  product={product}
+                  control={control}
+                  validationSchema={validationSchema}
+                  isCreatingNew={isCreatingNew}
+                />
               </TabPanel>
             )}
             {viewVisibility.Pricing && (
@@ -212,6 +231,11 @@ export default function ProductDetail({
                   priceBreakCount={defaultPriceSchedule?.PriceBreaks?.length || 0}
                   overridePriceSchedules={overridePriceSchedules}
                 />
+              </TabPanel>
+            )}
+            {viewVisibility.Fulfillment && (
+              <TabPanel p={0} mt={6}>
+                <FulfillmentTab control={control} validationSchema={validationSchema} />
               </TabPanel>
             )}
             {viewVisibility.Catalogs && (

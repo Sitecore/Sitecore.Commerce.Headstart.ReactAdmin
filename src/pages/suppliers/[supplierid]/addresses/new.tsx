@@ -1,6 +1,7 @@
 import {SupplierAddressForm} from "@/components/supplieraddresses/SupplierAddressForm"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
+import {useRouter} from "hooks/useRouter"
 
 /* This declare the page title and enable the breadcrumbs in the content header section. */
 export async function getServerSideProps() {
@@ -18,9 +19,10 @@ export async function getServerSideProps() {
 }
 
 function ProtectedNewSupplierAddressPage() {
+  const router = useRouter()
   return (
     <ProtectedContent hasAccess={appPermissions.SupplierManager}>
-      <SupplierAddressForm />
+      <SupplierAddressForm supplierId={router.query.supplierid.toString()} />
     </ProtectedContent>
   )
 }

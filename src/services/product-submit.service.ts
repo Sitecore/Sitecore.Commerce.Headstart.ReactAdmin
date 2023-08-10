@@ -1,4 +1,4 @@
-import {clone, difference, differenceBy, isEmpty, omit} from "lodash"
+import {difference, differenceBy, isEmpty, omit} from "lodash"
 import {
   PriceSchedules,
   Products,
@@ -6,7 +6,8 @@ import {
   Specs,
   ProductCatalogAssignment,
   Catalogs,
-  Categories
+  Categories,
+  InventoryRecords
 } from "ordercloud-javascript-sdk"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {SpecFieldValues, SpecOptionFieldValues} from "types/form/SpecFieldValues"
@@ -16,6 +17,7 @@ import {ISpec} from "types/ordercloud/ISpec"
 import {getItemsToAdd, getItemsToDelete, getItemsToUpdate, getObjectDiff} from "utils"
 import {v4 as randomId} from "uuid"
 import {
+  fetchInventoryRecords,
   fetchOverridePriceSchedules,
   fetchProductCatalogAssignments,
   fetchProductCategoryAssignments,
@@ -25,7 +27,7 @@ import {IVariant} from "types/ordercloud/IVariant"
 import {VariantFieldValues} from "types/form/VariantFieldValues"
 import {ORIGINAL_ID} from "constants/original-id"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
-import {defaultValues} from "@/components/products/detail/form-meta"
+import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
 
 export async function submitProduct(
   isCreatingNew: boolean,
@@ -33,6 +35,8 @@ export async function submitProduct(
   newDefaultPriceSchedule: IPriceSchedule,
   oldProduct: IProduct,
   newProduct: IProduct,
+  oldInventoryRecords: IInventoryRecord[],
+  newInventoryRecords: IInventoryRecord[],
   oldSpecs: ISpec[],
   newSpecs: SpecFieldValues[],
   oldVariants: IVariant[],
@@ -52,7 +56,18 @@ export async function submitProduct(
   )
 
   // create/update product
-  const updatedProduct = await handleUpdateProduct(oldProduct, newProduct, updatedDefaultPriceSchedule, isCreatingNew)
+  let updatedProduct = await handleUpdateProduct(oldProduct, newProduct, updatedDefaultPriceSchedule, isCreatingNew)
+
+  // create/update/delete inventory records
+  const updatedInventoryRecords = await handleUpdateInventoryRecords(
+    oldInventoryRecords,
+    newInventoryRecords,
+    updatedProduct
+  )
+
+  if (updatedInventoryRecords.length && !updatedProduct.Inventory?.Enabled) {
+    updatedProduct = await Products.Patch(updatedProduct.ID, {Inventory: {Enabled: true}})
+  }
 
   // create/update/delete specs & spec options
   const {updatedSpecs, didUpdateSpecs} = await handleUpdateSpecs(oldSpecs, newSpecs, updatedProduct)
@@ -83,6 +98,7 @@ export async function submitProduct(
 
   return {
     updatedProduct,
+    updatedInventoryRecords,
     updatedSpecs,
     didUpdateSpecs,
     updatedVariants,
@@ -281,6 +297,40 @@ async function updateProductAssignments(
   })
 
   await Promise.all([...addRequests, ...removeRequests])
+}
+
+async function handleUpdateInventoryRecords(
+  oldRecords: IInventoryRecord[],
+  newRecords: IInventoryRecord[],
+  product: IProduct
+) {
+  if (!product.xp.ShipsFromMultipleLocations) {
+    const allDeleteRequests = oldRecords.map(async (record) => InventoryRecords.Delete(product.ID, record.ID))
+    await Promise.all(allDeleteRequests)
+    return []
+  }
+
+  const addRecords = getItemsToAdd(newRecords)
+  const updateRecords = getItemsToUpdate(oldRecords, newRecords)
+  const deleteRecords = getItemsToDelete(oldRecords, newRecords)
+
+  const addRecordRequests = addRecords.map(async (record) => {
+    const newRecord = await InventoryRecords.Create(product.ID, record)
+    return newRecord
+  })
+
+  const updateRecordRequests = updateRecords.map(async (record) => {
+    const oldRecord = oldRecords.find((oldRecord) => oldRecord.ID === record.ID)
+    const diff = getObjectDiff(oldRecord, record)
+    await InventoryRecords.Patch(product.ID, record.ID, diff)
+  })
+
+  const deleteRecordRequests = deleteRecords.map(async (record) => InventoryRecords.Delete(product.ID, record.ID))
+
+  await Promise.all([...addRecordRequests, ...updateRecordRequests, ...deleteRecordRequests])
+
+  const updatedInventoryRecords = fetchInventoryRecords(product)
+  return updatedInventoryRecords
 }
 
 async function handleUpdateSpecs(oldSpecs: ISpec[], newSpecs: SpecFieldValues[], product: IProduct) {

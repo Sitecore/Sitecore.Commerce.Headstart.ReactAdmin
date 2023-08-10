@@ -22,6 +22,7 @@ export async function getServerSideProps() {
 const ProductDetailPage = () => {
   const {
     product,
+    inventoryRecords,
     defaultPriceSchedule,
     overridePriceSchedules,
     specs,
@@ -39,8 +40,10 @@ const ProductDetailPage = () => {
 
   return (
     <ProductDetail
+      defaultOwnerId=""
       initialTab={initialTab}
       initialProduct={product}
+      initialInventoryRecords={inventoryRecords}
       initialDefaultPriceSchedule={defaultPriceSchedule}
       initialOverridePriceSchedules={overridePriceSchedules}
       initialSpecs={specs}

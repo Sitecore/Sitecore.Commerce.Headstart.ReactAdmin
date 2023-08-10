@@ -10,6 +10,7 @@ export interface IProductXp {
   ShipLinearUnit?: string
   ShipWeightUnit?: string
   ShipFromCompanyID?: string
+  ShipsFromMultipleLocations?: boolean
 }
 
 export interface XpImage {

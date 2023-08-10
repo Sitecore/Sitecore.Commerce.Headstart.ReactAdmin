@@ -28,7 +28,7 @@ const Layout = (props) => {
           <DesktopSideBarMenu />
         </Hide>
         <Flex flexFlow={"column nowrap"} overflowX="hidden">
-          <ContentHeader {...props} />
+          <ContentHeader />
           {props.children}
           <ContentFooter />
         </Flex>

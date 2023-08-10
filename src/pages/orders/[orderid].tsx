@@ -4,20 +4,6 @@ import {OrderDetail} from "@/components/orders/detail/OrderDetail"
 import {useOrderDetail} from "hooks/useOrderDetail"
 import {OrderDetailSkeleton} from "@/components/orders/detail/OrderDetailSkeleton"
 
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Order Details",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      }
-    }
-  }
-}
 const OrderDetailPage = () => {
   const orderDetailProps = useOrderDetail()
   if (orderDetailProps.loading) {

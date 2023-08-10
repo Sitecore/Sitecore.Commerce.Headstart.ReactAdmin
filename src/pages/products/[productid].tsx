@@ -4,21 +4,6 @@ import {ProductDetailSkeleton} from "@/components/products/detail/ProductDetailS
 import {appPermissions} from "config/app-permissions.config"
 import {useProductDetail} from "hooks/useProductDetail"
 
-/* This declares the page title and enables breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Product Detail",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      }
-    }
-  }
-}
-
 const ProductDetailPage = () => {
   const {
     product,

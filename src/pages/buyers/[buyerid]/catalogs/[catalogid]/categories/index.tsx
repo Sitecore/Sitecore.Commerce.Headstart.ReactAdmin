@@ -24,22 +24,6 @@ import TreeView from "components/dndtreeview/TreeView"
 import {ocNodeModel} from "@minoru/react-dnd-treeview"
 import {useRouter} from "hooks/useRouter"
 
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Categories List",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
-
 const CategoriesList = (props) => {
   const [categoriesTreeView, setCategoriesTreeView] = useState([])
   const [selectedNode, setSelectedNode] = useState<ocNodeModel>(null)

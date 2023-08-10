@@ -7,24 +7,6 @@ import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ISupplier} from "types/ordercloud/ISupplier"
 
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-/* TODO Ask if this is the way to go or better to have getStaticProps + GetStaticPath in this case */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit supplier",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false,
-          hasSupplierContextSwitch: true
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
-
 const SupplierListItem = () => {
   const router = useRouter()
   const [supplier, setSupplier] = useState({} as Supplier)

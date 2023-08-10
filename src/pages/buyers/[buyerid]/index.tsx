@@ -7,23 +7,6 @@ import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-/* TODO Ask if this is the way to go or better to have getStaticProps + GetStaticPath in this case */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit buyer",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: true
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
-
 const BuyerListItem = () => {
   const router = useRouter()
   const [buyer, setBuyer] = useState({} as Buyer)

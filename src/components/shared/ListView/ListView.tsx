@@ -47,6 +47,7 @@ interface IListView<T, F = any> {
   children?: (props: ListViewChildrenProps) => ReactElement
   noResultsMessage?: ListViewTemplate
   noDataMessage?: ListViewTemplate
+  selectable?: boolean
 }
 
 export interface ListParams {
@@ -95,7 +96,8 @@ const ListView = <T extends IDefaultResource>({
   initialViewMode = "table",
   children,
   noResultsMessage = DEFAULT_NO_RESULTS_MESSAGE,
-  noDataMessage = DEFAULT_NO_DATA_MESSAGE
+  noDataMessage = DEFAULT_NO_DATA_MESSAGE,
+  selectable = true
 }: IListView<T>) => {
   const [data, setData] = useState<(T extends Product ? ListPageWithFacets<T> : ListPage<T>) | undefined>()
   const [viewMode, setViewMode] = useState<"grid" | "table">(initialViewMode)
@@ -269,7 +271,7 @@ const ListView = <T extends IDefaultResource>({
               itemHrefResolver={itemHrefResolver}
               data={data && data.Items}
               selected={selected}
-              onSelectChange={handleSelectChange}
+              onSelectChange={selectable ? handleSelectChange : null}
             />
           </Box>
           <Box minHeight="600px" hidden={viewMode !== "table"}>
@@ -282,7 +284,7 @@ const ListView = <T extends IDefaultResource>({
               data={data && data.Items}
               selected={selected}
               emptyDisplay={isSearching ? noResultsMessage : noDataMessage}
-              onSelectChange={handleSelectChange}
+              onSelectChange={selectable ? handleSelectChange : null}
               onSortChange={handleSortChange}
               currentSort={currentSort}
             />
@@ -311,7 +313,9 @@ const ListView = <T extends IDefaultResource>({
     currentPage,
     handleUpdateQuery,
     handleSelectChange,
-    handleSortChange
+    handleSortChange,
+    params,
+    selectable
   ])
 
   const childrenProps = useMemo(() => {

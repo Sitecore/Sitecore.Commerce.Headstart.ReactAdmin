@@ -12,8 +12,8 @@ const ContentHeader = () => {
   return (
     <Container px={[4, 6, 8]} pt={[6, 8, 10]} bg={"st.mainBackgroundColor"} maxW="100%">
       {path !== "/dashboard" && path !== "/" && <Breadcrumbs />}
-      {path.startsWith("/buyers") && pathParts.length > 2 && <BuyerContextSwitch />}
-      {path.startsWith("/suppliers") && pathParts.length > 2 && <SupplierContextSwitch />}
+      {path.startsWith("/buyers") && !path.endsWith("/new") && pathParts.length > 2 && <BuyerContextSwitch />}
+      {path.startsWith("/suppliers") && !path.endsWith("/new") && pathParts.length > 2 && <SupplierContextSwitch />}
     </Container>
   )
 }

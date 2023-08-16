@@ -47,17 +47,6 @@ export function BuyerForm({buyer}: BuyerFormProps) {
     mode: "onBlur"
   })
 
-  const [catalogs, setCatalogs] = useState([] as ICatalog[])
-
-  useEffect(() => {
-    initCatalogsData()
-  }, [])
-
-  async function initCatalogsData() {
-    const response = await Catalogs?.List<ICatalog>()
-    setCatalogs(response?.Items)
-  }
-
   async function createBuyer(fields: IBuyer) {
     const createdBuyer = await Buyers?.Create<IBuyer>(fields)
     successToast({
@@ -84,6 +73,14 @@ export function BuyerForm({buyer}: BuyerFormProps) {
     }
   }
 
+  const loadCatalogs = async (inputValue: string) => {
+    const allCatalogs = await Catalogs.List<ICatalog>({
+      search: inputValue,
+      pageSize: 5
+    })
+    return allCatalogs.Items.map((catalog) => ({label: catalog.Name, value: catalog.ID}))
+  }
+
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -108,7 +105,7 @@ export function BuyerForm({buyer}: BuyerFormProps) {
             label="Default Catalog"
             selectProps={{
               placeholder: "Select option",
-              options: catalogs.map(({ID, Name}) => ({value: ID, label: Name}))
+              loadOptions: loadCatalogs
             }}
             control={control}
             validationSchema={validationSchema}

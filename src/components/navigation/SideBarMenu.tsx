@@ -15,27 +15,39 @@ import {appPermissions} from "config/app-permissions.config"
 import {Link} from "./Link"
 import schraTheme from "theme/theme"
 import {useRouter} from "next/router"
+import {useAuth} from "hooks/useAuth"
 
-interface DesktopSideBarMenuProps {
+interface SidebarMenuProps {
   isInDrawer?: boolean
   onLinkClick?: () => void
 }
-const DesktopSideBarMenu = ({isInDrawer, onLinkClick}: DesktopSideBarMenuProps) => {
-  let router = useRouter()
-
-  // TODO: avoid component-specific one-off styles like this. Try to refactor these into a system of semantic-tokens.
+const SidebarMenu = ({isInDrawer, onLinkClick}: SidebarMenuProps) => {
+  const router = useRouter()
+  const {isSupplier} = useAuth()
   const btnActiveColor = useColorModeValue("inherit", "whiteAlpha.800")
   const btnActiveBgColor = useColorModeValue("white", "whiteAlpha.200")
 
   const data = [
-    {label: "dashboard", icon: TbLayout, permisshies: appPermissions.ProductManager},
-    {label: "products", icon: TbShoppingCartPlus, permisshies: appPermissions.ProductManager},
-    {label: "promotions", icon: TbShoppingCartDiscount, permisshies: appPermissions.OrderManager},
-    {label: "orders", icon: TbReceipt2, permisshies: appPermissions.OrderManager},
-    {label: "returns", icon: TbTruckReturn, permisshies: appPermissions.OrderManager},
-    {label: "buyers", icon: TbUserCheck, permisshies: appPermissions.BuyerManager},
-    {label: "suppliers", icon: TbBuildingWarehouse, permisshies: appPermissions.SupplierManager},
-    {label: "settings", icon: TbSettings2, permisshies: appPermissions.SettingsManager}
+    {label: "Dashboard", path: "/dashboard", icon: TbLayout, permisshies: appPermissions.ProductManager},
+    {label: "Products", path: "/products", icon: TbShoppingCartPlus, permisshies: appPermissions.ProductManager},
+    {label: "Promotions", path: "/promotions", icon: TbShoppingCartDiscount, permisshies: appPermissions.OrderManager},
+    {label: "Orders", path: "/orders", icon: TbReceipt2, permisshies: appPermissions.OrderManager},
+    {label: "Returns", path: "/returns", icon: TbTruckReturn, permisshies: appPermissions.OrderManager},
+    {label: "Buyers", path: "/buyers", icon: TbUserCheck, permisshies: appPermissions.BuyerManager},
+    isSupplier
+      ? {
+          label: "My Supplier",
+          path: "/mysupplier",
+          icon: TbBuildingWarehouse,
+          permisshies: appPermissions.SupplierManager
+        }
+      : {
+          label: "Suppliers",
+          path: "/suppliers",
+          icon: TbBuildingWarehouse,
+          permisshies: appPermissions.SupplierManager
+        },
+    {label: "settings", path: "/settings", icon: TbSettings2, permisshies: appPermissions.SettingsManager}
   ]
 
   const links = data.map((item) => (
@@ -44,7 +56,7 @@ const DesktopSideBarMenu = ({isInDrawer, onLinkClick}: DesktopSideBarMenuProps) 
       <Button
         as={Link}
         onClick={onLinkClick}
-        href={`/${item.label}`}
+        href={item.path}
         variant="ghost"
         leftIcon={<Icon as={item.icon} strokeWidth="1.25" fontSize="1.5em" />}
         isActive={"/" + item.label === router?.pathname}
@@ -99,4 +111,4 @@ const DesktopSideBarMenu = ({isInDrawer, onLinkClick}: DesktopSideBarMenuProps) 
   )
 }
 
-export default DesktopSideBarMenu
+export default SidebarMenu

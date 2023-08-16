@@ -10,7 +10,7 @@ import {
   DrawerBody,
   useColorModeValue
 } from "@chakra-ui/react"
-import DesktopSideBarMenu from "./DesktopSideBarMenu"
+import SideBarMenu from "./SideBarMenu"
 
 interface NavMenuDrawerProps {}
 export function NavMenuDrawer({}: NavMenuDrawerProps) {
@@ -28,7 +28,7 @@ export function NavMenuDrawer({}: NavMenuDrawerProps) {
         <DrawerContent backgroundColor={drawerBackground}>
           <DrawerCloseButton />
           <DrawerBody>
-            <DesktopSideBarMenu isInDrawer onLinkClick={onClose} />
+            <SideBarMenu isInDrawer onLinkClick={onClose} />
           </DrawerBody>
         </DrawerContent>
       </Drawer>

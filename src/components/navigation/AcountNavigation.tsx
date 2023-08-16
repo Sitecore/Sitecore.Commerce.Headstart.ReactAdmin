@@ -53,9 +53,9 @@ const MobileNavigation = () => {
     currenttheme = cookies.get("currenttheme")
   }
   return (
-    <HStack alignItems="center">
+    <HStack alignItems="center" gap={3}>
       <Menu>
-        <MenuButton pos={"relative"}>
+        <MenuButton pos={"relative"} mr={3}>
           <Icon as={TbInbox} strokeWidth="1.5" fontSize="2xl" />
           <Badge
             display={"flex"}
@@ -115,13 +115,11 @@ const MobileNavigation = () => {
               name={usersToken}
               src={`https://source.unsplash.com/random/?landscape`}
               borderRadius="50%"
-              mr="0"
-              ml="15px"
               size="sm"
               border=".5px solid #ccc"
             />
             <Show above="md">
-              <Text>{usersToken}</Text>
+              <Text whiteSpace="nowrap">{usersToken}</Text>
               <ChevronDownIcon />
             </Show>
           </HStack>

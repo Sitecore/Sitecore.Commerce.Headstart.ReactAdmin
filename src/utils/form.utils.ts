@@ -34,3 +34,10 @@ export function emptyStringToNull(value, originalValue) {
   }
   return value
 }
+
+export function nullToFalse(value, originalValue) {
+  if (originalValue === null) {
+    return false
+  }
+  return value
+}

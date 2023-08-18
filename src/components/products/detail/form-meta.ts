@@ -7,7 +7,7 @@ import {IVariant} from "types/ordercloud/IVariant"
 import {ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 import {array, bool, boolean, number, object, string} from "yup"
-import {emptyStringToNull} from "utils"
+import {emptyStringToNull, nullToFalse} from "utils"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {compact, uniqBy} from "lodash"
 import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
@@ -50,7 +50,7 @@ export const defaultValues: ProductDetailFormFields = {
       ShipLinearUnit: "in",
       ShipWeightUnit: "lb",
       ShipFromCompanyID: "",
-      UnitOfMeasure: "each",
+      UnitOfMeasure: { Qty: 1, Unit: "" },
       ShipsFromMultipleLocations: false
     }
   },
@@ -126,7 +126,7 @@ export const validationSchema = object().shape({
     ID: string().max(100),
     Description: string().max(2000),
     Inventory: object().shape({
-      Enabled: boolean(),
+      Enabled: boolean().transform(nullToFalse), // if Inventory is null, default to false
       VariantLevelTracking: boolean(),
       QuantityAvailable: number().integer().transform(emptyStringToNull).nullable(),
       OrderCanExceed: boolean()
@@ -146,7 +146,10 @@ export const validationSchema = object().shape({
       ShipLinearUnit: string(),
       ShipWeightUnit: string(),
       ShipFromCompanyID: string(),
-      UnitOfMeasure: string().max(50),
+      UnitOfMeasure:  object().shape({
+        Qty: number(),
+        Unit: string().max(50)
+      }),
       ShipsFromMultipleLocations: boolean()
     })
   }),

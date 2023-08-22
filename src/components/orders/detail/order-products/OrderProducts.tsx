@@ -53,7 +53,7 @@ function SupplierLineItems({
   return (
     <Card marginBottom={5} backgroundColor="st.mainBackgroundColor">
       <CardHeader>
-        <Heading size="sm">{address?.AddressName || "Admin"}</Heading>
+        {address?.AddressName && <Heading size="sm">{address?.AddressName}</Heading>}
         {address && <SingleLineAddress address={address} />}
       </CardHeader>
       <CardBody>

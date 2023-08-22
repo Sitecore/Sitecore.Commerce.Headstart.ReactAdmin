@@ -1,13 +1,13 @@
 import {useRouter} from "next/router"
 import {
-  AdminAddresses,
+  Address,
+  Addresses,
   LineItems,
   OrderReturns,
   Orders,
   Payments,
   Shipments,
   SpendingAccounts,
-  SupplierAddresses,
   Suppliers
 } from "ordercloud-javascript-sdk"
 import {useState, useEffect, useCallback} from "react"
@@ -27,7 +27,7 @@ import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 // this two level map is used to store ship from addresses for each supplier
 // SupplierID will be null if it is an admin address
 // ex: {SupplierID: {AddressID: Address}}
-export type ShipFromAddressMap = Record<string, Record<string, ISupplierAddress | IAdminAddress>>
+export type ShipFromAddressMap = Record<string, Address>
 
 export function useOrderDetail() {
   const {isAdmin} = useAuth()
@@ -95,37 +95,22 @@ export function useOrderDetail() {
     [isAdmin]
   )
 
-  const fetchShipFromAddresses = useCallback(async (lineItems: ILineItem[]) => {
-    const groupedLineItems = groupBy(lineItems, (li) => li.Product.DefaultSupplierID)
+  const fetchShipFromAddresses = useCallback(async (order: IOrder, lineItems: ILineItem[]) => {
+    const buyerId = order.FromCompanyID
+    const groupedLineItems = groupBy(lineItems, (li) => li.ShippingAddressID)
 
-    const addressRequests = Object.entries(groupedLineItems).map(async ([supplierId, lineItems]) => {
-      const uniqueAddressIds = uniq(compact(lineItems.map((lineItem) => lineItem.ShipFromAddressID)))
-      if (!uniqueAddressIds.length) {
-        return {DefaultSupplierID: supplierId || null, Addresses: []}
+    const addressRequests = Object.entries(groupedLineItems).map(async ([buyerAddressId, lineItems]) => {
+      if (buyerAddressId && buyerAddressId !== "null") {
+        return await Addresses.Get(buyerId, buyerAddressId)
+      } else {
+        return null
       }
-
-      const isSupplierAddresses = Boolean(supplierId)
-      if (isSupplierAddresses) {
-        const addressList = await SupplierAddresses.List<ISupplierAddress>(supplierId, {
-          filters: {ID: uniqueAddressIds.join("|")},
-          pageSize: 100
-        })
-        return {DefaultSupplierID: supplierId, Addresses: addressList.Items}
-      }
-      const addressList = await AdminAddresses.List<IAdminAddress>({
-        filters: {ID: uniqueAddressIds.join("|")},
-        pageSize: 100
-      })
-      return {DefaultSupplierID: null, Addresses: addressList.Items}
     })
     const responses = await Promise.all(addressRequests)
-    const addressMap: ShipFromAddressMap = responses.reduce((acc, response) => {
-      if (!acc[response.DefaultSupplierID]) {
-        acc[response.DefaultSupplierID] = {}
+    const addressMap: ShipFromAddressMap = responses.reduce((acc, address) => {
+      if (address?.ID) {
+        acc[address.ID] = address
       }
-      response.Addresses.forEach((address) => {
-        acc[response.DefaultSupplierID][address.ID] = address
-      })
       return acc
     }, {})
 
@@ -165,7 +150,7 @@ export function useOrderDetail() {
       await Promise.all([
         fetchLineItems(_order).then(async (lineItems) => {
           setLineItems(lineItems)
-          return await Promise.all([fetchSuppliers(lineItems), fetchShipFromAddresses(lineItems)])
+          return await Promise.all([fetchSuppliers(lineItems), fetchShipFromAddresses(_order, lineItems)])
         }),
         fetchPromotions(_order),
         fetchPayments(_order),

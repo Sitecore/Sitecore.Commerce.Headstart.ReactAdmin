@@ -16,37 +16,20 @@ export function OrderProducts({isAdmin, lineItems, suppliers, shipFromAddresses}
   if (!isAdmin) {
     return <LineItemTable lineItems={lineItems} />
   }
-  const shipFromGroupedLineItems = groupBy(lineItems, (li) => li.ShipFromAddressID)
+  const shipFromGroupedLineItems = groupBy(lineItems, (li) => li.ShippingAddressID)
   return (
     <>
       {Object.entries(shipFromGroupedLineItems).map(([shipFromAddressId, shipFromLineItems], shipFromIndex) => {
-        if (shipFromAddressId) {
-          const supplierId = shipFromLineItems[0].Product.DefaultSupplierID
-          return (
-            <SupplierLineItems
-              key={shipFromIndex}
-              supplierId={supplierId}
-              shipFromAddressId={shipFromAddressId}
-              suppliers={suppliers}
-              shipFromAddresses={shipFromAddresses}
-              lineItems={shipFromLineItems}
-            />
-          )
-        } else {
-          const supplierGroupedLineItems = groupBy(shipFromLineItems, (li) => li.Product.DefaultSupplierID)
-          return Object.entries(supplierGroupedLineItems).map(([supplierId, supplierLineItems], supplierIndex) => {
-            return (
-              <SupplierLineItems
-                key={shipFromIndex + supplierIndex}
-                supplierId={supplierId}
-                shipFromAddressId={null}
-                suppliers={suppliers}
-                shipFromAddresses={shipFromAddresses}
-                lineItems={supplierLineItems}
-              />
-            )
-          })
-        }
+        return (
+          <SupplierLineItems
+            key={shipFromIndex}
+            supplierId={null}
+            shipFromAddressId={shipFromAddressId}
+            suppliers={suppliers}
+            shipFromAddresses={shipFromAddresses}
+            lineItems={shipFromLineItems}
+          />
+        )
       })}
     </>
   )
@@ -66,12 +49,11 @@ function SupplierLineItems({
   shipFromAddresses,
   lineItems
 }: SupplierLineItemsProps) {
-  const supplier = suppliers.find((supplier) => supplier.ID === supplierId)
-  const address = shipFromAddresses[supplierId] ? shipFromAddresses[supplierId][shipFromAddressId] : null
+  const address = shipFromAddresses[shipFromAddressId]
   return (
     <Card marginBottom={5} backgroundColor="st.mainBackgroundColor">
       <CardHeader>
-        <Heading size="sm">{supplier?.Name || "Admin"}</Heading>
+        <Heading size="sm">{address?.AddressName || "Admin"}</Heading>
         {address && <SingleLineAddress address={address} />}
       </CardHeader>
       <CardBody>

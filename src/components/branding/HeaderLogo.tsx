@@ -5,7 +5,7 @@ import {MyCommerceIcon} from "../icons/Icons"
 interface HeaderLogoProps extends IconProps {}
 export function HeaderLogo({...iconProps}: HeaderLogoProps) {
   return (
-    <Link href="/" height="100%">
+    <Link href="/" display="flex" alignItems="center" height="100%">
       <MyCommerceIcon {...iconProps} />
     </Link>
   )

@@ -25,7 +25,7 @@ export function UnitOfMeasureCard({control, validationSchema, ...cardProps}: Uni
           />
           <InputControl
             label="Unit of measure"
-            name="Product.xp.UnitOfMeasure"
+            name="Product.xp.UnitOfMeasure.Unit"
             control={control}
             validationSchema={validationSchema}
           />

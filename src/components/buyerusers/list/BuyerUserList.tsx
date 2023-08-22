@@ -7,6 +7,7 @@ import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 import BuyerUsersDeleteModal from "../modals/BuyerUserDeleteModal"
 import BuyerUserActionMenu from "./BuyerUserActionMenu"
 import BuyerUserListToolbar from "./BuyerUserListToolBar"
+import {useRouter} from "hooks/useRouter"
 
 export const BuyerUserColorSchemeMap = {
   "": "gray",
@@ -85,6 +86,7 @@ const BuyerUsersTableOptions: ListViewTableOptions<IBuyerUser> = {
 }
 
 const BuyerUserList: FC<IBuyerUserList> = ({buyerid}) => {
+  const router = useRouter()
   const [actionBuyerUsers, setActionBuyerUsers] = useState<IBuyerUser>()
   const deleteDisclosure = useDisclosure()
 
@@ -96,10 +98,11 @@ const BuyerUserList: FC<IBuyerUserList> = ({buyerid}) => {
           buyeruser={buyeruser}
           onOpen={() => setActionBuyerUsers(buyeruser)}
           onDelete={deleteDisclosure.onOpen}
+          onMove={(movedBuyerId) => router.push(`/buyers/${movedBuyerId}/users`)}
         />
       )
     },
-    [buyerid, deleteDisclosure.onOpen]
+    [buyerid, deleteDisclosure.onOpen, router]
   )
 
   const resolveBuyerUserDetailHref = useCallback(

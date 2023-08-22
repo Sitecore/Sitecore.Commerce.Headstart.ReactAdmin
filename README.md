@@ -108,7 +108,7 @@ Changes from release-to-release are tracked in the [Changelog wiki page](https:/
 ## Roadmap
 Larger roadmap items are outlined in the [project milestones](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/milestones)
 
-## References
+## References 
 - [OrderCloud Javascript SDK](https://www.npmjs.com/package/ordercloud-javascript-sdk)
 - [OrderCloud API Reference](https://ordercloud.io/api-reference)
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.

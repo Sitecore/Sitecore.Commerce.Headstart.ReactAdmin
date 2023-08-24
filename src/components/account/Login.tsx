@@ -78,7 +78,7 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({title = "Sign into yo
         >
           <chakra.form pl={[0, 12]} name="ocLoginForm" onSubmit={handleSubmit}>
             <VStack width="full" alignItems={"flex-start"} gap={4}>
-              <HeaderLogo maxW={250} w="full" />
+              <HeaderLogo maxW={400} w="full" />
               <Heading as="h1" fontSize={"4xl"} fontWeight={"thin"} color={loginHeaderColor}>
                 {title}
               </Heading>

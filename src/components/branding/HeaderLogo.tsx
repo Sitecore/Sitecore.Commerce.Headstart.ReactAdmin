@@ -1,12 +1,11 @@
-import {IconProps} from "@chakra-ui/react"
+import {IconProps, Image} from "@chakra-ui/react"
 import {Link} from "../navigation/Link"
-import {MyCommerceIcon} from "../icons/Icons"
 
 interface HeaderLogoProps extends IconProps {}
 export function HeaderLogo({...iconProps}: HeaderLogoProps) {
   return (
     <Link href="/" display="flex" alignItems="center" height="100%">
-      <MyCommerceIcon {...iconProps} />
+      <Image src="/vector/shop.svg" alt="PLAY! Marketplace logo" {...iconProps} />
     </Link>
   )
 }

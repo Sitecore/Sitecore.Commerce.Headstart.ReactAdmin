@@ -20,7 +20,7 @@ const Header = () => {
         <Show below="sm">
           <NavMenuDrawer />
         </Show>
-        <HeaderLogo width={["150px", "auto"]} />
+        <HeaderLogo maxW={240} w="full" />
         <AcountNavigation />
       </HStack>
     </Container>

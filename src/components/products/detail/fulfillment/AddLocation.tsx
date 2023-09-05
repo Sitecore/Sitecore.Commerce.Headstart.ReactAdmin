@@ -4,9 +4,8 @@ import {Button, HStack, useDisclosure} from "@chakra-ui/react"
 import {ProductDetailFormFields} from "../form-meta"
 import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
 import {appSettings} from "config/app-settings"
-import {AdminAddressForm} from "@/components/adminaddresses"
 import {Address} from "ordercloud-javascript-sdk"
-import {SupplierAddressForm} from "@/components/supplieraddresses"
+import {AddressForm} from "@/components/addresses"
 
 interface AddLocationProps {
   control: Control<ProductDetailFormFields>
@@ -16,12 +15,8 @@ interface AddLocationProps {
   loading?: boolean
 }
 export function AddLocation({control, validationSchema, inventoryRecords, onAdd, loading}: AddLocationProps) {
-  const {onOpen: onOpenAdminAddress, onClose: onCloseAdminAddress, isOpen: isOpenAdminAddress} = useDisclosure()
-  const {
-    onOpen: onOpenSupplierAddress,
-    onClose: onCloseSupplierAddress,
-    isOpen: isOpenSupplierAddress
-  } = useDisclosure()
+  const adminAddressDisclosure = useDisclosure()
+  const supplierAddressDisclosure = useDisclosure()
 
   const {
     field: {onChange: onAddressIdChange}
@@ -34,16 +29,16 @@ export function AddLocation({control, validationSchema, inventoryRecords, onAdd,
 
   const openAddLocationModal = () => {
     if (companyId === appSettings.marketplaceId) {
-      onOpenAdminAddress()
+      adminAddressDisclosure.onOpen()
     } else {
-      onOpenSupplierAddress()
+      supplierAddressDisclosure.onOpen()
     }
   }
 
   const handleAddLocation = async (address: Address) => {
     onAdd(companyId, address.ID)
-    onCloseAdminAddress()
-    onCloseSupplierAddress()
+    adminAddressDisclosure.onClose()
+    supplierAddressDisclosure.onClose()
   }
 
   return (
@@ -69,24 +64,11 @@ export function AddLocation({control, validationSchema, inventoryRecords, onAdd,
           isLoading={loading}
           minW="max-content"
         >
-          Add Location
+          Add new location
         </Button>
       </HStack>
-      <AdminAddressForm
-        variant="modal"
-        modalTitle="Add Location"
-        isOpen={isOpenAdminAddress}
-        onClose={onCloseAdminAddress}
-        onCreate={handleAddLocation}
-      />
-      <SupplierAddressForm
-        variant="modal"
-        modalTitle="Add Location"
-        supplierId={companyId}
-        isOpen={isOpenSupplierAddress}
-        onClose={onCloseSupplierAddress}
-        onCreate={handleAddLocation}
-      />
+      <AddressForm addressType="admin" disclosureProps={adminAddressDisclosure} onCreate={handleAddLocation} />
+      <AddressForm addressType="supplier" disclosureProps={supplierAddressDisclosure} onCreate={handleAddLocation} />
     </>
   )
 }

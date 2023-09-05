@@ -1,4 +1,6 @@
+import ProtectedContent from "@/components/auth/ProtectedContent"
 import {Card, CardBody, Divider, CardFooter, HStack, Button, Image} from "@chakra-ui/react"
+import {appPermissions} from "config/app-permissions.config"
 import {useRef} from "react"
 import {useDrop, useDrag} from "react-dnd"
 import {XpImage} from "types/ordercloud/IProduct"
@@ -88,18 +90,20 @@ export function ImageCard({image, index, onSetPrimary, onRemove, onMove}: ImageC
         <Image src={image.ThumbnailUrl || image.Url} onError={loadFallbackImage} alt="Product image" />
       </CardBody>
       <Divider color="blackAlpha.300" />
-      <CardFooter>
-        <HStack width="full">
-          {index !== 0 && (
-            <Button variant="ghost" width="50%" size="xs" onClick={() => onSetPrimary(index)}>
-              Set as primary
+      <ProtectedContent hasAccess={appPermissions.ProductManager}>
+        <CardFooter>
+          <HStack width="full">
+            {index !== 0 && (
+              <Button variant="ghost" width="50%" size="xs" onClick={() => onSetPrimary(index)}>
+                Set as primary
+              </Button>
+            )}
+            <Button colorScheme="danger" width="50%" size="xs" onClick={() => onRemove(index)}>
+              Delete
             </Button>
-          )}
-          <Button colorScheme="danger" width="50%" size="xs" onClick={() => onRemove(index)}>
-            Delete
-          </Button>
-        </HStack>
-      </CardFooter>
+          </HStack>
+        </CardFooter>
+      </ProtectedContent>
     </Card>
   )
 }

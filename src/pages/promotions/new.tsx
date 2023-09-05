@@ -4,7 +4,7 @@ import {appPermissions} from "config/app-permissions.config"
 
 function ProtectedNewPromotionPage() {
   return (
-    <ProtectedContent hasAccess={appPermissions.OrderManager}>
+    <ProtectedContent hasAccess={appPermissions.PromotionManager}>
       <PromotionForm />
     </ProtectedContent>
   )

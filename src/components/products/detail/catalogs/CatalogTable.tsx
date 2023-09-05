@@ -5,6 +5,8 @@ import {useEffect, useState} from "react"
 import {ICatalog} from "types/ordercloud/ICatalog"
 import {CatalogActionMenu} from "./CatalogActionMenu"
 import {ProductDetailFormFields} from "../form-meta"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface CatalogsTableProps {
   control: Control<ProductDetailFormFields>
@@ -34,7 +36,7 @@ export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
     <TableContainer
       whiteSpace="normal"
       border=".5px solid"
-      borderColor="st.borderColor"
+      borderColor="chakra-border-color"
       shadow="lg"
       overflowX="hidden"
       w="100%"
@@ -63,7 +65,9 @@ export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
                 </Td>
                 <Td role="cell">{catalog.CategoryCount}</Td>
                 <Td role="cell">
-                  <CatalogActionMenu onDeleteAssignment={() => remove(index)} />
+                  <ProtectedContent hasAccess={appPermissions.ProductManager}>
+                    <CatalogActionMenu onDeleteAssignment={() => remove(index)} />
+                  </ProtectedContent>
                 </Td>
               </Tr>
             )

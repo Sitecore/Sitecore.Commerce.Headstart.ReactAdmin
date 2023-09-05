@@ -3,11 +3,13 @@ import {useController} from "react-hook-form"
 import {isRequiredField} from "utils"
 import {BaseProps, FormControl} from "../form-control"
 import {Select, Props} from "chakra-react-select"
+import {CreatableSelect} from "chakra-react-select"
 import {ReactSelectOption} from "types/form/ReactSelectOption"
 
 export type SelectControlProps = BaseProps & {
-  selectProps?: Props<ReactSelectOption, boolean, any> & {
+  selectProps: Props<ReactSelectOption, boolean, any> & {
     loadOptions?: (inputValue: string) => Promise<ReactSelectOption[]>
+    isCreatable?: boolean
   }
 }
 
@@ -16,7 +18,7 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
     name,
     control,
     label,
-    selectProps: {loadOptions, isMulti, inputValue, ...selectProps},
+    selectProps: {loadOptions, isMulti, isCreatable, inputValue, ...selectProps},
     validationSchema,
     ...rest
   } = props
@@ -46,6 +48,9 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
   )
 
   const value = useMemo(() => {
+    if (isCreatable) {
+      return fieldValue.map((value) => ({value, label: value}))
+    }
     if (!options) {
       return []
     }
@@ -66,7 +71,7 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
       onFieldChange("")
     }
     return singleVal
-  }, [fieldValue, options, isMulti, onFieldChange, optionsLoaded])
+  }, [fieldValue, options, isMulti, onFieldChange, optionsLoaded, isCreatable])
 
   const loadOptionsCallback = useCallback(
     async (search: string) => {
@@ -87,6 +92,8 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
     loadOptionsCallback(inputValue)
   }, [loadOptionsCallback, inputValue])
 
+  const SelectComponent = isCreatable ? CreatableSelect : Select
+
   return (
     <>
       <FormControl
@@ -97,7 +104,7 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
         validationSchema={validationSchema}
         {...rest}
       >
-        <Select
+        <SelectComponent
           {...field}
           {...selectProps}
           isMulti={isMulti}
@@ -107,7 +114,7 @@ export const SelectControl: FC<SelectControlProps> = (props: SelectControlProps)
           value={value}
           closeMenuOnSelect={true}
           hideSelectedOptions={true}
-          isDisabled={isSubmitting || isLoading || selectProps?.isLoading}
+          isDisabled={isSubmitting || isLoading || selectProps?.isLoading || selectProps?.isDisabled}
         />
       </FormControl>
     </>

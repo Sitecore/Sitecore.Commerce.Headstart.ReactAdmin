@@ -5,6 +5,8 @@ import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSea
 import {ListViewChildrenProps} from "../../shared/ListView/ListView"
 import ListViewMetaInfo from "../../shared/ListViewMetaInfo/ListViewMetaInfo"
 import ProductFacetListActions from "./ProductFacetListActions"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface ProductFacetListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
@@ -34,13 +36,15 @@ const ProductFacetListToolbar: FC<ProductFacetListToolbarProps> = ({
             <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href="productfacets/new">
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create Product Facet
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.ProductFacetManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href="productfacets/new">
+                <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+                  Create Product Facet
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

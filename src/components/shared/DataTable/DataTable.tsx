@@ -141,7 +141,7 @@ const DataTable = <T extends IDefaultResource>({
     <TableContainer
       whiteSpace="normal"
       border=".5px solid"
-      borderColor="st.borderColor"
+      borderColor="chakra-border-color"
       shadow="lg"
       overflowX="hidden"
       w="100%"

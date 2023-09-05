@@ -6,6 +6,8 @@ import Link from "next/link"
 import {FC} from "react"
 import SupplierUserListActions from "./SupplierUserListActions"
 import SupplierUserStatusFilter from "./SupplierUserStatusFilter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface SupplierUserListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {
   supplierid: string
@@ -36,13 +38,15 @@ const SupplierUserListToolbar: FC<SupplierUserListToolbarProps> = ({
             <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/suppliers/${supplierid}/users/new`}>
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create User
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.SupplierUserManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href={`/suppliers/${supplierid}/users/new`}>
+                <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+                  Create User
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

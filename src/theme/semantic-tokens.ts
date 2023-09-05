@@ -3,30 +3,15 @@
 // q: why are there duplicates?
 // a: there's no validation, so if you accidentally capitalize, you might not realize the error.
 //    duplicating with both case sensitivity to aleviate.
+// TODO: let's get rid of this crutch ^^^^^
 
 const semanticTokens = {
   colors: {
-    "st.borderColor": {
-      default: "blackAlpha.300",
-      _dark: "whiteAlpha.300"
-    },
-    "st.BorderColor": {
-      default: "blackAlpha.300",
-      _dark: "whiteAlpha.300"
-    },
     "st.mainBackgroundColor": {
       default: "blackAlpha.100",
       _dark: "gray.900"
     },
-    "st.MainBackgroundColor": {
-      default: "blackAlpha.50",
-      _dark: "gray.900"
-    },
     "st.cardBackgroundColor": {
-      default: "whiteAlpha.100",
-      _dark: "gray.900"
-    },
-    "st.CardBackgroundColor": {
       default: "whiteAlpha.100",
       _dark: "gray.900"
     },
@@ -34,16 +19,15 @@ const semanticTokens = {
       default: "blackAlpha.100",
       _dark: "gray.900"
     },
-    "st.TableStripeBackground": {
-      default: "whiteAlpha.100",
-      _dark: "gray.900"
-    },
     // LOGO SPECIFIC SEMANTIC TOKENS
     "st.logoBaseColor": {
       default: "gray.900",
       _dark: "gray.50"
     },
-
+    "st.linkColor": {
+      default: "primary.600",
+      _dark: "primary.100"
+    },
     "st.visaBackground": {
       default: "#1434CB",
       _dark: "white"

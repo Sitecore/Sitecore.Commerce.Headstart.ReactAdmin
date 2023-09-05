@@ -1,7 +1,9 @@
+import ProtectedContent from "@/components/auth/ProtectedContent"
 import BulkImport from "@/components/demo/BulkImport"
 import ExportToCsv from "@/components/demo/ExportToCsv"
 import {ChevronDownIcon, EditIcon} from "@chakra-ui/icons"
 import {Button, HStack, Menu, Icon, MenuButton, MenuDivider, MenuItem, MenuList, Text} from "@chakra-ui/react"
+import {appPermissions} from "config/app-permissions.config"
 import {FC, useMemo} from "react"
 import {TbSpeakerphone} from "react-icons/tb"
 
@@ -24,15 +26,19 @@ const ProductListActions: FC<IProductListActions> = ({selected, onBulkPromote, o
         </HStack>
       </MenuButton>
       <MenuList>
-        <BulkImport variant="menuitem" />
         <ExportToCsv variant="menuitem" />
-        <MenuDivider />
-        <MenuItem justifyContent="space-between" onClick={onBulkEdit} isDisabled={!hasBulkSelection}>
-          Bulk Edit <EditIcon />
-        </MenuItem>
-        <MenuItem justifyContent="space-between" onClick={onBulkPromote} isDisabled={!hasBulkSelection}>
-          Promote <Icon as={TbSpeakerphone} transform={"rotate(-35deg)"} fontSize="1.15em" stroke-width="1.7" />
-        </MenuItem>
+        <ProtectedContent hasAccess={appPermissions.ProductManager}>
+          <>
+            <BulkImport variant="menuitem" />
+            <MenuDivider />
+            <MenuItem justifyContent="space-between" onClick={onBulkEdit} isDisabled={!hasBulkSelection}>
+              Bulk Edit <EditIcon />
+            </MenuItem>
+            <MenuItem justifyContent="space-between" onClick={onBulkPromote} isDisabled={!hasBulkSelection}>
+              Promote <Icon as={TbSpeakerphone} transform={"rotate(-35deg)"} fontSize="1.15em" stroke-width="1.7" />
+            </MenuItem>
+          </>
+        </ProtectedContent>
       </MenuList>
     </Menu>
   )

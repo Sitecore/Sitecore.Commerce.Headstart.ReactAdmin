@@ -16,6 +16,7 @@ import {Link} from "./Link"
 import schraTheme from "theme/theme"
 import {useRouter} from "next/router"
 import {useAuth} from "hooks/useAuth"
+import {settingsPageItems} from "@/pages/settings"
 
 interface SidebarMenuProps {
   isInDrawer?: boolean
@@ -28,31 +29,60 @@ const SidebarMenu = ({isInDrawer, onLinkClick}: SidebarMenuProps) => {
   const btnActiveBgColor = useColorModeValue("white", "whiteAlpha.200")
 
   const data = [
-    {label: "Dashboard", path: "/dashboard", icon: TbLayout, permisshies: appPermissions.ProductManager},
-    {label: "Products", path: "/products", icon: TbShoppingCartPlus, permisshies: appPermissions.ProductManager},
-    {label: "Promotions", path: "/promotions", icon: TbShoppingCartDiscount, permisshies: appPermissions.OrderManager},
-    {label: "Orders", path: "/orders", icon: TbReceipt2, permisshies: appPermissions.OrderManager},
-    {label: "Returns", path: "/returns", icon: TbTruckReturn, permisshies: appPermissions.OrderManager},
-    {label: "Buyers", path: "/buyers", icon: TbUserCheck, permisshies: appPermissions.BuyerManager},
+    {label: "Dashboard", path: "/dashboard", icon: TbLayout, permisshies: appPermissions.DashboardViewer},
+    {
+      label: "Products",
+      path: "/products",
+      icon: TbShoppingCartPlus,
+      permisshies: [appPermissions.ProductViewer, appPermissions.ProductManager]
+    },
+    {
+      label: "Promotions",
+      path: "/promotions",
+      icon: TbShoppingCartDiscount,
+      permisshies: [appPermissions.PromotionViewer, appPermissions.PromotionManager]
+    },
+    {
+      label: "Orders",
+      path: "/orders",
+      icon: TbReceipt2,
+      permisshies: [appPermissions.OrderViewer, appPermissions.OrderManager]
+    },
+    {
+      label: "Returns",
+      path: "/returns",
+      icon: TbTruckReturn,
+      permisshies: [appPermissions.OrderViewer, appPermissions.OrderManager]
+    },
+    {
+      label: "Buyers",
+      path: "/buyers",
+      icon: TbUserCheck,
+      permisshies: [appPermissions.BuyerViewer, appPermissions.BuyerManager]
+    },
     isSupplier
       ? {
           label: "My Supplier",
           path: "/mysupplier",
           icon: TbBuildingWarehouse,
-          permisshies: appPermissions.SupplierManager
+          permisshies: [appPermissions.SupplierViewer, appPermissions.SupplierManager]
         }
       : {
           label: "Suppliers",
           path: "/suppliers",
           icon: TbBuildingWarehouse,
-          permisshies: appPermissions.SupplierManager
+          permisshies: [appPermissions.SupplierViewer, appPermissions.SupplierManager]
         },
-    {label: "settings", path: "/settings", icon: TbSettings2, permisshies: appPermissions.SettingsManager}
+    {
+      label: "settings",
+      path: "/settings",
+      icon: TbSettings2,
+      permisshies: settingsPageItems.map((item) => item.permisshies).flat()
+    }
   ]
 
   const links = data.map((item) => (
     <ProtectedContent hasAccess={item.permisshies} key={item.label}>
-      {/* TODO: This is excessive. Consider refactoring these styles into a button variant. */}
       <Button
         as={Link}
         onClick={onLinkClick}
@@ -64,7 +94,7 @@ const SidebarMenu = ({isInDrawer, onLinkClick}: SidebarMenuProps) => {
           backgroundColor: btnActiveBgColor,
           color: btnActiveColor,
           boxShadow: "sm",
-          borderColor: "st.borderColor"
+          borderColor: "chakra-border-color"
         }}
         _hover={{textDecoration: "none", backgroundColor: btnActiveBgColor, boxShadow: "md"}}
         border={".5px solid transparent"}
@@ -90,7 +120,7 @@ const SidebarMenu = ({isInDrawer, onLinkClick}: SidebarMenuProps) => {
       w={isInDrawer ? "250px" : ["75px", "75px", "75px", "250px"]}
       background={isInDrawer ? "transparent" : drawerBackground}
       borderRight={isInDrawer ? "none" : ".5px solid"}
-      borderColor="st.borderColor"
+      borderColor="chakra-border-color"
       minH={`calc(100vh - ${schraTheme?.sizes?.headerHeight} * 2.5)`} // this prevents uneeded scrollbars: full viewport height - header and footer heights...plus a .5 saftey net
       h="100%"
     >

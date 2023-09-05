@@ -4,7 +4,7 @@ import {appPermissions} from "config/app-permissions.config"
 
 const ProtectedPromotionsList = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.OrderManager}>
+    <ProtectedContent hasAccess={[appPermissions.PromotionViewer, appPermissions.PromotionManager]}>
       <PromotionList />
     </ProtectedContent>
   )

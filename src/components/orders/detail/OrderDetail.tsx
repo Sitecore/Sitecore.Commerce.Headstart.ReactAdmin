@@ -1,16 +1,4 @@
-import {
-  Card,
-  CardBody,
-  Container,
-  Stack,
-  VStack,
-  Text,
-  CardHeader,
-  Heading,
-  Flex,
-  HStack,
-  Button
-} from "@chakra-ui/react"
+import {Card, CardBody, Container, Stack, VStack, Text, CardHeader, Heading} from "@chakra-ui/react"
 import {dateHelper} from "utils"
 import {OrderSummary} from "./order-summary/OrderSummary"
 import {OrderCustomer} from "./order-customer/OrderCustomer"
@@ -128,7 +116,7 @@ export function OrderDetail({
                 <Stack direction={["column", "column", "row"]} justifyContent="space-between">
                   <Heading size="md">Products</Heading>
                   {order.Status === "Open" && shippableLineItems?.length && (
-                    <ProtectedContent hasAccess={appPermissions.ShipmentManager}>
+                    <ProtectedContent hasAccess={[appPermissions.OrderManager]}>
                       <ShipmentModal
                         order={order}
                         lineItems={shippableLineItems}
@@ -186,16 +174,18 @@ export function OrderDetail({
                 <Stack direction={["column", "column", "row"]} justifyContent="space-between">
                   <Heading size="md">Returns</Heading>
                   {(order.Status === "Open" || order.Status === "Completed") && refundableLineItems?.length && (
-                    <ReturnModal
-                      order={order}
-                      lineItems={refundableLineItems}
-                      allOrderReturns={returns}
-                      onUpdate={handleReturnUpdate}
-                      as="button"
-                      buttonProps={{colorScheme: "primary", size: "sm"}}
-                    >
-                      Create return
-                    </ReturnModal>
+                    <ProtectedContent hasAccess={appPermissions.OrderManager}>
+                      <ReturnModal
+                        order={order}
+                        lineItems={refundableLineItems}
+                        allOrderReturns={returns}
+                        onUpdate={handleReturnUpdate}
+                        as="button"
+                        buttonProps={{colorScheme: "primary", size: "sm"}}
+                      >
+                        Create return
+                      </ReturnModal>
+                    </ProtectedContent>
                   )}
                 </Stack>
               </CardHeader>

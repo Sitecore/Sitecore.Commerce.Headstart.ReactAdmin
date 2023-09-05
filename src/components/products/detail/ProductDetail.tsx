@@ -205,7 +205,7 @@ export default function ProductDetail({
           viewVisibility={viewVisibility}
           setViewVisibility={setViewVisibility}
         />
-        <Tabs colorScheme="accent" index={tabIndex} onChange={handleTabsChange}>
+        <Tabs colorScheme="accent" index={tabIndex} onChange={handleTabsChange} isLazy>
           <TabList flexWrap="wrap">
             {tabs.map((tab) => (
               <>{viewVisibility[tab] && <ProductDetailTab key={tab} tab={tab} control={control} />}</>

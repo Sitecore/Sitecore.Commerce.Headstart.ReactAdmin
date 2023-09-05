@@ -35,7 +35,7 @@ const PromotionItem = (props) => {
 
 const ProtectedPromotionItem = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.OrderManager}>
+    <ProtectedContent hasAccess={[appPermissions.PromotionViewer, appPermissions.PromotionManager]}>
       <PromotionItem />
     </ProtectedContent>
   )

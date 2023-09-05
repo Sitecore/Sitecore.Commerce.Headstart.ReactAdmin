@@ -18,6 +18,8 @@ import {Control, UseFormTrigger} from "react-hook-form"
 import {validationSchema} from "../form-meta"
 import {PriceBreakTable} from "./PricebreakTable"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
+import useHasAccess from "hooks/useHasAccess"
+import {appPermissions} from "config/app-permissions.config"
 
 interface PriceFormProps {
   control: Control<OverridePriceScheduleFieldValues>
@@ -34,6 +36,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
     }
     return fieldName
   }
+  const isProductManager = useHasAccess(appPermissions.ProductManager)
   return (
     <>
       <Card>
@@ -46,6 +49,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
               control={control}
               leftAddon="$"
               validationSchema={validationSchema}
+              isDisabled={!isProductManager}
             />
 
             <InputControl
@@ -55,6 +59,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
               control={control}
               leftAddon="$"
               validationSchema={validationSchema}
+              isDisabled={!isProductManager}
             />
 
             <InputControl
@@ -64,6 +69,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
               control={control}
               leftAddon="$"
               validationSchema={validationSchema}
+              isDisabled={!isProductManager}
             />
 
             <Grid gap={4} gridTemplateColumns={{base: "1fr", xl: "1fr 1fr 1fr"}}>
@@ -73,6 +79,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
                 control={control}
                 inputProps={{type: "datetime-local"}}
                 validationSchema={validationSchema}
+                isDisabled={!isProductManager}
               />
 
               <InputControl
@@ -81,6 +88,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
                 control={control}
                 inputProps={{type: "datetime-local"}}
                 validationSchema={validationSchema}
+                isDisabled={!isProductManager}
               />
             </Grid>
           </Grid>
@@ -104,6 +112,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
                       label="Restrict order quantity"
                       control={control}
                       validationSchema={validationSchema}
+                      isDisabled={!isProductManager}
                     />
                     <Text fontSize="sm" color="gray">
                       Require customers to order only in quantities specified in the volume pricing table
@@ -121,6 +130,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
                         label="Minimum quantity"
                         control={control}
                         validationSchema={validationSchema}
+                        isDisabled={!isProductManager}
                       />
                       <InputControl
                         name={withPrefix("MaxQuantity")}
@@ -128,6 +138,7 @@ export function PriceForm({control, trigger, priceBreakCount, fieldNamePrefix}: 
                         label="Maximum quantity"
                         control={control}
                         validationSchema={validationSchema}
+                        isDisabled={!isProductManager}
                       />
                     </Flex>
                   </Box>

@@ -4,6 +4,8 @@ import {CatalogsTable} from "./CatalogTable"
 import {ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {CatalogSelect} from "./CatalogSelect"
 import {ProductDetailFormFields} from "../form-meta"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface CatalogsCardProps {
   control: Control<ProductDetailFormFields>
@@ -32,7 +34,9 @@ export function CatalogsCard({control}: CatalogsCardProps) {
             Define which catalogs this product is assigned to
           </Text>
         </Heading>
-        <CatalogSelect onUpdate={handleCatalogAdd} existingAssignments={fieldValues} />
+        <ProtectedContent hasAccess={appPermissions.ProductManager}>
+          <CatalogSelect onUpdate={handleCatalogAdd} existingAssignments={fieldValues} />
+        </ProtectedContent>
       </CardHeader>
       <CardBody>
         {catalogAssignments.length > 0 ? (

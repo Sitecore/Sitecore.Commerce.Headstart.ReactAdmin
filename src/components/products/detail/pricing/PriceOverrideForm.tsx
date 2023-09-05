@@ -16,6 +16,8 @@ import {PriceOverrideModal} from "./price-override-modal/PriceOverrideModal"
 import {Control, UseFieldArrayReturn} from "react-hook-form"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {ProductDetailFormFields} from "../form-meta"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface PriceOverrideFormProps {
   control: Control<ProductDetailFormFields>
@@ -39,13 +41,18 @@ export function PriceOverrideForm({control, fieldArray, overridePriceSchedules}:
                   <PriceOverrideTable fieldArray={fieldArray} control={control} />
                 ) : (
                   <Box>
-                    No price overrides,{" "}
-                    <PriceOverrideModal
-                      onUpdate={(newPriceSchedule) => fieldArray.append(newPriceSchedule)}
-                      step="editprice"
-                      as="button"
-                      buttonProps={{children: "create one now", variant: "link", marginTop: "20px"}}
-                    />
+                    No price overrides
+                    <ProtectedContent hasAccess={appPermissions.ProductManager}>
+                      <>
+                        ,{" "}
+                        <PriceOverrideModal
+                          onUpdate={(newPriceSchedule) => fieldArray.append(newPriceSchedule)}
+                          step="editprice"
+                          as="button"
+                          buttonProps={{children: "create one now", variant: "link", marginTop: "20px"}}
+                        />
+                      </>
+                    </ProtectedContent>
                   </Box>
                 )}
               </Flex>

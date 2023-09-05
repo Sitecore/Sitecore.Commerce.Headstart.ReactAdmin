@@ -5,7 +5,7 @@ import SupplierList from "@/components/suppliers/list/SupplierList"
 
 const ProtectedSuppliersList = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SupplierManager}>
+    <ProtectedContent hasAccess={[appPermissions.SupplierViewer, appPermissions.SupplierManager]}>
       <SupplierList />
     </ProtectedContent>
   )

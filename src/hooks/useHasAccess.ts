@@ -1,11 +1,14 @@
+import {PermissionConfig} from "config/app-permissions.config"
 import {AuthContext} from "context/auth-context"
 import {useContext, useMemo} from "react"
 
 export type HasAccessFunction = (assignedRoles: string[]) => boolean
-export type AccessQualifier = string | string[] | HasAccessFunction
+export type AccessQualifier = boolean | string | string[] | HasAccessFunction | PermissionConfig | PermissionConfig[]
 
-export const isAllowedAccess = (assignedRoles: string[], hasAccess: AccessQualifier) => {
+export const isAllowedAccess = (assignedRoles: string[], hasAccess: AccessQualifier): boolean => {
   switch (typeof hasAccess) {
+    case "boolean":
+      return hasAccess
     case "undefined":
       return false
     case "string":
@@ -16,7 +19,24 @@ export const isAllowedAccess = (assignedRoles: string[], hasAccess: AccessQualif
       if (assignedRoles.includes("FullAccess")) {
         return true
       }
-      return hasAccess.every((requiredRole) => assignedRoles.includes(requiredRole))
+      if (Array.isArray(hasAccess)) {
+        if (hasAccess.length === 0) {
+          return false
+        }
+        if (typeof hasAccess[0] === "string") {
+          // handle string[] case, should include ALL roles in the array
+          return (hasAccess as string[]).every((access: string) => isAllowedAccess(assignedRoles, access))
+        } else {
+          // handle PermissionConfig[], only one of the PermissionConfigs needs to be valid (OR operation)
+          return (hasAccess as PermissionConfig[]).some((access: PermissionConfig) =>
+            isAllowedAccess(assignedRoles, access)
+          )
+        }
+      } else {
+        // handle PermissionConfig - should include ALL roles in the permission config
+        const roles = [...hasAccess.Roles, ...hasAccess.CustomRoles]
+        return roles.every((requiredRole) => assignedRoles.includes(requiredRole))
+      }
   }
 }
 

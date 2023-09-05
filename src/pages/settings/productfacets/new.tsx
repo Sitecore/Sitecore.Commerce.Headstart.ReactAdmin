@@ -15,7 +15,7 @@ const NewProductFacetsPage = () => {
 
 const ProtectedProductFacetsPage = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.ProductManager}>
+    <ProtectedContent hasAccess={appPermissions.ProductFacetManager}>
       <NewProductFacetsPage />
     </ProtectedContent>
   )

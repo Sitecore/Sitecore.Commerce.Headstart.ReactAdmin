@@ -15,7 +15,7 @@ interface VariantsTabProps {
 export function VariantsTab({control, validationSchema, variants, specs, onGenerateVariants}: VariantsTabProps) {
   return (
     <>
-      <SpecTable control={control} />
+      <SpecTable control={control} marginBottom={6} />
       <VariantTable
         onGenerateVariants={onGenerateVariants}
         control={control}

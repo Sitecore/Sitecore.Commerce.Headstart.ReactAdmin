@@ -31,7 +31,7 @@ const SupplierListItem = () => {
 
 const ProtectedSupplierListItem = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SupplierManager}>
+    <ProtectedContent hasAccess={[appPermissions.SupplierViewer, appPermissions.SupplierManager]}>
       <SupplierListItem />
     </ProtectedContent>
   )

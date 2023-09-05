@@ -14,7 +14,7 @@ const OrderReturnDetailPage = () => {
 
 const ProtectedOrderDetailpage = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.OrderManager}>
+    <ProtectedContent hasAccess={[appPermissions.OrderViewer, appPermissions.OrderManager]}>
       <OrderReturnDetailPage />
     </ProtectedContent>
   )

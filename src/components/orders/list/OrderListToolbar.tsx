@@ -7,6 +7,8 @@ import ListViewMetaInfo from "../../shared/ListViewMetaInfo/ListViewMetaInfo"
 import OrderStatusFilter from "./OrderStatusFilter"
 import OrderListActions from "./OrderListActions"
 import {OrderDirectionFilter} from "./OrderDirectionFilter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface OrderListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {
   onBulkEdit: () => void
@@ -39,13 +41,15 @@ const OrderListToolbar: FC<OrderListToolbarProps> = ({
             {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
             <Box as="span" width="2"></Box>
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href="/orders/new">
-              <Button variant="solid" colorScheme="primary" as="a">
-                Create Order
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.OrderManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href="/orders/new">
+                <Button variant="solid" colorScheme="primary" as="a">
+                  Create Order
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

@@ -31,7 +31,7 @@ const CategoryListItem = (props) => {
 }
 const ProtectedCategoryListItem = (props) => {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+    <ProtectedContent hasAccess={[appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager]}>
       <CategoryListItem {...props} />
     </ProtectedContent>
   )

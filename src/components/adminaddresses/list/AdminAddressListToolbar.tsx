@@ -5,6 +5,8 @@ import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSea
 import {ListViewChildrenProps} from "../../shared/ListView/ListView"
 import ListViewMetaInfo from "../../shared/ListViewMetaInfo/ListViewMetaInfo"
 import AdminAddressListActions from "./AdminAddressListActions"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface AdminAddressListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
@@ -34,13 +36,15 @@ const AdminAddressListToolbar: FC<AdminAddressListToolbarProps> = ({
             <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href="adminaddresses/new">
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create Admin Address
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.AdminAddressManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href="adminaddresses/new">
+                <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+                  Create Admin Address
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

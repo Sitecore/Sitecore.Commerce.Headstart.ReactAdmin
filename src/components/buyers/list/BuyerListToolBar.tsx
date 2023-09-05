@@ -7,6 +7,8 @@ import Link from "next/link"
 import {FC} from "react"
 import BuyerListActions from "./BuyerListActions"
 import BuyerStatusFilter from "./BuyerStatusFilter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface BuyerListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
@@ -26,11 +28,13 @@ const BuyerListToolbar: FC<BuyerListToolbarProps> = ({
         {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
         <Box as="span" width="2"></Box>
         {viewModeToggle}
-        <Link passHref href="/buyers/new">
-          <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-            Create Buyer
-          </Button>
-        </Link>
+        <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+          <Link passHref href="/buyers/new">
+            <Button variant="solid" colorScheme="primary" as="a">
+              Create Buyer
+            </Button>
+          </Link>
+        </ProtectedContent>
       </Stack>
     </Stack>
   )

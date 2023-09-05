@@ -12,7 +12,6 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
   Text,
   VStack,
   Badge,
@@ -27,6 +26,9 @@ import {GenerateVariantsButton} from "./GenerateVariantsButton"
 import {ISpec} from "types/ordercloud/ISpec"
 import {flatten, uniq} from "lodash"
 import {ProductDetailFormFields, validationSchema} from "../form-meta"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
+import useHasAccess from "hooks/useHasAccess"
 
 interface VariantTableProps extends BoxProps {
   control: Control<ProductDetailFormFields>
@@ -37,6 +39,7 @@ interface VariantTableProps extends BoxProps {
 }
 
 export function VariantTable({control, variants, specs, onGenerateVariants, ...boxProps}: VariantTableProps) {
+  const isProductManager = useHasAccess(appPermissions.ProductManager)
   // if you change the color codes here make sure to change in SpecTable.tsx
   const colorCodes = [
     "primary.500",
@@ -69,12 +72,14 @@ export function VariantTable({control, variants, specs, onGenerateVariants, ...b
         <Heading colorScheme="secondary" fontSize="xl">
           <VStack>
             <Text>This product has no variants</Text>
-            <GenerateVariantsButton
-              onGenerate={onGenerateVariants}
-              control={control}
-              specs={specs}
-              buttonProps={{variant: "solid", colorScheme: "primary", size: "sm"}}
-            />
+            {isProductManager && (
+              <GenerateVariantsButton
+                onGenerate={onGenerateVariants}
+                control={control}
+                specs={specs}
+                buttonProps={{variant: "solid", colorScheme: "primary", size: "sm"}}
+              />
+            )}
           </VStack>
         </Heading>
       </Box>
@@ -89,12 +94,14 @@ export function VariantTable({control, variants, specs, onGenerateVariants, ...b
             Variants can be generated after creating or adding specs and spec options
           </Text>
         </Heading>
-        <GenerateVariantsButton
-          onGenerate={onGenerateVariants}
-          control={control}
-          specs={specs}
-          buttonProps={{variant: "outline", colorScheme: "accent", ml: "auto"}}
-        />
+        {isProductManager && (
+          <GenerateVariantsButton
+            onGenerate={onGenerateVariants}
+            control={control}
+            specs={specs}
+            buttonProps={{variant: "outline", colorScheme: "accent", ml: "auto"}}
+          />
+        )}
       </CardHeader>
       <CardBody>
         <TableContainer>
@@ -110,7 +117,12 @@ export function VariantTable({control, variants, specs, onGenerateVariants, ...b
               {variants.map((variant, index) => (
                 <Tr key={variant.ID}>
                   <Td>
-                    <InputControl name={`Variants.${index}.ID`} control={control} validationSchema={validationSchema} />
+                    <InputControl
+                      name={`Variants.${index}.ID`}
+                      control={control}
+                      validationSchema={validationSchema}
+                      isDisabled={!isProductManager}
+                    />
                   </Td>
                   <Td>
                     <HStack>
@@ -138,6 +150,7 @@ export function VariantTable({control, variants, specs, onGenerateVariants, ...b
                       name={`Variants.${index}.Active`}
                       control={control}
                       validationSchema={validationSchema}
+                      isDisabled={!isProductManager}
                     />
                   </Td>
                 </Tr>

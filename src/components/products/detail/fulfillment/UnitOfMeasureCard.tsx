@@ -2,6 +2,8 @@ import {InputControl} from "@/components/react-hook-form"
 import {Card, CardBody, CardHeader, CardProps, HStack, Heading} from "@chakra-ui/react"
 import {Control} from "react-hook-form"
 import {ProductDetailFormFields} from "../form-meta"
+import useHasAccess from "hooks/useHasAccess"
+import {appPermissions} from "config/app-permissions.config"
 
 interface UnitOfMeasureCardProps extends CardProps {
   control: Control<ProductDetailFormFields>
@@ -9,6 +11,7 @@ interface UnitOfMeasureCardProps extends CardProps {
 }
 
 export function UnitOfMeasureCard({control, validationSchema, ...cardProps}: UnitOfMeasureCardProps) {
+  const isProductManager = useHasAccess(appPermissions.ProductManager)
   return (
     <Card {...cardProps}>
       <CardHeader>
@@ -22,12 +25,14 @@ export function UnitOfMeasureCard({control, validationSchema, ...cardProps}: Uni
             name="Product.QuantityMultiplier"
             control={control}
             validationSchema={validationSchema}
+            isDisabled={!isProductManager}
           />
           <InputControl
             label="Unit of measure"
             name="Product.xp.UnitOfMeasure"
             control={control}
             validationSchema={validationSchema}
+            isDisabled={!isProductManager}
           />
         </HStack>
       </CardBody>

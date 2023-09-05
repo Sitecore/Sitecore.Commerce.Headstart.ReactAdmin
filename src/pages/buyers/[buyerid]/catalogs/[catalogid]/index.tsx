@@ -28,12 +28,12 @@ const CatalogListItem = () => {
   )
 }
 
-const ProtectedBuyerListItem = () => {
+const ProtectedCatalogListItem = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+    <ProtectedContent hasAccess={[appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager]}>
       <CatalogListItem />
     </ProtectedContent>
   )
 }
 
-export default ProtectedBuyerListItem
+export default ProtectedCatalogListItem

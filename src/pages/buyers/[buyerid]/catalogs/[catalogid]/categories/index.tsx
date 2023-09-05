@@ -23,6 +23,8 @@ import React from "react"
 import TreeView from "components/dndtreeview/TreeView"
 import {ocNodeModel} from "@minoru/react-dnd-treeview"
 import {useRouter} from "hooks/useRouter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 const CategoriesList = (props) => {
   const [categoriesTreeView, setCategoriesTreeView] = useState([])
@@ -157,4 +159,12 @@ const CategoriesList = (props) => {
   )
 }
 
-export default CategoriesList
+const ProtectedCategoriesList = () => {
+  return (
+    <ProtectedContent hasAccess={[appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager]}>
+      <CategoriesList />
+    </ProtectedContent>
+  )
+}
+
+export default ProtectedCategoriesList

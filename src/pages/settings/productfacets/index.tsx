@@ -4,7 +4,7 @@ import ProductFacetList from "@/components/productfacets/list/ProductFacetList"
 
 const ProtectedProductFacets = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.ProductManager}>
+    <ProtectedContent hasAccess={[appPermissions.ProductFacetViewer, appPermissions.ProductFacetManager]}>
       <ProductFacetList />
     </ProtectedContent>
   )

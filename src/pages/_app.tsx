@@ -12,6 +12,7 @@ import {SetConfiguration} from "../services/ordercloud.service"
 import {axiosService} from "services/axios.service"
 import defaultSEOConfig from "../../next-seo.config"
 import dynamic from "next/dynamic"
+import "overlayscrollbars/overlayscrollbars.css"
 
 axiosService.initializeInterceptors()
 SetConfiguration()

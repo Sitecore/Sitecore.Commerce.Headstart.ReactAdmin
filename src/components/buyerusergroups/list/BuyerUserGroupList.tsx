@@ -1,11 +1,7 @@
-import {Box, Button, ButtonGroup, Container, Icon, Text, useDisclosure} from "@chakra-ui/react"
+import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
-import Link from "next/link"
-import {FC, useCallback, useMemo, useState} from "react"
-import {MdCheck} from "react-icons/md"
-import {IoMdClose} from "react-icons/io"
-import {dateHelper} from "utils"
+import {FC, useCallback, useState} from "react"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 import BuyerUserGroupActionMenu from "./BuyerUserGroupActionMenu"
 import {UserGroups} from "ordercloud-javascript-sdk"
@@ -17,7 +13,6 @@ interface IBuyerUserGroupList {
 }
 
 const paramMap = {
-  d: "Direction",
   buyerid: "BuyerID"
 }
 
@@ -91,6 +86,7 @@ const BuyerUserGroupList: FC<IBuyerUserGroupList> = ({buyerid}) => {
       tableOptions={BuyerUserGroupTableOptions}
       paramMap={paramMap}
       queryMap={BuyerUserGroupQueryMap}
+      filterMap={BuyerUserGroupFilterMap}
       itemHrefResolver={resolveBuyerUserGroupDetailHref}
       itemActions={renderBuyerUserGroupActionMenu}
     >

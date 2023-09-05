@@ -126,7 +126,7 @@ export const validationSchema = object().shape({
     ID: string().max(100),
     Description: string().max(2000),
     Inventory: object().shape({
-      Enabled: boolean(),
+      Enabled: boolean().nullable(),
       VariantLevelTracking: boolean(),
       QuantityAvailable: number().integer().transform(emptyStringToNull).nullable(),
       OrderCanExceed: boolean()

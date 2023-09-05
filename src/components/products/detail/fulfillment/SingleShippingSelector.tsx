@@ -7,6 +7,8 @@ import {SingleLineAddress} from "@/components/orders/detail/SingleLineAddress"
 import {appSettings} from "config/app-settings"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
+import useHasAccess from "hooks/useHasAccess"
+import {appPermissions} from "config/app-permissions.config"
 
 interface SingleShippingSelectorProps extends Omit<SelectControlProps, "name"> {
   control: Control<any>
@@ -21,6 +23,7 @@ export function SingleShippingSelector({
   existingAddressIds,
   ...allSelectControlProps
 }: SingleShippingSelectorProps) {
+  const isProductManager = useHasAccess(appPermissions.ProductManager)
   const ownerId = useWatch({name: "Product.OwnerID", control})
 
   const getShipFromAddressOptions = useCallback(async () => {
@@ -42,8 +45,14 @@ export function SingleShippingSelector({
     return addresses.Items.map((address) => ({
       label: (
         <VStack alignItems="flex-start">
-          <Text>{address.AddressName}</Text>
-          <SingleLineAddress color="gray.400" fontSize="small" className="single-line-address" address={address} />
+          {address.AddressName ? (
+            <>
+              <Text>{address.AddressName || address.CompanyName}</Text>
+              <SingleLineAddress color="gray.400" fontSize="small" className="single-line-address" address={address} />
+            </>
+          ) : (
+            <SingleLineAddress color="gray.400" fontSize="small" address={address} />
+          )}
         </VStack>
       ),
       value: address.ID
@@ -71,6 +80,7 @@ export function SingleShippingSelector({
       label={showLabels && "Ship From"}
       name="Product.ShipFromAddressID"
       control={control}
+      isDisabled={!isProductManager}
       {...selectControlProps}
     />
   )

@@ -13,11 +13,15 @@ import {useEffect, useState} from "react"
 import {useSuccessToast} from "hooks/useToast"
 import {object, string} from "yup"
 import {getObjectDiff} from "utils"
+import useHasAccess from "hooks/useHasAccess"
+import {appPermissions} from "config/app-permissions.config"
+import ProtectedContent from "../auth/ProtectedContent"
 
 interface CatalogFormProps {
   catalog?: ICatalog
 }
 export function CatalogForm({catalog}: CatalogFormProps) {
+  const isBuyerCatalogManager = useHasAccess(appPermissions.BuyerCatalogManager)
   const [currentCatalog, setCurrentCatalog] = useState(catalog)
   const [isCreating, setIsCreating] = useState(!catalog?.ID)
   const router = useRouter()
@@ -76,28 +80,43 @@ export function CatalogForm({catalog}: CatalogFormProps) {
           <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
             <Button
               onClick={() => router.push(`/buyers/${router.query.buyerid}/catalogs`)}
-              variant="outline"
+              variant="ghost"
               leftIcon={<TbChevronLeft />}
             >
               Back
             </Button>
-            <ButtonGroup>
-              <ResetButton control={control} reset={reset} variant="outline">
-                Discard Changes
-              </ResetButton>
-              <SubmitButton control={control} variant="solid" colorScheme="primary">
-                Save
-              </SubmitButton>
-            </ButtonGroup>
+            <ProtectedContent hasAccess={appPermissions.BuyerCatalogManager}>
+              <ButtonGroup>
+                <ResetButton control={control} reset={reset} variant="outline">
+                  Discard Changes
+                </ResetButton>
+                <SubmitButton control={control} variant="solid" colorScheme="primary">
+                  Save
+                </SubmitButton>
+              </ButtonGroup>
+            </ProtectedContent>
           </CardHeader>
           <CardBody display="flex" flexDirection={"column"} gap={4} maxW={{xl: "container.md"}}>
-            <SwitchControl name="Active" label="Active" control={control} validationSchema={validationSchema} />
-            <InputControl name="Name" label="Catalog Name" control={control} validationSchema={validationSchema} />
+            <SwitchControl
+              name="Active"
+              label="Active"
+              control={control}
+              validationSchema={validationSchema}
+              isDisabled={!isBuyerCatalogManager}
+            />
+            <InputControl
+              name="Name"
+              label="Catalog Name"
+              control={control}
+              validationSchema={validationSchema}
+              isDisabled={!isBuyerCatalogManager}
+            />
             <TextareaControl
               name="Description"
               label="Description"
               control={control}
               validationSchema={validationSchema}
+              isDisabled={!isBuyerCatalogManager}
             />
             {catalog?.ID && (
               <Link passHref href={`/buyers/${router.query.buyerid}/catalogs/${catalog.ID}/categories`}>

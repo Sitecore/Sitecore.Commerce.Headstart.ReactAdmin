@@ -25,6 +25,8 @@ import {array, object, string} from "yup"
 import {SelectControl} from "@/components/react-hook-form"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
 import {Link} from "@/components/navigation/Link"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface FacetUpdateModalProps {
   availableFacets: IProductFacet[]
@@ -70,9 +72,11 @@ export function FacetUpdateModal({availableFacets, facetIds = [], onUpdate, butt
 
   return (
     <>
-      <Button {...buttonProps} onClick={onOpen}>
-        {facetIds.length ? "Edit Facets" : "Add Facets"}
-      </Button>
+      <ProtectedContent hasAccess={appPermissions.ProductManager}>
+        <Button {...buttonProps} onClick={onOpen}>
+          {facetIds.length ? "Edit Facets" : "Add Facets"}
+        </Button>
+      </ProtectedContent>
 
       <Modal size="5xl" isOpen={isOpen} onClose={handleCancel}>
         <ModalOverlay />

@@ -4,7 +4,7 @@ import {appPermissions} from "config/app-permissions.config"
 
 const ProtectedProducts = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.ProductManager}>
+    <ProtectedContent hasAccess={[appPermissions.ProductViewer, appPermissions.ProductManager]}>
       <ProductList />
     </ProtectedContent>
   )

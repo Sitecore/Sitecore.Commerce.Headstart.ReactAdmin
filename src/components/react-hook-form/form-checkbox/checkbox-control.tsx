@@ -36,7 +36,7 @@ export const CheckboxControl: FC<CheckboxControlProps> = (props: CheckboxControl
       isRequired={isRequired}
       isInvalid={!!error && isTouched}
       isChecked={isChecked}
-      isDisabled={isSubmitting}
+      isDisabled={isSubmitting || props.isDisabled}
       {...rest}
     >
       {label}

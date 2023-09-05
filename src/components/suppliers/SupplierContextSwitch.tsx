@@ -16,10 +16,12 @@ import {useEffect, useState} from "react"
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {Supplier, SupplierAddresses, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
-import {ISupplierUser} from "types/ordercloud/ISupplierUser"
 import {ISupplier} from "types/ordercloud/ISupplier"
 import {TbUser} from "react-icons/tb"
-import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
+import {appPermissions} from "config/app-permissions.config"
+import useHasAccess from "hooks/useHasAccess"
+import ProtectedContent from "../auth/ProtectedContent"
+import Link from "next/link"
 
 export default function SupplierContextSwitch({...props}) {
   const [currentSupplier, setCurrentSupplier] = useState({} as Supplier)
@@ -27,8 +29,21 @@ export default function SupplierContextSwitch({...props}) {
   const [suppliersMeta, setSuppliersMeta] = useState({})
   const router = useRouter()
   const supplierid = router.query.supplierid.toString()
+  const canViewSupplierUsers = useHasAccess([appPermissions.SupplierUserViewer, appPermissions.SupplierUserManager])
+  const canViewSupplierUserGroups = useHasAccess([
+    appPermissions.SupplierUserGroupViewer,
+    appPermissions.SupplierUserGroupManager
+  ])
+  const canViewSupplierAddresses = useHasAccess([
+    appPermissions.SupplierAddressViewer,
+    appPermissions.SupplierAddressManager
+  ])
 
   useEffect(() => {
+    async function initSuppliersData() {
+      const suppliersList = await Suppliers.List<ISupplier>()
+      setSuppliers(suppliersList.Items)
+    }
     initSuppliersData()
   }, [])
 
@@ -39,25 +54,25 @@ export default function SupplierContextSwitch({...props}) {
     }
   }, [supplierid, suppliers])
 
-  async function initSuppliersData() {
-    let _supplierListMeta = {}
-    const suppliersList = await Suppliers.List<ISupplier>()
-    setSuppliers(suppliersList.Items)
-    const requests = suppliersList.Items.map(async (supplier, index) => {
-      const [userGroupsList, usersList, addressList] = await Promise.all([
-        SupplierUserGroups.List(supplier.ID),
-        SupplierUsers.List<ISupplierUser>(supplier.ID),
-        SupplierAddresses.List<ISupplierAddress>(supplier.ID)
-      ])
-      _supplierListMeta[supplier.ID] = {}
-      _supplierListMeta[supplier.ID]["userGroupsCount"] = userGroupsList.Meta.TotalCount
-      _supplierListMeta[supplier.ID]["usersCount"] = usersList.Meta.TotalCount
-      _supplierListMeta[supplier.ID]["addressesCount"] = addressList.Meta.TotalCount
-      //_supplierListMeta[supplier.ID]["key"] = index
-    })
-    await Promise.all(requests)
-    setSuppliersMeta(_supplierListMeta)
-  }
+  useEffect(() => {
+    const getCurrentSupplierMeta = async (supplierId: string) => {
+      if (!supplierId) {
+        return
+      }
+      const requests = []
+      requests.push(canViewSupplierUsers ? SupplierUsers.List(supplierId) : null)
+      requests.push(canViewSupplierUserGroups ? SupplierUserGroups.List(supplierId) : null)
+      requests.push(canViewSupplierAddresses ? SupplierAddresses.List(supplierId) : null)
+      const responses = await Promise.all(requests)
+
+      setSuppliersMeta({
+        UserCount: canViewSupplierUsers && responses[0].Meta.TotalCount,
+        UserGroupCount: canViewSupplierUserGroups && responses[1].Meta.TotalCount,
+        AddressCount: canViewSupplierAddresses && responses[2].Meta.TotalCount
+      })
+    }
+    getCurrentSupplierMeta(currentSupplier.ID)
+  }, [currentSupplier, canViewSupplierUsers, canViewSupplierUserGroups, canViewSupplierAddresses])
 
   return (
     <>
@@ -95,30 +110,40 @@ export default function SupplierContextSwitch({...props}) {
               </MenuButton>
               <MenuList>
                 {suppliers.map((supplier, index) => (
-                  <MenuItem key={index} minH="40px" onClick={() => router.push({query: {supplierid: supplier.ID}})}>
-                    <Image
-                      boxSize="2rem"
-                      borderRadius="full"
-                      src={`https://robohash.org/${supplier.ID}.png`}
-                      alt={supplier.Name}
-                      mr="12px"
-                    />
-                    <span>{supplier.Name}</span>
-                  </MenuItem>
+                  <Link key={index} passHref href={`/suppliers/${supplier.ID}`}>
+                    <MenuItem as="a" minH="40px">
+                      <Image
+                        boxSize="2rem"
+                        borderRadius="full"
+                        src={`https://robohash.org/${supplier.ID}.png`}
+                        alt={supplier.Name}
+                        mr="12px"
+                      />
+                      <span>{supplier.Name}</span>
+                    </MenuItem>
+                  </Link>
                 ))}
               </MenuList>
             </Menu>
           )}
           <ButtonGroup ml="auto" flexWrap="wrap" gap={2}>
-            <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/usergroups`)} variant="outline">
-              User Groups ({suppliersMeta[supplierid]?.userGroupsCount || "-"})
-            </Button>
-            <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/users`)} variant="outline">
-              Users ({suppliersMeta[supplierid]?.usersCount || "-"})
-            </Button>
-            <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/addresses`)} variant="outline">
-              Addresses ({suppliersMeta[supplierid]?.addressesCount || "-"})
-            </Button>
+            <ProtectedContent hasAccess={[appPermissions.SupplierUserViewer, appPermissions.SupplierUserManager]}>
+              <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/users`)} variant="outline">
+                Users ({suppliersMeta["UserCount"] || "-"})
+              </Button>
+            </ProtectedContent>
+            <ProtectedContent
+              hasAccess={[appPermissions.SupplierUserGroupViewer, appPermissions.SupplierUserGroupManager]}
+            >
+              <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/usergroups`)} variant="outline">
+                User Groups ({suppliersMeta["UserGroupCount"] || "-"})
+              </Button>
+            </ProtectedContent>
+            <ProtectedContent hasAccess={[appPermissions.SupplierAddressViewer, appPermissions.SupplierAddressManager]}>
+              <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/addresses`)} variant="outline">
+                Addresses ({suppliersMeta["AddressCount"] || "-"})
+              </Button>
+            </ProtectedContent>
           </ButtonGroup>
         </CardBody>
       </Card>

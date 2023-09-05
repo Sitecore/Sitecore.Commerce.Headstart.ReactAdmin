@@ -14,6 +14,8 @@ import ProductListToolbar from "./ProductListToolbar"
 import ProductDefaultImage from "../../shared/ProductDefaultImage"
 import {TbCactus} from "react-icons/tb"
 import {Link} from "@/components/navigation/Link"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 const ProductQueryMap = {
   s: "Search",
@@ -138,11 +140,13 @@ const ProductList = () => {
       <Heading colorScheme="secondary" fontSize="xl">
         <VStack>
           <Text>No products yet</Text>
-          <Link href="/products/new">
-            <Button variant="solid" size="sm" colorScheme="primary">
-              Create one now
-            </Button>
-          </Link>
+          <ProtectedContent hasAccess={appPermissions.ProductManager}>
+            <Link href="/products/new">
+              <Button variant="solid" size="sm" colorScheme="primary">
+                Create one now
+              </Button>
+            </Link>
+          </ProtectedContent>
         </VStack>
       </Heading>
     </Box>

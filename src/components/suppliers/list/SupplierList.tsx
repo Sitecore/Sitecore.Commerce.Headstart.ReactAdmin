@@ -12,6 +12,8 @@ import SupplierDeleteModal from "../modals/SupplierDeleteModal"
 import SupplierActionMenu from "./SupplierActionMenu"
 import SupplierListToolbar from "./SupplierListToolBar"
 import {ISupplierAddress} from "types/ordercloud/ISupplierAddress"
+import {appPermissions} from "config/app-permissions.config"
+import useHasAccess from "hooks/useHasAccess"
 
 interface ISupplierListItem extends RequiredDeep<ISupplier> {
   userGroupsCount: number
@@ -63,18 +65,6 @@ const CreatedDateColumn: DataTableColumn<ISupplierListItem> = {
   cell: ({value}) => dateHelper.formatDate(value)
 }
 
-const UserGroupColumn: DataTableColumn<ISupplierListItem> = {
-  header: "USER GROUPS",
-  skipHref: true,
-  cell: ({row}) => (
-    <Link passHref href={`/suppliers/${row.original.ID}/usergroups`}>
-      <Button as="a" variant="outline">
-        User Groups ({row.original.userGroupsCount})
-      </Button>
-    </Link>
-  )
-}
-
 const SupplierUsersColumn: DataTableColumn<ISupplierListItem> = {
   header: "USERS",
   skipHref: true,
@@ -87,8 +77,20 @@ const SupplierUsersColumn: DataTableColumn<ISupplierListItem> = {
   )
 }
 
-const SupplierAddressesColumn: DataTableColumn<ISupplierListItem> = {
-  header: "Addresses",
+const SupplierUserGroupColumn: DataTableColumn<ISupplierListItem> = {
+  header: "USER GROUPS",
+  skipHref: true,
+  cell: ({row}) => (
+    <Link passHref href={`/suppliers/${row.original.ID}/usergroups`}>
+      <Button as="a" variant="outline">
+        User Groups ({row.original.userGroupsCount})
+      </Button>
+    </Link>
+  )
+}
+
+const SupplierAddressColumn: DataTableColumn<ISupplierListItem> = {
+  header: "ADDRESSES",
   skipHref: true,
   cell: ({row}) => (
     <Link passHref href={`/suppliers/${row.original.ID}/addresses`}>
@@ -104,46 +106,55 @@ const SupplierTableOptions: ListViewTableOptions<ISupplierListItem> = {
     base: [IdColumn, NameColumn],
     md: [IdColumn, NameColumn],
     lg: [IdColumn, NameColumn],
-    xl: [
-      IdColumn,
-      NameColumn,
-      StatusColumn,
-      CreatedDateColumn,
-      UserGroupColumn,
-      SupplierUsersColumn,
-      SupplierAddressesColumn
-    ]
+    xl: [IdColumn, NameColumn, StatusColumn, CreatedDateColumn]
   }
-}
-
-const supplierListCall = async (listOptions: any) => {
-  const response = await Suppliers.List(listOptions)
-  const queue = []
-  const decoratedSupplierItems = []
-  response.Items.forEach((supplier) => {
-    queue.push(
-      Promise.all([
-        SupplierUserGroups.List<ISupplierUserGroup>(supplier.ID),
-        SupplierUsers.List<ISupplierUser>(supplier.ID),
-        SupplierAddresses.List<ISupplierAddress>(supplier.ID)
-      ]).then((responses) => {
-        const decoratedSupplier: ISupplierListItem = {
-          ...supplier,
-          userGroupsCount: responses[0].Meta.TotalCount,
-          usersCount: responses[1].Meta.TotalCount,
-          addressCount: responses[2].Meta.TotalCount
-        }
-        decoratedSupplierItems.push(decoratedSupplier)
-      })
-    )
-  })
-  await Promise.all(queue)
-  return {Meta: response.Meta, Items: decoratedSupplierItems}
 }
 
 const SupplierList: FC = () => {
   const [actionSupplier, setActionSupplier] = useState<ISupplierListItem>()
   const deleteDisclosure = useDisclosure()
+
+  const canViewSupplierUsers = useHasAccess([appPermissions.SupplierUserViewer, appPermissions.SupplierUserManager])
+  const canViewSupplierUserGroups = useHasAccess([
+    appPermissions.SupplierUserGroupViewer,
+    appPermissions.SupplierUserGroupManager
+  ])
+  const canViewSupplierAddresses = useHasAccess([
+    appPermissions.SupplierAddressViewer,
+    appPermissions.SupplierAddressManager
+  ])
+
+  if (canViewSupplierUsers && !SupplierTableOptions.responsive.xl.map((c) => c.header).includes("USERS")) {
+    SupplierTableOptions.responsive.xl.push(SupplierUsersColumn)
+  }
+  if (canViewSupplierUserGroups && !SupplierTableOptions.responsive.xl.map((c) => c.header).includes("USER GROUPS")) {
+    SupplierTableOptions.responsive.xl.push(SupplierUserGroupColumn)
+  }
+  if (canViewSupplierAddresses && !SupplierTableOptions.responsive.xl.map((c) => c.header).includes("ADDRESSES")) {
+    SupplierTableOptions.responsive.xl.push(SupplierAddressColumn)
+  }
+
+  const supplierListCall = async (listOptions: any) => {
+    const supplierList = await Suppliers.List(listOptions)
+    const enhancedSupplierRequests = supplierList.Items.map(async (supplier) => {
+      const requests = []
+      requests.push(canViewSupplierUsers ? SupplierUsers.List<ISupplierUser>(supplier.ID) : null)
+      requests.push(canViewSupplierUserGroups ? SupplierUserGroups.List<ISupplierUserGroup>(supplier.ID) : null)
+      requests.push(canViewSupplierAddresses ? SupplierAddresses.List<ISupplierAddress>(supplier.ID) : null)
+
+      return Promise.all(requests).then((responses) => {
+        return {
+          ...supplier,
+          usersCount: canViewSupplierUsers && responses[0].Meta.TotalCount,
+          userGroupsCount: canViewSupplierUserGroups && responses[1].Meta.TotalCount,
+          addressCount: canViewSupplierAddresses && responses[2].Meta.TotalCount
+        }
+      })
+    })
+
+    const enhancedSuppliers = await Promise.all(enhancedSupplierRequests)
+    return {Meta: supplierList.Meta, Items: enhancedSuppliers}
+  }
 
   const renderSupplierActionMenu = useCallback(
     (supplier: ISupplierListItem) => {

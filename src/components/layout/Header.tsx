@@ -14,7 +14,7 @@ const Header = () => {
       top="0px"
       zIndex="10"
       borderBottom={".5px solid"}
-      borderColor="st.borderColor"
+      borderColor="chakra-border-color"
     >
       <HStack justifyContent="space-between" alignItems={"center"} h="headerHeight" px={[0, 4]}>
         <Show below="sm">

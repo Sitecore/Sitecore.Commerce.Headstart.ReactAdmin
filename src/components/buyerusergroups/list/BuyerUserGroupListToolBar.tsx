@@ -5,6 +5,8 @@ import {Box, Button, Stack} from "@chakra-ui/react"
 import Link from "next/link"
 import {FC} from "react"
 import BuyerUserGroupListActions from "./BuyerUserGroupListActions"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface BuyerUserGroupListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {
   buyerid: string
@@ -36,13 +38,15 @@ const BuyerUserGroupListToolbar: FC<BuyerUserGroupListToolbarProps> = ({
             {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]}>
-            <Link passHref href={`/buyers/${buyerid}/usergroups/new`}>
-              <Button variant="solid" colorScheme="primary" as="a">
-                Create User Group
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.BuyerUserManager}>
+            <Box order={[0, 0, 0, 1]}>
+              <Link passHref href={`/buyers/${buyerid}/usergroups/new`}>
+                <Button variant="solid" colorScheme="primary" as="a">
+                  Create User Group
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

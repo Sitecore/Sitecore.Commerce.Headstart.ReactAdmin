@@ -6,6 +6,8 @@ import {ListViewChildrenProps} from "../../shared/ListView/ListView"
 import ListViewMetaInfo from "../../shared/ListViewMetaInfo/ListViewMetaInfo"
 import SupplierAddressListActions from "./SupplierAddressListActions"
 import {useRouter} from "next/router"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface SupplierAddressListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
@@ -36,13 +38,15 @@ const SupplierAddressListToolbar: FC<SupplierAddressListToolbarProps> = ({
             <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/suppliers/${supplierid}/addresses/new`}>
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create Supplier Address
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.SupplierAddressManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href={`/suppliers/${supplierid}/addresses/new`}>
+                <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+                  Create Supplier Address
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

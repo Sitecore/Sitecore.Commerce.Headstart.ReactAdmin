@@ -1,7 +1,6 @@
 import {Box, Button, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
-import Link from "next/link"
 import {Buyers, Catalogs, RequiredDeep, UserGroups, Users} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
 import {IBuyer} from "types/ordercloud/IBuyer"
@@ -13,6 +12,7 @@ import BuyerActionMenu from "./BuyerActionMenu"
 import BuyerDeleteModal from "../modals/BuyerDeleteModal"
 import useHasAccess from "hooks/useHasAccess"
 import {appPermissions} from "config/app-permissions.config"
+import {Link} from "@/components/navigation/Link"
 
 export const BuyerColorSchemeMap = {
   "": "gray",
@@ -42,10 +42,8 @@ const IdColumn: DataTableColumn<IBuyerListItem> = {
   header: "Buyer ID",
   accessor: "ID",
   cell: ({row, value}) => (
-    <Link passHref href={"/buyers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
+    <Link href={"/buyers/" + row.original.ID} noOfLines={2} title={value}>
+      {value}
     </Link>
   )
 }
@@ -54,10 +52,8 @@ const NameColumn: DataTableColumn<IBuyerListItem> = {
   header: "NAME",
   accessor: "Name",
   cell: ({row, value}) => (
-    <Link passHref href={"/buyers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
+    <Link href={"/buyers/" + row.original.ID} noOfLines={2} title={value}>
+      {value}
     </Link>
   )
 }
@@ -87,7 +83,7 @@ const BuyerUserGroupColumn: DataTableColumn<IBuyerListItem> = {
   header: "USER GROUPS",
   skipHref: true,
   cell: ({row}) => (
-    <Link passHref href={`/buyers/${row.original.ID}/usergroups`}>
+    <Link href={`/buyers/${row.original.ID}/usergroups`}>
       <Button variant="outline">User Groups ({row.original.userGroupsCount})</Button>
     </Link>
   )
@@ -97,7 +93,7 @@ const BuyerUserColumn: DataTableColumn<IBuyerListItem> = {
   header: "USERS",
   skipHref: true,
   cell: ({row}) => (
-    <Link passHref href={`/buyers/${row.original.ID}/users`}>
+    <Link href={`/buyers/${row.original.ID}/users`}>
       <Button variant="outline">Users ({row.original.usersCount})</Button>
     </Link>
   )

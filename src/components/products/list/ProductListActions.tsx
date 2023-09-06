@@ -35,7 +35,7 @@ const ProductListActions: FC<IProductListActions> = ({selected, onBulkPromote, o
               Bulk Edit <EditIcon />
             </MenuItem>
             <MenuItem justifyContent="space-between" onClick={onBulkPromote} isDisabled={!hasBulkSelection}>
-              Promote <Icon as={TbSpeakerphone} transform={"rotate(-35deg)"} fontSize="1.15em" stroke-width="1.7" />
+              Promote <Icon as={TbSpeakerphone} transform={"rotate(-35deg)"} fontSize="1.15em" strokeWidth="1.7" />
             </MenuItem>
           </>
         </ProtectedContent>

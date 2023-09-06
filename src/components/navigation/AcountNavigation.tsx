@@ -84,7 +84,7 @@ const MobileNavigation = () => {
               info="by AliciaAdmin01"
               boldInfo="New User Created"
               aName="Alicia"
-              aSrc="/images/avatars/avatar1.png"
+              aSrc="/raster/avatars/avatar1.png"
             />
           </MenuItem>
           <MenuItem borderRadius="lg">
@@ -93,7 +93,7 @@ const MobileNavigation = () => {
               info="PSPOTG10CSWSB"
               boldInfo="Product Deleted"
               aName="Josh Henry"
-              aSrc="/images/avatars/avatar2.png"
+              aSrc="/raster/avatars/avatar2.png"
             />
           </MenuItem>
           <MenuItem borderRadius="lg">
@@ -102,7 +102,7 @@ const MobileNavigation = () => {
               info="Payment succesfully completed!"
               boldInfo=""
               aName="Kara"
-              aSrc="/images/avatars/avatar3.png"
+              aSrc="/raster/avatars/avatar3.png"
             />
           </MenuItem>
         </MenuList>

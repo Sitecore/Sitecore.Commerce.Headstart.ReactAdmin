@@ -25,7 +25,18 @@ export interface BaseProps extends Omit<FormControlProps, "label"> {
 }
 
 export const FormControl: FC<BaseProps> = (props: BaseProps) => {
-  const {children, name, control, label, labelProps, helperText, helperTextProps, errorMessageProps, ...rest} = props
+  const {
+    children,
+    name,
+    control,
+    label,
+    labelProps,
+    helperText,
+    helperTextProps,
+    errorMessageProps,
+    validationSchema,
+    ...rest
+  } = props
 
   const {
     formState: {errors}

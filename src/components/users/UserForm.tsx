@@ -263,7 +263,7 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
                 control={control}
                 validationSchema={validationSchema}
                 isDisabled={!isUserManager}
-                inputProps={{type: showPassword ? "text" : "password"}}
+                inputProps={{type: showPassword ? "text" : "password", autoComplete: "off", autoCapitalize: "off"}}
                 rightElement={
                   <IconButton
                     onClick={handleTogglePasswordVisibility}
@@ -278,7 +278,11 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
                 control={control}
                 validationSchema={validationSchema}
                 isDisabled={!isUserManager}
-                inputProps={{type: showConfirmPassword ? "text" : "password"}}
+                inputProps={{
+                  type: showConfirmPassword ? "text" : "password",
+                  autoComplete: "off",
+                  autoCapitalize: "off"
+                }}
                 rightElement={
                   <IconButton
                     onClick={handleToggleConfirmPasswordVisibility}

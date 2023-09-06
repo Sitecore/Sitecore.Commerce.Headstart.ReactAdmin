@@ -25,8 +25,7 @@ import {CheckboxSingleControl, InputControl} from "@/components/react-hook-form"
 import {GenerateVariantsButton} from "./GenerateVariantsButton"
 import {ISpec} from "types/ordercloud/ISpec"
 import {flatten, uniq} from "lodash"
-import {ProductDetailFormFields, validationSchema} from "../form-meta"
-import ProtectedContent from "@/components/auth/ProtectedContent"
+import {ProductDetailFormFields} from "../form-meta"
 import {appPermissions} from "config/app-permissions.config"
 import useHasAccess from "hooks/useHasAccess"
 
@@ -38,7 +37,14 @@ interface VariantTableProps extends BoxProps {
   onGenerateVariants: (shouldOverwrite: boolean) => void
 }
 
-export function VariantTable({control, variants, specs, onGenerateVariants, ...boxProps}: VariantTableProps) {
+export function VariantTable({
+  control,
+  variants,
+  specs,
+  onGenerateVariants,
+  validationSchema,
+  ...boxProps
+}: VariantTableProps) {
   const isProductManager = useHasAccess(appPermissions.ProductManager)
   // if you change the color codes here make sure to change in SpecTable.tsx
   const colorCodes = [

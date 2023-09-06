@@ -42,9 +42,9 @@ const IdColumn: DataTableColumn<IBuyerListItem> = {
   header: "Buyer ID",
   accessor: "ID",
   cell: ({row, value}) => (
-    <Link href={"/buyers/" + row.original.ID} noOfLines={2} title={value}>
+    <Box noOfLines={2} title={value}>
       {value}
-    </Link>
+    </Box>
   )
 }
 
@@ -52,9 +52,9 @@ const NameColumn: DataTableColumn<IBuyerListItem> = {
   header: "NAME",
   accessor: "Name",
   cell: ({row, value}) => (
-    <Link href={"/buyers/" + row.original.ID} noOfLines={2} title={value}>
+    <Box noOfLines={2} title={value}>
       {value}
-    </Link>
+    </Box>
   )
 }
 

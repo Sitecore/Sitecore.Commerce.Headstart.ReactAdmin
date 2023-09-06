@@ -25,7 +25,7 @@ import Link from "next/link"
 
 export default function SupplierContextSwitch({...props}) {
   const [currentSupplier, setCurrentSupplier] = useState({} as Supplier)
-  const [suppliers, setSuppliers] = useState([])
+  const [suppliers, setSuppliers] = useState([] as Supplier[])
   const [suppliersMeta, setSuppliersMeta] = useState({})
   const router = useRouter()
   const supplierid = router.query.supplierid.toString()
@@ -103,15 +103,20 @@ export default function SupplierContextSwitch({...props}) {
             </Text>
           </VStack>
 
-          {suppliers.length > 1 && (
+          {suppliers.filter((s) => s.ID !== currentSupplier.ID).length > 1 && (
             <Menu>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />} size="lg" ml="30px">
                 {currentSupplier?.Name}
               </MenuButton>
               <MenuList>
-                {suppliers.map((supplier, index) => (
-                  <Link key={index} passHref href={`/suppliers/${supplier.ID}`}>
-                    <MenuItem as="a" minH="40px">
+                {suppliers
+                  .filter((s) => s.ID !== currentSupplier.ID)
+                  .map((supplier, index) => (
+                    <MenuItem
+                      key={supplier.ID}
+                      minH="40px"
+                      onClick={() => router.push({query: {supplierid: supplier.ID}})}
+                    >
                       <Image
                         boxSize="2rem"
                         borderRadius="full"
@@ -121,8 +126,7 @@ export default function SupplierContextSwitch({...props}) {
                       />
                       <span>{supplier.Name}</span>
                     </MenuItem>
-                  </Link>
-                ))}
+                  ))}
               </MenuList>
             </Menu>
           )}

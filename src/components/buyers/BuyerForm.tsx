@@ -17,6 +17,7 @@ import {appPermissions} from "config/app-permissions.config"
 import useHasAccess from "hooks/useHasAccess"
 import {differenceBy, isEmpty, isEqual} from "lodash"
 import {SecurityProfileAssignmentTabs} from "../security-profiles/assignments/SecurityProfileAssignmentTabs"
+import {useEffect} from "react"
 
 interface FormFieldValues {
   Buyer: IBuyer
@@ -62,6 +63,10 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
     defaultValues: buyer?.ID ? {Buyer: buyer, SecurityProfileAssignments: securityProfileAssignments} : defaultValues,
     mode: "onBlur"
   })
+
+  useEffect(() => {
+    reset({Buyer: buyer, SecurityProfileAssignments: securityProfileAssignments})
+  }, [buyer, securityProfileAssignments, reset])
 
   async function createBuyer(fields: FormFieldValues) {
     const createdBuyer = await Buyers?.Create<IBuyer>(fields.Buyer)

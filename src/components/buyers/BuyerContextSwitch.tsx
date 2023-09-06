@@ -24,7 +24,7 @@ import ProtectedContent from "../auth/ProtectedContent"
 
 export default function BuyerContextSwitch({...props}) {
   const [currentBuyer, setCurrentBuyer] = useState({} as Buyer)
-  const [buyers, setBuyers] = useState([])
+  const [buyers, setBuyers] = useState([] as Buyer[])
   const [buyersMeta, setBuyersMeta] = useState({})
   const router = useRouter()
   const buyerid = router.query.buyerid.toString()
@@ -100,24 +100,26 @@ export default function BuyerContextSwitch({...props}) {
 
         {typeof router.query.userid == "undefined" &&
           typeof router.query.usergroupid == "undefined" &&
-          buyers.length > 1 && (
+          buyers.filter((b) => b.ID !== currentBuyer.ID).length > 1 && (
             <Menu>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                 {currentBuyer?.Name}
               </MenuButton>
               <MenuList>
-                {buyers.map((buyer, index) => (
-                  <MenuItem key={index} minH="40px" onClick={() => router.push({query: {buyerid: buyer.ID}})}>
-                    <Image
-                      boxSize="2rem"
-                      borderRadius="full"
-                      src={`https://robohash.org/${buyer.ID}.png`}
-                      alt={buyer.Name}
-                      mr="12px"
-                    />
-                    <span>{buyer.Name}</span>
-                  </MenuItem>
-                ))}
+                {buyers
+                  .filter((b) => b.ID !== currentBuyer.ID)
+                  .map((buyer) => (
+                    <MenuItem key={buyer.ID} minH="40px" onClick={() => router.push({query: {buyerid: buyer.ID}})}>
+                      <Image
+                        boxSize="2rem"
+                        borderRadius="full"
+                        src={`https://robohash.org/${buyer.ID}.png`}
+                        alt={buyer.Name}
+                        mr="12px"
+                      />
+                      <span>{buyer.Name}</span>
+                    </MenuItem>
+                  ))}
               </MenuList>
             </Menu>
           )}

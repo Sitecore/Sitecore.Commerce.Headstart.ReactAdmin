@@ -16,6 +16,7 @@ import {appPermissions} from "config/app-permissions.config"
 import ProtectedContent from "../auth/ProtectedContent"
 import {differenceBy, isEmpty, isEqual} from "lodash"
 import {SecurityProfileAssignmentTabs} from "../security-profiles/assignments/SecurityProfileAssignmentTabs"
+import {useEffect} from "react"
 
 interface FormFieldValues {
   Supplier: ISupplier
@@ -61,6 +62,10 @@ export function SupplierForm({supplier, securityProfileAssignments = [], refresh
       : defaultValues,
     mode: "onBlur"
   })
+
+  useEffect(() => {
+    reset({Supplier: supplier, SecurityProfileAssignments: securityProfileAssignments})
+  }, [supplier, securityProfileAssignments, reset])
 
   async function createSupplier(fields: FormFieldValues) {
     const createdSupplier = await Suppliers.Create<ISupplier>(fields.Supplier)

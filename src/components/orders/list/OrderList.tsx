@@ -154,7 +154,7 @@ const OrderList: FC = () => {
     hideColumns: (column, params) => {
       const isAdmin = !isSupplier
       if (isAdmin) {
-        if (params.routeParams.Direction === "Incoming") {
+        if (!params.routeParams.Direction || params.routeParams.Direction === "Incoming") {
           return column.accessor === SupplierIdColumn.accessor
         } else {
           return (

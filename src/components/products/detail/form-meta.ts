@@ -7,7 +7,7 @@ import {IVariant} from "types/ordercloud/IVariant"
 import {ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 import {array, bool, boolean, number, object, string} from "yup"
-import {emptyStringToNull, orderCloudIDRegex} from "utils"
+import {emptyStringToNull, nullToFalse, orderCloudIDRegex} from "utils"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {compact, uniqBy} from "lodash"
 import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
@@ -128,7 +128,7 @@ export const validationSchema = object().shape({
       .max(100, "ID may not exceed 100 characters"),
     Description: string().max(2000),
     Inventory: object().shape({
-      Enabled: boolean().nullable(),
+      Enabled: boolean().transform(nullToFalse), // if Inventory is null, default to false,
       VariantLevelTracking: boolean(),
       QuantityAvailable: number().integer().transform(emptyStringToNull).nullable(),
       OrderCanExceed: boolean()

@@ -85,6 +85,7 @@ export function FacetTab({control, validationSchema, facetList, ...cardProps}: F
             const facetOptions = (facet.xp?.Options || []).map((option) => ({label: option, value: option}))
             return (
               <SelectControl
+                label={facet?.Name}
                 key={facetId}
                 name={`Product.xp.Facets.${facetId}`}
                 control={control}

@@ -43,4 +43,4 @@ export const orderCloudPasswordRegex =
 
 // regex matching OrderCloud's ID requirements
 // can include letters, numbers, dashes, and underscores, and can be at most 100 characters
-export const orderCloudIDRegex = /^[\w-]{1,100}$/
+export const orderCloudIDRegex = /^\w+$/

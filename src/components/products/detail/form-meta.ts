@@ -7,7 +7,7 @@ import {IVariant} from "types/ordercloud/IVariant"
 import {ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 import {array, bool, boolean, number, object, string} from "yup"
-import {emptyStringToNull} from "utils"
+import {emptyStringToNull, orderCloudIDRegex} from "utils"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {compact, uniqBy} from "lodash"
 import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
@@ -123,7 +123,9 @@ export const validationSchema = object().shape({
   Product: object().shape({
     Active: boolean(),
     Name: string().max(100).required("Required"),
-    ID: string().max(100),
+    ID: string()
+      .matches(orderCloudIDRegex, "ID must be alphanumeric (may also include dashes or underscores)")
+      .max(100, "ID may not exceed 100 characters"),
     Description: string().max(2000),
     Inventory: object().shape({
       Enabled: boolean().nullable(),

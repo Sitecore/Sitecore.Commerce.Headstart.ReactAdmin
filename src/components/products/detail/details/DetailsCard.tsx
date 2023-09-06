@@ -37,7 +37,7 @@ export function DetailsCard({control, validationSchema, isCreatingNew}: DetailsC
           />
           <InputControl
             style={{marginLeft: 0}}
-            label="SKU"
+            label="ID"
             name="Product.ID"
             control={control}
             validationSchema={validationSchema}

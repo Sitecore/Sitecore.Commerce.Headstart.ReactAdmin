@@ -67,7 +67,7 @@ export function CustomizationTab({control, product}: CustomizationTabProps) {
   return (
     <Card w="100%">
       <CardHeader display="flex" alignItems={"center"} flexWrap="wrap" gap={4}>
-        <Text fontSize="sm" color="gray.400" fontWeight="normal">
+        <Text fontSize="sm" color="chakra-subtle-text" fontWeight="normal">
           Define custom properties for your product
         </Text>
         <ProtectedContent hasAccess={appPermissions.ProductManager}>
@@ -80,7 +80,7 @@ export function CustomizationTab({control, product}: CustomizationTabProps) {
           />
         </ProtectedContent>
       </CardHeader>
-      <CardBody p={6} display="flex" flexDirection={"column"} minH={"xs"}>
+      <CardBody p={6} display="flex" flexDirection={"column"} minH={"xs"} gap={3}>
         {extendedPropertyValues.length > 0 ? (
           extendedPropertyValues.map((xpValue, index) => {
             return (
@@ -89,13 +89,14 @@ export function CustomizationTab({control, product}: CustomizationTabProps) {
                 display="grid"
                 gridTemplateColumns={"auto 2fr 2fr"}
                 justifyContent="flex-start"
+                gap={3}
                 w={"full"}
                 maxW={{xl: "75%"}}
               >
                 <ProtectedContent hasAccess={appPermissions.ProductManager}>
                   <>
                     <Hide below="lg">
-                      <ButtonGroup mr={2} alignItems="center">
+                      <ButtonGroup mr={2} alignItems="center" gap={2}>
                         <ProductXpModal
                           isCreatingNew={existingCustomPropertynames.includes(extendedPropertyNames[index])}
                           as="button"
@@ -104,12 +105,13 @@ export function CustomizationTab({control, product}: CustomizationTabProps) {
                           existingPropertyValue={xpValue}
                           onUpdate={handleXpUpdate}
                           buttonProps={{
+                            variant: "outline",
                             children: "Edit"
                           }}
                         />
                         <Button
                           variant="ghost"
-                          colorScheme="red"
+                          colorScheme="danger"
                           onClick={() => handleXpDelete(extendedPropertyNames[index])}
                         >
                           Delete
@@ -140,34 +142,47 @@ export function CustomizationTab({control, product}: CustomizationTabProps) {
                             children: "Edit"
                           }}
                         />
-                        <IconButton
+                        <Button
                           ml={"0 !important"}
-                          icon={<TbTrash size="1rem" />}
+                          leftIcon={<TbTrash size="1rem" />}
                           variant="outline"
-                          borderColor="red.300"
-                          color="red.300"
-                          aria-label="delete"
+                          colorScheme="danger"
                           onClick={() => handleXpDelete(extendedPropertyNames[index])}
                         >
                           Delete
-                        </IconButton>
+                        </Button>
                       </ButtonGroup>
                     </Hide>
                   </>
                 </ProtectedContent>
-                <Flex borderWidth={1} borderColor="gray.100" mt={"-1px"} px={4} py={2} alignItems="center">
+                <Flex
+                  borderWidth={1}
+                  borderColor="chakra-border-color"
+                  mt={"-1px"}
+                  px={4}
+                  py={2}
+                  alignItems="center"
+                  rounded="md"
+                >
                   <Text
-                    fontSize="0.8rem"
-                    fontWeight="bold"
-                    color="blackAlpha.500"
-                    textTransform="uppercase"
+                    color="chakra-placeholder-color"
+                    cursor="not-allowed"
                     letterSpacing={1}
                     wordBreak={"break-word"}
                   >
                     {extendedPropertyNames[index]}
                   </Text>
                 </Flex>
-                <Flex borderWidth={1} borderColor="gray.100" px={4} py={2} mt={"-1px"} ml={"-1px"} alignItems="center">
+                <Flex
+                  borderWidth={1}
+                  borderColor="chakra-border-color"
+                  px={4}
+                  py={2}
+                  mt={"-1px"}
+                  ml={"-1px"}
+                  alignItems="center"
+                  rounded="md"
+                >
                   <Text whiteSpace="pre-wrap" wordBreak="break-word">
                     {xpValue}
                   </Text>

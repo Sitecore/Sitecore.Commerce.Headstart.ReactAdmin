@@ -11,7 +11,7 @@ import {SecurityProfileAssignmentLevel} from "types/ordercloud/SecurityProfileAs
 interface SecurityProfileAssignmentListProps {
   assignmentLevel: SecurityProfileAssignmentLevel
   commerceRole: "buyer" | "supplier" | "admin"
-  parentId: string
+  parentId?: string
   assignmentLevelId: string
   control: any
 }

@@ -146,13 +146,6 @@ export function SecurityProfileDetail({securityProfile, isAssignedToAllAdmins}: 
               validationSchema={validationSchema}
               isDisabled={!isSecurityProfileManager}
             />
-            <InputControl
-              name="SecurityProfile.ID"
-              label="ID"
-              control={control}
-              validationSchema={validationSchema}
-              isDisabled={!isSecurityProfileManager}
-            />
             <FeatureList
               roles={roles.field.value}
               customRoles={customRoles.field.value}

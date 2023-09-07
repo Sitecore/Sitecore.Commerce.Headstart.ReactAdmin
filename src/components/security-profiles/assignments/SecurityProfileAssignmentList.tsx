@@ -1,10 +1,12 @@
 import {Link} from "@/components/navigation/Link"
-import {HStack, VStack, Text, Checkbox, Card, CardBody, Heading} from "@chakra-ui/react"
+import {InfoIcon, InfoOutlineIcon} from "@chakra-ui/icons"
+import {HStack, VStack, Text, Checkbox, Card, CardBody, useDisclosure} from "@chakra-ui/react"
 import {appPermissions} from "config/app-permissions.config"
+import useAwaitableModals from "hooks/useAwaitableModals"
 import {isAllowedAccess} from "hooks/useHasAccess"
 import {useSecurityProfileAssignmentRows} from "hooks/useSecurityProfileAssignmentRows"
 import {SecurityProfileAssignment} from "ordercloud-javascript-sdk"
-import {ReactNode} from "react"
+import {ReactNode, useRef} from "react"
 import {useController} from "react-hook-form"
 import {SecurityProfileAssignmentLevel} from "types/ordercloud/SecurityProfileAssignmentLevel"
 
@@ -28,8 +30,17 @@ export function SecurityProfileAssignmentList({
     field: {value: assignments, onChange: onAssignmentsChange}
   } = useController({control, name: "SecurityProfileAssignments"})
   const {rows} = useSecurityProfileAssignmentRows({assignments, assignmentLevel, commerceRole})
+  const {confirm} = useAwaitableModals()
 
-  const handleAssignmentChange = (shouldAssign: boolean, securityProfileId: string) => {
+  const handleAssignmentChange = async (shouldAssign: boolean, isInherited: boolean, securityProfileId: string) => {
+    if (shouldAssign && isInherited) {
+      const confirmText =
+        "This security profile is already assigned to a parent, and inherited. Do you still want to make the assignment?"
+      if (!(await confirm(confirmText))) {
+        return
+      }
+    }
+
     const targetAssignment: SecurityProfileAssignment = {
       SecurityProfileID: securityProfileId,
       BuyerID: null,
@@ -73,7 +84,7 @@ export function SecurityProfileAssignmentList({
   }
   return (
     <VStack>
-      {rows.map(({securityProfile, isInherited, isAssigned, inheritedAssignedParties}) => {
+      {rows.map(({securityProfile, isInherited, isAssignedAtCurrentLevel, inheritedAssignedParties}) => {
         const roles = [...securityProfile.Roles, ...securityProfile.CustomRoles]
         const enabledFeaturesCount = features.filter((f) => isAllowedAccess(roles, f)).length
 
@@ -116,7 +127,7 @@ export function SecurityProfileAssignmentList({
           if (inheritedAssignedParties.buyerUserGroups?.length) {
             if (inheritedAssignedParties.buyerUserGroups.length > 1) {
               inheritedFromParts.push(
-                <Text key="usergroups">{inheritedAssignedParties.buyerUserGroups.length} usergroups</Text>
+                <Text key="usergroups">{inheritedAssignedParties.buyerUserGroups.length} group</Text>
               )
             } else {
               const item = inheritedAssignedParties.buyerUserGroups[0]
@@ -126,7 +137,7 @@ export function SecurityProfileAssignmentList({
                   href={`/buyers/${item.buyerID}/usergroups/${item.userGroup.ID}`}
                   title={item.userGroup.Name}
                 >
-                  usergroup
+                  group
                 </Link>
               )
             }
@@ -142,7 +153,7 @@ export function SecurityProfileAssignmentList({
                   href={`/suppliers/${item.supplierID}/usergroups/${item.userGroup.ID}`}
                   title={item.userGroup.Name}
                 >
-                  usergroup
+                  group
                 </Link>
               )
             }
@@ -162,12 +173,11 @@ export function SecurityProfileAssignmentList({
         }
 
         return (
-          <Card key={securityProfile.ID + isInherited} width="full" marginBottom={3}>
+          <Card key={securityProfile.ID} width="full" marginBottom={3}>
             <CardBody as={HStack} alignItems="center" gap={6}>
               <Checkbox
-                isChecked={isAssigned}
-                isDisabled={isInherited}
-                onChange={(e) => handleAssignmentChange(e.target.checked, securityProfile.ID)}
+                isChecked={isAssignedAtCurrentLevel}
+                onChange={(e) => handleAssignmentChange(e.target.checked, isInherited, securityProfile.ID)}
               />
               <VStack alignItems="flex-start" justifyContent="center" lineHeight="1">
                 <Link href={`/settings/securityprofiles/${securityProfile.ID}`} title={securityProfile.Name}>

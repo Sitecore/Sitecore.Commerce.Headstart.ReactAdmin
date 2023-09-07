@@ -39,7 +39,7 @@ interface RowData {
     adminUserGroups?: IAdminUserGroup[]
   }
   isInherited: boolean
-  isAssigned: boolean
+  isAssignedAtCurrentLevel: boolean
 }
 
 interface RelatedData {
@@ -268,34 +268,22 @@ export function useSecurityProfileAssignmentRows({
           securityProfile: securityProfile,
           assignments: [],
           isInherited: false,
-          isAssigned: false,
+          isAssignedAtCurrentLevel: false,
           inheritedAssignedParties: {}
         }
       })
       assignments.forEach((assignment) => {
-        const securityProfile = relatedData.securityProfiles.find(
-          (profile) => profile.ID === assignment.SecurityProfileID
-        )
         const isInherited = !hasAssignmentAtLevel(assignment, assignmentLevel)
-        const row = _rows.find(
-          (row) => row.securityProfile.ID === assignment.SecurityProfileID && row.isInherited === isInherited
-        )
+        const row = _rows.find((row) => row.securityProfile.ID === assignment.SecurityProfileID)
         if (row) {
           row.assignments.push(assignment)
-          row.isAssigned = true
+          row.isAssignedAtCurrentLevel = row.isAssignedAtCurrentLevel || !isInherited
+          row.isInherited = row.isInherited || isInherited
           row.inheritedAssignedParties = updateInheritedAssignedParties(
             assignment,
             row.inheritedAssignedParties,
             relatedData
           )
-        } else {
-          _rows.push({
-            securityProfile: securityProfile,
-            assignments: [assignment],
-            isInherited: isInherited,
-            isAssigned: true,
-            inheritedAssignedParties: updateInheritedAssignedParties(assignment, {}, relatedData)
-          })
         }
       })
       setRows(sortBy(_rows, (row) => row.securityProfile.Name))

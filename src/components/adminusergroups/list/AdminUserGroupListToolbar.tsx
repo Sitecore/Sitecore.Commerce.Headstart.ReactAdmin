@@ -37,7 +37,7 @@ const AdminUserGroupListToolbar: FC<AdminUserGroupListToolbarProps> = ({
           </Stack>
           <ProtectedContent hasAccess={appPermissions.AdminUserManager}>
             <Box order={[0, 0, 0, 1]}>
-              <Link passHref href={`/settings/adminusergroups/usergroups/new`}>
+              <Link passHref href={`/settings/adminusergroups/new`}>
                 <Button variant="solid" colorScheme="primary" as="a">
                   Create User Group
                 </Button>

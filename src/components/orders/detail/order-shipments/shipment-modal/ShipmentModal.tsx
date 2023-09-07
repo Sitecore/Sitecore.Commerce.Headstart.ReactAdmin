@@ -165,7 +165,6 @@ export function ShipmentModal({
           )}
           {activeStep === 2 && (
             <ShipmentDetailsModalContent
-              buyerId={order.FromCompanyID}
               shipment={currentShipment}
               onStepChange={setActiveStep}
               onUpdate={setCurrentShipment}

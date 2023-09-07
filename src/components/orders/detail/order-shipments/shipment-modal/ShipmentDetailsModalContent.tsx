@@ -13,17 +13,14 @@ interface ShipmentDetailsModalContentProps {
   onStepChange: (step: number) => void
   onUpdate: (data: IShipment) => void
   onCancelModal: () => void
-  buyerId: string
 }
 export function ShipmentDetailsModalContent({
   shipment,
   onStepChange,
   onUpdate,
-  onCancelModal,
-  buyerId
+  onCancelModal
 }: ShipmentDetailsModalContentProps) {
   const defaultValues: Partial<IShipment> = {
-    BuyerID: buyerId, // this should not be required, and is a bug in the API
     xp: {}
   }
   const validationSchema = object().shape({

@@ -27,7 +27,7 @@ export function SecurityProfileAssignmentList({
   const {
     field: {value: assignments, onChange: onAssignmentsChange}
   } = useController({control, name: "SecurityProfileAssignments"})
-  const [rows] = useSecurityProfileAssignmentRows({assignments, assignmentLevel, commerceRole})
+  const {rows} = useSecurityProfileAssignmentRows({assignments, assignmentLevel, commerceRole})
 
   const handleAssignmentChange = (shouldAssign: boolean, securityProfileId: string) => {
     const targetAssignment: SecurityProfileAssignment = {

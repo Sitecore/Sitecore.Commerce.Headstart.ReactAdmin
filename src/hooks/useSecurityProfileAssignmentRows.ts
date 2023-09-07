@@ -313,5 +313,5 @@ export function useSecurityProfileAssignmentRows({
     updateInheritedAssignedParties
   ])
 
-  return [rows]
+  return {rows}
 }

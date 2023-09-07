@@ -26,7 +26,7 @@ const ProductActionMenu: FC<IProductActionMenu> = ({product, onOpen, onClose, on
           </MenuItem>
         </Link>
         <MenuItem justifyContent="space-between" onClick={onPromote}>
-          Promote <Icon as={TbSpeakerphone} transform={"rotate(-35deg)"} fontSize="1.15em" stroke-width="1.7" />
+          Promote <Icon as={TbSpeakerphone} transform={"rotate(-35deg)"} fontSize="1.15em" strokeWidth="1.7" />
         </MenuItem>
         <MenuDivider />
         <MenuItem justifyContent="space-between" color="danger" onClick={onDelete}>

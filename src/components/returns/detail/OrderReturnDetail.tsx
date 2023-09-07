@@ -19,6 +19,8 @@ import {dateHelper, priceHelper} from "utils"
 import {Link} from "@/components/navigation/Link"
 import {Payment, Payments} from "ordercloud-javascript-sdk"
 import {useState} from "react"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 type OrderReturnDetailProps = ReturnType<typeof useOrderReturnDetail>
 
@@ -59,11 +61,13 @@ export function OrderReturnDetail({orderReturn, lineItems, payment, fetchOrderRe
       <Heading size="md" marginBottom={7}>
         <HStack justifyContent="space-between">
           <Text>Return #{orderReturn.ID}</Text>
-          {orderReturn.Status === "Open" && (
-            <Button variant="solid" colorScheme="primary" onClick={handleCompleteReturn} isLoading={loading}>
-              Complete
-            </Button>
-          )}
+          <ProtectedContent hasAccess={appPermissions.OrderManager}>
+            {orderReturn.Status === "Open" && (
+              <Button variant="solid" colorScheme="primary" onClick={handleCompleteReturn} isLoading={loading}>
+                Complete
+              </Button>
+            )}
+          </ProtectedContent>
         </HStack>
       </Heading>
       <VStack gap={cardGap} width="full">

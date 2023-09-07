@@ -1,7 +1,6 @@
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
 import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
-import Link from "next/link"
 import {OrderReturns} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
@@ -10,6 +9,7 @@ import OrderReturnDeleteModal from "../modals/OrderReturnDeleteModal"
 import OrderReturnActionMenu from "./OrderReturnActionMenu"
 import OrderReturnListToolbar from "./OrderReturnListToolbar"
 import {OrderStatus} from "@/components/orders/OrderStatus"
+import {Link} from "@/components/navigation/Link"
 
 const OrderReturnQueryMap = {
   s: "Search",
@@ -58,8 +58,8 @@ const StatusColumn: DataTableColumn<IOrderReturn> = {
   accessor: "Status",
   width: "15%",
   cell: ({row, value}) => (
-    <Link href={`/returns/${row.original.ID}`} passHref>
-      <OrderStatus as="a" status={value} />
+    <Link href={`/returns/${row.original.ID}`}>
+      <OrderStatus status={value} />
     </Link>
   ),
   sortable: true

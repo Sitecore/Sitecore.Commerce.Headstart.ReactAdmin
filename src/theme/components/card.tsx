@@ -23,7 +23,7 @@ const variants = {
         textDecoration: "none",
         border: `.5px solid transparent`,
         _hover: {
-          borderColor: "st.borderColor",
+          borderColor: "chakra-border-color",
           boxShadow: "lg",
           transform: "translateY(-1px)",
           textDecoration: "none"

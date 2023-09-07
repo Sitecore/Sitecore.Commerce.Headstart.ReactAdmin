@@ -4,7 +4,7 @@ import AdminAddressList from "@/components/adminaddresses/list/AdminAddressList"
 
 const ProtectedAdminAddresses = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SettingsManager}>
+    <ProtectedContent hasAccess={[appPermissions.AdminAddressViewer, appPermissions.AdminAddressManager]}>
       <AdminAddressList />
     </ProtectedContent>
   )

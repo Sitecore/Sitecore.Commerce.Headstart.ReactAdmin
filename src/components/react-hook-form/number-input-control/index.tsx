@@ -60,7 +60,7 @@ export const NumberInputControl: FC<NumberInputControlProps> = (props: NumberInp
         <NumberInput
           id={name}
           isInvalid={!!error && isTouched}
-          isDisabled={isSubmitting}
+          isDisabled={isSubmitting || props.isDisabled}
           {...field}
           {...numberInputProps}
           value={field.value ?? ""}

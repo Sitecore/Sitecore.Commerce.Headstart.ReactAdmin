@@ -1,7 +1,7 @@
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
 import {Box, Container, Text, useDisclosure} from "@chakra-ui/react"
-import {Orders} from "ordercloud-javascript-sdk"
+import {OrderDirection, Orders} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
 import {IOrder} from "types/ordercloud/IOrder"
 import {dateHelper, priceHelper} from "utils"
@@ -154,7 +154,7 @@ const OrderList: FC = () => {
     hideColumns: (column, params) => {
       const isAdmin = !isSupplier
       if (isAdmin) {
-        if (params.routeParams.Direction === "Incoming") {
+        if (!params.routeParams.Direction || params.routeParams.Direction === "Incoming") {
           return column.accessor === SupplierIdColumn.accessor
         } else {
           return (
@@ -197,6 +197,7 @@ const OrderList: FC = () => {
           {renderContent}
           <OrderDeleteModal
             onComplete={listViewChildProps.removeItems}
+            orderDirection={listViewChildProps.routeParams.Direction as OrderDirection}
             orders={
               actionOrder
                 ? [actionOrder]

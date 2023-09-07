@@ -4,7 +4,7 @@ import {appPermissions} from "config/app-permissions.config"
 
 const ProtectedReturnsPage = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.OrderManager}>
+    <ProtectedContent hasAccess={[appPermissions.OrderViewer, appPermissions.OrderManager]}>
       <OrderReturnList />
     </ProtectedContent>
   )

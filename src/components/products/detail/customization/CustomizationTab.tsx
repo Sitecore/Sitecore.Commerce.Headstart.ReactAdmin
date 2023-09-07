@@ -6,6 +6,8 @@ import {cloneDeep} from "lodash"
 import {Control, useController} from "react-hook-form"
 import {useEffect, useState} from "react"
 import {IProduct} from "types/ordercloud/IProduct"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface CustomizationTabProps {
   control: Control<ProductDetailFormFields>
@@ -65,18 +67,20 @@ export function CustomizationTab({control, product}: CustomizationTabProps) {
   return (
     <Card w="100%">
       <CardHeader display="flex" alignItems={"center"} flexWrap="wrap" gap={4}>
-        <Text fontSize="sm" color="gray.400" fontWeight="normal">
+        <Text fontSize="sm" color="chakra-subtle-text" fontWeight="normal">
           Define custom properties for your product
         </Text>
-        <ProductXpModal
-          isCreatingNew={true}
-          as="button"
-          extendedProperties={extendedProperties}
-          onUpdate={handleXpUpdate}
-          buttonProps={{variant: "outline", colorScheme: "accent", ml: {md: "auto"}, children: "Add property"}}
-        />
+        <ProtectedContent hasAccess={appPermissions.ProductManager}>
+          <ProductXpModal
+            isCreatingNew={true}
+            as="button"
+            extendedProperties={extendedProperties}
+            onUpdate={handleXpUpdate}
+            buttonProps={{variant: "outline", colorScheme: "accent", ml: {md: "auto"}, children: "Add property"}}
+          />
+        </ProtectedContent>
       </CardHeader>
-      <CardBody p={6} display="flex" flexDirection={"column"} minH={"xs"}>
+      <CardBody p={6} display="flex" flexDirection={"column"} minH={"xs"} gap={3}>
         {extendedPropertyValues.length > 0 ? (
           extendedPropertyValues.map((xpValue, index) => {
             return (
@@ -85,80 +89,100 @@ export function CustomizationTab({control, product}: CustomizationTabProps) {
                 display="grid"
                 gridTemplateColumns={"auto 2fr 2fr"}
                 justifyContent="flex-start"
+                gap={3}
                 w={"full"}
                 maxW={{xl: "75%"}}
               >
-                <Hide below="lg">
-                  <ButtonGroup mr={2} alignItems="center">
-                    <ProductXpModal
-                      isCreatingNew={existingCustomPropertynames.includes(extendedPropertyNames[index])}
-                      as="button"
-                      extendedProperties={extendedProperties}
-                      existingPropertyName={extendedPropertyNames[index]}
-                      existingPropertyValue={xpValue}
-                      onUpdate={handleXpUpdate}
-                      buttonProps={{
-                        children: "Edit"
-                      }}
-                    />
-                    <Button
-                      variant="ghost"
-                      colorScheme="red"
-                      onClick={() => handleXpDelete(extendedPropertyNames[index])}
-                    >
-                      Delete
-                    </Button>
-                  </ButtonGroup>
-                </Hide>
-                <Hide above="lg">
-                  <ButtonGroup
-                    size="sm"
-                    mr={{base: 3, md: 6}}
-                    flexDirection={{base: "column", md: "row"}}
-                    padding={{base: 1, md: 0}}
-                    alignItems={{base: "flex-start", md: "center"}}
-                    gap={2}
-                    alignSelf="center"
-                  >
-                    <ProductXpModal
-                      isCreatingNew={existingCustomPropertynames.includes(extendedPropertyNames[index])}
-                      as="iconbutton"
-                      extendedProperties={extendedProperties}
-                      existingPropertyName={extendedPropertyNames[index]}
-                      existingPropertyValue={xpValue}
-                      onUpdate={handleXpUpdate}
-                      iconButtonProps={{
-                        icon: <TbEdit size="1rem" />,
-                        "aria-label": "edit",
-                        children: "Edit"
-                      }}
-                    />
-                    <IconButton
-                      ml={"0 !important"}
-                      icon={<TbTrash size="1rem" />}
-                      variant="outline"
-                      borderColor="red.300"
-                      color="red.300"
-                      aria-label="delete"
-                      onClick={() => handleXpDelete(extendedPropertyNames[index])}
-                    >
-                      Delete
-                    </IconButton>
-                  </ButtonGroup>
-                </Hide>
-                <Flex borderWidth={1} borderColor="gray.100" mt={"-1px"} px={4} py={2} alignItems="center">
+                <ProtectedContent hasAccess={appPermissions.ProductManager}>
+                  <>
+                    <Hide below="lg">
+                      <ButtonGroup mr={2} alignItems="center" gap={2}>
+                        <ProductXpModal
+                          isCreatingNew={existingCustomPropertynames.includes(extendedPropertyNames[index])}
+                          as="button"
+                          extendedProperties={extendedProperties}
+                          existingPropertyName={extendedPropertyNames[index]}
+                          existingPropertyValue={xpValue}
+                          onUpdate={handleXpUpdate}
+                          buttonProps={{
+                            variant: "outline",
+                            children: "Edit"
+                          }}
+                        />
+                        <Button
+                          variant="ghost"
+                          colorScheme="danger"
+                          onClick={() => handleXpDelete(extendedPropertyNames[index])}
+                        >
+                          Delete
+                        </Button>
+                      </ButtonGroup>
+                    </Hide>
+
+                    <Hide above="lg">
+                      <ButtonGroup
+                        size="sm"
+                        mr={{base: 3, md: 6}}
+                        flexDirection={{base: "column", md: "row"}}
+                        padding={{base: 1, md: 0}}
+                        alignItems={{base: "flex-start", md: "center"}}
+                        gap={2}
+                        alignSelf="center"
+                      >
+                        <ProductXpModal
+                          isCreatingNew={existingCustomPropertynames.includes(extendedPropertyNames[index])}
+                          as="iconbutton"
+                          extendedProperties={extendedProperties}
+                          existingPropertyName={extendedPropertyNames[index]}
+                          existingPropertyValue={xpValue}
+                          onUpdate={handleXpUpdate}
+                          iconButtonProps={{
+                            icon: <TbEdit size="1rem" />,
+                            "aria-label": "edit",
+                            children: "Edit"
+                          }}
+                        />
+                        <Button
+                          ml={"0 !important"}
+                          leftIcon={<TbTrash size="1rem" />}
+                          variant="outline"
+                          colorScheme="danger"
+                          onClick={() => handleXpDelete(extendedPropertyNames[index])}
+                        >
+                          Delete
+                        </Button>
+                      </ButtonGroup>
+                    </Hide>
+                  </>
+                </ProtectedContent>
+                <Flex
+                  borderWidth={1}
+                  borderColor="chakra-border-color"
+                  mt={"-1px"}
+                  px={4}
+                  py={2}
+                  alignItems="center"
+                  rounded="md"
+                >
                   <Text
-                    fontSize="0.8rem"
-                    fontWeight="bold"
-                    color="blackAlpha.500"
-                    textTransform="uppercase"
+                    color="chakra-placeholder-color"
+                    cursor="not-allowed"
                     letterSpacing={1}
                     wordBreak={"break-word"}
                   >
                     {extendedPropertyNames[index]}
                   </Text>
                 </Flex>
-                <Flex borderWidth={1} borderColor="gray.100" px={4} py={2} mt={"-1px"} ml={"-1px"} alignItems="center">
+                <Flex
+                  borderWidth={1}
+                  borderColor="chakra-border-color"
+                  px={4}
+                  py={2}
+                  mt={"-1px"}
+                  ml={"-1px"}
+                  alignItems="center"
+                  rounded="md"
+                >
                   <Text whiteSpace="pre-wrap" wordBreak="break-word">
                     {xpValue}
                   </Text>

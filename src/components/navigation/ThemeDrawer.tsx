@@ -72,7 +72,7 @@ export const ThemeDrawer = () => {
         <DrawerCloseButton />
         <DrawerHeader color={color}>Theming</DrawerHeader>
         <DrawerBody color={color} display="flex" flexFlow="column nowrap" gap={6}>
-          <ProtectedContent hasAccess={appPermissions.MeManager}>
+          <ProtectedContent hasAccess={appPermissions.ProfileManager}>
             <FormControl display="flex" gap={4}>
               <Switch
                 isChecked={currentColorMode === "dark"}

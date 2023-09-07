@@ -4,7 +4,7 @@ import {appPermissions} from "config/app-permissions.config"
 
 const ProtectedNewCatalogPage = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+    <ProtectedContent hasAccess={appPermissions.BuyerCatalogManager}>
       <CatalogForm />
     </ProtectedContent>
   )

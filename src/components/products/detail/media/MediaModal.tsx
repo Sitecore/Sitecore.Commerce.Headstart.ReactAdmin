@@ -19,6 +19,8 @@ import {useForm} from "react-hook-form"
 import {XpImage} from "types/ordercloud/IProduct"
 import {object, string} from "yup"
 import {FormEvent} from "react"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface MediaModalProps {
   onAdd: (data: XpImage) => void
@@ -58,9 +60,11 @@ export function MediaModal({buttonProps, onAdd}: MediaModalProps) {
 
   return (
     <>
-      <Button {...buttonProps} onClick={onOpen}>
-        Add image by URL
-      </Button>
+      <ProtectedContent hasAccess={appPermissions.ProductManager}>
+        <Button {...buttonProps} onClick={onOpen}>
+          Add image by URL
+        </Button>
+      </ProtectedContent>
 
       <Modal isOpen={isOpen} onClose={handleCancel}>
         <ModalOverlay />

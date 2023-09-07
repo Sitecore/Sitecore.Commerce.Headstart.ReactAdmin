@@ -12,12 +12,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SimpleGrid
+  SimpleGrid,
+  UseDisclosureProps
 } from "@chakra-ui/react"
 import {yupResolver} from "@hookform/resolvers/yup"
 import {InputControl} from "components/react-hook-form"
 import {useRouter} from "hooks/useRouter"
-import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
+import {Address, Addresses, AdminAddresses, SupplierAddresses} from "ordercloud-javascript-sdk"
 import {useForm} from "react-hook-form"
 import {TbChevronLeft} from "react-icons/tb"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
@@ -27,25 +28,28 @@ import {FormEvent, useEffect, useState} from "react"
 import {object, string} from "yup"
 import {useSuccessToast} from "hooks/useToast"
 import {getObjectDiff} from "utils"
+import ProtectedContent from "../auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
+import useHasAccess from "hooks/useHasAccess"
 
-interface AdminAddressFormProps {
+interface AddressFormProps {
   address?: Address
+  addressType: "buyer" | "supplier" | "admin"
+  parentId?: string // used for buyer and supplier addresses
   onCreate?: (address: IAdminAddress) => void
   onUpdate?: (address: IAdminAddress) => void
-  variant?: "default" | "modal"
-  isOpen?: boolean // only used when variant === "modal"
-  onClose?: () => void // only used when variant === "modal"
-  modalTitle?: string // only used when variant === "modal"
+  disclosureProps?: UseDisclosureProps
 }
-export function AdminAddressForm({
-  address,
-  onCreate,
-  onUpdate,
-  variant = "default",
-  isOpen,
-  onClose,
-  modalTitle
-}: AdminAddressFormProps) {
+export function AddressForm({address, addressType, parentId, onCreate, onUpdate, disclosureProps}: AddressFormProps) {
+  const isAddressManager = useHasAccess(
+    addressType === "admin"
+      ? appPermissions.AdminAddressManager
+      : addressType === "supplier"
+      ? appPermissions.SupplierAddressManager
+      : false // don't currently have buyer addresses in the app so disallow for now
+  )
+  const variant = disclosureProps ? "modal" : "default"
+  const {onClose, isOpen} = disclosureProps || {}
   const [currentAddress, setCurrentAddress] = useState(address)
   const [isCreating, setIsCreating] = useState(!address?.ID)
   let router = useRouter()
@@ -77,8 +81,28 @@ export function AdminAddressForm({
     mode: "onBlur"
   })
 
+  const createOrderCloudAddress = async (fields: IAdminAddress) => {
+    if (addressType === "buyer") {
+      return await Addresses.Create(parentId, fields)
+    } else if (addressType === "supplier") {
+      return await SupplierAddresses.Create(parentId, fields)
+    } else {
+      return await AdminAddresses.Create(fields)
+    }
+  }
+
+  const updateOrderCloudAddress = async (fields: Partial<IAdminAddress>) => {
+    if (addressType === "buyer") {
+      return await Addresses.Patch(parentId, fields.ID, fields)
+    } else if (addressType === "supplier") {
+      return await SupplierAddresses.Patch(parentId, fields.ID, fields)
+    } else {
+      return await AdminAddresses.Patch(fields.ID, fields)
+    }
+  }
+
   async function createAddress(fields: IAdminAddress) {
-    const createdAddress = await AdminAddresses.Create<IAdminAddress>(fields)
+    const createdAddress = await createOrderCloudAddress(fields)
     if (onCreate) {
       await onCreate(createdAddress)
       setCurrentAddress(address)
@@ -93,7 +117,7 @@ export function AdminAddressForm({
 
   async function updateAddress(fields: IAdminAddress) {
     const diff = getObjectDiff(currentAddress, fields)
-    const updatedAddress = await AdminAddresses.Patch<IAdminAddress>(fields.ID, diff)
+    const updatedAddress = await updateOrderCloudAddress(diff)
     if (onUpdate) {
       await onUpdate(updatedAddress)
     } else {
@@ -125,25 +149,91 @@ export function AdminAddressForm({
   const formFields = (
     <>
       <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
-        <InputControl name="FirstName" label="First Name" control={control} validationSchema={validationSchema} />
-        <InputControl name="LastName" label="Last Name" control={control} validationSchema={validationSchema} />
+        <InputControl
+          name="FirstName"
+          label="First Name"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
+        <InputControl
+          name="LastName"
+          label="Last Name"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
       </SimpleGrid>
       <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
-        <InputControl name="AddressName" label="Address Name" control={control} validationSchema={validationSchema} />
-        <InputControl name="CompanyName" label="Company Name" control={control} validationSchema={validationSchema} />
+        <InputControl
+          name="AddressName"
+          label="Address Name"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
+        <InputControl
+          name="CompanyName"
+          label="Company Name"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
       </SimpleGrid>
       <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
-        <InputControl name="Street1" label="Street 1" control={control} validationSchema={validationSchema} />
-        <InputControl name="Street2" label="Street 2" control={control} validationSchema={validationSchema} />
+        <InputControl
+          name="Street1"
+          label="Street 1"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
+        <InputControl
+          name="Street2"
+          label="Street 2"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
       </SimpleGrid>
       <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr 1fr"}}>
-        <InputControl name="City" label="City" control={control} validationSchema={validationSchema} />
-        <InputControl name="State" label="State" control={control} validationSchema={validationSchema} />
-        <InputControl name="Zip" label="Zip" control={control} validationSchema={validationSchema} />
+        <InputControl
+          name="City"
+          label="City"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
+        <InputControl
+          name="State"
+          label="State"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
+        <InputControl
+          name="Zip"
+          label="Zip"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
       </SimpleGrid>
       <SimpleGrid gap={4} w="100%" gridTemplateColumns={{md: "1fr 1fr"}}>
-        <InputControl name="Country" label="Country" control={control} validationSchema={validationSchema} />
-        <InputControl name="Phone" label="Phone" control={control} validationSchema={validationSchema} />
+        <InputControl
+          name="Country"
+          label="Country"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
+        <InputControl
+          name="Phone"
+          label="Phone"
+          control={control}
+          validationSchema={validationSchema}
+          isDisabled={!isAddressManager}
+        />
       </SimpleGrid>
     </>
   )
@@ -152,17 +242,19 @@ export function AdminAddressForm({
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
-          <Button onClick={() => router.back()} variant="outline" leftIcon={<TbChevronLeft />}>
+          <Button onClick={() => router.back()} variant="ghost" leftIcon={<TbChevronLeft />}>
             Back
           </Button>
-          <ButtonGroup>
-            <ResetButton control={control} reset={reset} variant="outline">
-              Discard Changes
-            </ResetButton>
-            <SubmitButton control={control} variant="solid" colorScheme="primary">
-              Save
-            </SubmitButton>
-          </ButtonGroup>
+          <ProtectedContent hasAccess={isAddressManager}>
+            <ButtonGroup>
+              <ResetButton control={control} reset={reset} variant="outline">
+                Discard Changes
+              </ResetButton>
+              <SubmitButton control={control} variant="solid" colorScheme="primary">
+                Save
+              </SubmitButton>
+            </ButtonGroup>
+          </ProtectedContent>
         </CardHeader>
         <CardBody
           display="flex"
@@ -180,7 +272,7 @@ export function AdminAddressForm({
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
       <ModalContent as="form" noValidate onSubmit={handleSubmitPreventBubbling}>
-        <ModalHeader>{modalTitle}</ModalHeader>
+        <ModalHeader>{isCreating ? "Create" : "Update"}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{formFields}</ModalBody>
         <ModalFooter display="flex" justifyContent="space-between">

@@ -39,7 +39,7 @@ export default function BulkImport({variant = "button"}: BulkImportProps) {
         </Button>
       ) : (
         <MenuItem onClick={() => setIsOpen(true)}>
-          Bulk Import <Icon ml="auto" as={TbTableImport} fontSize="1.15em" stroke-width="1.7" />
+          Bulk Import <Icon ml="auto" as={TbTableImport} fontSize="1.15em" strokeWidth="1.7" />
         </MenuItem>
       )}
       <AlertDialog isOpen={isOpen} onClose={() => setIsOpen(false)} leastDestructiveRef={cancelRef}>

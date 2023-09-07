@@ -20,10 +20,11 @@ import {Buyers, ProductAssignment, UserGroups} from "ordercloud-javascript-sdk"
 import {compact, debounce, rest, uniq, uniqWith} from "lodash"
 import {AsyncSelect, Select} from "chakra-react-select"
 import {TbX} from "react-icons/tb"
-import {isRequiredField} from "utils"
 import FormControl from "@/components/react-hook-form/form-control"
 import {SelectControl} from "@/components/react-hook-form"
 import {IBuyer} from "types/ordercloud/IBuyer"
+import useHasAccess from "hooks/useHasAccess"
+import {appPermissions} from "config/app-permissions.config"
 
 interface AssignPriceFormModel {
   BuyerAssignments: string[]
@@ -42,6 +43,7 @@ export function AssignPriceModalContent({
   onStepChange,
   onCancelModal
 }: AssignPriceModalContentProps) {
+  const isProductManager = useHasAccess(appPermissions.ProductManager)
   const selectOptionShemaOptional = object().shape({label: string(), value: string()})
   const selectOptionSchemaRequired = object().shape({label: string().required(), value: string().required()})
   const validationSchema = object()
@@ -156,6 +158,7 @@ export function AssignPriceModalContent({
           label="Assign to buyer organizations"
           control={control}
           validationSchema={validationSchema}
+          isDisabled={!isProductManager}
           maxWidth="50%"
           selectProps={{
             isMulti: true,
@@ -182,7 +185,7 @@ export function AssignPriceModalContent({
               </ChakraFormControl>
             )}
             <Button onClick={() => onStepChange("editprice")}>Edit Price</Button>
-            <SubmitButton control={control} variant="solid" colorScheme="primary">
+            <SubmitButton control={control} variant="solid" colorScheme="primary" isDisabled={!isProductManager}>
               Save changes
             </SubmitButton>
           </HStack>
@@ -203,6 +206,7 @@ function UserGroupSelect({control, label, validationSchema}: UserGroupSelectProp
   const [currentBuyer, setCurrentBuyer] = useState({label: "", value: ""})
   const [userGroupOptions, setUserGroupOptions] = useState([])
   const [isLoadingUserGroupOptions, setIsLoadingUserGroupOptions] = useState(false)
+  const isProductManager = useHasAccess(appPermissions.ProductManager)
   const {
     field,
     formState: {isSubmitting}
@@ -239,8 +243,6 @@ function UserGroupSelect({control, label, validationSchema}: UserGroupSelectProp
     }
   }
 
-  const isRequired = isRequiredField(validationSchema, field.name)
-
   const handleRemove = (index: number) => {
     const update = field.value.filter((value, i) => i !== index)
     field.onChange(update)
@@ -258,17 +260,11 @@ function UserGroupSelect({control, label, validationSchema}: UserGroupSelectProp
 
   return (
     <>
-      <FormControl
-        name={inputName}
-        control={control}
-        label={label}
-        validationSchema={validationSchema}
-        {...rest}
-      >
+      <FormControl name={inputName} control={control} label={label} validationSchema={validationSchema} {...rest}>
         <HStack>
           <AsyncSelect
             chakraStyles={{container: (baseStyles) => ({...baseStyles, width: "100%"})}}
-            isDisabled={isSubmitting}
+            isDisabled={isSubmitting || !isProductManager}
             placeholder="Select buyer"
             defaultOptions
             loadOptions={loadBuyers}
@@ -281,7 +277,7 @@ function UserGroupSelect({control, label, validationSchema}: UserGroupSelectProp
             options={userGroupOptions}
             placeholder="Select usergroups in buyer"
             name={field.name}
-            isDisabled={isSubmitting || !currentBuyer.value}
+            isDisabled={isSubmitting || !currentBuyer.value || !isProductManager}
             onChange={handleUserGroupChange}
             closeMenuOnSelect={true}
             onInputChange={handleUserGroupInputChange}

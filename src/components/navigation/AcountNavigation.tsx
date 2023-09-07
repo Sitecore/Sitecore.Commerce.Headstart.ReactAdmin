@@ -84,7 +84,7 @@ const MobileNavigation = () => {
               info="by AliciaAdmin01"
               boldInfo="New User Created"
               aName="Alicia"
-              aSrc="/images/avatars/avatar1.png"
+              aSrc="/raster/avatars/avatar1.png"
             />
           </MenuItem>
           <MenuItem borderRadius="lg">
@@ -93,7 +93,7 @@ const MobileNavigation = () => {
               info="PSPOTG10CSWSB"
               boldInfo="Product Deleted"
               aName="Josh Henry"
-              aSrc="/images/avatars/avatar2.png"
+              aSrc="/raster/avatars/avatar2.png"
             />
           </MenuItem>
           <MenuItem borderRadius="lg">
@@ -102,7 +102,7 @@ const MobileNavigation = () => {
               info="Payment succesfully completed!"
               boldInfo=""
               aName="Kara"
-              aSrc="/images/avatars/avatar3.png"
+              aSrc="/raster/avatars/avatar3.png"
             />
           </MenuItem>
         </MenuList>
@@ -127,28 +127,27 @@ const MobileNavigation = () => {
           </HStack>
         </MenuButton>
         <MenuList>
-          <ProtectedContent hasAccess={appPermissions.MeManager}>
-            <MenuItem icon={<Icon as={TbUserCircle} strokeWidth="1.25" fontSize="1.5em" />} lineHeight="0">
-              Manage Profile
-            </MenuItem>
+          <ProtectedContent hasAccess={appPermissions.ProfileManager}>
+            <>
+              <MenuItem icon={<Icon as={TbUserCircle} strokeWidth="1.25" fontSize="1.5em" />} lineHeight="0">
+                Manage Profile
+              </MenuItem>
+
+              <MenuItem icon={<Icon as={TbInbox} strokeWidth="1.25" fontSize="1.5em" />} lineHeight="0">
+                Notifications
+              </MenuItem>
+              <MenuItem
+                ref={btnRef}
+                onClick={onOpen}
+                _hover={{textDecoration: "none"}}
+                lineHeight="0"
+                icon={<Icon as={TbPalette} strokeWidth="1.25" fontSize="1.5em" />}
+              >
+                Theming
+              </MenuItem>
+              <MenuDivider />
+            </>
           </ProtectedContent>
-          <ProtectedContent hasAccess={appPermissions.MeManager}>
-            <MenuItem icon={<Icon as={TbInbox} strokeWidth="1.25" fontSize="1.5em" />} lineHeight="0">
-              Notifications
-            </MenuItem>
-          </ProtectedContent>
-          <ProtectedContent hasAccess={appPermissions.MeManager}>
-            <MenuItem
-              ref={btnRef}
-              onClick={onOpen}
-              _hover={{textDecoration: "none"}}
-              lineHeight="0"
-              icon={<Icon as={TbPalette} strokeWidth="1.25" fontSize="1.5em" />}
-            >
-              Theming
-            </MenuItem>
-          </ProtectedContent>
-          <MenuDivider />
           <MenuItem
             color="danger.500"
             onClick={() => Logout()}

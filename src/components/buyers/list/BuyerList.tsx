@@ -1,18 +1,18 @@
-import {Box, Button, ButtonGroup, Container, Icon, Tag, Text, useDisclosure} from "@chakra-ui/react"
+import {Box, Button, Container, Tag, Text, useDisclosure} from "@chakra-ui/react"
 import {DataTableColumn} from "@/components/shared/DataTable/DataTable"
 import ListView, {ListViewTableOptions} from "@/components/shared/ListView/ListView"
-import Link from "next/link"
 import {Buyers, Catalogs, RequiredDeep, UserGroups, Users} from "ordercloud-javascript-sdk"
 import {FC, useCallback, useState} from "react"
 import {IBuyer} from "types/ordercloud/IBuyer"
-import {MdCheck} from "react-icons/md"
-import {IoMdClose} from "react-icons/io"
 import {dateHelper} from "utils"
 import {IBuyerUserGroup} from "types/ordercloud/IBuyerUserGroup"
 import {IBuyerUser} from "types/ordercloud/IBuyerUser"
 import BuyerListToolbar from "./BuyerListToolBar"
 import BuyerActionMenu from "./BuyerActionMenu"
 import BuyerDeleteModal from "../modals/BuyerDeleteModal"
+import useHasAccess from "hooks/useHasAccess"
+import {appPermissions} from "config/app-permissions.config"
+import {Link} from "@/components/navigation/Link"
 
 export const BuyerColorSchemeMap = {
   "": "gray",
@@ -42,11 +42,9 @@ const IdColumn: DataTableColumn<IBuyerListItem> = {
   header: "Buyer ID",
   accessor: "ID",
   cell: ({row, value}) => (
-    <Link passHref href={"/buyers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Box noOfLines={2} title={value}>
+      {value}
+    </Box>
   )
 }
 
@@ -54,11 +52,9 @@ const NameColumn: DataTableColumn<IBuyerListItem> = {
   header: "NAME",
   accessor: "Name",
   cell: ({row, value}) => (
-    <Link passHref href={"/buyers/" + row.original.ID}>
-      <Text as="a" noOfLines={2} title={value}>
-        {value}
-      </Text>
-    </Link>
+    <Box noOfLines={2} title={value}>
+      {value}
+    </Box>
   )
 }
 
@@ -83,27 +79,27 @@ const CreatedDateColumn: DataTableColumn<IBuyerListItem> = {
   cell: ({value}) => dateHelper.formatDate(value)
 }
 
-const UserGroupColumn: DataTableColumn<IBuyerListItem> = {
+const BuyerUserGroupColumn: DataTableColumn<IBuyerListItem> = {
   header: "USER GROUPS",
   skipHref: true,
   cell: ({row}) => (
-    <Link passHref href={`/buyers/${row.original.ID}/usergroups`}>
+    <Link href={`/buyers/${row.original.ID}/usergroups`}>
       <Button variant="outline">User Groups ({row.original.userGroupsCount})</Button>
     </Link>
   )
 }
 
-const BuyerUsersColumn: DataTableColumn<IBuyerListItem> = {
+const BuyerUserColumn: DataTableColumn<IBuyerListItem> = {
   header: "USERS",
   skipHref: true,
   cell: ({row}) => (
-    <Link passHref href={`/buyers/${row.original.ID}/users`}>
+    <Link href={`/buyers/${row.original.ID}/users`}>
       <Button variant="outline">Users ({row.original.usersCount})</Button>
     </Link>
   )
 }
 
-const CatalogColumn: DataTableColumn<IBuyerListItem> = {
+const BuyerCatalogColumn: DataTableColumn<IBuyerListItem> = {
   header: "CATALOGS",
   skipHref: true,
   cell: ({row}) => (
@@ -118,45 +114,50 @@ const BuyerTableOptions: ListViewTableOptions<IBuyerListItem> = {
     base: [IdColumn, NameColumn],
     md: [IdColumn, NameColumn],
     lg: [IdColumn, NameColumn],
-    xl: [
-      IdColumn,
-      NameColumn,
-      DefaultCatalogIDColumn,
-      StatusColumn,
-      CreatedDateColumn,
-      UserGroupColumn,
-      BuyerUsersColumn,
-      CatalogColumn
-    ]
+    xl: [IdColumn, NameColumn, DefaultCatalogIDColumn, StatusColumn, CreatedDateColumn]
   }
 }
 
-const buyerListCall = async (listOptions: any) => {
-  const response = await Buyers.List(listOptions)
-  const queue = []
-  const decoratedBuyerItems = []
-  response.Items.forEach((buyer) => {
-    queue.push(
-      Promise.all([
-        UserGroups.List<IBuyerUserGroup>(buyer.ID),
-        Users.List<IBuyerUser>(buyer.ID),
-        Catalogs.ListAssignments({buyerID: buyer.ID})
-      ]).then((responses) => {
-        const decoratedBuyer: IBuyerListItem = {
-          ...buyer,
-          userGroupsCount: responses[0].Meta.TotalCount,
-          usersCount: responses[1].Meta.TotalCount,
-          catalogsCount: responses[2].Meta.TotalCount
-        }
-        decoratedBuyerItems.push(decoratedBuyer)
-      })
-    )
-  })
-  await Promise.all(queue)
-  return {Meta: response.Meta, Items: decoratedBuyerItems}
-}
-
 const BuyerList: FC = () => {
+  const canViewBuyerUsers = useHasAccess([appPermissions.BuyerUserViewer, appPermissions.BuyerUserManager])
+  const canViewBuyerUserGroups = useHasAccess([
+    appPermissions.BuyerUserGroupViewer,
+    appPermissions.BuyerUserGroupManager
+  ])
+  const canViewBuyerCatalogs = useHasAccess([appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager])
+
+  if (canViewBuyerUsers && !BuyerTableOptions.responsive.xl.map((c) => c.header).includes("USERS")) {
+    BuyerTableOptions.responsive.xl.push(BuyerUserColumn)
+  }
+  if (canViewBuyerUserGroups && !BuyerTableOptions.responsive.xl.map((c) => c.header).includes("USER GROUPS")) {
+    BuyerTableOptions.responsive.xl.push(BuyerUserGroupColumn)
+  }
+  if (canViewBuyerCatalogs && !BuyerTableOptions.responsive.xl.map((c) => c.header).includes("CATALOGS")) {
+    BuyerTableOptions.responsive.xl.push(BuyerCatalogColumn)
+  }
+
+  const buyerListCall = async (listOptions: any) => {
+    const buyersList = await Buyers.List(listOptions)
+    const enhancedBuyerRequests = buyersList.Items.map(async (buyer) => {
+      const requests = []
+      requests.push(canViewBuyerUsers ? Users.List<IBuyerUser>(buyer.ID) : null)
+      requests.push(canViewBuyerUserGroups ? UserGroups.List<IBuyerUserGroup>(buyer.ID) : null)
+      requests.push(canViewBuyerCatalogs ? Catalogs.ListAssignments({buyerID: buyer.ID}) : null)
+
+      return Promise.all(requests).then((responses) => {
+        return {
+          ...buyer,
+          usersCount: canViewBuyerUsers && responses[0].Meta.TotalCount,
+          userGroupsCount: canViewBuyerUserGroups && responses[1].Meta.TotalCount,
+          catalogsCount: canViewBuyerCatalogs && responses[2].Meta.TotalCount
+        }
+      })
+    })
+
+    const enhancedBuyers = await Promise.all(enhancedBuyerRequests)
+    return {Meta: buyersList.Meta, Items: enhancedBuyers}
+  }
+
   const [actionBuyer, setActionBuyer] = useState<IBuyerListItem>()
   const deleteDisclosure = useDisclosure()
 

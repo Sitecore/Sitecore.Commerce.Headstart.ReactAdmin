@@ -34,3 +34,20 @@ export function emptyStringToNull(value, originalValue) {
   }
   return value
 }
+
+export function nullToFalse(value, originalValue) {
+  if (originalValue === null) {
+    return false
+  }
+  return value
+}
+
+// regex matching OrderCloud's minimum password requirements
+// 10 characters, must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number, may contain special characters
+// https://ordercloud.io/knowledge-base/custom-password-configuration
+export const orderCloudPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?a-zA-Z\d\S]{10,}$/
+
+// regex matching OrderCloud's ID requirements
+// can include letters, numbers, dashes, and underscores, and can be at most 100 characters
+export const orderCloudIDRegex = /^\w+$/

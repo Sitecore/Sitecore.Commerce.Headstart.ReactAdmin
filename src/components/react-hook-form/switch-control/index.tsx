@@ -38,7 +38,7 @@ export const SwitchControl: FC<SwitchControlProps> = (props: SwitchControlProps)
         id={name}
         isInvalid={!!error && isTouched}
         isChecked={field.value}
-        isDisabled={isSubmitting}
+        isDisabled={isSubmitting || props.isDisabled}
         {...switchProps}
       />
     </FormControl>

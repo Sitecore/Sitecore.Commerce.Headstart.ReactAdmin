@@ -6,6 +6,8 @@ import Link from "next/link"
 import {FC} from "react"
 import BuyerUserListActions from "./BuyerUserListActions"
 import BuyerUserStatusFilter from "./BuyerUserStatusFilter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface BuyerUserListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {
   buyerid: string
@@ -40,13 +42,15 @@ const BuyerUserListToolbar: FC<BuyerUserListToolbarProps> = ({
             <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/buyers/${buyerid}/users/new`}>
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create User
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.BuyerUserManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href={`/buyers/${buyerid}/users/new`}>
+                <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+                  Create User
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

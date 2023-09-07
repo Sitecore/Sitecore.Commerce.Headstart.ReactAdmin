@@ -17,6 +17,8 @@ import {HamburgerIcon} from "@chakra-ui/icons"
 import {TbPlus} from "react-icons/tb"
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import {ProductDetailFormFields} from "./form-meta"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface ProductDetailToolbarProps {
   product: IProduct
@@ -51,28 +53,33 @@ export default function ProductDetailToolbar({
       <Hide below="xl">
         <Stack direction="row" mb={5} w="100%">
           <ViewManager viewVisibility={viewVisibility} setViewVisibility={setViewVisibility} />
-          <Menu>
-            <MenuButton as={Button} variant="outline" width={"max-content"}>
-              <HStack>
-                <Text>Actions</Text>
-                <ChevronDownIcon />
+
+          <ProtectedContent hasAccess={appPermissions.ProductManager}>
+            <>
+              <Menu>
+                <MenuButton as={Button} variant="outline" width={"max-content"}>
+                  <HStack>
+                    <Text>Actions</Text>
+                    <ChevronDownIcon />
+                  </HStack>
+                </MenuButton>
+                <MenuList>
+                  <ViewProduct />
+                  <ExportToCsv variant="menuitem" />
+                  <LanguageSelector />
+                  <ConfirmDelete deleteText="Delete Product" loading={deleteLoading} onDelete={onDelete} />
+                </MenuList>
+              </Menu>
+              <HStack flexGrow="1" justifyContent={"flex-end"} gap={1}>
+                <ResetButton control={control} reset={resetForm}>
+                  Discard Changes
+                </ResetButton>
+                <SubmitButton control={control} variant="solid" colorScheme="primary">
+                  Save
+                </SubmitButton>
               </HStack>
-            </MenuButton>
-            <MenuList>
-              <ViewProduct />
-              <ExportToCsv variant="menuitem" />
-              <LanguageSelector />
-              <ConfirmDelete deleteText="Delete Product" loading={deleteLoading} onDelete={onDelete} />
-            </MenuList>
-          </Menu>
-          <HStack flexGrow="1" justifyContent={"flex-end"} gap={1}>
-            <ResetButton control={control} reset={resetForm}>
-              Discard Changes
-            </ResetButton>
-            <SubmitButton control={control} variant="solid" colorScheme="primary">
-              Save
-            </SubmitButton>
-          </HStack>
+            </>
+          </ProtectedContent>
         </Stack>
       </Hide>
 

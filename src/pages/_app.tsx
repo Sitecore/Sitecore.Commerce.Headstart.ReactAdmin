@@ -12,6 +12,8 @@ import {SetConfiguration} from "../services/ordercloud.service"
 import {axiosService} from "services/axios.service"
 import defaultSEOConfig from "../../next-seo.config"
 import dynamic from "next/dynamic"
+import "overlayscrollbars/overlayscrollbars.css"
+import {ModalProvider} from "hooks/useAwaitableModals"
 
 axiosService.initializeInterceptors()
 SetConfiguration()
@@ -34,7 +36,9 @@ const MyApp = ({Component, pageProps, ...appProps}: AppProps) => {
       <DynamicAuthProvider>
         <ProtectedApp>
           <Layout {...pageProps}>
-            <Component {...pageProps} />
+            <ModalProvider>
+              <Component {...pageProps} />
+            </ModalProvider>
           </Layout>
         </ProtectedApp>
       </DynamicAuthProvider>

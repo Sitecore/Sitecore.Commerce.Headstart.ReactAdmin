@@ -33,7 +33,7 @@ const ProductFacetsListItem = () => {
 
 const ProtectedProductFacetsListItem = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.ProductManager}>
+    <ProtectedContent hasAccess={[appPermissions.ProductFacetViewer, appPermissions.ProductFacetManager]}>
       <ProductFacetsListItem />
     </ProtectedContent>
   )

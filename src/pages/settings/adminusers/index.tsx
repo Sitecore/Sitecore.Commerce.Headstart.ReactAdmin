@@ -4,7 +4,7 @@ import AdminUserList from "@/components/adminusers/list/AdminUserList"
 
 const ProtectedAdminUsers = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SettingsManager}>
+    <ProtectedContent hasAccess={[appPermissions.AdminUserViewer, appPermissions.AdminUserManager]}>
       <AdminUserList />
     </ProtectedContent>
   )

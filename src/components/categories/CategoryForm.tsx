@@ -22,9 +22,9 @@ export function CategoryForm({category, headerComponent, parentId, onSuccess}: C
   const [isCreating, setIsCreating] = useState(!category?.ID)
 
   const router = useRouter()
-  const catalogID = router.query.catalogid.toString()
-  const buyerID = router.query.buyerid.toString()
-  const userGroupID = router.query.usergroupid?.toString()
+  const catalogID = router.isReady ? router.query.catalogid.toString() : null
+  const buyerID = router.isReady ? router.query.buyerid.toString() : null
+  const userGroupID = router.isReady ? router.query.usergroupid?.toString() : null
 
   const successToast = useSuccessToast()
   const errorToast = useErrorToast()

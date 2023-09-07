@@ -4,7 +4,7 @@ import {appPermissions} from "config/app-permissions.config"
 
 const ProtectedBuyersList = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+    <ProtectedContent hasAccess={[appPermissions.BuyerViewer, appPermissions.BuyerManager]}>
       <BuyerList />
     </ProtectedContent>
   )

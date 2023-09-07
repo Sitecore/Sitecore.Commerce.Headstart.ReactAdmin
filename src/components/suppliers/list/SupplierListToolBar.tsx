@@ -7,6 +7,8 @@ import Link from "next/link"
 import {FC} from "react"
 import SupplierListActions from "./SupplierListActions"
 import SupplierStatusFilter from "./SupplierStatusFilter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface SupplierListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
@@ -26,11 +28,13 @@ const SupplierListToolbar: FC<SupplierListToolbarProps> = ({
         {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
         <Box as="span" width="2"></Box>
         {viewModeToggle}
-        <Link passHref href="/suppliers/new">
-          <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-            Create Supplier
-          </Button>
-        </Link>
+        <ProtectedContent hasAccess={appPermissions.SupplierManager}>
+          <Link passHref href="/suppliers/new">
+            <Button variant="solid" colorScheme="primary" as="a">
+              Create Supplier
+            </Button>
+          </Link>
+        </ProtectedContent>
       </Stack>
     </Stack>
   )

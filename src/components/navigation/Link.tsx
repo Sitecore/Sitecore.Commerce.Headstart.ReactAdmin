@@ -1,5 +1,5 @@
-import NextLink, {LinkProps} from "next/link"
-import {Link as ChakraLink, HTMLChakraProps, ThemingProps} from "@chakra-ui/react"
+import NextLink from "next/link"
+import {Link as ChakraLink, HTMLChakraProps, ThemingProps, forwardRef} from "@chakra-ui/react"
 
 interface ChakraLinkProps extends HTMLChakraProps<"a">, ThemingProps<"Link"> {
   /**
@@ -12,11 +12,12 @@ interface ChakraLinkProps extends HTMLChakraProps<"a">, ThemingProps<"Link"> {
 
 // combines chakra ui, with functionality needed for nextjs links
 // https://jools.dev/using-nextjs-link-with-chakra-ui-link
-
-export const Link = ({href, children, ...props}: ChakraLinkProps) => {
+export const Link = forwardRef<ChakraLinkProps, "a">(function Link2({href, children, ...restProps}, ref) {
   return (
     <NextLink href={href} passHref>
-      <ChakraLink {...props}>{children}</ChakraLink>
+      <ChakraLink ref={ref} {...restProps}>
+        {children}
+      </ChakraLink>
     </NextLink>
   )
-}
+})

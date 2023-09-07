@@ -125,7 +125,7 @@ export default function AverageOrderAmount() {
   ]
 
   return (
-    <Card border=".5px solid" borderColor="st.borderColor" flex={"1 1 100%"}>
+    <Card border=".5px solid" borderColor="chakra-border-color" flex={"1 1 100%"}>
       <CardHeader display="flex" flexDirection="column" mb="GlobalPadding" ps="22px" alignSelf="flex-start">
         <Heading fontSize="lg" mb="6px" textTransform="capitalize" color={headingColor}>
           {chartData.salesoverview.title}

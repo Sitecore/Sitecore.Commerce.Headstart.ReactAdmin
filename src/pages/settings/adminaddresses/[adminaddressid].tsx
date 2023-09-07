@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react"
-import {AdminAddressForm} from "components/adminaddresses"
 import {Container, Skeleton} from "@chakra-ui/react"
 import {Address, AdminAddresses} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {IAdminAddress} from "types/ordercloud/IAdminAddress"
+import {AddressForm} from "@/components/addresses"
 
 const AdminAddressListItem = () => {
   const router = useRouter()
@@ -22,7 +22,7 @@ const AdminAddressListItem = () => {
   return (
     <>
       {adminAddress?.ID ? (
-        <AdminAddressForm address={adminAddress} />
+        <AddressForm address={adminAddress} addressType="admin" />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />
@@ -34,7 +34,7 @@ const AdminAddressListItem = () => {
 
 const ProtectedAdminAddressListItem = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SettingsManager}>
+    <ProtectedContent hasAccess={[appPermissions.AdminAddressViewer, appPermissions.AdminAddressManager]}>
       <AdminAddressListItem />
     </ProtectedContent>
   )

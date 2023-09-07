@@ -3,6 +3,8 @@ import {ShipmentSummary} from "./ShipmentSummary"
 import {IOrder} from "types/ordercloud/IOrder"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IShipment} from "types/ordercloud/IShipment"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface OrderShipmentsProps {
   shipments: IShipment[]
@@ -16,13 +18,15 @@ export function OrderShipments({shipments, order, lineItems, onUpdate, onDelete}
     <>
       {shipments.map((shipment) => (
         <ShipmentSummary key={shipment.ID} shipment={shipment} lineItems={lineItems} marginBottom={5}>
-          <ShipmentActionMenu
-            shipment={shipment}
-            order={order}
-            lineItems={lineItems}
-            onUpdate={onUpdate}
-            onDelete={() => onDelete(shipment.ID)}
-          />
+          <ProtectedContent hasAccess={appPermissions.OrderManager}>
+            <ShipmentActionMenu
+              shipment={shipment}
+              order={order}
+              lineItems={lineItems}
+              onUpdate={onUpdate}
+              onDelete={() => onDelete(shipment.ID)}
+            />
+          </ProtectedContent>
         </ShipmentSummary>
       ))}
     </>

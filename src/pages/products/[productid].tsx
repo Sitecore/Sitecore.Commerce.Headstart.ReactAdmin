@@ -42,7 +42,7 @@ const ProductDetailPage = () => {
 
 const ProtectedProductDetailPage = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.ProductManager}>
+    <ProtectedContent hasAccess={[appPermissions.ProductViewer, appPermissions.ProductManager]}>
       <ProductDetailPage />
     </ProtectedContent>
   )

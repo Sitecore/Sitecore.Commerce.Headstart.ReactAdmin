@@ -55,7 +55,7 @@ const Dashboard = () => {
   const [percentNewUsers, setpercentNewUsers] = useState(Number)
   const [percentNewUsersChange, setpercentNewUsersChange] = useState(String)
   const [canViewReports, setCanViewReports] = useState(false)
-  const hasAccessToViewReports = useHasAccess(appPermissions.ReportViewer)
+  const hasAccessToViewReports = useHasAccess(appPermissions.DashboardViewer)
   const [dashboardListMeta, setDashboardMeta] = useState({})
 
   const [above2xl] = useMediaQuery(`(min-width: ${theme.breakpoints["2xl"]})`, {

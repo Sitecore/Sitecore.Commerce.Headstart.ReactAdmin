@@ -5,6 +5,7 @@ import ProtectedContent from "@/components/auth/ProtectedContent"
 import {PriceOverrideForm} from "./PriceOverrideForm"
 import {appPermissions} from "config/app-permissions.config"
 import {ProductDetailFormFields} from "../form-meta"
+import {useAuth} from "hooks/useAuth"
 
 interface PricingTabProps {
   control: Control<ProductDetailFormFields>
@@ -13,6 +14,7 @@ interface PricingTabProps {
   overridePriceSchedules?: IPriceSchedule[]
 }
 export function PricingTab({control, trigger, priceBreakCount, overridePriceSchedules}: PricingTabProps) {
+  const {isAdmin} = useAuth()
   const fieldArray = useFieldArray({
     control,
     name: `OverridePriceSchedules`
@@ -25,9 +27,9 @@ export function PricingTab({control, trigger, priceBreakCount, overridePriceSche
         trigger={trigger}
         priceBreakCount={priceBreakCount}
       />
-      <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+      {isAdmin && (
         <PriceOverrideForm control={control} fieldArray={fieldArray} overridePriceSchedules={overridePriceSchedules} />
-      </ProtectedContent>
+      )}
     </>
   )
 }

@@ -7,6 +7,8 @@ import {cloneDeep, difference} from "lodash"
 import {FacetUpdateModal} from "./FacetUpdateModal"
 import {SelectControl} from "@/components/react-hook-form"
 import {ProductDetailFormFields} from "../form-meta"
+import useHasAccess from "hooks/useHasAccess"
+import {appPermissions} from "config/app-permissions.config"
 
 interface FacetTabProps extends CardProps {
   control: Control<ProductDetailFormFields>
@@ -15,6 +17,7 @@ interface FacetTabProps extends CardProps {
 }
 
 export function FacetTab({control, validationSchema, facetList, ...cardProps}: FacetTabProps) {
+  const isProductManager = useHasAccess(appPermissions.ProductManager)
   const {field} = useController({control, name: "Product.xp.Facets"})
   const productFacetIds = Object.keys(field.value || {})
     .filter((key) => field.value[key]) // exclude facets with empty values
@@ -23,7 +26,7 @@ export function FacetTab({control, validationSchema, facetList, ...cardProps}: F
   const handleFacetsUpdate = (selectedFacetIds: string[]) => {
     const addKeys = difference(selectedFacetIds, productFacetIds)
     const removeKeys = difference(productFacetIds, selectedFacetIds)
-    const clone = cloneDeep(field.value)
+    const clone = cloneDeep(field.value) || {}
     addKeys.forEach((key) => {
       clone[key] = []
     })
@@ -82,11 +85,13 @@ export function FacetTab({control, validationSchema, facetList, ...cardProps}: F
             const facetOptions = (facet.xp?.Options || []).map((option) => ({label: option, value: option}))
             return (
               <SelectControl
+                label={facet?.Name}
                 key={facetId}
                 name={`Product.xp.Facets.${facetId}`}
                 control={control}
                 validationSchema={validationSchema}
                 selectProps={{options: facetOptions, isMulti: true}}
+                isDisabled={!isProductManager}
               />
             )
           })}

@@ -4,6 +4,8 @@ import {CategoryTable} from "./CategoryTable"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 import {CategorySelect} from "./CategorySelect"
 import {ProductDetailFormFields} from "../../form-meta"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface CategoriesCardProps {
   control: Control<ProductDetailFormFields>
@@ -31,7 +33,9 @@ export function CategoriesCard({control}: CategoriesCardProps) {
             Define which categories this product is assigned to
           </Text>
         </Heading>
-        <CategorySelect onUpdate={handleCategoryAdd} existingAssignments={existingAssignments} />
+        <ProtectedContent hasAccess={appPermissions.ProductManager}>
+          <CategorySelect onUpdate={handleCategoryAdd} existingAssignments={existingAssignments} />
+        </ProtectedContent>
       </CardHeader>
       <CardBody>
         {categoryAssignments.length > 0 ? (

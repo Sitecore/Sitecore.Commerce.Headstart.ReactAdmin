@@ -1,5 +1,6 @@
 import {TableContainer, Table, Tbody, Tr, Td, Heading, Switch} from "@chakra-ui/react"
 import {appPermissions} from "config/app-permissions.config"
+import useHasAccess from "hooks/useHasAccess"
 import {useState} from "react"
 import {textHelper} from "utils"
 
@@ -8,6 +9,7 @@ interface AdminPermissionTableProps {
   onPermissionChange: (permissions: string[]) => void
 }
 export function AdminPermissionTable(props: AdminPermissionTableProps) {
+  const isAdminUserManager = useHasAccess(appPermissions.AdminUserManager)
   const allPermissions = Object.keys(appPermissions)
   const [assignedPermissions, setAssignedPermissions] = useState(props.assignedPermissions || [])
 
@@ -39,6 +41,7 @@ export function AdminPermissionTable(props: AdminPermissionTableProps) {
                   colorScheme={"primary"}
                   isChecked={assignedPermissions.includes(permission)}
                   onChange={() => handlePermissionChange(permission)}
+                  isDisabled={!isAdminUserManager}
                 ></Switch>
               </Td>
             </Tr>

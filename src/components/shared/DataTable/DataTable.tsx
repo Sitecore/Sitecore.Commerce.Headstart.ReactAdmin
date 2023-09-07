@@ -141,7 +141,7 @@ const DataTable = <T extends IDefaultResource>({
     <TableContainer
       whiteSpace="normal"
       border=".5px solid"
-      borderColor="st.borderColor"
+      borderColor="chakra-border-color"
       shadow="lg"
       overflowX="hidden"
       w="100%"
@@ -177,10 +177,11 @@ const DataTable = <T extends IDefaultResource>({
                 key={index}
                 style={{cursor: header.sortable ? "pointer" : "auto"}}
                 onClick={
-                  header.sortable &&
-                  (() => {
-                    onSortChange(header.accessor, header.isSorted, header.isSortedDesc)
-                  })
+                  header.sortable
+                    ? () => {
+                        onSortChange(header.accessor, header.isSorted, header.isSortedDesc)
+                      }
+                    : undefined
                 }
               >
                 <Flex

@@ -5,7 +5,7 @@ import {appPermissions} from "config/app-permissions.config"
 
 const ProtectedNewCategoryPage = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+    <ProtectedContent hasAccess={appPermissions.BuyerCatalogManager}>
       <Box pl="GlobalPadding">
         <CategoryForm />
       </Box>

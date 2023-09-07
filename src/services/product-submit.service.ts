@@ -75,14 +75,8 @@ export async function submitProduct(
   // update variants
   const updatedVariants = await handleUpdateVariants(oldVariants, newVariants, updatedProduct, updatedSpecs)
 
-  // create/update/delete price overrides and related assignments
-  const updatedPriceOverrides = await handleUpdatePriceOverrides(
-    oldOverridePriceSchedules,
-    newOverridePriceSchedules.filter((priceSchedule) => priceSchedule.PriceBreaks[0].Price),
-    updatedProduct
-  )
-
   // create/update/delete category assignments
+  // Note: this must happen BEFORE price overrides to ensure product is visible to assigned buyers
   const updatedCategoryAssignments = await handleUpdateCategoryAssignments(
     oldCategoryAssignments,
     newCategoryAssignments,
@@ -90,9 +84,17 @@ export async function submitProduct(
   )
 
   // create/update/delete catalog assignments
+  // Note: this must happen BEFORE price overrides to ensure product is visible to assigned buyers
   const updatedCatalogAssignments = await handleUpdateCatalogAssignments(
     oldCatalogAssignments,
     newCatalogAssignments,
+    updatedProduct
+  )
+
+  // create/update/delete price overrides and related assignments
+  const updatedPriceOverrides = await handleUpdatePriceOverrides(
+    oldOverridePriceSchedules,
+    newOverridePriceSchedules.filter((priceSchedule) => priceSchedule.PriceBreaks[0].Price),
     updatedProduct
   )
 

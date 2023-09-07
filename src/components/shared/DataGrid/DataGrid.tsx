@@ -33,6 +33,7 @@ const DEFAULT_DATA_GRID__RENDER_GRID_ITEM = (
   hrefResolver
 ) => (
   <DefaultDataGridItemCard
+    key={o.ID || i}
     o={o}
     i={i}
     actions={actions}
@@ -87,9 +88,9 @@ const DataGrid = <T extends IDefaultResource>({
         </Box>
       )}
       {data &&
-        data.map((o, i) => (
-          <>{renderGridItem(o, i, gridItemActions, selected.includes(o.ID), onSelectChange, itemHrefResolver)}</>
-        ))}
+        data.map((o, i) =>
+          renderGridItem(o, i, gridItemActions, selected.includes(o.ID), onSelectChange, itemHrefResolver)
+        )}
       {!loading && !data.length && (
         <GridItem
           colSpan={columns}

@@ -16,37 +16,22 @@ export function OrderProducts({isAdmin, lineItems, suppliers, shipFromAddresses}
   if (!isAdmin) {
     return <LineItemTable lineItems={lineItems} />
   }
-  const shipFromGroupedLineItems = groupBy(lineItems, (li) => li.ShipFromAddressID)
+  const groupedByShipFrom = groupBy(lineItems, (li) => li.Product.DefaultSupplierID + li.ShipFromAddressID)
   return (
     <>
-      {Object.entries(shipFromGroupedLineItems).map(([shipFromAddressId, shipFromLineItems], shipFromIndex) => {
-        if (shipFromAddressId) {
-          const supplierId = shipFromLineItems[0].Product.DefaultSupplierID
-          return (
-            <SupplierLineItems
-              key={shipFromIndex}
-              supplierId={supplierId}
-              shipFromAddressId={shipFromAddressId}
-              suppliers={suppliers}
-              shipFromAddresses={shipFromAddresses}
-              lineItems={shipFromLineItems}
-            />
-          )
-        } else {
-          const supplierGroupedLineItems = groupBy(shipFromLineItems, (li) => li.Product.DefaultSupplierID)
-          return Object.entries(supplierGroupedLineItems).map(([supplierId, supplierLineItems], supplierIndex) => {
-            return (
-              <SupplierLineItems
-                key={shipFromIndex + supplierIndex}
-                supplierId={supplierId}
-                shipFromAddressId={null}
-                suppliers={suppliers}
-                shipFromAddresses={shipFromAddresses}
-                lineItems={supplierLineItems}
-              />
-            )
-          })
-        }
+      {Object.values(groupedByShipFrom).map((shipFromLineItems, shipFromIndex) => {
+        const shipFromAddressId = shipFromLineItems[0].ShipFromAddressID
+        const supplierId = shipFromLineItems[0].Product?.DefaultSupplierID
+        return (
+          <SupplierLineItems
+            key={supplierId + shipFromAddressId}
+            supplierId={supplierId}
+            shipFromAddressId={shipFromAddressId}
+            suppliers={suppliers}
+            shipFromAddresses={shipFromAddresses}
+            lineItems={shipFromLineItems}
+          />
+        )
       })}
     </>
   )

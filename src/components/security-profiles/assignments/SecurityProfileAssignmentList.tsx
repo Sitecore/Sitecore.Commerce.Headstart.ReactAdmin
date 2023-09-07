@@ -259,7 +259,6 @@ export function SecurityProfileAssignmentList({
                 >
                   <Text color="chakra-placeholder-color">Inherited from</Text>
                   <HStack
-                    gap={2}
                     flexWrap="wrap"
                     alignItems="flex-end"
                     divider={

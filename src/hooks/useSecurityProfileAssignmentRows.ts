@@ -69,18 +69,19 @@ export function useSecurityProfileAssignmentRows({
 
   const hasAssignmentAtLevel = useCallback(
     (assignment: SecurityProfileAssignment, level: SecurityProfileAssignmentLevel): boolean => {
-      if (level === "user") {
-        return Boolean(assignment.UserID)
-      } else if (level === "group") {
-        return Boolean(assignment.UserGroupID)
-      } else {
-        if (commerceRole === "buyer") {
-          return assignment.BuyerID && !assignment.UserGroupID && !assignment.UserID
-        } else if (commerceRole === "supplier") {
-          return assignment.SupplierID && !assignment.UserGroupID && !assignment.UserID
-        } else {
-          return !assignment.BuyerID && !assignment.SupplierID && !assignment.UserGroupID && !assignment.UserID
-        }
+      switch (level) {
+        case "user":
+          return Boolean(assignment.UserID)
+        case "group":
+          return Boolean(assignment.UserGroupID)
+        case "company":
+          if (commerceRole === "buyer") {
+            return assignment.BuyerID && !assignment.UserGroupID && !assignment.UserID
+          } else if (commerceRole === "supplier") {
+            return assignment.SupplierID && !assignment.UserGroupID && !assignment.UserID
+          } else {
+            return !assignment.BuyerID && !assignment.SupplierID && !assignment.UserGroupID && !assignment.UserID
+          }
       }
     },
     [commerceRole]

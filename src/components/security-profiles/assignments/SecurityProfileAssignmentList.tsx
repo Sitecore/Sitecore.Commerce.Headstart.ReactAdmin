@@ -1,11 +1,24 @@
 import {Link} from "@/components/navigation/Link"
-import {HStack, VStack, Text, Checkbox, Card, CardBody} from "@chakra-ui/react"
+import {
+  HStack,
+  VStack,
+  Text,
+  Checkbox,
+  Card,
+  CardBody,
+  MenuItem,
+  Menu,
+  MenuButton,
+  MenuList,
+  Link as ChakraLink
+} from "@chakra-ui/react"
 import {appPermissions} from "config/app-permissions.config"
 import useAwaitableModals from "hooks/useAwaitableModals"
 import {isAllowedAccess} from "hooks/useHasAccess"
 import {useSecurityProfileAssignmentRows} from "hooks/useSecurityProfileAssignmentRows"
 import {SecurityProfileAssignment} from "ordercloud-javascript-sdk"
 import {ReactNode} from "react"
+import {FaCaretRight} from "react-icons/fa"
 import {SecurityProfileAssignmentLevel} from "types/ordercloud/SecurityProfileAssignmentLevel"
 
 export const PLACEHOLDER_ID = "THIS_WILL_BE_REPLACED_BY_THE_CREATED_ENTITY_ID"
@@ -126,7 +139,22 @@ export function SecurityProfileAssignmentList({
           if (inheritedAssignedParties.buyerUserGroups?.length) {
             if (inheritedAssignedParties.buyerUserGroups.length > 1) {
               inheritedFromParts.push(
-                <Text key="usergroups">{inheritedAssignedParties.buyerUserGroups.length} group</Text>
+                <Menu>
+                  <MenuButton as={ChakraLink}>{inheritedAssignedParties.buyerUserGroups.length} groups</MenuButton>
+                  <MenuList>
+                    {inheritedAssignedParties.buyerUserGroups.map(({userGroup, buyerID}) => (
+                      <MenuItem
+                        key={userGroup.ID}
+                        as={Link}
+                        href={`/buyers/${buyerID}/usergroups/${userGroup.ID}`}
+                        flexDirection="row-reverse"
+                        icon={<FaCaretRight />}
+                      >
+                        {userGroup.Name}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Menu>
               )
             } else {
               const item = inheritedAssignedParties.buyerUserGroups[0]
@@ -143,7 +171,24 @@ export function SecurityProfileAssignmentList({
           }
           if (inheritedAssignedParties.supplierUserGroups?.length) {
             if (inheritedAssignedParties.supplierUserGroups.length > 1) {
-              inheritedFromParts.push(<Text>{inheritedAssignedParties.supplierUserGroups.length} usergroups</Text>)
+              inheritedFromParts.push(
+                <Menu>
+                  <MenuButton as={ChakraLink}>{inheritedAssignedParties.supplierUserGroups.length} groups</MenuButton>
+                  <MenuList>
+                    {inheritedAssignedParties.supplierUserGroups.map(({userGroup, supplierID}) => (
+                      <MenuItem
+                        key={userGroup.ID}
+                        as={Link}
+                        href={`/suppliers/${supplierID}/usergroups/${userGroup.ID}`}
+                        flexDirection="row-reverse"
+                        icon={<FaCaretRight />}
+                      >
+                        {userGroup.Name}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Menu>
+              )
             } else {
               const item = inheritedAssignedParties.supplierUserGroups[0]
               inheritedFromParts.push(
@@ -159,12 +204,29 @@ export function SecurityProfileAssignmentList({
           }
           if (inheritedAssignedParties.adminUserGroups?.length) {
             if (inheritedAssignedParties.adminUserGroups.length > 1) {
-              inheritedFromParts.push(<Text>{inheritedAssignedParties.adminUserGroups.length} usergroups</Text>)
+              inheritedFromParts.push(
+                <Menu>
+                  <MenuButton as={ChakraLink}>{inheritedAssignedParties.adminUserGroups.length} groups</MenuButton>
+                  <MenuList>
+                    {inheritedAssignedParties.adminUserGroups.map((group) => (
+                      <MenuItem
+                        key={group.ID}
+                        as={Link}
+                        href={`/settings/adminusergroups/${group.ID}`}
+                        flexDirection="row-reverse"
+                        icon={<FaCaretRight />}
+                      >
+                        {group.Name}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Menu>
+              )
             } else {
               const item = inheritedAssignedParties.adminUserGroups[0]
               inheritedFromParts.push(
                 <Link key="usergroups" href={`/settings/adminusergroups/${item.ID}`} title={item.Name}>
-                  usergroup
+                  group
                 </Link>
               )
             }

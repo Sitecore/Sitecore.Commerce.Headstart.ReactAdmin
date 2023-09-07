@@ -17,7 +17,7 @@ import {appPermissions} from "config/app-permissions.config"
 import useHasAccess from "hooks/useHasAccess"
 import {differenceBy, isEmpty, isEqual} from "lodash"
 import {SecurityProfileAssignmentTabs} from "../security-profiles/assignments/SecurityProfileAssignmentTabs"
-import {useEffect} from "react"
+import {useCallback, useEffect} from "react"
 
 interface FormFieldValues {
   Buyer: IBuyer
@@ -129,13 +129,13 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
     }
   }
 
-  const loadCatalogs = async (inputValue: string) => {
+  const loadCatalogs = useCallback(async (inputValue: string) => {
     const allCatalogs = await Catalogs.List<ICatalog>({
       search: inputValue,
       pageSize: 5
     })
     return allCatalogs.Items.map((catalog) => ({label: catalog.Name, value: catalog.ID}))
-  }
+  }, [])
 
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>

@@ -65,7 +65,9 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
   })
 
   useEffect(() => {
-    reset({Buyer: buyer, SecurityProfileAssignments: securityProfileAssignments})
+    if (buyer) {
+      reset({Buyer: buyer, SecurityProfileAssignments: securityProfileAssignments})
+    }
   }, [buyer, securityProfileAssignments, reset])
 
   async function createBuyer(fields: FormFieldValues) {
@@ -197,7 +199,7 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
               control={control}
               commerceRole="buyer"
               assignmentLevel="company"
-              assignmentLevelId={buyer?.ID || "THIS_WILL_BE_REPLACED_BY_THE_CREATED_BUYER_ID"}
+              assignmentLevelId={buyer?.ID}
               showAssignedTab={false}
             />
           </ProtectedContent>

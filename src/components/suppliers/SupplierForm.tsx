@@ -64,7 +64,9 @@ export function SupplierForm({supplier, securityProfileAssignments = [], refresh
   })
 
   useEffect(() => {
-    reset({Supplier: supplier, SecurityProfileAssignments: securityProfileAssignments})
+    if (supplier) {
+      reset({Supplier: supplier, SecurityProfileAssignments: securityProfileAssignments})
+    }
   }, [supplier, securityProfileAssignments, reset])
 
   async function createSupplier(fields: FormFieldValues) {
@@ -183,7 +185,7 @@ export function SupplierForm({supplier, securityProfileAssignments = [], refresh
               control={control}
               commerceRole="supplier"
               assignmentLevel="company"
-              assignmentLevelId={supplier?.ID || "THIS_WILL_BE_REPLACED_BY_THE_CREATED_SUPPLIER_ID"}
+              assignmentLevelId={supplier?.ID}
               showAssignedTab={false}
             />
           </ProtectedContent>

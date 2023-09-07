@@ -1,34 +1,33 @@
 import {Link} from "@/components/navigation/Link"
-import {InfoIcon, InfoOutlineIcon} from "@chakra-ui/icons"
-import {HStack, VStack, Text, Checkbox, Card, CardBody, useDisclosure} from "@chakra-ui/react"
+import {HStack, VStack, Text, Checkbox, Card, CardBody} from "@chakra-ui/react"
 import {appPermissions} from "config/app-permissions.config"
 import useAwaitableModals from "hooks/useAwaitableModals"
 import {isAllowedAccess} from "hooks/useHasAccess"
 import {useSecurityProfileAssignmentRows} from "hooks/useSecurityProfileAssignmentRows"
 import {SecurityProfileAssignment} from "ordercloud-javascript-sdk"
-import {ReactNode, useRef} from "react"
-import {useController} from "react-hook-form"
+import {ReactNode} from "react"
 import {SecurityProfileAssignmentLevel} from "types/ordercloud/SecurityProfileAssignmentLevel"
 
+export const PLACEHOLDER_ID = "THIS_WILL_BE_REPLACED_BY_THE_CREATED_ENTITY_ID"
+
 interface SecurityProfileAssignmentListProps {
+  assignments: SecurityProfileAssignment[]
+  onAssignmentsChange: (assignments: SecurityProfileAssignment[]) => void
   assignmentLevel: SecurityProfileAssignmentLevel
   commerceRole: "buyer" | "supplier" | "admin"
   parentId?: string
   assignmentLevelId: string
-  control: any
 }
 
 export function SecurityProfileAssignmentList({
+  assignments,
+  onAssignmentsChange,
   assignmentLevel,
   commerceRole,
   parentId,
-  assignmentLevelId,
-  control
+  assignmentLevelId = PLACEHOLDER_ID
 }: SecurityProfileAssignmentListProps) {
   const features = Object.values(appPermissions)
-  const {
-    field: {value: assignments, onChange: onAssignmentsChange}
-  } = useController({control, name: "SecurityProfileAssignments"})
   const {rows} = useSecurityProfileAssignmentRows({assignments, assignmentLevel, commerceRole})
   const {confirm} = useAwaitableModals()
 

@@ -328,7 +328,7 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
                 commerceRole={userType}
                 assignmentLevel="user"
                 parentId={parentId}
-                assignmentLevelId={user?.ID || "THIS_WILL_BE_REPLACED_BY_THE_CREATED_USER_ID"}
+                assignmentLevelId={user?.ID}
                 showAssignedTab={!isCreating}
               />
             </ProtectedContent>

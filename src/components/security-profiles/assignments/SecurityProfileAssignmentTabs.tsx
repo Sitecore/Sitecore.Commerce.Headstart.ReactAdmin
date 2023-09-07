@@ -5,6 +5,7 @@ import {orderCloudRoles} from "constants/ordercloud-roles"
 import {SecurityProfileAssignmentLevel} from "types/ordercloud/SecurityProfileAssignmentLevel"
 import {SecurityProfileAssignmentList} from "./SecurityProfileAssignmentList"
 import {OverlayScrollbarsComponent} from "overlayscrollbars-react"
+import {useController} from "react-hook-form"
 
 interface SecurityProfileAssignmentsProps {
   assignedRoles?: string[] // assigned roles including both api roles and custom roles
@@ -26,6 +27,9 @@ export function SecurityProfileAssignmentTabs({
 }: SecurityProfileAssignmentsProps) {
   const apiRoles = assignedRoles.filter((role: ApiRole) => orderCloudRoles.includes(role)) as ApiRole[]
   const customRoles = assignedRoles.filter((role: ApiRole) => !orderCloudRoles.includes(role))
+  const {
+    field: {value: assignments, onChange: onAssignmentsChange}
+  } = useController({control, name: "SecurityProfileAssignments"})
 
   return (
     <>
@@ -59,11 +63,12 @@ export function SecurityProfileAssignmentTabs({
               level can be modified. Inherited assignments must be modified at the level they are assigned at.
             </Text>
             <SecurityProfileAssignmentList
+              assignments={assignments}
+              onAssignmentsChange={onAssignmentsChange}
               assignmentLevel={assignmentLevel}
               commerceRole={commerceRole}
               parentId={parentId}
               assignmentLevelId={assignmentLevelId}
-              control={control}
             />
           </TabPanel>
         </TabPanels>

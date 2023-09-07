@@ -1,3 +1,4 @@
+import {PLACEHOLDER_ID} from "@/components/security-profiles/assignments/SecurityProfileAssignmentList"
 import {sortBy, uniq, uniqBy} from "lodash"
 import {
   AdminUserGroups,
@@ -111,7 +112,10 @@ export function useSecurityProfileAssignmentRows({
     if (commerceRole !== "buyer") {
       return []
     }
-    const relevantAssignments = getAssignmentsAtLevel(assignments, "company")
+    const relevantAssignments = getAssignmentsAtLevel(assignments, "company").filter(
+      // This ID means the buyer hasn't been created yet, so no need to retrive
+      (assignment) => assignment.BuyerID !== PLACEHOLDER_ID
+    )
     if (!relevantAssignments.length) {
       return []
     }
@@ -137,7 +141,10 @@ export function useSecurityProfileAssignmentRows({
     if (commerceRole !== "supplier") {
       return []
     }
-    const relevantAssignments = getAssignmentsAtLevel(assignments, "company")
+    const relevantAssignments = getAssignmentsAtLevel(assignments, "company").filter(
+      // This ID means the buyer hasn't been created yet, so no need to retrive
+      (assignment) => assignment.SupplierID === PLACEHOLDER_ID
+    )
     if (!relevantAssignments.length) {
       return []
     }
@@ -163,7 +170,10 @@ export function useSecurityProfileAssignmentRows({
     if (commerceRole !== "buyer" || assignmentLevel !== "user") {
       return []
     }
-    const relevantAssignments = getAssignmentsAtLevel(assignments, "group")
+    const relevantAssignments = getAssignmentsAtLevel(assignments, "group").filter(
+      // This ID means the buyer hasn't been created yet, so no need to retrive
+      (assignment) => assignment.UserGroupID !== PLACEHOLDER_ID
+    )
     if (!relevantAssignments.length) {
       return []
     }
@@ -178,7 +188,10 @@ export function useSecurityProfileAssignmentRows({
     if (commerceRole !== "supplier" || assignmentLevel !== "user") {
       return []
     }
-    const relevantAssignments = getAssignmentsAtLevel(assignments, "group")
+    const relevantAssignments = getAssignmentsAtLevel(assignments, "group").filter(
+      // This ID means the buyer hasn't been created yet, so no need to retrive
+      (assignment) => assignment.UserGroupID !== PLACEHOLDER_ID
+    )
     if (!relevantAssignments.length) {
       return [] as SupplierGroupData[]
     }
@@ -193,7 +206,10 @@ export function useSecurityProfileAssignmentRows({
     if (commerceRole !== "admin") {
       return
     }
-    const relevantAssignments = getAssignmentsAtLevel(assignments, "group")
+    const relevantAssignments = getAssignmentsAtLevel(assignments, "group").filter(
+      // This ID means the buyer hasn't been created yet, so no need to retrive
+      (assignment) => assignment.UserGroupID !== PLACEHOLDER_ID
+    )
     if (!relevantAssignments.length) {
       return []
     }

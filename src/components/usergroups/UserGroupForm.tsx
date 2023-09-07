@@ -207,7 +207,7 @@ export function UserGroupFormForm({
               commerceRole={userGroupType}
               assignmentLevel="group"
               parentId={parentId}
-              assignmentLevelId={userGroup?.ID || "THIS_WILL_BE_REPLACED_BY_THE_CREATED_USERGROUP_ID"}
+              assignmentLevelId={userGroup?.ID}
               showAssignedTab={false}
             />
           </ProtectedContent>

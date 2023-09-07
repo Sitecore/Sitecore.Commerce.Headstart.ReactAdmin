@@ -45,11 +45,7 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
     Buyer: object().shape({
       Active: boolean(),
       Name: string().required("Name is required"),
-      DefaultCatalogID: string(),
-      xp: object().shape({
-        MarkupPercent: number(),
-        URL: string()
-      })
+      DefaultCatalogID: string()
     }),
     SecurityProfileAssignments: array().of(
       object().shape({

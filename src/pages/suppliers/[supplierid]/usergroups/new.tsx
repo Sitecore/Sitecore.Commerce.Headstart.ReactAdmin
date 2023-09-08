@@ -15,6 +15,7 @@ const ProtectedSupplierUserGroupPage = () => {
   useEffect(() => {
     const getSecurityProfileAssignments = async () => {
       if (!isSecurityProfileManager) {
+        setLoading(false)
         return
       }
       const assignmentList = await SecurityProfiles.ListAssignments({

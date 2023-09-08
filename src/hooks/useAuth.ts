@@ -1,7 +1,7 @@
 import ocConfig from "config/ordercloud-config"
 import {AuthContext} from "context/auth-context"
 import {useRouter} from "hooks/useRouter"
-import {ApiRole, Auth, Me} from "ordercloud-javascript-sdk"
+import {Auth, Me} from "ordercloud-javascript-sdk"
 import {useContext} from "react"
 import {IMeAdminUser} from "types/ordercloud/IMeAdminUser"
 import {IMeSupplierUser} from "types/ordercloud/IMeSupplierUser"
@@ -11,16 +11,7 @@ export function useAuth() {
   const router = useRouter()
 
   async function Login(username: string, password: string, remember: boolean): Promise<void> {
-    const response = await Auth.Login(username, password, ocConfig.clientId, [
-      "AdminUserGroupAdmin",
-      "AdminUserGroupManager",
-      "SecurityProfileAdmin",
-      "SupplierUserGroupAdmin",
-      "AdminUserGroupAdmin",
-      "UserGroupAdmin",
-      "SecurityProfileManager",
-      "FullAccess"
-    ] as ApiRole[])
+    const response = await Auth.Login(username, password, ocConfig.clientId)
     setUserTokens(response.access_token, remember && response.refresh_token)
     const me = await Me.Get<IMeAdminUser | IMeSupplierUser>()
     localStorage.setItem("usersToken", `${me.FirstName} ${me.LastName}`)

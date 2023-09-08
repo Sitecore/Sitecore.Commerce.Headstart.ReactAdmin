@@ -76,7 +76,7 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
     successToast({
       description: "Buyer created successfully."
     })
-    router.push(`/buyers/${createdBuyer.ID}`)
+    router.replace(`/buyers/${createdBuyer.ID}`)
   }
 
   async function updateBuyer(fields: FormFieldValues) {

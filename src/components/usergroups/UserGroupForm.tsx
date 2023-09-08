@@ -110,11 +110,11 @@ export function UserGroupFormForm({
       description: "Usergroup created successfully."
     })
     if (router.query.buyerid) {
-      router.push(`/buyers/${parentId}/usergroups/${createdUserGroup.ID}`)
+      router.replace(`/buyers/${parentId}/usergroups/${createdUserGroup.ID}`)
     } else if (router.query.supplierid) {
-      router.push(`/suppliers/${parentId}/usergroups/${createdUserGroup.ID}`)
+      router.replace(`/suppliers/${parentId}/usergroups/${createdUserGroup.ID}`)
     } else {
-      router.push(`/settings/adminusergroups/${createdUserGroup.ID}`)
+      router.replace(`/settings/adminusergroups/${createdUserGroup.ID}`)
     }
   }
 

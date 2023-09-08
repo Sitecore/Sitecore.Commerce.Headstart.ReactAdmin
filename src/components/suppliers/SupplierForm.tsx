@@ -79,7 +79,7 @@ export function SupplierForm({supplier, securityProfileAssignments = [], refresh
     successToast({
       description: "Supplier created successfully."
     })
-    router.push(`/suppliers/${createdSupplier.ID}`)
+    router.replace(`/suppliers/${createdSupplier.ID}`)
   }
 
   async function updateSupplier(fields: FormFieldValues) {

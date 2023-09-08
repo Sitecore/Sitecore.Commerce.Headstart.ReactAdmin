@@ -34,7 +34,7 @@ import useHasAccess from "hooks/useHasAccess"
 import {appPermissions} from "config/app-permissions.config"
 import ProtectedContent from "../auth/ProtectedContent"
 import {SecurityProfileAssignmentTabs} from "../security-profiles/assignments/SecurityProfileAssignmentTabs"
-import {differenceBy, isEmpty, isEqual, omit, transform} from "lodash"
+import {differenceBy, isEmpty, isEqual, omit} from "lodash"
 import {useState} from "react"
 import {FaEye, FaEyeSlash} from "react-icons/fa"
 
@@ -150,11 +150,11 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
       description: "User created successfully."
     })
     if (router.query.buyerid) {
-      router.push(`/buyers/${parentId}/users/${createdUser.ID}`)
+      router.replace(`/buyers/${parentId}/users/${createdUser.ID}`)
     } else if (router.query.supplierid) {
-      router.push(`/suppliers/${parentId}/users/${createdUser.ID}`)
+      router.replace(`/suppliers/${parentId}/users/${createdUser.ID}`)
     } else {
-      router.push(`/settings/adminusers/${createdUser.ID}`)
+      router.replace(`/settings/adminusers/${createdUser.ID}`)
     }
   }
 

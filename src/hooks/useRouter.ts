@@ -7,19 +7,20 @@ import {useMemo} from "react"
  * and possibly remove next/router from the project in the future
  */
 export function useRouter() {
-  const {back, push, pathname, query, isReady, asPath, reload} = useNextRouter()
+  const {back, push, replace, pathname, query, isReady, asPath, reload} = useNextRouter()
 
   const result = useMemo(() => {
     return {
       back,
       push,
+      replace,
       pathname,
       query,
       isReady,
       asPath,
       reload
     }
-  }, [back, push, pathname, query, isReady, asPath, reload])
+  }, [back, push, replace, pathname, query, isReady, asPath, reload])
 
   return result
 }

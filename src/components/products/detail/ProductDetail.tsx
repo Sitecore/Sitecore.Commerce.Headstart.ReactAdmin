@@ -148,7 +148,7 @@ export default function ProductDetail({
     }
 
     if (isCreatingNew) {
-      router.push(`/products/${updatedProduct.ID}`)
+      router.replace(`/products/${updatedProduct.ID}`)
     } else {
       // Update the state with the new product data
       setProduct(updatedProduct)

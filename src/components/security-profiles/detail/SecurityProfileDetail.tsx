@@ -68,7 +68,7 @@ export function SecurityProfileDetail({securityProfile, isAssignedToAllAdmins}: 
     setCurrentSecurityProfile(createdSecurityProfile)
     setCurrentIsAssignedToAllAdmins(fields.IsAssignedToAllAdmins)
     successToast({description: "Security Profile Created"})
-    router.push(`/settings/securityprofiles/${createdSecurityProfile.ID}`)
+    router.replace(`/settings/securityprofiles/${createdSecurityProfile.ID}`)
   }
 
   const updateSecurityProfile = async (fields: SecurityProfileForm) => {

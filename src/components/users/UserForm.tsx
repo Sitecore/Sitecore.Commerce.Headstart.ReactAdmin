@@ -316,10 +316,12 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
                     label="Password"
                     onClick={() => handleFakePasswordClick("User.Password")}
                     tooltipText={passwordTooltipText}
+                    isDisabled={!isUserManager}
                   />
                   <FakePasswordInput
                     label="Confirm Password"
                     onClick={() => handleFakePasswordClick("User.ConfirmPassword")}
+                    isDisabled={!isUserManager}
                   />
                 </>
               )}

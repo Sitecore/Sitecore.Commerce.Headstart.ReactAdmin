@@ -5,11 +5,12 @@ interface FakePasswordInputProps {
   label: string
   onClick: () => void
   tooltipText?: string
+  isDisabled?: boolean
 }
 
-export function FakePasswordInput({label, onClick, tooltipText}: FakePasswordInputProps) {
+export function FakePasswordInput({label, onClick, tooltipText, isDisabled}: FakePasswordInputProps) {
   return (
-    <FormControl>
+    <FormControl isDisabled={isDisabled}>
       <FormLabel m={0}>
         {label}
         {tooltipText && (

@@ -272,6 +272,7 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
                   <InputControl
                     name="User.Password"
                     label="Password"
+                    tooltipText="For security reasons it is recommended to not set user passwords here, and instead have them set their own passwords via the forgot password flow"
                     control={control}
                     validationSchema={validationSchema}
                     isDisabled={!isUserManager}

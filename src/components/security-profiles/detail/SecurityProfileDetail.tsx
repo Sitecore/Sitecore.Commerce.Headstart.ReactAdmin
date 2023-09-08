@@ -169,7 +169,13 @@ export function SecurityProfileDetail({securityProfile, isAssignedToAllAdmins}: 
               label="Custom Roles"
               control={control}
               validationSchema={validationSchema}
-              selectProps={{isCreatable: true, isMulti: true, isDisabled: !isSecurityProfileManager}}
+              selectProps={{
+                isCreatable: true,
+                isMulti: true,
+                isDisabled: !isSecurityProfileManager,
+                noOptionsMessage: () => "Start typing to create a custom role",
+                placeholder: "Start typing to create a custom role"
+              }}
             />
           </VStack>
         </CardBody>

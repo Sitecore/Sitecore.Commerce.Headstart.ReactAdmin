@@ -226,6 +226,9 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
     })
   }
 
+  const passwordTooltipText =
+    "For security reasons it is recommended to not set user passwords here, and instead have them set their own passwords via the forgot password flow"
+
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -272,7 +275,7 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
                   <InputControl
                     name="User.Password"
                     label="Password"
-                    tooltipText="For security reasons it is recommended to not set user passwords here, and instead have them set their own passwords via the forgot password flow"
+                    tooltipText={passwordTooltipText}
                     control={control}
                     validationSchema={validationSchema}
                     isDisabled={!isUserManager}
@@ -309,7 +312,11 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
                 </>
               ) : (
                 <>
-                  <FakePasswordInput label="Password" onClick={() => handleFakePasswordClick("User.Password")} />
+                  <FakePasswordInput
+                    label="Password"
+                    onClick={() => handleFakePasswordClick("User.Password")}
+                    tooltipText={passwordTooltipText}
+                  />
                   <FakePasswordInput
                     label="Confirm Password"
                     onClick={() => handleFakePasswordClick("User.ConfirmPassword")}

@@ -37,9 +37,10 @@ import {SecurityProfileAssignmentTabs} from "../security-profiles/assignments/Se
 import {differenceBy, isEmpty, isEqual, omit} from "lodash"
 import {useState} from "react"
 import {FaEye, FaEyeSlash} from "react-icons/fa"
+import {FakePasswordInput} from "./FakePasswordInput"
 
 interface FormFieldValues {
-  User: User
+  User: User & {ConfirmPassword: string}
   SecurityProfileAssignments: SecurityProfileAssignment[]
 }
 
@@ -51,11 +52,12 @@ interface UserFormProps {
   refresh?: () => void
 }
 export function UserForm({user, userType, parentId, securityProfileAssignments = [], refresh}: UserFormProps) {
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const router = useRouter()
   const successToast = useSuccessToast()
   const isCreating = !user?.ID
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showRealPasswordInputs, setShowRealShowPasswordInputs] = useState(isCreating)
 
   const isUserManager = useHasAccess(
     userType === "admin"
@@ -113,7 +115,7 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
     )
   })
 
-  const {handleSubmit, control, reset} = useForm<FormFieldValues>({
+  const {handleSubmit, control, reset, setFocus} = useForm<FormFieldValues>({
     resolver: yupResolver(validationSchema),
     defaultValues: user?.ID ? {User: user, SecurityProfileAssignments: securityProfileAssignments} : defaultValues,
     mode: "onBlur"
@@ -216,6 +218,14 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
     setShowConfirmPassword(!showConfirmPassword)
   }
 
+  const handleFakePasswordClick = (field: "User.Password" | "User.ConfirmPassword") => {
+    setShowRealShowPasswordInputs(true)
+
+    setTimeout(() => {
+      setFocus(field)
+    })
+  }
+
   return (
     <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -257,40 +267,54 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
               isDisabled={!isUserManager}
             />
             <SimpleGrid gap={4} w="100%" gridTemplateColumns={{lg: "1fr 1fr"}}>
-              <InputControl
-                name="User.Password"
-                label="Password"
-                control={control}
-                validationSchema={validationSchema}
-                isDisabled={!isUserManager}
-                inputProps={{type: showPassword ? "text" : "password", autoComplete: "off", autoCapitalize: "off"}}
-                rightElement={
-                  <IconButton
-                    onClick={handleTogglePasswordVisibility}
-                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    icon={showPassword ? <Icon as={FaEyeSlash} size="20px" /> : <Icon as={FaEye} size="20px" />}
-                  ></IconButton>
-                }
-              />
-              <InputControl
-                name="User.ConfirmPassword"
-                label="Confirm Password"
-                control={control}
-                validationSchema={validationSchema}
-                isDisabled={!isUserManager}
-                inputProps={{
-                  type: showConfirmPassword ? "text" : "password",
-                  autoComplete: "off",
-                  autoCapitalize: "off"
-                }}
-                rightElement={
-                  <IconButton
-                    onClick={handleToggleConfirmPasswordVisibility}
-                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    icon={showConfirmPassword ? <Icon as={FaEyeSlash} size="20px" /> : <Icon as={FaEye} size="20px" />}
-                  ></IconButton>
-                }
-              />
+              {showRealPasswordInputs ? (
+                <>
+                  <InputControl
+                    name="User.Password"
+                    label="Password"
+                    control={control}
+                    validationSchema={validationSchema}
+                    isDisabled={!isUserManager}
+                    inputProps={{type: showPassword ? "text" : "password", autoComplete: "off", autoCapitalize: "off"}}
+                    rightElement={
+                      <IconButton
+                        onClick={handleTogglePasswordVisibility}
+                        aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                        icon={showPassword ? <Icon as={FaEyeSlash} size="20px" /> : <Icon as={FaEye} size="20px" />}
+                      ></IconButton>
+                    }
+                  />
+                  <InputControl
+                    name="User.ConfirmPassword"
+                    label="Confirm Password"
+                    control={control}
+                    validationSchema={validationSchema}
+                    isDisabled={!isUserManager}
+                    inputProps={{
+                      type: showConfirmPassword ? "text" : "password",
+                      autoComplete: "off",
+                      autoCapitalize: "off"
+                    }}
+                    rightElement={
+                      <IconButton
+                        onClick={handleToggleConfirmPasswordVisibility}
+                        aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                        icon={
+                          showConfirmPassword ? <Icon as={FaEyeSlash} size="20px" /> : <Icon as={FaEye} size="20px" />
+                        }
+                      ></IconButton>
+                    }
+                  />
+                </>
+              ) : (
+                <>
+                  <FakePasswordInput label="Password" onClick={() => handleFakePasswordClick("User.Password")} />
+                  <FakePasswordInput
+                    label="Confirm Password"
+                    onClick={() => handleFakePasswordClick("User.ConfirmPassword")}
+                  />
+                </>
+              )}
               <InputControl
                 name="User.FirstName"
                 label="First name"

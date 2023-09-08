@@ -345,17 +345,19 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
                 isDisabled={!isUserManager}
               />
             </SimpleGrid>
-            <Divider my={6} />
             <ProtectedContent hasAccess={appPermissions.SecurityProfileManager}>
-              <SecurityProfileAssignmentTabs
-                control={control}
-                assignedRoles={user?.AvailableRoles}
-                commerceRole={userType}
-                assignmentLevel="user"
-                parentId={parentId}
-                assignmentLevelId={user?.ID}
-                showAssignedTab={!isCreating}
-              />
+              <>
+                <Divider my={6} />
+                <SecurityProfileAssignmentTabs
+                  control={control}
+                  assignedRoles={user?.AvailableRoles}
+                  commerceRole={userType}
+                  assignmentLevel="user"
+                  parentId={parentId}
+                  assignmentLevelId={user?.ID}
+                  showAssignedTab={!isCreating}
+                />
+              </>
             </ProtectedContent>
           </VStack>
         </CardBody>

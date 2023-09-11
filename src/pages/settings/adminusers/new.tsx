@@ -14,6 +14,7 @@ function ProtectedNewAdminUserPage() {
   useEffect(() => {
     const getSecurityProfileAssignments = async () => {
       if (!isSecurityProfileManager) {
+        setLoading(false)
         return
       }
       const assignmentList = await SecurityProfiles.ListAssignments({level: "Company", commerceRole: "Seller"})

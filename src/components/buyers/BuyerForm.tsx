@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container, Divider} from "@chakra-ui/react"
 import {InputControl, SelectControl, SwitchControl} from "components/react-hook-form"
 import {Buyers, Catalogs, PartialDeep, SecurityProfileAssignment, SecurityProfiles} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
@@ -76,7 +76,7 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
     successToast({
       description: "Buyer created successfully."
     })
-    router.push(`/buyers/${createdBuyer.ID}`)
+    router.replace(`/buyers/${createdBuyer.ID}`)
   }
 
   async function updateBuyer(fields: FormFieldValues) {
@@ -191,13 +191,16 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
             />
           )}
           <ProtectedContent hasAccess={appPermissions.SecurityProfileManager}>
-            <SecurityProfileAssignmentTabs
-              control={control}
-              commerceRole="buyer"
-              assignmentLevel="company"
-              assignmentLevelId={buyer?.ID}
-              showAssignedTab={false}
-            />
+            <>
+              <Divider my={6} />
+              <SecurityProfileAssignmentTabs
+                control={control}
+                commerceRole="buyer"
+                assignmentLevel="company"
+                assignmentLevelId={buyer?.ID}
+                showAssignedTab={false}
+              />
+            </>
           </ProtectedContent>
         </CardBody>
       </Card>

@@ -68,7 +68,7 @@ export function SecurityProfileDetail({securityProfile, isAssignedToAllAdmins}: 
     setCurrentSecurityProfile(createdSecurityProfile)
     setCurrentIsAssignedToAllAdmins(fields.IsAssignedToAllAdmins)
     successToast({description: "Security Profile Created"})
-    router.push(`/settings/securityprofiles/${createdSecurityProfile.ID}`)
+    router.replace(`/settings/securityprofiles/${createdSecurityProfile.ID}`)
   }
 
   const updateSecurityProfile = async (fields: SecurityProfileForm) => {
@@ -169,7 +169,13 @@ export function SecurityProfileDetail({securityProfile, isAssignedToAllAdmins}: 
               label="Custom Roles"
               control={control}
               validationSchema={validationSchema}
-              selectProps={{isCreatable: true, isMulti: true, isDisabled: !isSecurityProfileManager}}
+              selectProps={{
+                isCreatable: true,
+                isMulti: true,
+                isDisabled: !isSecurityProfileManager,
+                noOptionsMessage: () => "Start typing to create a custom role",
+                placeholder: "Start typing to create a custom role"
+              }}
             />
           </VStack>
         </CardBody>

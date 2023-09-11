@@ -111,7 +111,7 @@ export function AddressForm({address, addressType, parentId, onCreate, onUpdate,
       successToast({
         description: "Address created successfully."
       })
-      router.push(`/settings/adminaddresses/${createdAddress.ID}`)
+      router.replace(`/settings/adminaddresses/${createdAddress.ID}`)
     }
   }
 

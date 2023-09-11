@@ -52,7 +52,7 @@ export function ProductFacetForm({productFacet}: ProductFacetFormProps) {
     successToast({
       description: "Product Facet created successfully."
     })
-    router.push(`/settings/productfacets/${createdProductFacet.ID}`)
+    router.replace(`/settings/productfacets/${createdProductFacet.ID}`)
   }
 
   async function updateProductFacet(fields: IProductFacet) {

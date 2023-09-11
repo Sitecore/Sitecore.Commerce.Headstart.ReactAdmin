@@ -1,4 +1,4 @@
-import {Card, Button, ButtonGroup, CardBody, CardHeader, Container} from "@chakra-ui/react"
+import {Card, Button, ButtonGroup, CardBody, CardHeader, Container, Divider} from "@chakra-ui/react"
 import {InputControl, SwitchControl} from "components/react-hook-form"
 import {PartialDeep, SecurityProfileAssignment, SecurityProfiles, Suppliers} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
@@ -79,7 +79,7 @@ export function SupplierForm({supplier, securityProfileAssignments = [], refresh
     successToast({
       description: "Supplier created successfully."
     })
-    router.push(`/suppliers/${createdSupplier.ID}`)
+    router.replace(`/suppliers/${createdSupplier.ID}`)
   }
 
   async function updateSupplier(fields: FormFieldValues) {
@@ -181,13 +181,16 @@ export function SupplierForm({supplier, securityProfileAssignments = [], refresh
             />
           )}
           <ProtectedContent hasAccess={appPermissions.SecurityProfileManager}>
-            <SecurityProfileAssignmentTabs
-              control={control}
-              commerceRole="supplier"
-              assignmentLevel="company"
-              assignmentLevelId={supplier?.ID}
-              showAssignedTab={false}
-            />
+            <>
+              <Divider my={6} />
+              <SecurityProfileAssignmentTabs
+                control={control}
+                commerceRole="supplier"
+                assignmentLevel="company"
+                assignmentLevelId={supplier?.ID}
+                showAssignedTab={false}
+              />
+            </>
           </ProtectedContent>
         </CardBody>
       </Card>

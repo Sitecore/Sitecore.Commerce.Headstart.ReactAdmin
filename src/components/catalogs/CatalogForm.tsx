@@ -52,7 +52,7 @@ export function CatalogForm({catalog}: CatalogFormProps) {
     successToast({
       description: "Catalog created successfully."
     })
-    router.push(`/buyers/${router.query.buyerid}/catalogs/${createdCatalog.ID}`)
+    router.replace(`/buyers/${router.query.buyerid}/catalogs/${createdCatalog.ID}`)
   }
 
   async function updateCatalog(fields: ICatalog) {

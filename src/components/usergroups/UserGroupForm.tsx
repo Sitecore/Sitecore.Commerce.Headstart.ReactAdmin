@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Card, CardBody, CardHeader, Container} from "@chakra-ui/react"
+import {Button, ButtonGroup, Card, CardBody, CardHeader, Container, Divider} from "@chakra-ui/react"
 import {InputControl, TextareaControl} from "components/react-hook-form"
 import {
   AdminUserGroups,
@@ -110,11 +110,11 @@ export function UserGroupFormForm({
       description: "Usergroup created successfully."
     })
     if (router.query.buyerid) {
-      router.push(`/buyers/${parentId}/usergroups/${createdUserGroup.ID}`)
+      router.replace(`/buyers/${parentId}/usergroups/${createdUserGroup.ID}`)
     } else if (router.query.supplierid) {
-      router.push(`/suppliers/${parentId}/usergroups/${createdUserGroup.ID}`)
+      router.replace(`/suppliers/${parentId}/usergroups/${createdUserGroup.ID}`)
     } else {
-      router.push(`/settings/adminusergroups/${createdUserGroup.ID}`)
+      router.replace(`/settings/adminusergroups/${createdUserGroup.ID}`)
     }
   }
 
@@ -202,14 +202,17 @@ export function UserGroupFormForm({
             isDisabled={!isUserGroupManager}
           />
           <ProtectedContent hasAccess={appPermissions.SecurityProfileManager}>
-            <SecurityProfileAssignmentTabs
-              control={control}
-              commerceRole={userGroupType}
-              assignmentLevel="group"
-              parentId={parentId}
-              assignmentLevelId={userGroup?.ID}
-              showAssignedTab={false}
-            />
+            <>
+              <Divider my={6} />
+              <SecurityProfileAssignmentTabs
+                control={control}
+                commerceRole={userGroupType}
+                assignmentLevel="group"
+                parentId={parentId}
+                assignmentLevelId={userGroup?.ID}
+                showAssignedTab={false}
+              />
+            </>
           </ProtectedContent>
         </CardBody>
       </Card>

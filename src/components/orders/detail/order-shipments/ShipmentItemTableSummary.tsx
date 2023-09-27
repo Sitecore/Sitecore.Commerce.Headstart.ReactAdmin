@@ -26,8 +26,18 @@ export function ShipmentItemTableSummary({lineItems, shipment, isInModal, isMobi
   return (
     <VStack width="full">
       <SimpleGrid w="full" gridTemplateColumns={isMobile ? "1fr" : isInModal ? "1fr 1fr" : "1fr 1fr 2fr"} gap={3}>
-        <HeaderItem label="Shipment ID" value={shipment.ID} />
-        <HeaderItem label="Cost" value={priceHelper.formatPrice(shipment.Cost)} />
+        <HeaderItem
+          direction={isInModal || isMobile ? "row" : "column"}
+          alignItems={isInModal || isMobile ? "center" : "start"}
+          label="Shipment ID"
+          value={shipment.ID}
+        />
+        <HeaderItem
+          direction={isInModal || isMobile ? "row" : "column"}
+          alignItems={isInModal || isMobile ? "center" : "start"}
+          label="Cost"
+          value={typeof shipment.Cost === "number" ? priceHelper.formatPrice(shipment.Cost) : ""}
+        />
         {shipment.xp?.Comments && <HeaderItem flexGrow={1} label="Comments" value={comments} />}
       </SimpleGrid>
       <Divider marginY={4} borderColor="gray.300" />

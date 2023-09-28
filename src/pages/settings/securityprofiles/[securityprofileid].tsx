@@ -19,7 +19,8 @@ const SecurityProfileItem = () => {
       if (isSecurityProfileManager) {
         const assignmentsList = await SecurityProfiles.ListAssignments({
           securityProfileID: profile.ID,
-          level: "Company"
+          level: "Company",
+          commerceRole: "Seller"
         })
         setIsAssignedToAllAdmins(assignmentsList.Items.length > 0)
       }

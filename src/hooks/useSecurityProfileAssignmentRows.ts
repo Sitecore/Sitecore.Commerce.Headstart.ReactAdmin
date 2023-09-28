@@ -142,8 +142,8 @@ export function useSecurityProfileAssignmentRows({
       return []
     }
     const relevantAssignments = getAssignmentsAtLevel(assignments, "company").filter(
-      // This ID means the buyer hasn't been created yet, so no need to retrive
-      (assignment) => assignment.SupplierID === PLACEHOLDER_ID
+      // This ID means the supplier hasn't been created yet, so no need to retrive
+      (assignment) => assignment.SupplierID !== PLACEHOLDER_ID
     )
     if (!relevantAssignments.length) {
       return []
@@ -171,7 +171,7 @@ export function useSecurityProfileAssignmentRows({
       return []
     }
     const relevantAssignments = getAssignmentsAtLevel(assignments, "group").filter(
-      // This ID means the buyer hasn't been created yet, so no need to retrive
+      // This ID means the usergroup hasn't been created yet, so no need to retrive
       (assignment) => assignment.UserGroupID !== PLACEHOLDER_ID
     )
     if (!relevantAssignments.length) {
@@ -189,7 +189,7 @@ export function useSecurityProfileAssignmentRows({
       return []
     }
     const relevantAssignments = getAssignmentsAtLevel(assignments, "group").filter(
-      // This ID means the buyer hasn't been created yet, so no need to retrive
+      // This ID means the usergroup hasn't been created yet, so no need to retrive
       (assignment) => assignment.UserGroupID !== PLACEHOLDER_ID
     )
     if (!relevantAssignments.length) {
@@ -207,7 +207,7 @@ export function useSecurityProfileAssignmentRows({
       return
     }
     const relevantAssignments = getAssignmentsAtLevel(assignments, "group").filter(
-      // This ID means the buyer hasn't been created yet, so no need to retrive
+      // This ID means the usergroup hasn't been created yet, so no need to retrive
       (assignment) => assignment.UserGroupID !== PLACEHOLDER_ID
     )
     if (!relevantAssignments.length) {

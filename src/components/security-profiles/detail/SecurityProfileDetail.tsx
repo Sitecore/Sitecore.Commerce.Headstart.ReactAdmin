@@ -147,6 +147,7 @@ export function SecurityProfileDetail({securityProfile, isAssignedToAllAdmins}: 
               isDisabled={!isSecurityProfileManager}
             />
             <FeatureList
+              isAdmin={true}
               roles={roles.field.value}
               customRoles={customRoles.field.value}
               onRolesChange={roles.field.onChange}

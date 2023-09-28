@@ -6,12 +6,13 @@ import {FeatureList} from "../detail/FeatureList"
 interface SecurityProfileSummaryProps {
   roles: ApiRole[]
   customRoles: string[]
+  commerceRole: "buyer" | "supplier" | "admin"
 }
 
-export function SecurityProfileSummary({roles, customRoles}: SecurityProfileSummaryProps) {
+export function SecurityProfileSummary({roles, customRoles, commerceRole}: SecurityProfileSummaryProps) {
   return (
     <VStack gap={4}>
-      <FeatureList isDisabled={true} roles={roles} customRoles={customRoles} />
+      <FeatureList isDisabled={true} roles={roles} customRoles={customRoles} isAdmin={commerceRole === "admin"} />
       <FormControl>
         <FormLabel>Roles</FormLabel>
         <Select

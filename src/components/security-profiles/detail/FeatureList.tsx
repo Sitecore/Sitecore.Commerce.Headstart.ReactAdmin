@@ -21,6 +21,7 @@ import {groupBy, uniq} from "lodash"
 import {ApiRole} from "ordercloud-javascript-sdk"
 
 interface FeatureListProps {
+  isAdmin?: boolean
   roles: ApiRole[]
   customRoles: string[]
   isDisabled: boolean
@@ -29,6 +30,7 @@ interface FeatureListProps {
 }
 
 export function FeatureList({
+  isAdmin,
   roles = [],
   customRoles = [],
   onRolesChange,
@@ -46,7 +48,7 @@ export function FeatureList({
     // determine which features are currently enabled
     const enabledFeatures = features.filter((f) => isFeatureEnabled(f))
 
-    const hasAccessCurrently = isAllowedAccess(allRoles, feature)
+    const hasAccessCurrently = isAllowedAccess(allRoles, feature, isAdmin)
     if (hasAccessCurrently) {
       // intent is to remove feature, so remove feature from enabledFeatures
       enabledFeatures.splice(enabledFeatures.indexOf(feature), 1)
@@ -65,7 +67,7 @@ export function FeatureList({
   }
 
   const isFeatureEnabled = (feature: PermissionConfig) => {
-    return isAllowedAccess(allRoles, feature)
+    return isAllowedAccess(allRoles, feature, isAdmin)
   }
 
   const getFeaturesEnabledCount = (features: PermissionConfig[]) => {

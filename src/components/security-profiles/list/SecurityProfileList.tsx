@@ -47,7 +47,7 @@ const NumberFeaturesColumn: DataTableColumn<SecurityProfile> = {
     const roles = row.original.Roles
     const customRoles = row.original.CustomRoles
     const allRoles = [...roles, ...customRoles]
-    const features = Object.values(appPermissions).filter((permission) => isAllowedAccess(allRoles, permission))
+    const features = Object.values(appPermissions).filter((permission) => isAllowedAccess(allRoles, permission, true))
     return <Text>{features.length}</Text>
   }
 }

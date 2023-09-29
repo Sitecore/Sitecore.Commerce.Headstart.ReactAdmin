@@ -19,18 +19,15 @@ const PromotionItem = (props) => {
       getPromotion()
     }
   }, [router.query.promotionid])
-  console.log(promotion)
-  return (
-    <>
-      {promotion?.ID ? (
-        <PromotionForm promotion={promotion} />
-      ) : (
-        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-          <Skeleton w="100%" h="544px" borderRadius="md" />
-        </Container>
-      )}
-    </>
-  )
+
+  if (!promotion?.ID) {
+    return (
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+        <Skeleton w="100%" h="544px" borderRadius="md" />
+      </Container>
+    )
+  }
+  return <PromotionForm promotion={promotion} />
 }
 
 const ProtectedPromotionItem = () => {

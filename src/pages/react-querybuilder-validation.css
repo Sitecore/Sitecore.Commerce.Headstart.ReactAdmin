@@ -1,0 +1,15 @@
+/* Invalid groups */
+.queryBuilder .ruleGroup.queryBuilder-invalid {
+    border: 1px solid red;
+}
+
+
+/* Invalid rules */
+.queryBuilder .rule.queryBuilder-invalid {
+    border: 1px solid red;
+}
+
+.queryBuilder .ruleGroup .rule {
+    align-items: flex-end;
+    padding: 10px;
+}

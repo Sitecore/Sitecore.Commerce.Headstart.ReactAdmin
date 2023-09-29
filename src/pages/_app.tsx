@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import "react-querybuilder/dist/query-builder.css"
+import "./react-querybuilder-validation.css"
 
 import type {AppProps} from "next/app"
 import {Chakra} from "components/Chakra"

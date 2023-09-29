@@ -1,11 +1,11 @@
-import {PromotionForm} from "../../components/promotions/PromotionForm"
+import {PromotionDetails} from "@/components/promotions/details/PromotionDetails"
 import ProtectedContent from "components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 
 function ProtectedNewPromotionPage() {
   return (
     <ProtectedContent hasAccess={appPermissions.PromotionManager}>
-      <PromotionForm />
+      <PromotionDetails />
     </ProtectedContent>
   )
 }

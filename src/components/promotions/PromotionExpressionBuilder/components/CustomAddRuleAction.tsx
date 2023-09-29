@@ -8,7 +8,8 @@ import {
   MenuOptionGroup,
   Select,
   Tooltip,
-  Text
+  Text,
+  Icon
 } from "@chakra-ui/react"
 import {usePromoExpressions} from "hooks/usePromoExpressions"
 import {ActionWithRulesAndAddersProps, RuleGroupType, update} from "react-querybuilder"
@@ -16,6 +17,7 @@ import {ChangeEvent, MouseEvent, useMemo} from "react"
 import {InfoOutlineIcon} from "@chakra-ui/icons"
 import {getValidationMessage, isInvalid} from "../validator"
 import {groupOperators} from "../groupOperators"
+import {MdAdd, MdArrowDropDown, MdPlusOne} from "react-icons/md"
 
 export function CustomAddRuleAction({
   label,
@@ -93,7 +95,7 @@ export function CustomAddRuleAction({
           placement="right"
           aria-label={`Tooltip for group operator ${ruleOrGroup["operator"]}`}
         >
-          <InfoOutlineIcon fontSize="sm" color="gray.600" />
+          <InfoOutlineIcon fontSize="sm" color="danger" />
         </Tooltip>
         {isInvalid(validation) && (
           <Text color="red" whiteSpace="nowrap">
@@ -101,14 +103,16 @@ export function CustomAddRuleAction({
           </Text>
         )}
       </HStack>
-      <Menu placement="right-end">
+      <Menu placement="right-start">
         <MenuButton
           as={Button}
+          variant="outline"
           isDisabled={isAddRuleDisabled}
           title={isAddRuleDisabled ? "Min/Max can compare up to two expressions" : "Add a new rule"}
           aria-label={isAddRuleDisabled ? "Min/Max can compare up to two expressions" : "Add a new rule"}
+          rightIcon={<Icon ml="4" as={MdArrowDropDown}></Icon>}
         >
-          {label} {isAddRuleDisabled}
+          {label.replaceAll("+", "")} {isAddRuleDisabled}
         </MenuButton>
         <MenuList>
           <MenuOptionGroup title="Add rule for">

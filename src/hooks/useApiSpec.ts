@@ -72,6 +72,9 @@ export function useApiSpec() {
   }, [baseUrl, retrieveSpec])
 
   const result = useMemo(() => {
+    if (!spec) {
+      return {}
+    }
     return {
       schemas: spec.components.schemas as Record<string, OpenAPIV3.SchemaObject> // we know they are schema objects because we've dereferenced the spec
     }

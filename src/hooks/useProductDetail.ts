@@ -80,8 +80,10 @@ export function useProductDetail() {
       setLoading(false)
     }
 
-    initializeData()
-  }, [query.productid])
+    if (isReady) {
+      initializeData()
+    }
+  }, [query.productid, isReady])
 
   useEffect(() => {
     const setCurrentTabQueryParam = async () => {

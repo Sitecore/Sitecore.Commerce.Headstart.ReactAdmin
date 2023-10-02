@@ -87,7 +87,7 @@ export function PromotionDetails({promotion}: PromotionDetailsProps) {
   }
 
   return (
-    <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+    <Container maxW="full" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
       <Card as="form" noValidate onSubmit={handleSubmit(onSubmit)}>
         <CardHeader display="flex" flexWrap="wrap" justifyContent="space-between">
           <Button onClick={() => router.push("/buyers")} variant="ghost" leftIcon={<TbChevronLeft />}>
@@ -105,7 +105,7 @@ export function PromotionDetails({promotion}: PromotionDetailsProps) {
           </ProtectedContent>
         </CardHeader>
         <CardBody>
-          <Tabs variant="enclosed" width="full">
+          <Tabs variant="enclosed" maxW="container.2xl">
             <TabList>
               <Tab>Promotion Settings</Tab>
               <Tab>Expression Builder</Tab>

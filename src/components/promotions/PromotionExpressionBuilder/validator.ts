@@ -12,7 +12,7 @@ export const validator: QueryValidator = (query) => {
 function validateGroup(group: RuleGroupTypeAny, result: ValidationMap) {
   const reasons: any[] = []
   if (group.rules.length === 0) {
-    reasons.push({code: "empty", message: "Group must have at least one rule"})
+    reasons.push({code: "empty", message: "Groups must have at least one rule"})
   } else if (!("combinator" in group)) {
     // Odd indexes should be valid combinators and even indexes should be rules or groups
     let invalidICs = false

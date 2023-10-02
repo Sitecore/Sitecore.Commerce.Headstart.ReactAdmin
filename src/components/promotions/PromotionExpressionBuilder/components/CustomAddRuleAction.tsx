@@ -9,7 +9,12 @@ import {
   Select,
   Tooltip,
   Text,
-  Icon
+  Icon,
+  VStack,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText
 } from "@chakra-ui/react"
 import {usePromoExpressions} from "hooks/usePromoExpressions"
 import {ActionWithRulesAndAddersProps, RuleGroupType, update} from "react-querybuilder"
@@ -17,10 +22,9 @@ import {ChangeEvent, MouseEvent, useMemo} from "react"
 import {InfoOutlineIcon} from "@chakra-ui/icons"
 import {getValidationMessage, isInvalid} from "../validator"
 import {groupOperators} from "../groupOperators"
-import {MdAdd, MdArrowDropDown, MdPlusOne} from "react-icons/md"
+import {MdArrowDropDown, MdError, MdErrorOutline} from "react-icons/md"
 
 export function CustomAddRuleAction({
-  label,
   handleOnClick,
   path,
   context,
@@ -77,31 +81,27 @@ export function CustomAddRuleAction({
   }, [ruleOrGroup])
 
   return (
-    <HStack justifyContent="space-between" width="full">
-      <HStack>
-        <Select onChange={updateGroup}>
-          <option value=""></option>
-          {groupOperators.map((o) => (
-            <option key={o.name} value={o.name}>
-              {o.label}
+    <HStack justifyContent="space-between" width="full" id="whoya" alignItems="flex-end">
+      <HStack w="full">
+        <VStack alignItems="flex-start" w="full">
+          <FormLabel fontWeight="normal" fontSize="sm" color="chakra-subtle-text">
+            {groupOperators.find((o) => o.name === ruleOrGroup["operator"])?.description ||
+              "Optionally apply an operator to all the rules in the group"}
+          </FormLabel>
+          <Select onChange={updateGroup} maxW="md">
+            <option value="Select Operator" hidden disabled selected>
+              Select Operator
             </option>
-          ))}
-        </Select>
-        <Tooltip
-          label={
-            groupOperators.find((o) => o.name === ruleOrGroup["operator"])?.description ||
-            "Optionally apply an operator to all the rules in the group"
-          }
-          placement="right"
-          aria-label={`Tooltip for group operator ${ruleOrGroup["operator"]}`}
-        >
-          <InfoOutlineIcon fontSize="sm" color="danger" />
-        </Tooltip>
-        {isInvalid(validation) && (
-          <Text color="red" whiteSpace="nowrap">
-            {getValidationMessage(validation)}
-          </Text>
-        )}
+            {groupOperators.map((o) => (
+              <option key={o.name} value={o.name}>
+                {o.label}
+              </option>
+            ))}
+          </Select>
+        </VStack>
+        <Text fontSize="sm" color="danger" whiteSpace="nowrap" alignSelf="flex-end" mb={2}>
+          {getValidationMessage(validation)}
+        </Text>
       </HStack>
       <Menu placement="right-start">
         <MenuButton
@@ -112,10 +112,10 @@ export function CustomAddRuleAction({
           aria-label={isAddRuleDisabled ? "Min/Max can compare up to two expressions" : "Add a new rule"}
           rightIcon={<Icon ml="4" as={MdArrowDropDown}></Icon>}
         >
-          {label.replaceAll("+", "")} {isAddRuleDisabled}
+          Add Rule
         </MenuButton>
         <MenuList>
-          <MenuOptionGroup title="Add rule for">
+          <MenuOptionGroup title="Add New Rule">
             {options.map((option) => (
               <MenuItemOption
                 key={option.value}

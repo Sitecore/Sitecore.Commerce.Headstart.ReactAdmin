@@ -104,7 +104,7 @@ export function PromotionDetails({promotion}: PromotionDetailsProps) {
             </ButtonGroup>
           </ProtectedContent>
         </CardHeader>
-        <CardBody maxW={{xl: "container.lg"}}>
+        <CardBody>
           <Tabs variant="enclosed" width="full">
             <TabList>
               <Tab>Promotion Settings</Tab>

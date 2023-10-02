@@ -161,7 +161,8 @@ export function OrderDetail({
                 <CardBody>
                   <OrderShipments
                     shipments={shipments}
-                    lineItems={shippableLineItems}
+                    lineItems={lineItems}
+                    shippableLineItems={shippableLineItems}
                     order={order}
                     onUpdate={handleShipmentUpdate}
                     onDelete={handleShipmentDelete}

@@ -81,7 +81,7 @@ export function CustomAddRuleAction({
   }, [ruleOrGroup])
 
   return (
-    <HStack justifyContent="space-between" width="full" id="whoya" alignItems="flex-end">
+    <HStack justifyContent="space-between" width="full" alignItems="flex-end">
       <HStack w="full">
         <VStack alignItems="flex-start" w="full">
           <FormLabel fontWeight="normal" fontSize="sm" color="chakra-subtle-text">

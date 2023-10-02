@@ -31,6 +31,7 @@ import {IPromotion} from "types/ordercloud/IPromotion"
 import {emptyStringToNull} from "utils"
 import {object, string, date, number, boolean, bool} from "yup"
 import {PromotionExpressionBuilder} from "../PromotionExpressionBuilder/PromotionExpressionBuilder"
+import {MdAdd, MdDashboard} from "react-icons/md"
 
 interface PromotionDetailsProps {
   promotion?: IPromotion
@@ -105,16 +106,16 @@ export function PromotionDetails({promotion}: PromotionDetailsProps) {
           </ProtectedContent>
         </CardHeader>
         <CardBody>
-          <Tabs variant="enclosed" maxW="container.2xl">
+          <Tabs variant="enclosed">
             <TabList>
               <Tab>Promotion Settings</Tab>
               <Tab>Expression Builder</Tab>
               <Tab>Assignments</Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
+              <TabPanel maxW="container.lg">
                 <Accordion allowToggle={true} defaultIndex={[0]}>
-                  <AccordionItem>
+                  <AccordionItem border="none">
                     <AccordionButton>
                       <Heading as="h3" size="sm" fontWeight="medium" flex="1" textAlign="left">
                         Details
@@ -200,6 +201,7 @@ export function PromotionDetails({promotion}: PromotionDetailsProps) {
                       <Heading as="h3" size="sm" fontWeight="medium" flex="1" textAlign="left">
                         Usage Limits
                       </Heading>
+                      <AccordionIcon />
                     </AccordionButton>
 
                     <AccordionPanel>

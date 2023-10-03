@@ -9,11 +9,19 @@ import {appPermissions} from "config/app-permissions.config"
 interface OrderShipmentsProps {
   shipments: IShipment[]
   lineItems: ILineItem[]
+  shippableLineItems: ILineItem[]
   order: IOrder
   onUpdate: () => void
   onDelete: (shipmentId: string) => void
 }
-export function OrderShipments({shipments, order, lineItems, onUpdate, onDelete}: OrderShipmentsProps) {
+export function OrderShipments({
+  shipments,
+  order,
+  lineItems,
+  shippableLineItems,
+  onUpdate,
+  onDelete
+}: OrderShipmentsProps) {
   return (
     <>
       {shipments.map((shipment) => (
@@ -22,7 +30,7 @@ export function OrderShipments({shipments, order, lineItems, onUpdate, onDelete}
             <ShipmentActionMenu
               shipment={shipment}
               order={order}
-              lineItems={lineItems}
+              lineItems={shippableLineItems}
               onUpdate={onUpdate}
               onDelete={() => onDelete(shipment.ID)}
             />

@@ -1,6 +1,5 @@
-import {useAuth} from "hooks/useAuth"
-import React, {useEffect, useState} from "react"
-import {AccessQualifier, isAllowedAccess} from "../../hooks/useHasAccess"
+import React from "react"
+import useHasAccess, {AccessQualifier} from "../../hooks/useHasAccess"
 
 interface ProtectedContentProps {
   /**
@@ -16,16 +15,7 @@ interface ProtectedContentProps {
  */
 const ProtectedContent = (props: ProtectedContentProps) => {
   const {hasAccess, children} = props
-  const {assignedRoles} = useAuth()
-  const [canSee, setCanSee] = useState(false)
-
-  useEffect(() => {
-    if (assignedRoles?.length && isAllowedAccess(assignedRoles, hasAccess)) {
-      setCanSee(true)
-    } else {
-      setCanSee(false)
-    }
-  }, [assignedRoles, hasAccess])
+  const canSee = useHasAccess(hasAccess)
 
   return canSee ? children : <></>
 }

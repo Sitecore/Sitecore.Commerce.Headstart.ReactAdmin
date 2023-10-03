@@ -62,7 +62,15 @@ export function ShipmentItemTableEditable({
                     <ProductDefaultImage product={lineItem.Product} />
                     <VStack justifyContent="space-between">
                       <Flex flexDirection="column">
-                        <Text fontSize="sm">{lineItem.Product.Name}</Text>
+                        <Text
+                          fontSize="sm"
+                          maxWidth="200px"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          title={lineItem.Product.Name}
+                        >
+                          {lineItem.Product.Name}
+                        </Text>
                         <Link href={`/products/${lineItem.Product.ID}`}>
                           <Text fontSize="xs" color="gray.400">
                             SKU: {lineItem.Product.ID}

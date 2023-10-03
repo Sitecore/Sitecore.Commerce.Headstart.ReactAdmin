@@ -98,7 +98,7 @@ export function SecurityProfileAssignmentList({
     <VStack>
       {rows.map(({securityProfile, isInherited, isAssignedAtCurrentLevel, inheritedAssignedParties}) => {
         const roles = [...securityProfile.Roles, ...securityProfile.CustomRoles]
-        const enabledFeaturesCount = features.filter((f) => isAllowedAccess(roles, f)).length
+        const enabledFeaturesCount = features.filter((f) => isAllowedAccess(roles, f, commerceRole === "admin")).length
 
         const summary: string[] = []
         if (enabledFeaturesCount) {

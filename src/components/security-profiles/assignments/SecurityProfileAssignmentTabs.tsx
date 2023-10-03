@@ -44,7 +44,7 @@ export function SecurityProfileAssignmentTabs({
               <Text fontStyle="italic" color="gray.500" marginBottom={5}>
                 A flat view of all of the roles assigned to the user, regardless of which level they are assigned at
               </Text>
-              <SecurityProfileSummary roles={apiRoles} customRoles={customRoles} />
+              <SecurityProfileSummary roles={apiRoles} customRoles={customRoles} commerceRole={commerceRole} />
             </TabPanel>
           )}
           <TabPanel

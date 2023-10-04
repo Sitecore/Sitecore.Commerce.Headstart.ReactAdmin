@@ -34,6 +34,7 @@ import {
   TbTriangleFilled
 } from "react-icons/tb"
 import {ChevronDownIcon, ChevronUpIcon, TriangleUpIcon} from "@chakra-ui/icons"
+import {appSettings} from "config/app-settings"
 
 export default function AverageOrderAmount() {
   const headingColor = useColorModeValue("boxTextColor.400", "boxTextColor.300")
@@ -49,7 +50,7 @@ export default function AverageOrderAmount() {
   }, [])
 
   async function initData() {
-    if (process.env.NEXT_PUBLIC_OC_USELIVEDATA) {
+    if (appSettings.useRealDashboardData === "true") {
       //TODO COMPLETE THIS SECTION
       //These functions will bring in real data
       //const totalSales = await dashboardService.getTotalSalesByMonth()
@@ -124,7 +125,7 @@ export default function AverageOrderAmount() {
   ]
 
   return (
-    <Card border=".5px solid" borderColor="st.borderColor" flex={"1 1 100%"}>
+    <Card border=".5px solid" borderColor="chakra-border-color" flex={"1 1 100%"}>
       <CardHeader display="flex" flexDirection="column" mb="GlobalPadding" ps="22px" alignSelf="flex-start">
         <Heading fontSize="lg" mb="6px" textTransform="capitalize" color={headingColor}>
           {chartData.salesoverview.title}

@@ -6,6 +6,8 @@ import {ListViewChildrenProps} from "../../shared/ListView/ListView"
 import ListViewMetaInfo from "../../shared/ListViewMetaInfo/ListViewMetaInfo"
 import AdminUserListActions from "./AdminUserListActions"
 import AdminUserStatusFilter from "./AdminUserStatusFilter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface AdminUserListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
@@ -37,13 +39,15 @@ const AdminUserListToolbar: FC<AdminUserListToolbarProps> = ({
             <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href="adminusers/new">
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create Admin User
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.AdminUserManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href="adminusers/new">
+                <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+                  Create Admin User
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

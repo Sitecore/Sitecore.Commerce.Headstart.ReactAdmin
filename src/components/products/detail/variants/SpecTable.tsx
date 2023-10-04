@@ -16,20 +16,24 @@ import {
   useColorModeValue,
   Text,
   VStack,
-  Badge
+  Badge,
+  CardProps
 } from "@chakra-ui/react"
 import {TbCactus} from "react-icons/tb"
 import {SpecActionsMenu} from "./SpecActionsMenu"
 import {SpecUpdateModal} from "./SpecUpdateModal"
-import {Control, FieldValues, useFieldArray} from "react-hook-form"
+import {Control, useFieldArray} from "react-hook-form"
 import {SpecFieldValues} from "types/form/SpecFieldValues"
 import {uniq, flatten} from "lodash"
+import {ProductDetailFormFields} from "../form-meta"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
-interface SpecTableProps {
-  control: Control<FieldValues, any>
+interface SpecTableProps extends CardProps {
+  control: Control<ProductDetailFormFields>
 }
 
-export function SpecTable({control}: SpecTableProps) {
+export function SpecTable({control, ...cardProps}: SpecTableProps) {
   const {fields, append, remove, update} = useFieldArray({
     control,
     name: "Specs"
@@ -62,18 +66,20 @@ export function SpecTable({control}: SpecTableProps) {
         <Heading colorScheme="secondary" fontSize="xl">
           <VStack>
             <Text>This product has no specs</Text>
-            <SpecUpdateModal
-              onUpdate={append}
-              as="button"
-              buttonProps={{variant: "solid", size: "sm", colorScheme: "primary"}}
-            />
+            <ProtectedContent hasAccess={appPermissions.ProductManager}>
+              <SpecUpdateModal
+                onUpdate={append}
+                as="button"
+                buttonProps={{variant: "solid", size: "sm", colorScheme: "primary"}}
+              />
+            </ProtectedContent>
           </VStack>
         </Heading>
       </Box>
     )
   }
   return (
-    <Card>
+    <Card {...cardProps}>
       <CardHeader display="flex" alignItems={"center"}>
         <Heading as="h3" fontSize="lg" alignSelf={"flex-start"}>
           Specs
@@ -81,11 +87,13 @@ export function SpecTable({control}: SpecTableProps) {
             Create specs like size and color to generate variants for this product.
           </Text>
         </Heading>
-        <SpecUpdateModal
-          onUpdate={append}
-          as="button"
-          buttonProps={{variant: "outline", colorScheme: "accent", ml: "auto"}}
-        />
+        <ProtectedContent hasAccess={appPermissions.ProductManager}>
+          <SpecUpdateModal
+            onUpdate={append}
+            as="button"
+            buttonProps={{variant: "outline", colorScheme: "accent", ml: "auto"}}
+          />
+        </ProtectedContent>
       </CardHeader>
       <CardBody>
         <TableContainer>
@@ -142,11 +150,13 @@ export function SpecTable({control}: SpecTableProps) {
                     })}
                   </Td>
                   <Td>
-                    <SpecActionsMenu
-                      spec={spec}
-                      onDelete={() => remove(index)}
-                      onUpdate={(updatedSpec) => update(index, updatedSpec)}
-                    />
+                    <ProtectedContent hasAccess={appPermissions.ProductManager}>
+                      <SpecActionsMenu
+                        spec={spec}
+                        onDelete={() => remove(index)}
+                        onUpdate={(updatedSpec) => update(index, updatedSpec)}
+                      />
+                    </ProtectedContent>
                   </Td>
                 </Tr>
               ))}

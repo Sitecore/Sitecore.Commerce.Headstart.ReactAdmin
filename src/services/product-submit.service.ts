@@ -1,4 +1,4 @@
-import {differenceBy, isEmpty, omit} from "lodash"
+import {difference, differenceBy, isEmpty, omit} from "lodash"
 import {
   PriceSchedules,
   Products,
@@ -6,16 +6,18 @@ import {
   Specs,
   ProductCatalogAssignment,
   Catalogs,
-  Categories
+  Categories,
+  InventoryRecords
 } from "ordercloud-javascript-sdk"
 import {OverridePriceScheduleFieldValues} from "types/form/OverridePriceScheduleFieldValues"
 import {SpecFieldValues, SpecOptionFieldValues} from "types/form/SpecFieldValues"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
-import {getObjectDiff} from "utils"
+import {getItemsToAdd, getItemsToDelete, getItemsToUpdate, getObjectDiff} from "utils"
 import {v4 as randomId} from "uuid"
 import {
+  fetchInventoryRecords,
   fetchOverridePriceSchedules,
   fetchProductCatalogAssignments,
   fetchProductCategoryAssignments,
@@ -25,6 +27,7 @@ import {IVariant} from "types/ordercloud/IVariant"
 import {VariantFieldValues} from "types/form/VariantFieldValues"
 import {ORIGINAL_ID} from "constants/original-id"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
+import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
 
 export async function submitProduct(
   isCreatingNew: boolean,
@@ -32,6 +35,8 @@ export async function submitProduct(
   newDefaultPriceSchedule: IPriceSchedule,
   oldProduct: IProduct,
   newProduct: IProduct,
+  oldInventoryRecords: IInventoryRecord[],
+  newInventoryRecords: IInventoryRecord[],
   oldSpecs: ISpec[],
   newSpecs: SpecFieldValues[],
   oldVariants: IVariant[],
@@ -51,13 +56,40 @@ export async function submitProduct(
   )
 
   // create/update product
-  const updatedProduct = await handleUpdateProduct(oldProduct, newProduct, updatedDefaultPriceSchedule, isCreatingNew)
+  let updatedProduct = await handleUpdateProduct(oldProduct, newProduct, updatedDefaultPriceSchedule, isCreatingNew)
+
+  // create/update/delete inventory records
+  const updatedInventoryRecords = await handleUpdateInventoryRecords(
+    oldInventoryRecords,
+    newInventoryRecords,
+    updatedProduct
+  )
+
+  if (updatedInventoryRecords.length && !updatedProduct.Inventory?.Enabled) {
+    updatedProduct = await Products.Patch(updatedProduct.ID, {Inventory: {Enabled: true}})
+  }
 
   // create/update/delete specs & spec options
   const {updatedSpecs, didUpdateSpecs} = await handleUpdateSpecs(oldSpecs, newSpecs, updatedProduct)
 
   // update variants
   const updatedVariants = await handleUpdateVariants(oldVariants, newVariants, updatedProduct, updatedSpecs)
+
+  // create/update/delete category assignments
+  // Note: this must happen BEFORE price overrides to ensure product is visible to assigned buyers
+  const updatedCategoryAssignments = await handleUpdateCategoryAssignments(
+    oldCategoryAssignments,
+    newCategoryAssignments,
+    updatedProduct
+  )
+
+  // create/update/delete catalog assignments
+  // Note: this must happen BEFORE price overrides to ensure product is visible to assigned buyers
+  const updatedCatalogAssignments = await handleUpdateCatalogAssignments(
+    oldCatalogAssignments,
+    newCatalogAssignments,
+    updatedProduct
+  )
 
   // create/update/delete price overrides and related assignments
   const updatedPriceOverrides = await handleUpdatePriceOverrides(
@@ -66,22 +98,9 @@ export async function submitProduct(
     updatedProduct
   )
 
-  // create/update/delete category assignments
-  const updatedCategoryAssignments = await handleUpdateCategoryAssignments(
-    oldCategoryAssignments,
-    newCategoryAssignments,
-    updatedProduct
-  )
-
-  // create/update/delete catalog assignments
-  const updatedCatalogAssignments = await handleUpdateCatalogAssignments(
-    oldCatalogAssignments,
-    newCatalogAssignments,
-    updatedProduct
-  )
-
   return {
     updatedProduct,
+    updatedInventoryRecords,
     updatedSpecs,
     didUpdateSpecs,
     updatedVariants,
@@ -166,14 +185,26 @@ async function handleUpdateProduct(
   newProduct: IProduct,
   updatedPriceSchedule: IPriceSchedule,
   isCreatingNew: boolean
-): Promise<IProduct> {
+) {
   let updatedProduct: IProduct
   if (isCreatingNew) {
     newProduct.DefaultPriceScheduleID = updatedPriceSchedule.ID
     updatedProduct = await Products.Create<IProduct>(newProduct)
   } else {
     const diff = getObjectDiff(oldProduct, newProduct) as IProduct
-    updatedProduct = isEmpty(diff) ? oldProduct : await Products.Patch<IProduct>(oldProduct.ID, diff)
+    const reverseXpDiff = getObjectDiff(newProduct.xp, oldProduct.xp)
+    const didDeleteCustomXp = difference(Object.keys(reverseXpDiff || {}), Object.keys(diff.xp || {})).length > 0
+    if (isEmpty(diff) && !didDeleteCustomXp) {
+      updatedProduct = oldProduct
+    } else {
+      if (didDeleteCustomXp) {
+        // Its not possible to delete extended properties with a single PATCH
+        // so we must perform a PUT with the full product object instead
+        updatedProduct = await Products.Save<IProduct>(oldProduct.ID, newProduct)
+      } else {
+        updatedProduct = await Products.Patch<IProduct>(oldProduct.ID, diff)
+      }
+    }
   }
   return updatedProduct
 }
@@ -205,7 +236,9 @@ async function handleUpdatePriceOverrides(
   const updatePriceScheduleRequests = updatePriceSchedules.map(async (priceOverride) => {
     const oldPriceSchedule = oldPriceSchedules.find((oldPriceSchedule) => oldPriceSchedule.ID === priceOverride.ID)
     const diff = getObjectDiff(oldPriceSchedule, priceOverride)
-    const priceSchedule = await PriceSchedules.Patch<IPriceSchedule>(priceOverride.ID, diff)
+    const priceSchedule = isEmpty(diff)
+      ? oldPriceSchedule
+      : await PriceSchedules.Patch<IPriceSchedule>(priceOverride.ID, diff)
     await updateProductAssignments(priceSchedule.ID, priceOverride.ProductAssignments, product)
   })
 
@@ -266,6 +299,40 @@ async function updateProductAssignments(
   })
 
   await Promise.all([...addRequests, ...removeRequests])
+}
+
+async function handleUpdateInventoryRecords(
+  oldRecords: IInventoryRecord[],
+  newRecords: IInventoryRecord[],
+  product: IProduct
+) {
+  if (!product.xp.ShipsFromMultipleLocations) {
+    const allDeleteRequests = oldRecords.map(async (record) => InventoryRecords.Delete(product.ID, record.ID))
+    await Promise.all(allDeleteRequests)
+    return []
+  }
+
+  const addRecords = getItemsToAdd(newRecords)
+  const updateRecords = getItemsToUpdate(oldRecords, newRecords)
+  const deleteRecords = getItemsToDelete(oldRecords, newRecords)
+
+  const addRecordRequests = addRecords.map(async (record) => {
+    const newRecord = await InventoryRecords.Create(product.ID, record)
+    return newRecord
+  })
+
+  const updateRecordRequests = updateRecords.map(async (record) => {
+    const oldRecord = oldRecords.find((oldRecord) => oldRecord.ID === record.ID)
+    const diff = getObjectDiff(oldRecord, record)
+    await InventoryRecords.Patch(product.ID, record.ID, diff)
+  })
+
+  const deleteRecordRequests = deleteRecords.map(async (record) => InventoryRecords.Delete(product.ID, record.ID))
+
+  await Promise.all([...addRecordRequests, ...updateRecordRequests, ...deleteRecordRequests])
+
+  const updatedInventoryRecords = fetchInventoryRecords(product)
+  return updatedInventoryRecords
 }
 
 async function handleUpdateSpecs(oldSpecs: ISpec[], newSpecs: SpecFieldValues[], product: IProduct) {
@@ -343,50 +410,4 @@ async function handleUpdateSpecOptions(specId, newOptions: SpecOptionFieldValues
   const deleteOptionRequests = deleteOptions.map(async (option) => Specs.DeleteOption(specId, option.ID))
 
   await Promise.all([...addOptionRequests, ...updateOptionRequests, ...deleteOptionRequests])
-}
-
-/**
- *
- * @param newItems current list of items in their desired state (what we want them to be after updates)
- * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
- * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
- * @returns
- */
-function getItemsToAdd<TReturnType>(newItems: TReturnType[], keyId: string = "ID"): TReturnType[] {
-  return (newItems || []).filter((newObject) => !newObject[keyId])
-}
-
-/**
- *
- * @param oldItems list of items in their original state (before updates)
- * @param newItems current list of items in their desired state (what we want them to be after updates)
- * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
- * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
- * @returns
- */
-function getItemsToUpdate<TReturnType>(oldItems, newItems: TReturnType[], keyId: string = "ID"): TReturnType[] {
-  return (newItems || []).filter((newObject) => {
-    const oldObject = (oldItems || []).find((oldObject) => oldObject.ID === newObject[keyId])
-    if (oldObject) {
-      const diff = getObjectDiff(oldObject, newObject)
-      return !isEmpty(diff)
-    }
-  })
-}
-
-/**
- *
- * @param oldItems list of items in their original state (before updates)
- * @param newItems current list of items in their desired state (what we want them to be after updates)
- * @param keyId used to determine if an item is new, updated, or deleted, in most cases this is ID but
- * for entities where we allow users to modify ID (such as variants), we need to use ORIGINAL_ID
- * @returns
- */
-function getItemsToDelete<TReturnType>(oldItems: TReturnType[], newItems, keyId: string = "ID"): TReturnType[] {
-  return (oldItems || []).filter((oldObject) => {
-    const newObject = (newItems || []).find((newObject) => newObject.ID === oldObject[keyId])
-    if (!newObject) {
-      return true
-    }
-  })
 }

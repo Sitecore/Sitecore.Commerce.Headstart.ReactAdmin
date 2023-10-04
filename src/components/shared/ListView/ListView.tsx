@@ -47,6 +47,13 @@ interface IListView<T, F = any> {
   children?: (props: ListViewChildrenProps) => ReactElement
   noResultsMessage?: ListViewTemplate
   noDataMessage?: ListViewTemplate
+  selectable?: boolean
+}
+
+export interface ListParams {
+  routeParams: Record<string, string>
+  queryParams: Record<string, string>
+  filterParams: Record<string, string>
 }
 
 export interface ListViewChildrenProps {
@@ -89,7 +96,8 @@ const ListView = <T extends IDefaultResource>({
   initialViewMode = "table",
   children,
   noResultsMessage = DEFAULT_NO_RESULTS_MESSAGE,
-  noDataMessage = DEFAULT_NO_DATA_MESSAGE
+  noDataMessage = DEFAULT_NO_DATA_MESSAGE,
+  selectable = true
 }: IListView<T>) => {
   const [data, setData] = useState<(T extends Product ? ListPageWithFacets<T> : ListPage<T>) | undefined>()
   const [viewMode, setViewMode] = useState<"grid" | "table">(initialViewMode)
@@ -105,7 +113,7 @@ const ListView = <T extends IDefaultResource>({
   const {push, pathname, isReady, query} = useRouter()
 
   const mapRouterQuery = useCallback(
-    (map?: {[key: string]: string}) => {
+    (map?: Record<string, string>): Record<string, string> => {
       let result = {}
       if (!isReady) return result
       if (!map) return result
@@ -120,11 +128,12 @@ const ListView = <T extends IDefaultResource>({
   )
 
   const params = useMemo(() => {
-    return {
+    const mappedParams: ListParams = {
       routeParams: mapRouterQuery(paramMap),
       queryParams: mapRouterQuery(queryMap),
       filterParams: mapRouterQuery(filterMap)
     }
+    return mappedParams
   }, [paramMap, queryMap, filterMap, mapRouterQuery])
 
   const fetchData = useCallback(async () => {
@@ -136,8 +145,10 @@ const ListView = <T extends IDefaultResource>({
       ...params.queryParams,
       filters: params.filterParams
     }
-    if (Object.values(params.routeParams).length || defaultParameters.length) {
-      response = await service(...defaultParameters, ...Object.values(params.routeParams), listOptions)
+    if (Object.values(params.routeParams).length) {
+      response = await service(...Object.values(params.routeParams), listOptions)
+    } else if (defaultParameters.length) {
+      response = await service(...defaultParameters, listOptions)
     } else {
       response = await service(listOptions)
     }
@@ -260,19 +271,20 @@ const ListView = <T extends IDefaultResource>({
               itemHrefResolver={itemHrefResolver}
               data={data && data.Items}
               selected={selected}
-              onSelectChange={handleSelectChange}
+              onSelectChange={selectable ? handleSelectChange : null}
             />
           </Box>
-          <Box hidden={viewMode !== "table"}>
+          <Box minHeight="600px" hidden={viewMode !== "table"}>
             <DataTable
               {...tableOptions}
+              params={params}
               loading={loading}
               itemHrefResolver={itemHrefResolver}
               rowActions={itemActions}
               data={data && data.Items}
               selected={selected}
               emptyDisplay={isSearching ? noResultsMessage : noDataMessage}
-              onSelectChange={handleSelectChange}
+              onSelectChange={selectable ? handleSelectChange : null}
               onSortChange={handleSortChange}
               currentSort={currentSort}
             />
@@ -301,7 +313,9 @@ const ListView = <T extends IDefaultResource>({
     currentPage,
     handleUpdateQuery,
     handleSelectChange,
-    handleSortChange
+    handleSortChange,
+    params,
+    selectable
   ])
 
   const childrenProps = useMemo(() => {

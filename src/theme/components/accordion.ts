@@ -1,2 +1,2 @@
-const Accordion = {};
-export default Accordion;
+const Accordion = {}
+export default Accordion

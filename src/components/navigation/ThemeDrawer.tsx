@@ -1,6 +1,7 @@
 import {
   Button,
   Divider,
+  Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
@@ -14,7 +15,7 @@ import {
   useColorModeValue,
   useModalContext
 } from "@chakra-ui/react"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useContext, useState} from "react"
 import Cookies from "universal-cookie"
 import ProtectedContent from "../auth/ProtectedContent"
@@ -71,7 +72,7 @@ export const ThemeDrawer = () => {
         <DrawerCloseButton />
         <DrawerHeader color={color}>Theming</DrawerHeader>
         <DrawerBody color={color} display="flex" flexFlow="column nowrap" gap={6}>
-          <ProtectedContent hasAccess={appPermissions.MeManager}>
+          <ProtectedContent hasAccess={appPermissions.ProfileManager}>
             <FormControl display="flex" gap={4}>
               <Switch
                 isChecked={currentColorMode === "dark"}

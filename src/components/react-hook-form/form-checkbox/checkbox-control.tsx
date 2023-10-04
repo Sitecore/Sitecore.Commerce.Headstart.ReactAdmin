@@ -7,7 +7,7 @@ type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U
 
 export type CheckboxControlProps = Overwrite<CheckboxProps, {value?: string | number}> & {
   name: string
-  control: Control<FieldValues, any>
+  control: any
   label?: string
   validationSchema?: any
 }
@@ -36,7 +36,7 @@ export const CheckboxControl: FC<CheckboxControlProps> = (props: CheckboxControl
       isRequired={isRequired}
       isInvalid={!!error && isTouched}
       isChecked={isChecked}
-      isDisabled={isSubmitting}
+      isDisabled={isSubmitting || props.isDisabled}
       {...rest}
     >
       {label}

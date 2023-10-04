@@ -7,6 +7,8 @@ import {ListViewChildrenProps} from "../../shared/ListView/ListView"
 import ListViewMetaInfo from "../../shared/ListViewMetaInfo/ListViewMetaInfo"
 import ProductListActions from "./ProductListActions"
 import ProductStatusFilter from "./ProductStatusFilter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface ProductListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {
   onBulkPromote: () => void
@@ -40,11 +42,13 @@ const ProductListToolbar: FC<ProductListToolbarProps> = ({
       <HStack ml="auto">
         {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
         {viewModeToggle}
-        <Link passHref href="/products/new">
-          <Button as="a" variant="solid" colorScheme="primary">
-            Create Product
-          </Button>
-        </Link>
+        <ProtectedContent hasAccess={appPermissions.ProductManager}>
+          <Link passHref href="/products/new">
+            <Button as="a" variant="solid" colorScheme="primary">
+              Create Product
+            </Button>
+          </Link>
+        </ProtectedContent>
       </HStack>
     </Flex>
   )

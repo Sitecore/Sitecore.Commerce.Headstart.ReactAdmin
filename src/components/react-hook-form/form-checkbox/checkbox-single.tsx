@@ -27,7 +27,7 @@ export const CheckboxSingleControl: FC<CheckboxSingleProps> = (props: CheckboxSi
         id={name}
         isInvalid={!!error && isTouched}
         isChecked={isChecked}
-        isDisabled={isSubmitting}
+        isDisabled={isSubmitting || props.isDisabled}
         {...checkBoxProps}
       >
         {label}

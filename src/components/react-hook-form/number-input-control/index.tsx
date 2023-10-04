@@ -47,15 +47,23 @@ export const NumberInputControl: FC<NumberInputControlProps> = (props: NumberInp
   const isRequired = isRequiredField(props.validationSchema, field.name)
 
   return (
-    <FormControl isRequired={isRequired} name={name} control={control} label={label} {...rest}>
+    <FormControl
+      isRequired={isRequired}
+      name={name}
+      control={control}
+      label={label}
+      validationSchema={validationSchema}
+      {...rest}
+    >
       <InputGroup>
         {leftAddon && <InputLeftAddon>{leftAddon}</InputLeftAddon>}
         <NumberInput
-          {...field}
           id={name}
           isInvalid={!!error && isTouched}
-          isDisabled={isSubmitting}
+          isDisabled={isSubmitting || props.isDisabled}
+          {...field}
           {...numberInputProps}
+          value={field.value ?? ""}
         >
           <NumberInputField name={name} ref={field.ref} />
           {showStepper && (

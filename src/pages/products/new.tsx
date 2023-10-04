@@ -1,26 +1,11 @@
 import ProtectedContent from "@/components/auth/ProtectedContent"
 import ProductDetail from "@/components/products/detail/ProductDetail"
 import {ProductDetailSkeleton} from "@/components/products/detail/ProductDetailSkeleton"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useProductDetail} from "hooks/useProductDetail"
 
-/* This declares the page title and enables breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "New Product",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      }
-    }
-  }
-}
-
 const ProductDetailPage = () => {
-  const {loading, showTabbedView, initialTab, facets} = useProductDetail()
+  const {loading, initialTab, facets, defaultOwnerId} = useProductDetail()
 
   if (loading) {
     return <ProductDetailSkeleton />
@@ -28,7 +13,8 @@ const ProductDetailPage = () => {
 
   return (
     <ProductDetail
-      showTabbedView={showTabbedView}
+      initialInventoryRecords={[]}
+      defaultOwnerId={defaultOwnerId}
       initialTab={initialTab}
       facets={facets}
       initialSpecs={[]}

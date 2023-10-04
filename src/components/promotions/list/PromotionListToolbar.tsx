@@ -6,6 +6,8 @@ import {ListViewChildrenProps} from "../../shared/ListView/ListView"
 import ListViewMetaInfo from "../../shared/ListViewMetaInfo/ListViewMetaInfo"
 import PromotionListActions from "./PromotionListActions"
 import PromotionStatusFilter from "./PromotionStatusFilter"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface PromotionListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {}
 
@@ -37,13 +39,15 @@ const PromotionListToolbar: FC<PromotionListToolbarProps> = ({
             <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href="promotions/add">
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create Promotion
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.PromotionManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href="promotions/new">
+                <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+                  Create Promotion
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

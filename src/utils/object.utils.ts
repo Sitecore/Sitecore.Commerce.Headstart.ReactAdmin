@@ -6,7 +6,7 @@ import {get, isArray, isEqual, isObject, set} from "lodash"
  * @param oldObj The original object to be compared
  * @param newObj The new object with updates
  */
-export function getObjectDiff(oldObj, newObj) {
+export function getObjectDiff(oldObj = {}, newObj = {}) {
   const diff = {}
   const diffKeys = getObjectDiffKeys(oldObj, newObj)
   if (!diffKeys?.length) {
@@ -25,12 +25,12 @@ export function getObjectDiff(oldObj, newObj) {
  * @param oldObj The original object to be compared
  * @param newObj The new object with updates
  */
-function getObjectDiffKeys(oldObj, newObj) {
+function getObjectDiffKeys(oldObj = {}, newObj = {}) {
   return Object.keys(newObj || {}).reduce((result, key) => {
     const inner1 = oldObj[key]
     const inner2 = newObj[key]
     if (!isEqual(inner1, inner2)) {
-      if (isObject(inner2) && !isArray(inner2)) {
+      if (isObject(inner2) && isObject(inner1) && !isArray(inner2)) {
         const innerDiffKeys = getObjectDiffKeys(oldObj[key] || {}, newObj[key] || {}).map(
           (innerKey) => `${key}.${innerKey}`
         )

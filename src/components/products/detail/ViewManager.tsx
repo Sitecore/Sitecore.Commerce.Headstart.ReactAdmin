@@ -8,9 +8,6 @@ import {
   PopoverTrigger,
   Button,
   PopoverContent,
-  PopoverHeader,
-  PopoverArrow,
-  PopoverCloseButton,
   PopoverBody,
   PopoverFooter,
   Flex
@@ -33,6 +30,8 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
     const update = {...visibility, [event.target.value]: event.target.checked}
     setVisibility(update)
   }
+  const views = Object.keys(visibility)
+
   return (
     <Popover>
       {({onClose}) => (
@@ -48,27 +47,11 @@ export default function ViewManager({viewVisibility, setViewVisibility}: ViewMan
           <PopoverContent>
             <PopoverBody>
               <SimpleGrid columns={[1, 2]} spacing={2}>
-                <Checkbox value="Details" isChecked={visibility.Details} onChange={handleChange}>
-                  Details
-                </Checkbox>
-                <Checkbox value="Pricing" isChecked={visibility.Pricing} onChange={handleChange}>
-                  Pricing
-                </Checkbox>
-                <Checkbox value="Catalogs" isChecked={visibility.Catalogs} onChange={handleChange}>
-                  Catalogs
-                </Checkbox>
-                <Checkbox value="Variants" isChecked={visibility.Variants} onChange={handleChange}>
-                  Variants
-                </Checkbox>
-                <Checkbox value="Media" isChecked={visibility.Media} onChange={handleChange}>
-                  Media
-                </Checkbox>
-                <Checkbox value="Facets" isChecked={visibility.Facets} onChange={handleChange}>
-                  Facets
-                </Checkbox>
-                <Checkbox value="Customization" isChecked={visibility.Customization} onChange={handleChange}>
-                  Customization
-                </Checkbox>
+                {views.map((view) => (
+                  <Checkbox key={view} value={view} isChecked={visibility[view]} onChange={handleChange}>
+                    {view}
+                  </Checkbox>
+                ))}
               </SimpleGrid>
             </PopoverBody>
             <PopoverFooter>

@@ -1,2 +1,2 @@
-const Container = {};
-export default Container;
+const Container = {}
+export default Container

@@ -22,94 +22,6 @@ export const isRequiredField = (validationSchema: any, name: string) => {
 }
 
 /**
- * In react-hook-form inputs can not be null or undefined. This function evaluates all properties
- * and if it finds any properties that are null or undefined it sets them to the default value
- *
- * @param obj the object to provide fallbacks to
- * @param defaultValues the default values
- * @returns
- */
-export function withDefaultValuesFallback(obj: any, defaultValues: any): any {
-  Object.keys(defaultValues).forEach((key) => {
-    const value = get(obj, key, null)
-    if (value == null) {
-      set(obj, key, defaultValues[key])
-    } else if (Array.isArray(value) && Array.isArray(defaultValues[key]) && defaultValues[key].length) {
-      // If the value is an array we need to check the value for each item in the array
-      // fallback will be the first item in the defaultValues array item
-      value.forEach((innerObj, index) => {
-        Object.keys(innerObj).forEach((innerKey) => {
-          const innerObjValue = innerObj[innerKey]
-          if (innerObjValue == null) {
-            set(obj, `${key}.${index}.${innerKey}`, defaultValues[key][0][innerKey])
-          }
-        })
-      })
-    }
-  })
-  return obj
-}
-
-/**
- * Takes a flat object definition such as:
- * const obj = {
- *   'Product.Active': true,
- *   'Product.Description': ''
- * }
- *
- * and turns it to a nested one:
- * const obj = {
- *  Product: {
- *     Active: true
- *     Description: ''
- *   }
- * }
- */
-export function makeNestedObject(obj: any) {
-  const newObj = {}
-  Object.keys(obj).forEach((key) => {
-    set(newObj, key, obj[key])
-  })
-  return newObj
-}
-
-/**
- * Helper that makes form validation valid by ensuring it is nested
- * this is useful because we can format both initial values and validation in the same way
- *
- * Takes a flat form validation definition such as:
- * const schema = {
- *   'Product.Active': yup.string(),
- *   'Product.Inventory.Enabled': yup.bool()
- * }
- *
- * and turns it to a nested one:
- * const schema = {
- *  Product: yup.object({
- *     Active: yup.string(),
- *     Inventory: yup.object({
- *      Enabled: yup.bool()
- *    })
- *  })
- * }
- */
-export function makeNestedValidationSchema(obj: any) {
-  return wrapSchema(makeNestedObject(obj))
-}
-
-function wrapSchema(obj: any) {
-  Object.keys(obj).forEach((key) => {
-    const value = obj[key]
-    const isSchema = value instanceof yup.BaseSchema
-    if (!isSchema) {
-      const wrapped = wrapSchema(value)
-      obj[key] = yup.object(wrapped)
-    }
-  })
-  return obj
-}
-
-/**
  * Yup helper for allowing number types with a default value of empty string
  * Chakra doesn't allow null for inputs, and undefined is considered uncontrolled input
  * and we may not want to default a field to zero so this lets us define an "empty" field
@@ -122,3 +34,20 @@ export function emptyStringToNull(value, originalValue) {
   }
   return value
 }
+
+export function nullToFalse(value, originalValue) {
+  if (originalValue === null) {
+    return false
+  }
+  return value
+}
+
+// regex matching OrderCloud's minimum password requirements
+// 10 characters, must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number, may contain special characters
+// https://ordercloud.io/knowledge-base/custom-password-configuration
+export const orderCloudPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?a-zA-Z\d\S]{10,}$/
+
+// regex matching OrderCloud's ID requirements
+// can include letters, numbers, dashes, and underscores, and can be at most 100 characters
+export const orderCloudIDRegex = /^\w+$/

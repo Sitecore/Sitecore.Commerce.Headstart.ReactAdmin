@@ -23,14 +23,14 @@ import {InputControl, SwitchControl} from "@/components/react-hook-form"
 import {SpecOptionTable} from "./SpecOptionTable"
 import {compact, uniqBy} from "lodash"
 import {SpecFieldValues} from "types/form/SpecFieldValues"
+import {ISpec} from "types/ordercloud/ISpec"
 
 const specFormSchema = object().shape({
   Name: string().required(),
   DefinesVariant: bool(),
   Required: bool().when("DefinesVariant", {
     is: true,
-    then: bool().oneOf([true], "Spec must be required if Defines Variant"),
-    otherwise: bool()
+    then: (schema) => schema.oneOf([true], "Spec must be required if Defines Variant")
   }),
   Options: array()
     .of(
@@ -79,10 +79,10 @@ export function SpecUpdateModal({
 }: SpecUpdateModalProps) {
   const [spec, setSpec] = useState<SpecFieldValues | null>(initialSpec)
   const {isOpen, onOpen, onClose} = useDisclosure()
-  const {handleSubmit, control, trigger, reset} = useForm({
+  const {handleSubmit, control, trigger, reset} = useForm<SpecFieldValues>({
     mode: "onBlur",
     resolver: yupResolver(specFormSchema),
-    defaultValues: (spec || specFormDefaultValues) as any
+    defaultValues: spec || specFormDefaultValues
   })
 
   const handleSubmitPreventBubbling = (event: FormEvent) => {
@@ -143,7 +143,7 @@ export function SpecUpdateModal({
                 control={control}
                 validationSchema={specFormSchema}
               />
-              <SpecOptionTable control={control} trigger={trigger} />
+              <SpecOptionTable control={control} validationSchema={specFormSchema} trigger={trigger} />
             </VStack>
           </ModalBody>
           <ModalFooter>

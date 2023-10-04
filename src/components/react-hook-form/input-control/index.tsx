@@ -1,4 +1,12 @@
-import {Input, InputProps, InputGroup, InputLeftAddon, InputRightAddon} from "@chakra-ui/react"
+import {
+  Input,
+  InputProps,
+  InputGroup,
+  InputLeftAddon,
+  InputRightAddon,
+  InputLeftElement,
+  InputRightElement
+} from "@chakra-ui/react"
 import React, {FC} from "react"
 import {useController} from "react-hook-form"
 import {isRequiredField} from "utils"
@@ -8,10 +16,23 @@ export type InputControlProps = BaseProps & {
   inputProps?: InputProps
   leftAddon?: React.ReactNode
   rightAddon?: React.ReactNode
+  rightElement?: React.ReactNode
+  leftElement?: React.ReactNode
 }
 
 export const InputControl: FC<InputControlProps> = (props: InputControlProps) => {
-  const {name, control, label, inputProps, leftAddon, rightAddon, validationSchema, ...rest} = props
+  const {
+    name,
+    control,
+    label,
+    inputProps,
+    leftAddon,
+    rightAddon,
+    leftElement,
+    rightElement,
+    validationSchema,
+    ...rest
+  } = props
   const {
     field,
     formState: {isSubmitting}
@@ -21,10 +42,26 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
   })
   const isRequired = isRequiredField(props.validationSchema, field.name)
   return (
-    <FormControl name={name} control={control} label={label} {...rest} isRequired={isRequired}>
+    <FormControl
+      name={name}
+      control={control}
+      label={label}
+      {...rest}
+      validationSchema={validationSchema}
+      isRequired={isRequired}
+    >
       <InputGroup>
         {leftAddon && <InputLeftAddon>{leftAddon}</InputLeftAddon>}
-        <Input isRequired={isRequired} {...field} id={name} isDisabled={isSubmitting} {...inputProps} />
+        {leftElement && <InputLeftElement>{leftElement}</InputLeftElement>}
+        <Input
+          isRequired={isRequired}
+          {...field}
+          id={name}
+          isDisabled={isSubmitting || props.isDisabled}
+          {...inputProps}
+          value={field.value ?? ""}
+        />
+        {rightElement && <InputRightElement>{rightElement}</InputRightElement>}
         {rightAddon && <InputRightAddon>{rightAddon}</InputRightAddon>}
       </InputGroup>
     </FormControl>

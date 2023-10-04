@@ -1,2 +1,2 @@
 const PinInput = {}
-export default PinInput;
+export default PinInput

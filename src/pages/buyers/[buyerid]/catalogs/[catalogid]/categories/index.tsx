@@ -1,5 +1,7 @@
 import {
   Box,
+  Card,
+  CardBody,
   Grid,
   GridItem,
   HStack,
@@ -14,31 +16,15 @@ import {
 } from "@chakra-ui/react"
 import {Categories, Category} from "ordercloud-javascript-sdk"
 import {useCallback, useEffect, useState} from "react"
-
-import Card from "components/card/Card"
-import {CreateUpdateForm} from "components/categories"
+import {CategoryForm} from "components/categories"
 import ExportToCsv from "components/demo/ExportToCsv"
 import {ICategory} from "types/ordercloud/ICategoryXp"
 import React from "react"
 import TreeView from "components/dndtreeview/TreeView"
 import {ocNodeModel} from "@minoru/react-dnd-treeview"
 import {useRouter} from "hooks/useRouter"
-
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Categories List",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 const CategoriesList = (props) => {
   const [categoriesTreeView, setCategoriesTreeView] = useState([])
@@ -108,53 +94,55 @@ const CategoriesList = (props) => {
             <ExportToCsv />
           </HStack>
         </HStack>
-        <Card variant="primaryCard">
-          <Grid
-            templateAreas={`"header header"
+        <Card>
+          <CardBody>
+            <Grid
+              templateAreas={`"header header"
                   "nav main"
                   "nav footer"`}
-            gridTemplateRows={"auto 1fr 30px"}
-            gridTemplateColumns={"auto 1fr"}
-            h="auto"
-            gap="1"
-            color="blackAlpha.700"
-            fontWeight="bold"
-          >
-            <GridItem pl="2" area={"header"}></GridItem>
-            <GridItem pl="2" area={"nav"} width="300px">
-              <TreeView
-                treeData={categoriesTreeView}
-                selectedNode={selectedNode}
-                handleSelect={handleSelect}
-                handleCategoryCreate={handleCategoryCreate}
-                {...props}
-              />
-            </GridItem>
-            <GridItem pl="2" area={"main"}>
-              {selectedNode ? (
-                <CreateUpdateForm
-                  category={selectedNode.data}
-                  onSuccess={onCategoryCreateSuccess}
-                  headerComponent={
-                    <Heading as="h5" size="md" marginLeft={10} marginTop={5}>
-                      Update the selected category
-                    </Heading>
-                  }
+              gridTemplateRows={"auto 1fr 30px"}
+              gridTemplateColumns={"auto 1fr"}
+              h="auto"
+              gap="1"
+              color="blackAlpha.700"
+              fontWeight="bold"
+            >
+              <GridItem pl="2" area={"header"}></GridItem>
+              <GridItem pl="2" area={"nav"} width="300px">
+                <TreeView
+                  treeData={categoriesTreeView}
+                  selectedNode={selectedNode}
+                  handleSelect={handleSelect}
+                  handleCategoryCreate={handleCategoryCreate}
+                  {...props}
                 />
-              ) : (
-                <CreateUpdateForm
-                  onSuccess={onCategoryCreateSuccess}
-                  category={{Name: "", Description: "", Active: false, ParentID: ""}}
-                  headerComponent={
-                    <Heading as="h5" size="md" marginLeft={10} marginTop={5}>
-                      Create root category
-                    </Heading>
-                  }
-                />
-              )}
-            </GridItem>
-            <GridItem pl="2" area={"footer"}></GridItem>
-          </Grid>
+              </GridItem>
+              <GridItem pl="2" area={"main"}>
+                {selectedNode ? (
+                  <CategoryForm
+                    category={selectedNode.data}
+                    onSuccess={onCategoryCreateSuccess}
+                    headerComponent={
+                      <Heading as="h5" size="md" marginLeft={10} marginTop={5}>
+                        Update the selected category
+                      </Heading>
+                    }
+                  />
+                ) : (
+                  <CategoryForm
+                    onSuccess={onCategoryCreateSuccess}
+                    category={{Name: "", Description: "", Active: false, ParentID: ""}}
+                    headerComponent={
+                      <Heading as="h5" size="md" marginLeft={10} marginTop={5}>
+                        Create root category
+                      </Heading>
+                    }
+                  />
+                )}
+              </GridItem>
+              <GridItem pl="2" area={"footer"}></GridItem>
+            </Grid>
+          </CardBody>
         </Card>
       </Box>
       <Modal size="2xl" isOpen={isCategoryCreateOpen} onClose={onCloseCategoryCreate}>
@@ -163,7 +151,7 @@ const CategoriesList = (props) => {
           <ModalHeader>Create category</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <CreateUpdateForm parentId={parentIdToCreate} onSuccess={onCategoryCreateSuccess} />
+            <CategoryForm parentId={parentIdToCreate} onSuccess={onCategoryCreateSuccess} />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -171,4 +159,12 @@ const CategoriesList = (props) => {
   )
 }
 
-export default CategoriesList
+const ProtectedCategoriesList = () => {
+  return (
+    <ProtectedContent hasAccess={[appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager]}>
+      <CategoriesList />
+    </ProtectedContent>
+  )
+}
+
+export default ProtectedCategoriesList

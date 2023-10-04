@@ -23,7 +23,7 @@ import {NextSeo} from "next-seo"
 import TodaysMoney from "components/analytics/PercentChangeTile"
 import TodaysUsers from "components/analytics/PercentChangeTile"
 import TotalSales from "components/analytics/PercentChangeTile"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {priceHelper} from "utils/price.utils"
 import useHasAccess from "hooks/useHasAccess"
 import {Link} from "components/navigation/Link"
@@ -55,7 +55,7 @@ const Dashboard = () => {
   const [percentNewUsers, setpercentNewUsers] = useState(Number)
   const [percentNewUsersChange, setpercentNewUsersChange] = useState(String)
   const [canViewReports, setCanViewReports] = useState(false)
-  const hasAccessToViewReports = useHasAccess(appPermissions.ReportViewer)
+  const hasAccessToViewReports = useHasAccess(appPermissions.DashboardViewer)
   const [dashboardListMeta, setDashboardMeta] = useState({})
 
   const [above2xl] = useMediaQuery(`(min-width: ${theme.breakpoints["2xl"]})`, {

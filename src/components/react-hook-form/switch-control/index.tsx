@@ -26,6 +26,7 @@ export const SwitchControl: FC<SwitchControlProps> = (props: SwitchControlProps)
       control={control}
       label={label}
       isRequired={isRequired}
+      validationSchema={validationSchema}
       {...rest}
       display="grid"
       gridTemplateColumns={"1fr 1fr"}
@@ -37,7 +38,7 @@ export const SwitchControl: FC<SwitchControlProps> = (props: SwitchControlProps)
         id={name}
         isInvalid={!!error && isTouched}
         isChecked={field.value}
-        isDisabled={isSubmitting}
+        isDisabled={isSubmitting || props.isDisabled}
         {...switchProps}
       />
     </FormControl>

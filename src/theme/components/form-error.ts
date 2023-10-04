@@ -1,2 +1,2 @@
-const FormError = {};
-export default FormError;
+const FormError = {}
+export default FormError

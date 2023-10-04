@@ -16,14 +16,14 @@ import {
   useColorModeValue,
   useDisclosure
 } from "@chakra-ui/react"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useAuth} from "hooks/useAuth"
 import React, {useState} from "react"
 import {TbDoorExit, TbInbox, TbPalette, TbUserCircle} from "react-icons/tb"
 import Cookies from "universal-cookie"
 import ProtectedContent from "../auth/ProtectedContent"
-import {ItemContent} from "../generic/ItemContent"
 import {ThemeDrawer} from "./ThemeDrawer"
+import {ItemContent} from "./ItemContent"
 
 const MobileNavigation = () => {
   const {Logout} = useAuth()
@@ -53,9 +53,9 @@ const MobileNavigation = () => {
     currenttheme = cookies.get("currenttheme")
   }
   return (
-    <HStack alignItems="center">
+    <HStack alignItems="center" gap={3}>
       <Menu>
-        <MenuButton pos={"relative"}>
+        <MenuButton pos={"relative"} mr={3}>
           <Icon as={TbInbox} strokeWidth="1.5" fontSize="2xl" />
           <Badge
             display={"flex"}
@@ -84,7 +84,7 @@ const MobileNavigation = () => {
               info="by AliciaAdmin01"
               boldInfo="New User Created"
               aName="Alicia"
-              aSrc="/images/avatars/avatar1.png"
+              aSrc="/raster/avatars/avatar1.png"
             />
           </MenuItem>
           <MenuItem borderRadius="lg">
@@ -93,7 +93,7 @@ const MobileNavigation = () => {
               info="PSPOTG10CSWSB"
               boldInfo="Product Deleted"
               aName="Josh Henry"
-              aSrc="/images/avatars/avatar2.png"
+              aSrc="/raster/avatars/avatar2.png"
             />
           </MenuItem>
           <MenuItem borderRadius="lg">
@@ -102,7 +102,7 @@ const MobileNavigation = () => {
               info="Payment succesfully completed!"
               boldInfo=""
               aName="Kara"
-              aSrc="/images/avatars/avatar3.png"
+              aSrc="/raster/avatars/avatar3.png"
             />
           </MenuItem>
         </MenuList>
@@ -115,40 +115,37 @@ const MobileNavigation = () => {
               name={usersToken}
               src={`https://source.unsplash.com/random/?landscape`}
               borderRadius="50%"
-              mr="0"
-              ml="15px"
               size="sm"
               border=".5px solid #ccc"
             />
             <Show above="md">
-              <Text>{usersToken}</Text>
+              <Text whiteSpace="nowrap">{usersToken}</Text>
               <ChevronDownIcon />
             </Show>
           </HStack>
         </MenuButton>
         <MenuList>
-          <ProtectedContent hasAccess={appPermissions.MeManager}>
-            <MenuItem icon={<Icon as={TbUserCircle} strokeWidth="1.25" fontSize="1.5em" />} lineHeight="0">
-              Manage Profile
-            </MenuItem>
+          <ProtectedContent hasAccess={appPermissions.ProfileManager}>
+            <>
+              <MenuItem icon={<Icon as={TbUserCircle} strokeWidth="1.25" fontSize="1.5em" />} lineHeight="0">
+                Manage Profile
+              </MenuItem>
+
+              <MenuItem icon={<Icon as={TbInbox} strokeWidth="1.25" fontSize="1.5em" />} lineHeight="0">
+                Notifications
+              </MenuItem>
+              <MenuItem
+                ref={btnRef}
+                onClick={onOpen}
+                _hover={{textDecoration: "none"}}
+                lineHeight="0"
+                icon={<Icon as={TbPalette} strokeWidth="1.25" fontSize="1.5em" />}
+              >
+                Theming
+              </MenuItem>
+              <MenuDivider />
+            </>
           </ProtectedContent>
-          <ProtectedContent hasAccess={appPermissions.MeManager}>
-            <MenuItem icon={<Icon as={TbInbox} strokeWidth="1.25" fontSize="1.5em" />} lineHeight="0">
-              Notifications
-            </MenuItem>
-          </ProtectedContent>
-          <ProtectedContent hasAccess={appPermissions.MeManager}>
-            <MenuItem
-              ref={btnRef}
-              onClick={onOpen}
-              _hover={{textDecoration: "none"}}
-              lineHeight="0"
-              icon={<Icon as={TbPalette} strokeWidth="1.25" fontSize="1.5em" />}
-            >
-              Theming
-            </MenuItem>
-          </ProtectedContent>
-          <MenuDivider />
           <MenuItem
             color="danger.500"
             onClick={() => Logout()}

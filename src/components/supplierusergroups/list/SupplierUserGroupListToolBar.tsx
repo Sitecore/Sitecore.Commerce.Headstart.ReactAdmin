@@ -5,6 +5,8 @@ import {Box, Button, Stack} from "@chakra-ui/react"
 import Link from "next/link"
 import {FC} from "react"
 import SupplierUserGroupListActions from "./SupplierUserGroupListActions"
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 interface SupplierUserGroupListToolbarProps extends Omit<ListViewChildrenProps, "renderContent"> {
   supplierid: string
@@ -37,13 +39,15 @@ const SupplierUserGroupListToolbar: FC<SupplierUserGroupListToolbarProps> = ({
             <Box as="span" width="2"></Box>
             {viewModeToggle}
           </Stack>
-          <Box order={[0, 0, 0, 1]} mt={0}>
-            <Link passHref href={`/suppliers/${supplierid}/usergroups/add`}>
-              <Button variant="solid" colorScheme="primary" as="a" mb={3}>
-                Create User Group
-              </Button>
-            </Link>
-          </Box>
+          <ProtectedContent hasAccess={appPermissions.SupplierUserGroupManager}>
+            <Box order={[0, 0, 0, 1]} mt={0}>
+              <Link passHref href={`/suppliers/${supplierid}/usergroups/new`}>
+                <Button variant="solid" colorScheme="primary" as="a" mb={3}>
+                  Create User Group
+                </Button>
+              </Link>
+            </Box>
+          </ProtectedContent>
         </Stack>
       </Stack>
     </>

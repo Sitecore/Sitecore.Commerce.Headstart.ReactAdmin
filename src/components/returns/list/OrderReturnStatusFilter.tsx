@@ -1,6 +1,6 @@
-import {OrderStatusColorSchemeMap} from "@/components/orders/list/OrderList"
+import {OrderStatus} from "@/components/orders/OrderStatus"
 import {ChevronDownIcon} from "@chakra-ui/icons"
-import {Button, HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Tag, Text} from "@chakra-ui/react"
+import {Button, HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Text} from "@chakra-ui/react"
 import {FC} from "react"
 
 interface IOrderReturnStatusFilter {
@@ -14,7 +14,7 @@ const OrderReturnStatusFilter: FC<IOrderReturnStatusFilter> = ({value, onChange}
       <MenuButton as={Button} py={0} variant="outline">
         <HStack alignContent="center" h="100%">
           <Text>Status</Text>
-          <Tag colorScheme={OrderStatusColorSchemeMap[value] || "default"}>{value || "Any"}</Tag>
+          <OrderStatus status={value} />
           <ChevronDownIcon />
         </HStack>
       </MenuButton>

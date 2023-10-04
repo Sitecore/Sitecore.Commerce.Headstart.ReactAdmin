@@ -1,6 +1,0 @@
-export const SALE_START = "SaleStart"
-export const SALE_END = "SaleEnd"
-export const RESTRICTED_QUANTITY = "RestrictedQuantity"
-export const PRICE_BREAKS = "PriceBreaks"
-export const MIN_QUANTITY = "MinQuantity"
-export const MAX_QUANTITY = "MaxQuantity"

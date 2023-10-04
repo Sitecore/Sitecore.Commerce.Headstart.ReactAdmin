@@ -29,7 +29,7 @@ export const PinInputControl: FC<PinInputControlProps> = (props: PinInputControl
   return (
     <FormControl name={name} control={control} label={label} isRequired={isRequired} {...rest}>
       <HStack {...stackProps}>
-        <PinInput {...field} isDisabled={isSubmitting} {...pinInputProps}>
+        <PinInput {...field} isDisabled={isSubmitting || props.isDisabled} {...pinInputProps}>
           {renderedPinInputFields}
         </PinInput>
       </HStack>

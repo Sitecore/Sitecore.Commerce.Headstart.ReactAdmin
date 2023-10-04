@@ -1,57 +1,71 @@
-import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "components/suppliers"
-import {Box, Container, Skeleton} from "@chakra-ui/react"
-import ProtectedContent from "components/auth/ProtectedContent"
-import {Supplier, Suppliers} from "ordercloud-javascript-sdk"
-import {appPermissions} from "constants/app-permissions.config"
+import {useCallback, useEffect, useState} from "react"
+import {SupplierForm} from "components/suppliers"
+import {Container, Skeleton} from "@chakra-ui/react"
+import {SecurityProfileAssignment, SecurityProfiles, Suppliers} from "ordercloud-javascript-sdk"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ISupplier} from "types/ordercloud/ISupplier"
-
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-/* TODO Ask if this is the way to go or better to have getStaticProps + GetStaticPath in this case */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit supplier",
-        metas: {
-          hasBreadcrumbs: true,
-          hasSupplierContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
+import useHasAccess from "hooks/useHasAccess"
+import ProtectedContent from "@/components/auth/ProtectedContent"
 
 const SupplierListItem = () => {
   const router = useRouter()
-  const [supplier, setSupplier] = useState({} as Supplier)
+  const isSecurityProfileManager = useHasAccess(appPermissions.SecurityProfileManager)
+  const [loading, setLoading] = useState(true)
+  const [supplier, setSupplier] = useState({} as ISupplier)
+  const [securityProfileAssignments, setSecurityProfileAssignments] = useState([] as SecurityProfileAssignment[])
+
+  const getSecurityProfileAssignments = useCallback(
+    async (supplierId: string) => {
+      if (!isSecurityProfileManager) {
+        return
+      }
+      const assignmentsList = await SecurityProfiles.ListAssignments({supplierID: supplierId, level: "Company"})
+      const assignments = assignmentsList.Items
+      setSecurityProfileAssignments(assignments)
+      return assignments
+    },
+    [isSecurityProfileManager]
+  )
+
+  const getSupplier = useCallback(async (supplierId: string) => {
+    const _supplier = await Suppliers.Get<ISupplier>(supplierId)
+    setSupplier(_supplier)
+    return _supplier
+  }, [])
+
+  const initialize = useCallback(
+    async function (supplierId: string) {
+      await Promise.all([getSupplier(supplierId), getSecurityProfileAssignments(supplierId)])
+      setLoading(false)
+    },
+    [getSupplier, getSecurityProfileAssignments]
+  )
   useEffect(() => {
-    const getSupplier = async () => {
-      const supplier = await Suppliers.Get<ISupplier>(router.query.supplierid as string)
-      setSupplier(supplier)
-    }
     if (router.query.supplierid) {
-      getSupplier()
+      initialize(router.query.supplierid as string)
     }
-  }, [router.query.supplierid])
+  }, [router.query.supplierid, initialize])
+
+  if (loading) {
+    return (
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+        <Skeleton w="100%" h="544px" borderRadius="md" />
+      </Container>
+    )
+  }
   return (
-    <>
-      {supplier?.ID ? (
-        <CreateUpdateForm supplier={supplier} />
-      ) : (
-        <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
-          <Skeleton w="100%" h="344px" borderRadius="md" />
-        </Container>
-      )}
-    </>
+    <SupplierForm
+      supplier={supplier}
+      securityProfileAssignments={securityProfileAssignments}
+      refresh={() => initialize(supplier.ID)}
+    />
   )
 }
 
 const ProtectedSupplierListItem = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SupplierManager}>
+    <ProtectedContent hasAccess={[appPermissions.SupplierViewer, appPermissions.SupplierManager]}>
       <SupplierListItem />
     </ProtectedContent>
   )

@@ -1,25 +1,10 @@
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import AdminUserList from "@/components/adminusers/list/AdminUserList"
-
-/* This declares the page title and enables the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Admin Users List",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      }
-    }
-  }
-}
 
 const ProtectedAdminUsers = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.SettingsManager}>
+    <ProtectedContent hasAccess={[appPermissions.AdminUserViewer, appPermissions.AdminUserManager]}>
       <AdminUserList />
     </ProtectedContent>
   )

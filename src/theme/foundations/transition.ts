@@ -1,2 +1,2 @@
 const transition = {}
-export default transition;
+export default transition

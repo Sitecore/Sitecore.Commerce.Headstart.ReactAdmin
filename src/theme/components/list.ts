@@ -1,2 +1,2 @@
-const List = {};
-export default List;
+const List = {}
+export default List

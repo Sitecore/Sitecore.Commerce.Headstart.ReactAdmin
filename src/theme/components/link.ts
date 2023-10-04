@@ -1,8 +1,6 @@
-// TODO: Link Variants?
-
 const Link = {
   baseStyle: {
-    color: "primary.600",
+    color: "st.linkColor",
     fontWeight: 600
   }
 }

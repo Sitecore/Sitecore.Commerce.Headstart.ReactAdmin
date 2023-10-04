@@ -1,4 +1,4 @@
-import {InfoIcon, InfoOutlineIcon} from "@chakra-ui/icons"
+import {InfoOutlineIcon} from "@chakra-ui/icons"
 import {
   FormControl as ChakraFormControl,
   FormControlProps,
@@ -7,25 +7,42 @@ import {
   FormHelperText,
   FormLabel,
   FormLabelProps,
-  TextProps
+  TextProps,
+  Tooltip,
+  TooltipProps
 } from "@chakra-ui/react"
 import {get} from "lodash"
 import React, {FC} from "react"
-import {Control, FieldValues, useController} from "react-hook-form"
+import {useController} from "react-hook-form"
 
 export interface BaseProps extends Omit<FormControlProps, "label"> {
   name: string
-  control: Control<FieldValues, any>
-  validationSchema?: any
+  control: any
+  validationSchema: any // used to determine if field is required
   label?: React.ReactNode
   labelProps?: FormLabelProps
   helperText?: React.ReactNode
   helperTextProps?: TextProps
+  tooltipText?: string
+  tooltipProps?: TooltipProps
   errorMessageProps?: FormErrorMessageProps
 }
 
 export const FormControl: FC<BaseProps> = (props: BaseProps) => {
-  const {children, name, control, label, labelProps, helperText, helperTextProps, errorMessageProps, ...rest} = props
+  const {
+    children,
+    name,
+    control,
+    label,
+    labelProps,
+    helperText,
+    helperTextProps,
+    tooltipText,
+    tooltipProps,
+    errorMessageProps,
+    validationSchema,
+    ...rest
+  } = props
 
   const {
     formState: {errors}
@@ -37,7 +54,17 @@ export const FormControl: FC<BaseProps> = (props: BaseProps) => {
     <ChakraFormControl isInvalid={hasError} {...rest}>
       {label && typeof label === "string" ? (
         <FormLabel m={0} htmlFor={name} {...labelProps}>
-          {label}
+          {label}{" "}
+          {tooltipText && (
+            <Tooltip
+              label={tooltipText}
+              placement="right"
+              aria-label={`Tooltip for form field ${name}`}
+              {...tooltipProps}
+            >
+              <InfoOutlineIcon fontSize="sm" color="gray.600" />
+            </Tooltip>
+          )}
         </FormLabel>
       ) : (
         label

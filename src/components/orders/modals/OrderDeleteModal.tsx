@@ -16,7 +16,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  Tag,
   Text,
   UseDisclosureProps,
   VStack
@@ -24,15 +23,17 @@ import {
 import {FC, Fragment, useCallback, useEffect, useState} from "react"
 import {IOrder} from "types/ordercloud/IOrder"
 import {priceHelper} from "utils"
-import {OrderStatusColorSchemeMap} from "../list/OrderList"
+import {OrderStatus} from "../OrderStatus"
+import {OrderDirection, Orders} from "ordercloud-javascript-sdk"
 
 interface IOrderDeleteModal {
+  orderDirection: OrderDirection
   orders?: IOrder[]
   disclosure: UseDisclosureProps
   onComplete: (idsToRemove: string[]) => void
 }
 
-const OrderDeleteModal: FC<IOrderDeleteModal> = ({orders, disclosure, onComplete}) => {
+const OrderDeleteModal: FC<IOrderDeleteModal> = ({orders, orderDirection, disclosure, onComplete}) => {
   const {isOpen, onClose} = disclosure
   const [showOrders, setShowOrders] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -44,13 +45,17 @@ const OrderDeleteModal: FC<IOrderDeleteModal> = ({orders, disclosure, onComplete
     }
   }, [isOpen])
 
-  const handleSubmit = useCallback(() => {
-    setLoading(true)
-    setTimeout(() => {
-      onComplete(orders.map((o) => o.ID))
+  const handleSubmit = useCallback(async () => {
+    try {
+      setLoading(true)
+      const orderIdsToRemove = orders.map((o) => o.ID)
+      await Promise.all(orderIdsToRemove.map((orderId) => Orders.Delete(orderDirection || "All", orderId)))
+      onComplete(orderIdsToRemove)
       onClose()
-    }, 2000)
-  }, [onComplete, orders, onClose])
+    } finally {
+      setLoading(false)
+    }
+  }, [onComplete, orders, onClose, orderDirection])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -82,7 +87,7 @@ const OrderDeleteModal: FC<IOrderDeleteModal> = ({orders, disclosure, onComplete
                         <Badge>{o.ID}</Badge>
                         <Text fontSize="sm">{`Order Total: ${priceHelper.formatPrice(o.Total)}`}</Text>
                       </VStack>
-                      <Tag colorScheme={OrderStatusColorSchemeMap[o.Status] || "default"}>{o.Status}</Tag>
+                      <OrderStatus status={o.Status} />
                     </HStack>
                   </ListItem>
                   {i < orders.length - 1 && <Divider my={3} />}

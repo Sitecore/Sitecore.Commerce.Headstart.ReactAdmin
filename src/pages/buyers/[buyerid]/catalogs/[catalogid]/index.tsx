@@ -1,28 +1,11 @@
 import {Catalog, Catalogs} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
-
-import {CreateUpdateForm} from "components/catalogs/CreateUpdateForm"
+import {CatalogForm} from "@/components/catalogs/CatalogForm"
 import {ICatalog} from "types/ordercloud/ICatalog"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {Container, Skeleton} from "@chakra-ui/react"
-
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit catalog",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: true
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
 
 const CatalogListItem = () => {
   const router = useRouter()
@@ -35,7 +18,7 @@ const CatalogListItem = () => {
   return (
     <>
       {catalog?.ID ? (
-        <CreateUpdateForm catalog={catalog} />
+        <CatalogForm catalog={catalog} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />
@@ -45,12 +28,12 @@ const CatalogListItem = () => {
   )
 }
 
-const ProtectedBuyerListItem = () => {
+const ProtectedCatalogListItem = () => {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+    <ProtectedContent hasAccess={[appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager]}>
       <CatalogListItem />
     </ProtectedContent>
   )
 }
 
-export default ProtectedBuyerListItem
+export default ProtectedCatalogListItem

@@ -1,29 +1,41 @@
-import {Box} from "@chakra-ui/react"
-import {CreateUpdateForm} from "components/adminusers/CreateUpdateForm"
+import {UserForm} from "@/components/users"
+import {Container, Skeleton} from "@chakra-ui/react"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
+import useHasAccess from "hooks/useHasAccess"
+import {SecurityProfileAssignment, SecurityProfiles} from "ordercloud-javascript-sdk"
+import {useEffect, useState} from "react"
 
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getStaticProps() {
-  return {
-    props: {
-      header: {
-        title: "Create a new admin user",
-        metas: {
-          hasBreadcrumbs: true
-        }
-      },
-      revalidate: 5 * 60
+function ProtectedNewAdminUserPage() {
+  const [loading, setLoading] = useState(true)
+  const [securityProfileAssignments, setSecurityProfileAssignments] = useState([] as SecurityProfileAssignment[])
+  const isSecurityProfileManager = useHasAccess(appPermissions.SecurityProfileManager)
+
+  useEffect(() => {
+    const getSecurityProfileAssignments = async () => {
+      if (!isSecurityProfileManager) {
+        setLoading(false)
+        return
+      }
+      const assignmentList = await SecurityProfiles.ListAssignments({level: "Company", commerceRole: "Seller"})
+      setSecurityProfileAssignments(assignmentList.Items)
+      setLoading(false)
     }
-  }
-}
+    getSecurityProfileAssignments()
+  }, [isSecurityProfileManager])
 
-function ProtectedCreateUpdateForm() {
+  if (loading) {
+    return (
+      <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
+        <Skeleton w="100%" h="544px" borderRadius="md" />
+      </Container>
+    )
+  }
   return (
-    <ProtectedContent hasAccess={appPermissions.SettingsManager}>
-      <CreateUpdateForm />
+    <ProtectedContent hasAccess={appPermissions.AdminUserManager}>
+      <UserForm userType="admin" securityProfileAssignments={securityProfileAssignments} />
     </ProtectedContent>
   )
 }
 
-export default ProtectedCreateUpdateForm
+export default ProtectedNewAdminUserPage

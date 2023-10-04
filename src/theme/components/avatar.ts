@@ -1,2 +1,2 @@
-const Avatar = {};
-export default Avatar;
+const Avatar = {}
+export default Avatar

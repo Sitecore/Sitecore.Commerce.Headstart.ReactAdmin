@@ -1,16 +1,17 @@
 import {ORIGINAL_ID} from "constants/original-id"
-import {flatten, uniq} from "lodash"
+import {compact, flatten, uniq} from "lodash"
 import {
   Catalogs,
   Categories,
+  InventoryRecords,
   PriceSchedules,
   ProductCatalogAssignment,
   Products,
   SpecProductAssignment,
   Specs
 } from "ordercloud-javascript-sdk"
-import {ICatalog} from "types/ordercloud/ICatalog"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
+import {IInventoryRecord} from "types/ordercloud/IInventoryRecord"
 import {IProduct} from "types/ordercloud/IProduct"
 import {ISpec} from "types/ordercloud/ISpec"
 
@@ -27,6 +28,11 @@ import {ISpec} from "types/ordercloud/ISpec"
 
 export async function fetchProduct(productId: string) {
   return await Products.Get<IProduct>(productId)
+}
+
+export async function fetchInventoryRecords(product: IProduct) {
+  const response = await InventoryRecords.List<IInventoryRecord>(product.ID, {pageSize: 100})
+  return response.Items
 }
 
 export async function fetchDefaultPriceSchedule(product: IProduct) {
@@ -58,7 +64,10 @@ export async function fetchOverridePriceSchedules(product: IProduct) {
   if (!assignments.Items.length) {
     return []
   }
-  const priceScheduleIDs = uniq(assignments.Items.map((assignment) => assignment.PriceScheduleID))
+  const priceScheduleIDs = compact(uniq(assignments.Items.map((assignment) => assignment.PriceScheduleID)))
+  if (!priceScheduleIDs.length) {
+    return []
+  }
   const priceSchedules = await PriceSchedules.List({filters: {ID: priceScheduleIDs.join("|")}})
   return priceSchedules.Items.map((priceSchedule) => {
     priceSchedule["ProductAssignments"] = assignments.Items.filter(
@@ -73,6 +82,9 @@ async function fetchSpecsFromAssignments(items: SpecProductAssignment[]) {
     return []
   }
   const specIDs = uniq(items.map((assignment) => assignment.SpecID))
+  if (!specIDs.length) {
+    return []
+  }
   const listResponse = await Specs.List<ISpec>({filters: {ID: specIDs.join("|")}})
   return listResponse.Items
 }

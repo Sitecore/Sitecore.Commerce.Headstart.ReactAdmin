@@ -1,27 +1,11 @@
 import {useEffect, useState} from "react"
-import {CreateUpdateForm} from "components/categories/CreateUpdateForm"
-import {Box, Container, Skeleton} from "@chakra-ui/react"
+import {CategoryForm} from "@/components/categories/CategoryForm"
+import {Container, Skeleton} from "@chakra-ui/react"
 import {Categories, Category} from "ordercloud-javascript-sdk"
 import ProtectedContent from "components/auth/ProtectedContent"
-import {appPermissions} from "constants/app-permissions.config"
+import {appPermissions} from "config/app-permissions.config"
 import {useRouter} from "hooks/useRouter"
 import {ICategory} from "types/ordercloud/ICategoryXp"
-
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Edit category",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: false
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
 
 const CategoryListItem = (props) => {
   const router = useRouter()
@@ -36,7 +20,7 @@ const CategoryListItem = (props) => {
   return (
     <>
       {category?.ID ? (
-        <CreateUpdateForm category={category} />
+        <CategoryForm category={category} />
       ) : (
         <Container maxW="100%" bgColor="st.mainBackgroundColor" flexGrow={1} p={[4, 6, 8]}>
           <Skeleton w="100%" h="544px" borderRadius="md" />
@@ -47,7 +31,7 @@ const CategoryListItem = (props) => {
 }
 const ProtectedCategoryListItem = (props) => {
   return (
-    <ProtectedContent hasAccess={appPermissions.BuyerManager}>
+    <ProtectedContent hasAccess={[appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager]}>
       <CategoryListItem {...props} />
     </ProtectedContent>
   )

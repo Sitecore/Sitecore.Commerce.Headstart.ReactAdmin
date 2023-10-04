@@ -14,21 +14,25 @@ import {
 } from "@chakra-ui/react"
 import {useErrorToast} from "hooks/useToast"
 import {get} from "lodash"
-import {Control, FieldValues, UseFormTrigger, useFieldArray, useFormState, useWatch} from "react-hook-form"
+import {Control, UseFormTrigger, useFieldArray, useFormState, useWatch} from "react-hook-form"
 import {specFormDefaultValues} from "./SpecUpdateModal"
-import {SpecOptionFieldValues} from "types/form/SpecFieldValues"
+import {SpecFieldValues} from "types/form/SpecFieldValues"
 import {InputControl, SelectControl} from "@/components/react-hook-form"
 
 interface SpecOptionTableProps {
-  control: Control<FieldValues, any>
+  control: Control<SpecFieldValues>
+  validationSchema: any
   trigger: UseFormTrigger<any>
 }
-export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
-  const {fields, append, remove} = useFieldArray({
+export function SpecOptionTable({control, validationSchema, trigger}: SpecOptionTableProps) {
+  const {
+    fields: options,
+    append,
+    remove
+  } = useFieldArray({
     control,
     name: "Options"
   })
-  const options = fields as SpecOptionFieldValues[]
   const {errors} = useFormState({control, name: "Options"})
   const errorMessage = getOptionsErrorMessage(errors)
   const errorToast = useErrorToast()
@@ -85,13 +89,15 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
                     <InputControl
                       name={`Options.${index}.Value`}
                       control={control}
-                      inputProps={{isRequired: true, onKeyPress: handleKeyPress}}
+                      validationSchema={validationSchema}
+                      inputProps={{onKeyPress: handleKeyPress}}
                     />
                   </Td>
                   <Td padding={tableCellPadding}>
                     <SelectControl
                       name={`Options.${index}.PriceMarkupType`}
                       control={control}
+                      validationSchema={validationSchema}
                       selectProps={{
                         options: [
                           {label: "None", value: "NoMarkup"},
@@ -103,7 +109,12 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
                     />
                   </Td>
                   <Td padding={tableCellPadding}>
-                    <PriceMarkupControl index={index} control={control} onKeyPress={handleKeyPress} />
+                    <PriceMarkupControl
+                      index={index}
+                      control={control}
+                      validationSchema={validationSchema}
+                      onKeyPress={handleKeyPress}
+                    />
                   </Td>
                   <Td
                     _hover={{cursor: "pointer"}}
@@ -136,13 +147,17 @@ export function SpecOptionTable({control, trigger}: SpecOptionTableProps) {
 }
 
 interface PriceMarkupControlProps {
-  control: Control<FieldValues, any>
+  control: Control<SpecFieldValues>
+  validationSchema: any
   index: number
   onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 // Isolating this component to limit rerenders caused by useWatch (best practice)
-function PriceMarkupControl({control, index, onKeyPress}: PriceMarkupControlProps) {
-  const markupType = useWatch({control, name: `Options.${index}.PriceMarkupType`})
+function PriceMarkupControl({control, validationSchema, index, onKeyPress}: PriceMarkupControlProps) {
+  const markupType = useWatch({
+    control,
+    name: `Options.${index}.MarkupType`
+  })
 
   const isDisabled = markupType === "NoMarkup"
   const leftAddon = markupType === "AmountTotal" ? "$" : null
@@ -155,6 +170,7 @@ function PriceMarkupControl({control, index, onKeyPress}: PriceMarkupControlProp
       rightAddon={rightAddon}
       name={`Options.${index}.PriceMarkup`}
       control={control}
+      validationSchema={validationSchema}
     />
   )
 }

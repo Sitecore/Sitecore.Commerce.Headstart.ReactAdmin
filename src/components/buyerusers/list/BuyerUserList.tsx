@@ -43,11 +43,6 @@ const BuyerUserLastNameColumn: DataTableColumn<IBuyerUser> = {
   accessor: "LastName"
 }
 
-const BuyerUserCompanyIDColumn: DataTableColumn<IBuyerUser> = {
-  header: "Company ID",
-  accessor: "CompanyID"
-}
-
 const BuyerUserUsernameColumn: DataTableColumn<IBuyerUser> = {
   header: "Username",
   accessor: "Username"
@@ -81,7 +76,6 @@ const BuyerUsersTableOptions: ListViewTableOptions<IBuyerUser> = {
     xl: [
       firstNameColumn,
       BuyerUserLastNameColumn,
-      BuyerUserCompanyIDColumn,
       BuyerUserUsernameColumn,
       BuyerUserEmailColumn,
       BuyerPhoneColumn,

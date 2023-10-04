@@ -1,6 +1,7 @@
-import {HStack, useColorModeValue, Container} from "@chakra-ui/react"
+import {HStack, useColorModeValue, Container, Show} from "@chakra-ui/react"
 import AcountNavigation from "components/navigation/AcountNavigation"
-import {MyCommerceLogo} from "../branding/MyCommerceLogo"
+import {NavMenuDrawer} from "../navigation/NavMenuDrawer"
+import {HeaderLogo} from "../branding/HeaderLogo"
 
 const Header = () => {
   return (
@@ -13,10 +14,13 @@ const Header = () => {
       top="0px"
       zIndex="10"
       borderBottom={".5px solid"}
-      borderColor="st.borderColor"
+      borderColor="chakra-border-color"
     >
-      <HStack justifyContent="space-between" alignItems={"center"} h="headerHeight" px={4}>
-        <MyCommerceLogo />
+      <HStack justifyContent="space-between" alignItems={"center"} h="headerHeight" px={[0, 4]}>
+        <Show below="sm">
+          <NavMenuDrawer />
+        </Show>
+        <HeaderLogo width={["150px", "auto"]} />
         <AcountNavigation />
       </HStack>
     </Container>

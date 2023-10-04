@@ -1,22 +1,8 @@
 import React from "react"
 import {useRouter} from "hooks/useRouter"
 import BuyerUserList from "@/components/buyerusers/list/BuyerUserList"
-
-/* This declare the page title and enable the breadcrumbs in the content header section. */
-export async function getServerSideProps() {
-  return {
-    props: {
-      header: {
-        title: "Users List",
-        metas: {
-          hasBreadcrumbs: true,
-          hasBuyerContextSwitch: true
-        }
-      },
-      revalidate: 5 * 60
-    }
-  }
-}
+import ProtectedContent from "@/components/auth/ProtectedContent"
+import {appPermissions} from "config/app-permissions.config"
 
 const UsersList = () => {
   const router = useRouter()
@@ -25,4 +11,11 @@ const UsersList = () => {
   return <BuyerUserList buyerid={buyerid} />
 }
 
-export default UsersList
+const ProtectedUsersList = () => {
+  return (
+    <ProtectedContent hasAccess={[appPermissions.BuyerUserViewer, appPermissions.BuyerUserManager]}>
+      <UsersList />
+    </ProtectedContent>
+  )
+}
+export default ProtectedUsersList

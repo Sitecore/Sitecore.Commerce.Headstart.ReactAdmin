@@ -20,7 +20,7 @@ import get from "lodash/get"
 import Link from "next/link"
 import {ReactElement, useMemo} from "react"
 import {TiArrowSortedDown, TiArrowSortedUp, TiArrowUnsorted} from "react-icons/ti"
-import {IDefaultResource, ListViewTemplate} from "../ListView/ListView"
+import {IDefaultResource, ListParams, ListViewTemplate} from "../ListView/ListView"
 
 export interface DataTableColumn<T> {
   header: string
@@ -36,12 +36,12 @@ export interface DataTableColumn<T> {
 
 export type DataTableRowActionsCallback<T> = (data: T) => ReactElement
 
-export type ColumnIndex = number
-
 export interface IDataTable<T> {
   columns?: DataTableColumn<T>[]
   responsive?: ResponsiveObject<DataTableColumn<T>[]>
   data: T[]
+  hideColumns?: (column: DataTableColumn<T>, params: ListParams) => boolean
+  params?: ListParams
   loading?: boolean
   emptyDisplay?: ListViewTemplate
   selected?: string[]
@@ -61,7 +61,9 @@ const DEFAULT_DATA_TABLE_EMPTY_DISPLAY: ReactElement = (
 const DataTable = <T extends IDefaultResource>({
   columns,
   responsive,
+  hideColumns,
   data,
+  params,
   loading,
   currentSort,
   emptyDisplay = DEFAULT_DATA_TABLE_EMPTY_DISPLAY,
@@ -75,9 +77,11 @@ const DataTable = <T extends IDefaultResource>({
 
   //use responsive columns when available
   const currentColumns = useMemo(() => {
-    if (responsiveColumns) return responsiveColumns
-    return columns
-  }, [responsiveColumns, columns])
+    const hideFilter = (column: DataTableColumn<T>) =>
+      typeof hideColumns === "function" ? !hideColumns(column, params) : true
+    if (responsiveColumns) return responsiveColumns.filter(hideFilter)
+    return columns.filter(hideFilter)
+  }, [responsiveColumns, columns, hideColumns, params])
 
   const headers = useMemo(() => {
     return currentColumns.map((column) => {
@@ -137,11 +141,11 @@ const DataTable = <T extends IDefaultResource>({
     <TableContainer
       whiteSpace="normal"
       border=".5px solid"
-      borderColor="st.borderColor"
+      borderColor="chakra-border-color"
       shadow="lg"
       overflowX="hidden"
       w="100%"
-      minH={100}
+      minH={400}
       rounded="md"
     >
       {loading && (
@@ -173,10 +177,11 @@ const DataTable = <T extends IDefaultResource>({
                 key={index}
                 style={{cursor: header.sortable ? "pointer" : "auto"}}
                 onClick={
-                  header.sortable &&
-                  (() => {
-                    onSortChange(header.accessor, header.isSorted, header.isSortedDesc)
-                  })
+                  header.sortable
+                    ? () => {
+                        onSortChange(header.accessor, header.isSorted, header.isSortedDesc)
+                      }
+                    : undefined
                 }
               >
                 <Flex

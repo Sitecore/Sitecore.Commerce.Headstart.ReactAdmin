@@ -5,7 +5,6 @@ const {defineMultiStyleConfig, definePartsStyle} = createMultiStyleConfigHelpers
 
 const baseStyleContainer = defineStyle({
   borderRadius: "sm",
-  fontFamily: "monospace",
   textTransform: "upperCase"
 })
 

@@ -53,7 +53,7 @@ export const FormControl: FC<BaseProps> = (props: BaseProps) => {
   return (
     <ChakraFormControl isInvalid={hasError} {...rest}>
       {label && typeof label === "string" ? (
-        <FormLabel m={0} htmlFor={name} {...labelProps}>
+        <FormLabel htmlFor={name} {...labelProps}>
           {label}{" "}
           {tooltipText && (
             <Tooltip
@@ -62,7 +62,7 @@ export const FormControl: FC<BaseProps> = (props: BaseProps) => {
               aria-label={`Tooltip for form field ${name}`}
               {...tooltipProps}
             >
-              <InfoOutlineIcon fontSize="sm" color="gray.600" />
+              <InfoOutlineIcon fontSize=".9em" color="neutral.600" />
             </Tooltip>
           )}
         </FormLabel>

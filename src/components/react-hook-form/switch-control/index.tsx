@@ -29,8 +29,15 @@ export const SwitchControl: FC<SwitchControlProps> = (props: SwitchControlProps)
       validationSchema={validationSchema}
       {...rest}
       display="grid"
-      gridTemplateColumns={"1fr 1fr"}
-      gap={2}
+      gridTemplateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
+      alignItems="center"
+      onClick={(e) => {
+        // Fix issue where clicking on the label would toggle the switch
+        if (!e.target["className"].includes("chakra-switch__thumb")) {
+          e.preventDefault()
+        }
+      }}
+      gap={5}
     >
       <Switch
         colorScheme={"primary"}

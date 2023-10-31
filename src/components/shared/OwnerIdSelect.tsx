@@ -3,15 +3,12 @@ import {appSettings} from "config/app-settings"
 import {useAuth} from "hooks/useAuth"
 import {Suppliers} from "ordercloud-javascript-sdk"
 import {useCallback} from "react"
-import {Control} from "react-hook-form"
 
-interface OwnerIdSelectProps extends Omit<BaseProps, "name"> {
-  control: Control<any>
-  validationSchema: any
-  isCreatingNew?: boolean
+interface OwnerIdSelectProps extends BaseProps {
+  isCreatingNew: boolean
 }
 
-export function OwnerIdSelect({control, validationSchema, isCreatingNew, ...baseProps}: OwnerIdSelectProps) {
+export function OwnerIdSelect({control, validationSchema, isCreatingNew, name, ...baseProps}: OwnerIdSelectProps) {
   const {isAdmin} = useAuth()
 
   const getShipFromCompanyOptions = useCallback(async () => {
@@ -31,7 +28,7 @@ export function OwnerIdSelect({control, validationSchema, isCreatingNew, ...base
 
   if (!isAdmin) {
     // Viewing the owner is only relevant for admins because suppliers
-    // can only ever see their own products
+    // can only ever see their own entities
     return
   }
   return (
@@ -45,7 +42,7 @@ export function OwnerIdSelect({control, validationSchema, isCreatingNew, ...base
       }}
       label="Owner"
       validationSchema={validationSchema}
-      name="Product.OwnerID"
+      name={name}
       control={control}
       isDisabled={!isCreatingNew}
       {...baseProps}

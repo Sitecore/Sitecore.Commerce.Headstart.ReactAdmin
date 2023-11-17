@@ -127,12 +127,14 @@ export const validationSchema = object().shape({
       .matches(orderCloudIDRegex, "ID must be alphanumeric (may also include dashes or underscores)")
       .max(100, "ID may not exceed 100 characters"),
     Description: string().max(2000),
-    Inventory: object().shape({
-      Enabled: boolean().transform(nullToFalse), // if Inventory is null, default to false,
-      VariantLevelTracking: boolean(),
-      QuantityAvailable: number().integer().transform(emptyStringToNull).nullable(),
-      OrderCanExceed: boolean()
-    }),
+    Inventory: object()
+      .shape({
+        Enabled: boolean().transform(nullToFalse),
+        VariantLevelTracking: boolean().transform(nullToFalse),
+        QuantityAvailable: number().integer().transform(emptyStringToNull).nullable(),
+        OrderCanExceed: boolean().transform(nullToFalse)
+      })
+      .nullable(),
     ShipLength: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
     ShipWidth: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
     ShipHeight: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),

@@ -111,7 +111,13 @@ export function AddressForm({address, addressType, parentId, onCreate, onUpdate,
       successToast({
         description: "Address created successfully."
       })
-      router.replace(`/settings/adminaddresses/${createdAddress.ID}`)
+      if (addressType === "buyer") {
+        router.replace(`/buyers/${parentId}/addresses/${createdAddress.ID}`)
+      } else if (addressType === "supplier") {
+        router.replace(`/suppliers/${parentId}/addresses/${createdAddress.ID}`)
+      } else {
+        router.replace(`/settings/adminaddresses/${createdAddress.ID}`)
+      }
     }
   }
 

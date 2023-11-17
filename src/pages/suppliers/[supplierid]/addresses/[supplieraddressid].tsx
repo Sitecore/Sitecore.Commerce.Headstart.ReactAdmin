@@ -18,10 +18,10 @@ const SupplierAddressListItem = () => {
       )
       setSupplierAddress(address)
     }
-    if (router.query.supplieraddressid) {
+    if (router.query.supplieraddressid && router.isReady) {
       getSupplierAddress()
     }
-  }, [router.query.supplierid, router.query.supplieraddressid])
+  }, [router.query.supplierid, router.query.supplieraddressid, router.isReady])
   return (
     <>
       {supplierAddress?.ID ? (

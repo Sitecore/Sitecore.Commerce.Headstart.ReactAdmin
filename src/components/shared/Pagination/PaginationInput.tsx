@@ -8,11 +8,13 @@ import {
 import React from "react"
 
 interface PaginationInputProps {
+  inputPage: number
   page: number
   totalPages: number
   onPageChange: (page: number) => void
+  onInputChange: (page: number) => void
 }
-export function PaginationInput({page, totalPages, onPageChange}: PaginationInputProps) {
+export function PaginationInput({page, inputPage, totalPages, onPageChange, onInputChange}: PaginationInputProps) {
   return (
     <NumberInput
       max={totalPages}
@@ -20,7 +22,9 @@ export function PaginationInput({page, totalPages, onPageChange}: PaginationInpu
       w="75px"
       mx="6px"
       defaultValue="1"
-      onChange={(e) => onPageChange(parseInt(e))}
+      value={inputPage}
+      onChange={(e) => onInputChange(parseInt(e))}
+      onBlur={(e) => onPageChange(parseInt(e.target.value))}
     >
       <NumberInputField />
       <NumberInputStepper>

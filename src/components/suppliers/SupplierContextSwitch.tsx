@@ -21,12 +21,15 @@ import {TbUser} from "react-icons/tb"
 import {appPermissions} from "config/app-permissions.config"
 import useHasAccess from "hooks/useHasAccess"
 import ProtectedContent from "../auth/ProtectedContent"
-import Link from "next/link"
 
 export default function SupplierContextSwitch({...props}) {
   const [currentSupplier, setCurrentSupplier] = useState({} as Supplier)
   const [suppliers, setSuppliers] = useState([] as Supplier[])
-  const [suppliersMeta, setSuppliersMeta] = useState({})
+  const [suppliersMeta, setSuppliersMeta] = useState({
+    UserCount: null,
+    UserGroupCount: null,
+    AddressCount: null
+  })
   const router = useRouter()
   const supplierid = router.query.supplierid.toString()
   const canViewSupplierUsers = useHasAccess([appPermissions.SupplierUserViewer, appPermissions.SupplierUserManager])
@@ -133,19 +136,19 @@ export default function SupplierContextSwitch({...props}) {
           <ButtonGroup ml="auto" flexWrap="wrap" gap={2}>
             <ProtectedContent hasAccess={[appPermissions.SupplierUserViewer, appPermissions.SupplierUserManager]}>
               <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/users`)} variant="outline">
-                Users ({suppliersMeta["UserCount"] || "-"})
+                Users ({suppliersMeta.UserCount ?? "-"})
               </Button>
             </ProtectedContent>
             <ProtectedContent
               hasAccess={[appPermissions.SupplierUserGroupViewer, appPermissions.SupplierUserGroupManager]}
             >
               <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/usergroups`)} variant="outline">
-                User Groups ({suppliersMeta["UserGroupCount"] || "-"})
+                User Groups ({suppliersMeta.UserGroupCount ?? "-"})
               </Button>
             </ProtectedContent>
             <ProtectedContent hasAccess={[appPermissions.SupplierAddressViewer, appPermissions.SupplierAddressManager]}>
               <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/addresses`)} variant="outline">
-                Addresses ({suppliersMeta["AddressCount"] || "-"})
+                Addresses ({suppliersMeta.AddressCount ?? "-"})
               </Button>
             </ProtectedContent>
           </ButtonGroup>

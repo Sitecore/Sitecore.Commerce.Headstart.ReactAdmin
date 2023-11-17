@@ -25,7 +25,11 @@ import ProtectedContent from "../auth/ProtectedContent"
 export default function BuyerContextSwitch({...props}) {
   const [currentBuyer, setCurrentBuyer] = useState({} as Buyer)
   const [buyers, setBuyers] = useState([] as Buyer[])
-  const [buyersMeta, setBuyersMeta] = useState({})
+  const [buyersMeta, setBuyersMeta] = useState({
+    UserCount: null,
+    UserGroupCount: null,
+    CatalogCount: null
+  })
   const router = useRouter()
   const buyerid = router.query.buyerid.toString()
   const canViewBuyerUsers = useHasAccess([appPermissions.BuyerUserViewer, appPermissions.BuyerUserManager])
@@ -130,7 +134,7 @@ export default function BuyerContextSwitch({...props}) {
               variant="outline"
               style={{margin: 0}}
             >
-              Users ({buyersMeta["UserGroupCount"] || "-"})
+              Users ({buyersMeta.UserCount ?? "-"})
             </Button>
           </ProtectedContent>
           <ProtectedContent hasAccess={[appPermissions.BuyerUserGroupViewer, appPermissions.BuyerUserGroupManager]}>
@@ -139,7 +143,7 @@ export default function BuyerContextSwitch({...props}) {
               variant="outline"
               style={{margin: 0}}
             >
-              User Groups ({buyersMeta["UserCount"] || "-"})
+              User Groups ({buyersMeta.UserGroupCount ?? "-"})
             </Button>
           </ProtectedContent>
           <ProtectedContent hasAccess={[appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager]}>
@@ -148,7 +152,7 @@ export default function BuyerContextSwitch({...props}) {
               variant="outline"
               style={{margin: 0}}
             >
-              Catalogs ({buyersMeta["CatalogCount"] || "-"})
+              Catalogs ({buyersMeta.CatalogCount ?? "-"})
             </Button>
           </ProtectedContent>
         </ButtonGroup>

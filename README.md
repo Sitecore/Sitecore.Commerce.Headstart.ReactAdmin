@@ -1,61 +1,71 @@
-# Sitecore Commerce Headstart: React Admin
-This is an Open Source implementation of Sitecore Commerce using the OrderCloud Javascript SDK. You can use it as a starting point to discover how Sitecore Commerce administrative projects are built and teach you about the various Sitecore services that are involved and how they work together.
+# Sitecore Headstart React Admin
 
-> **Important Note:** This application is **not production-ready**.
->
-> It is meant as a demonstration and learning tool for enabling sales and speeding up the solution development process.
+Welcome to the Sitecore Headstart React Admin, an open-source admin application for Sitecore OrderCloud built with React. Whether you're looking to explore how admin applications are constructed or kickstart your own custom solution, this project provides a valuable resource.
 
-This app is capable of showcasing different marketplace scenarios and commerce strategies: B2B, B2C, B2B2C. It is actively being worked on and maintained by internal developers at Sitecore and the larger Sitecore community. You can expect some major changes in the near future regarding design system choice, feature additions / modifications, and further integrations with additional Sitecore services.
+> **Important Note:** This application is intended for demonstration and learning purposes and is not production-ready.
 
-## What is Sitecore Commerce OrderCloud?
-[OrderCloud](https://ordercloud.io/discover/platform-overview) is a B2B, B2C, B2X commerce and marketplace development platform, 
-OrderCloud delivers cloud-based, API-first, headless eCommerce architecture. Limitless customizations and endless freedom for growth to support your complete commerce strategy.
+## About Sitecore OrderCloud?
 
-## What is Sitecore Commerce Seller App?
-A **simple**, **powerful** and **flexible** Commerce Seller Application built on top of Sitecore [OrderCloud API](https://ordercloud.io/api-reference) and the [Javascript SDK](https://www.npmjs.com/package/ordercloud-javascript-sdk) built with:
-* React
-* Next.JS
-* Typescript
-* Chakra UI
-* Toolings for linting, formatting, and conventions configured `eslint`, `prettier`, `husky`, `lint-staged`, `commitlint`, `commitizen`, and `standard-version`
-* SEO optimization configured with `next-seo` and `next-sitemap`. you'll need to reconfigure or tinker with it to get it right according to your needs, but it's there if you need it.
+[OrderCloud](https://ordercloud.io/discover/platform-overview) is a versatile commerce and marketplace development platform, offering limitless customizations and API-first, headless eCommerce architecture
 
-## What you can do with this app?
-* Create, read, update delete product catalogs and categories
-* Create, read, update delete products with Extended propreties
-* Create, read, update delete promotions
-* Create, read, update, delete buyers
-* Create, read, update, delete user groups and users
-* Read, Update Orders
+## Features
 
-## Requirement
-Create an OrderCloud Marketplace instance (https://portal.ordercloud.io)
+The Sitecore Headstart React Admin application is a powerful and flexible tool built on top of the Sitecore OrderCloud API and Javascript SDK. It utilizes:
 
-## How do I get started? 
-Using the Deploy Button below, you'll deploy on Vercel the Next.js project as well as connect it to your Sitecore Commerce OrderCloud sandbox.
+- React
+- Next.JS
+- Typescript
+- Chakra UI
+- Various toolings for linting, formatting, and conventions
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin&env=NEXT_PUBLIC_APP_NAME,NEXT_PUBLIC_OC_CLIENT_ID,NEXT_PUBLIC_OC_API_URL,NEXT_PUBLIC_OC_MARKETPLACE_ID,NEXT_PUBLIC_OC_MARKETPLACE_NAME,NEXT_PUBLIC_DEFAULT_PRODUCT_VIEW_TABBED&project-name=sitecore-commerce-headstart-reactadmin&repository-name=Sitecore.Commerce.Headstart.ReactAdmin&demo-title=OrderCloud%20Admin%20App&demo-description=An%20ecommerce%20admin%20app%20built%20on%20Sitecore%20OrderCloud&demo-url=sitecore-commerce-headstart-react-admin.vercel.app&demo-image=https%3A%2F%2Fraw.githubusercontent.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%2Fmain%2Fpublic%2Fimages%2Fdemo-image.png)
+## Commerce Features
+
+These are the currently implemented features:
+
+- Admin products including products, product facets, prices, and catalogs (both as admin users and suppliers)
+- Admin promotions
+- Admin buyers including users and usergroups
+- Admin suppliers including users, usergroups, and addresses
+- Admin and assign security profiles (controls visibility of admin applciation)
+- Fulfill orders - including managing orders and order returns
+
+Check out our roadmap below for upcoming features
+
+## Requirements
+
+An OrderCloud Marketplace (https://portal.ordercloud.io) with the following (minimum):
+
+- An admin api client _without_ client secret defined
+- An admin user with the [correct permissions](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/blob/development/src/config/app-permissions.config.ts#L71) (or FullAccess)
+
+## How do I get started?
+
+Using the Deploy Button below, you'll deploy on Vercel the Next.js project as well as connect it to your Sitecore Commerce OrderCloud Marketplace.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin&env=NEXT_PUBLIC_APP_NAME,NEXT_PUBLIC_OC_CLIENT_ID,NEXT_PUBLIC_OC_API_URL,NEXT_PUBLIC_OC_MARKETPLACE_ID,NEXT_PUBLIC_OC_MARKETPLACE_NAME,NEXT_PUBLIC_USE_REAL_DASHBOARD_DATA&project-name=sitecore-commerce-headstart-reactadmin&repository-name=Sitecore.Commerce.Headstart.ReactAdmin&demo-title=OrderCloud%20Admin%20App&demo-description=An%20ecommerce%20admin%20app%20built%20on%20Sitecore%20OrderCloud&demo-url=sitecore-commerce-headstart-react-admin.vercel.app&demo-image=https%3A%2F%2Fraw.githubusercontent.com%2FSitecore%2FSitecore.Commerce.Headstart.ReactAdmin%2Fmain%2Fpublic%2Fimages%2Fdemo-image.png)
 
 ## Working locally
+
 1. Using this repository as a template, create a new repository.
 2. Clone your new repository locally
 3. Copy the `.env.local.example` file in the root directory to `.env.local` (ignored by default during your next Git commit):
 
 ```bash
+# Copy the template .env.local.example to .env.local
 cp .env.local.example .env.local
 ```
 
 Then set each variable on `.env.local`:
-`NEXT_PUBLIC_APP_NAME` Application Name used on Page title. 
+`NEXT_PUBLIC_APP_NAME` Application Name used on Page title.
 `NEXT_PUBLIC_OC_CLIENT_ID` ClientID from portal.ordercloud.io  
 `NEXT_PUBLIC_OC_API_URL`='https://sandboxapi.ordercloud.io' Sandbox URL from portal.ordercloud.io  
-`NEXT_PUBLIC_OC_MARKETPLACE_ID` 
+`NEXT_PUBLIC_OC_MARKETPLACE_ID`
 `NEXT_PUBLIC_OC_MARKETPLACE_NAME`
 
 Your `.env.local` file should look like this:
 
 ```bash
-NEXT_PUBLIC_APP_NAME='Sitecore Commerce Seller App'
+NEXT_PUBLIC_APP_NAME='Sitecore Commerce Admin App'
 NEXT_PUBLIC_OC_CLIENT_ID='****0BAC-****-4711-B01F-1A**4F7*****'
 NEXT_PUBLIC_OC_API_URL='https://sandboxapi.ordercloud.io'
 NEXT_PUBLIC_OC_MARKETPLACE_ID='SitecoreCommerce'
@@ -63,6 +73,7 @@ NEXT_PUBLIC_OC_MARKETPLACE_NAME='Sitecore Commerce'
 ```
 
 3. Run Next.js in development mode
+
 ```bash
 npm install
 npm run dev
@@ -72,43 +83,72 @@ Your app should be up and running on [http://localhost:3000](http://localhost:30
 
 ### Seeding a new marketplace
 
-In some cases it may be useful to have your own marketplace. Maybe you need to create data for a specific workflow, or perhaps you want to insulate yourself from unwanted data changes right before a demo. To make this easy we've included a CLI command that will create a marketplace for you and pre-populate it with products from the play shop marketplace. 
+There are scenarios where having your own marketplace becomes essential. Whether you're initiating a new project, creating data for a specific workflow, or safeguarding against unwanted data changes before a demo, we've simplified the process for you. Our application includes a convenient command-line feature for generating two types of marketplaces.
+
+#### Minimal Marketplace
+
+The first option is a minimal marketplace, featuring only the essential configurations such as API Clients, security profiles, and initial login details. We recommend choosing this option when you are starting a new project, providing a streamlined foundation to build upon.
+
+To generate a minimal marketplace, run the following command:
 
 ```bash
-npm run seed -- -u=YOUR_PORTAL_USERNAME -p=YOUR_PORTAL_PASSWORD -n=YOUR_MARKETPLACE_NAME
+npm run seed-minimal -- -u=YOUR_PORTAL_USERNAME -p=YOUR_PORTAL_PASSWORD -n=YOUR_MARKETPLACE_NAME
 ```
 
-Next, find the admin client ID and set it as NEXT_PUBLIC_OC_CLIENT_ID in your .env.local file.
+#### Playshop Marketplace
 
-Then, run the application by running `npm run dev`.
+The second option crafts a B2C-style marketplace, pre-populated with products from the [PlayShop demo](https://github.com/Sitecore/Sitecore.Demo.Edge). Opt for this option to quickly explore the capabilities of the admin application without the need to manually set up extensive data. This option is particularly handy for demo purposes.
 
-Finally, log in as `initialadminuser` with the password `Testingsetup123!`
+To generate a B2C-style marketplace with PlayShop demo data, run the following command:
+
+```bash
+npm run seed-playshop -- -u=YOUR_PORTAL_USERNAME -p=YOUR_PORTAL_PASSWORD -n=YOUR_MARKETPLACE_NAME
+```
+
+#### Configuration Details
+
+After generating the marketplace, complete the setup by filling out your .env.local file with the relevant information from your newly created marketplace. You can then run the application locally by executing:
+
+```bash
+npm run dev
+```
+
+Log in as `initialadminuser` with the password `Testingsetup123!` to explore the functionalities of the admin application. When creating new admin users, ensure you assign them a security profile for proper access.
+
+These options empower you to kickstart your projects or explore the application's capabilities effortlessly.
 
 ### Unit Tests
+
 This project uses [Jest](https://jestjs.io/) for unit testing. To write a unit test:
 
-1. Create  a file under either test/components or tests/pages that ends in .test.tsx (so it gets picked up by test runner)
+1. Create a file under either test/components or tests/pages that ends in .test.tsx (so it gets picked up by test runner)
 2. Write your unit test
 3. Run unit tests by running the command `npm test`
 
 ### Deploy on Vercel
+
 To deploy your local project to Vercel, push it to public GitHub/GitLab/Bitbucket repository then [import to Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example).
 
 ### Questions or New Ideas?
+
 Check out the [Discussion board](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/discussions). You ask questions or suggest answers in our [Q&A](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/discussions/categories/q-a) board.
 
 ---
 
 ## Contributing Guide
+
 Check out our [Contributing](./CONTRIBUTING.md) guide.
 
 ## Changelog
+
 Changes from release-to-release are tracked in the [Changelog wiki page](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/wiki/Changelog).
 
 ## Roadmap
+
 Larger roadmap items are outlined in the [project milestones](https://github.com/Sitecore/Sitecore.Commerce.Headstart.ReactAdmin/milestones)
 
 ## References
+
 - [OrderCloud Javascript SDK](https://www.npmjs.com/package/ordercloud-javascript-sdk)
 - [OrderCloud API Reference](https://ordercloud.io/api-reference)
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.

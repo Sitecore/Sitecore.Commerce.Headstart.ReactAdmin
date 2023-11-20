@@ -1,8 +1,8 @@
 {
-  "name": "ocsellerapp",
+  "name": "ordercloud-react-admin",
   "version": "1.0.0-alpha.2",
   "private": true,
-  "author": "ghaeger",
+  "author": "Sitecore",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -18,7 +18,8 @@
     "release": "cross-env HUSKY=0 standard-version",
     "push-release": "git push --follow-tags origin main",
     "pre-commit": "npm run lint && npm run type-check",
-    "seed": "seeding seed playshop-marketplace.yml",
+    "seed-playshop": "seeding seed marketplace-configurations/playshop-marketplace.yml",
+    "seed-minimal": "seeding seed marketplace-configurations/minimal-marketplace.yml",
     "prepare": "husky install",
     "test": "jest"
   },

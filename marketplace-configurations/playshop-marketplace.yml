@@ -1,7 +1,7 @@
 Objects:
   SecurityProfiles:
-    - ID: Middleware
-      Name: Middleware
+    - ID: SuperAdmin
+      Name: Super Admin
       Roles:
         - FullAccess
     - ID: BuyerUser
@@ -13,80 +13,12 @@ Objects:
         - MeXpAdmin
         - PasswordReset
         - Shopper
-    - ID: BuyerManager
-      Name: Buyer Manager
-      Roles:
-        - BuyerAdmin
-        - BuyerUserAdmin
-        - CatalogAdmin
-        - CategoryAdmin
-        - UserGroupAdmin
-    - ID: MeManager
-      Name: Me Manager
-      Roles:
-        - MeAdmin
-        - MeXpAdmin
-    - ID: OrderManager
-      Name: Order Manager
-      Roles:
-        - OrderAdmin
-        - SupplierAddressReader
-        - BuyerImpersonation
-        - SetSecurityProfile
-    - ID: ShipmentManager
-      Name: Shipment Manager
-      Roles:
-        - ShipmentAdmin
-    - ID: ReportViewer
-      Name: Report Viewer
-      Roles:
-        - ProductAdmin
-        - OrderAdmin
-    - ID: ProductManager
-      Name: Product Manager
-      Roles:
-        - ProductAdmin
-        - PromotionAdmin
-        - PriceScheduleAdmin
-        - ProductFacetReader
-    - ID: SettingsManager
-      Name: Settings Manager
-      Roles:
-        - ProductFacetAdmin
-        - AdminUserAdmin
-        - AdminUserGroupAdmin
-        - AdminAddressAdmin
-    - ID: SupplierManager
-      Name: Supplier Manager
-      Roles:
-        - SupplierAdmin
-        - SupplierAddressAdmin
-        - SupplierUserAdmin
-        - SupplierUserGroupAdmin
   ImpersonationConfigs:
     - ID: buyer1
       BuyerID: buyer1
       SecurityProfileID: BuyerUser
       ClientID: BUYER_CLIENT_ID
-  OpenIdConnects:
-    - ID: Auth0Connection
-      OrderCloudApiClientID: BUYER_CLIENT_ID
-      ConnectClientID: ZpEPH2WiXPDSu3jYG9wUL9e8Kp4hchGb
-      ConnectClientSecret: L4W-kO5HqiEsaOm5LwvvXhlKtXttR3Sjvg3O1-hw7uwslAIhkjW0ZykuVqZz3__l
-      AppStartUrl: REPLACE_WITH_HOSTED_BUYER_URL{2}?oidcToken={0}&idpToken={1}
-      AuthorizationEndpoint: https://playdemo.us.auth0.com/authorize
-      TokenEndpoint: https://playdemo.us.auth0.com/oauth/token
-      UrlEncoded: true
-      IntegrationEventID: SingleSignOn
-    - ID: Auth0ConnectionLocal
-      OrderCloudApiClientID: BUYER_CLIENT_ID
-      ConnectClientID: ZpEPH2WiXPDSu3jYG9wUL9e8Kp4hchGb
-      ConnectClientSecret: L4W-kO5HqiEsaOm5LwvvXhlKtXttR3Sjvg3O1-hw7uwslAIhkjW0ZykuVqZz3__l
-      AppStartUrl: http://localhost:3000{2}?oidcToken={0}&idpToken={1}
-      AuthorizationEndpoint: https://playdemo.us.auth0.com/authorize
-      TokenEndpoint: https://playdemo.us.auth0.com/oauth/token
-      UrlEncoded: true
-      IntegrationEventID: SingleSignOn
+  OpenIdConnects: []
   AdminUsers:
     - ID: middleware-user
       Username: middleware-user
@@ -104,39 +36,7 @@ Objects:
       Email: fake@email.com
       Phone: null
       Active: true
-  AdminUserGroups:
-    - ID: BuyerManager
-      Name: Buyer Manager
-      Description: Associated with the BuyerManager security profile
-      xp: {IsPermission: true}
-    - ID: MeManager
-      Name: Me Manager
-      Description: Associated with the MeManager security profile
-      xp: {IsPermission: true}
-    - ID: OrderManager
-      Name: Order Manager
-      Description: Associated with the OrderManager security profile
-      xp: {IsPermission: true}
-    - ID: ShipmentManager
-      Name: Shipment Manager
-      Description: Associated with the ShipmentManager security profile
-      xp: {IsPermission: true}
-    - ID: ProductManager
-      Name: Product Manager
-      Description: Associated with the ProductManager security profile
-      xp: {IsPermission: true}
-    - ID: ReportViewer
-      Name: Report Viewer
-      Description: Associated with the ReportViewer security profile
-      xp: {IsPermission: true}
-    - ID: SupplierManager
-      Name: Supplier Manager
-      Description: Associated with the SupplierManager security profile
-      xp: {IsPermission: true}
-    - ID: SettingsManager
-      Name: Settings Manager
-      Description: Associated with the SettingsManager security profile
-      xp: {IsPermission: true}
+  AdminUserGroups: []
   AdminAddresses: []
   MessageSenders: []
   ApiClients:
@@ -172,17 +72,8 @@ Objects:
       ID: OrderCheckout
       ConfigData: null
       EventType: OrderCheckout
-      CustomImplementationUrl: REPLACE_WITH_HOSTED_BUYER_URL/api/checkout
+      CustomImplementationUrl: REPLACE_WITH_HOSTED_BUYER_URL/api/order-checkout
       Name: Order Checkout
-      HashKey: <Redacted. Leave unchanged.>
-    - ElevatedRoles:
-        - BuyerUserAdmin
-        - UserGroupAdmin
-      ID: SingleSignOn
-      ConfigData: null
-      EventType: OpenIDConnect
-      CustomImplementationUrl: REPLACE_WITH_HOSTED_BUYER_URL/api/openid-connect
-      Name: Single Sign On
       HashKey: <Redacted. Leave unchanged.>
   XpIndices: []
   Buyers:
@@ -5009,68 +4900,17 @@ Assignments:
       SupplierID: null
       UserID: null
       UserGroupID: null
-    - SecurityProfileID: Middleware
+    - SecurityProfileID: SuperAdmin
       BuyerID: null
       SupplierID: null
       UserID: middleware-user
       UserGroupID: null
-    - SecurityProfileID: BuyerManager
+    - SecurityProfileID: SuperAdmin
       BuyerID: null
       SupplierID: null
-      UserID: null
-      UserGroupID: BuyerManager
-    - SecurityProfileID: MeManager
-      BuyerID: null
-      SupplierID: null
-      UserID: null
-      UserGroupID: MeManager
-    - SecurityProfileID: OrderManager
-      BuyerID: null
-      SupplierID: null
-      UserID: null
-      UserGroupID: OrderManager
-    - SecurityProfileID: ShipmentManager
-      BuyerID: null
-      SupplierID: null
-      UserID: null
-      UserGroupID: ShipmentManager
-    - SecurityProfileID: ProductManager
-      BuyerID: null
-      SupplierID: null
-      UserID: null
-      UserGroupID: ProductManager
-    - SecurityProfileID: ReportViewer
-      BuyerID: null
-      SupplierID: null
-      UserID: null
-      UserGroupID: ReportViewer
-    - SecurityProfileID: SupplierManager
-      BuyerID: null
-      SupplierID: null
-      UserID: null
-      UserGroupID: SupplierManager
-    - SecurityProfileID: SettingsManager
-      BuyerID: null
-      SupplierID: null
-      UserID: null
-      UserGroupID: SettingsManager
-  AdminUserGroupAssignments:
-    - UserGroupID: BuyerManager
       UserID: initial-admin-user
-    - UserGroupID: MeManager
-      UserID: initial-admin-user
-    - UserGroupID: OrderManager
-      UserID: initial-admin-user
-    - UserGroupID: ShipmentManager
-      UserID: initial-admin-user
-    - UserGroupID: ProductManager
-      UserID: initial-admin-user
-    - UserGroupID: ReportViewer
-      UserID: initial-admin-user
-    - UserGroupID: SupplierManager
-      UserID: initial-admin-user
-    - UserGroupID: SettingsManager
-      UserID: initial-admin-user
+      UserGroupID: null
+  AdminUserGroupAssignments: []
   ApiClientAssignments: []
   ProductAssignments: []
   CatalogAssignments:

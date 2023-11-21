@@ -29,7 +29,7 @@ These are the currently implemented features:
 - Admin and assign security profiles (controls visibility of admin applciation)
 - Fulfill orders - including managing orders and order returns
 
-Check out our roadmap below for upcoming features
+Check out our roadmap for upcoming features
 
 ## Requirements
 
@@ -56,13 +56,22 @@ cp .env.local.example .env.local
 ```
 
 Then set each variable on `.env.local`:
-`NEXT_PUBLIC_APP_NAME` Application Name used on Page title.
-`NEXT_PUBLIC_OC_CLIENT_ID` ClientID from portal.ordercloud.io  
-`NEXT_PUBLIC_OC_API_URL`='https://sandboxapi.ordercloud.io' Sandbox URL from portal.ordercloud.io  
-`NEXT_PUBLIC_OC_MARKETPLACE_ID`
-`NEXT_PUBLIC_OC_MARKETPLACE_NAME`
 
-Your `.env.local` file should look like this:
+| Variable                            | Description                                                                                                       |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_APP_NAME`              | Name of the application title used on page title                                                                  |
+| `NEXT_PUBLIC_OC_CLIENT_ID`          | Admin Client ID                                                                                                   |
+| `NEXT_PUBLIC_OC_API_URL`            | Base OrderCloud API URL (varies based on region/environment check portal)                                         |
+| `NEXT_PUBLIC_OC_MARKETPLACE_ID`     | The ID for your OrderCloud Marketplace                                                                            |
+| `NEXT_PUBLIC_OC_MARKETPLACE_NAME`   | The name for your OrderCloud Marketplace                                                                          |
+| `NEXT_PUBLIC_THEME_COLOR_PRIMARY`   | The primary theme color hex code (optional)                                                                       |
+| `NEXT_PUBLIC_THEME_COLOR_SECONDARY` | The secondary theme color hex code (optional)                                                                     |
+| `NEXT_PUBLIC_THEME_COLOR_ACCENT`    | The accent theme color hex code (optional)                                                                        |
+| `NEXT_PUBLIC_THEME_FONT_HEADING`    | The font used for heading text (optional) must be one of the [available google fonts](./src/utils//font.utils.ts) |
+| `NEXT_PUBLIC_THEME_FONT_BODY`       | The font used for body text (optional) must be one of the [available google fonts](./src/utils//font.utils.ts)    |
+| `NEXT_PUBLIC_THEME_LOGO_URL`        | The URL to your logo (optional)                                                                                   |
+
+Your `.env.local` file should look something like this:
 
 ```bash
 NEXT_PUBLIC_APP_NAME='Sitecore Commerce Admin App'

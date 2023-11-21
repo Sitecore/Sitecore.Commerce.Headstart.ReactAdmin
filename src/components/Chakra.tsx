@@ -1,8 +1,8 @@
 import {ChakraProvider, extendTheme, localStorageManager} from "@chakra-ui/react"
+import {appSettings} from "config/app-settings"
 import useLocalStorage from "hooks/useLocalStorage"
 import Head from "next/head"
 import React, {useMemo} from "react"
-import {DEFAULT_THEME_ACCENT, DEFAULT_THEME_PRIMARY, DEFAULT_THEME_SECONDARY} from "theme/foundations/colors"
 import schraTheme from "theme/theme"
 import {generatePalette} from "utils"
 import {buildFontHref} from "../utils/font.utils"
@@ -27,24 +27,28 @@ interface IBrandContext {
 export const brandContext = React.createContext<IBrandContext>({})
 
 export const DEFAULT_THEME_COLORS = {
-  accent: DEFAULT_THEME_ACCENT[500],
-  primary: DEFAULT_THEME_PRIMARY[500],
-  secondary: DEFAULT_THEME_SECONDARY[500]
+  accent: appSettings.themeColorAccent,
+  primary: appSettings.themeColorPrimary,
+  secondary: appSettings.themeColorSecondary
 }
 
 export const Chakra = ({children}: ChakraProps) => {
   const [colors, setColors] = useLocalStorage("themeColors", DEFAULT_THEME_COLORS)
-  const [fonts, setFonts] = useLocalStorage("themeFonts", undefined)
+  const [fonts, setFonts] = useLocalStorage(
+    "themeFonts",
+    appSettings.themeFontHeading || appSettings.themeFontBody
+      ? {heading: appSettings.themeFontHeading, body: appSettings.themeFontBody}
+      : undefined
+  )
 
   const currentTheme = useMemo(() => {
-    let updatedColors, updatedFonts
-    if (colors !== DEFAULT_THEME_COLORS) {
-      updatedColors = {
-        accent: generatePalette(colors?.accent),
-        primary: generatePalette(colors?.primary),
-        secondary: generatePalette(colors?.secondary)
-      }
+    let updatedColors = {
+      accent: generatePalette(colors?.accent),
+      primary: generatePalette(colors?.primary),
+      secondary: generatePalette(colors?.secondary)
     }
+
+    let updatedFonts
     if (fonts !== undefined) {
       updatedFonts = {
         heading: fonts.heading,

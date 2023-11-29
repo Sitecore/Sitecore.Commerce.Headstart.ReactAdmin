@@ -1,230 +1,178 @@
 import {appSettings} from "config/app-settings"
-import {Orders} from "ordercloud-javascript-sdk"
+import {Orders, Products, Promotions} from "ordercloud-javascript-sdk"
 import {IOrder} from "types/ordercloud/IOrder"
-
+import {endOfToday, endOfWeek, endOfYesterday, startOfToday, startOfWeek, startOfYesterday, subWeeks} from "date-fns"
+import {uniq} from "lodash"
+import pLimit from "p-limit"
 const shouldUseRealDashboardData = appSettings.useRealDashboardData === "true"
-
-const d = new Date()
-let day = d.getDate()
-let month = d.getMonth() + 1 //Need the plus 1 since it is an array of 0-11
-let year = d.getFullYear()
-let previousMonth = d.getMonth()
-if (d.getMonth() === 0) {
-  previousMonth = 11
-}
-let previousMonthYear = d.getFullYear()
-if (d.getMonth() === 0) {
-  previousMonthYear = d.getFullYear() - 1
-}
-let mockData
-if (!shouldUseRealDashboardData) {
-  mockData = require("../mockdata/dashboard_data.json")
-}
+const mockData = require("../mockdata/dashboard_data.json")
 
 export const dashboardService = {
   getTodaysMoney,
   getPreviousTodaysMoney,
-  getTotalSales,
-  getPreviousTotalSales,
-  getTotalUsers,
-  getPreviousTotalUsers,
-  getTotalNewUsers,
-  getPreviousTotalNewUsers
-  //,
-  //getTotalSalesByMonth,
-  //getTotalSalesPreviousYearByMonth
+  getWeeklySales,
+  getPreviousWeeklySales,
+  getWeekUniqueUsers,
+  getPreviousWeekUniqueUsers,
+  listAllOrdersSincePreviousWeek,
+  getTotalPromosCount,
+  getTotalProductsCount
 }
 
-async function getTodaysMoney() {
-  // Total Sales todate this month
-  //console.log("dashboardService::getTodaysSales")
-  let result
-
-  if (shouldUseRealDashboardData) {
-    const ordersList = await Orders.List<IOrder>("All", {
-      filters: {
-        DateCreated: [">" + year + "-" + month + "-01", "<" + year + "-" + month + "-" + day]
-      }
-    })
-    result = ordersList.Items.reduce((accumulator, obj) => {
-      return accumulator + obj.Total
-    }, 0)
-  } else {
-    result = mockData.todaysmoney.totalamount
+function getTodaysMoney(orders: IOrder[]): number {
+  if (!shouldUseRealDashboardData) {
+    return mockData.todaysmoney.totalamount
   }
-  return await result
+  const startOfTodayIso = startOfToday().toISOString()
+  const endOfTodayIso = endOfToday().toISOString()
+
+  return getTotalSalesForRange(orders, startOfTodayIso, endOfTodayIso)
 }
 
-async function getPreviousTodaysMoney() {
-  // Total Sales todate last month
-  // console.log("dashboardService::getPreviousTodaysSales")
-  let result
-
-  if (shouldUseRealDashboardData) {
-    const ordersList = await Orders.List<IOrder>("All", {
-      filters: {
-        DateCreated: [
-          ">" + previousMonthYear + "-" + previousMonth + "-01",
-          "<" + previousMonthYear + "-" + previousMonth + "-" + day
-        ]
-      }
-    })
-    result = ordersList.Items.reduce((accumulator, obj) => {
-      return accumulator + obj.Total
-    }, 0)
-  } else {
-    result = mockData.todaysmoney.previoustotalamount
+function getPreviousTodaysMoney(orders: IOrder[]): number {
+  if (!shouldUseRealDashboardData) {
+    return mockData.todaysmoney.previoustotalamount
   }
+  const startOfYesterdayIso = startOfYesterday().toISOString()
+  const endOfYesterdayIso = endOfYesterday().toISOString()
 
-  return await result
+  return getTotalSalesForRange(orders, startOfYesterdayIso, endOfYesterdayIso)
 }
 
-async function getTotalSales() {
-  // Total Sales todate this month
-  // console.log("dashboardService::getTotalSales")
-  let result
-
-  if (shouldUseRealDashboardData) {
-    const ordersList = await Orders.List<IOrder>("All", {
-      filters: {
-        DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
-      }
-    })
-    result = ordersList.Items.reduce((accumulator, obj) => {
-      return accumulator + obj.Total
-    }, 0)
-  } else {
-    result = mockData.totalsales.totalamount
+function getWeeklySales(orders: IOrder[]): number {
+  if (!shouldUseRealDashboardData) {
+    return mockData.weeksales.totalamount
   }
+  const now = new Date()
+  const startOfWeekIso = startOfWeek(now).toISOString()
+  const endOfWeekIso = endOfWeek(now).toISOString()
 
-  return await result
+  return getTotalSalesForRange(orders, startOfWeekIso, endOfWeekIso)
 }
 
-async function getPreviousTotalSales() {
-  // Total Sales todate last month
-  // console.log("dashboardService::getPreviousTotalSales")
-  let result
-
-  if (shouldUseRealDashboardData) {
-    const ordersList = await Orders.List<IOrder>("All", {
-      filters: {
-        DateCreated: [">" + (year - 1) + "-01-01", "<" + (year - 1) + "-" + month + "-" + day]
-      }
-    })
-    result = ordersList.Items.reduce((accumulator, obj) => {
-      return accumulator + obj.Total
-    }, 0)
-  } else {
-    result = mockData.totalsales.previoustotalamount
+function getPreviousWeeklySales(orders: IOrder[]): number {
+  if (!shouldUseRealDashboardData) {
+    return mockData.weeksales.previoustotalamount
   }
+  const now = new Date()
+  const previousWeek = subWeeks(now, 1)
+  const startOfPreviousWeekIso = startOfWeek(previousWeek).toISOString()
+  const endOfPreviousWeekIso = endOfWeek(previousWeek).toISOString()
 
-  return await result
+  return getTotalSalesForRange(orders, startOfPreviousWeekIso, endOfPreviousWeekIso)
 }
 
-// async function getTotalSalesByMonth() {
-//   // Total Sales todate this month
-//   // console.log("dashboardService::getTotalSales")
-//   const ordersList = await Orders.List<IOrder>("All", {
-//     filters: {
-//       DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
-//     }
-//   })
-//   const result = ordersList.Items.reduce((accumulator, obj) => {
-//     return accumulator + accumulator + obj.Total
-//   }, 0)
-//   return await result
-// }
-
-// async function getTotalSalesPreviousYearByMonth() {
-//   // Total Sales todate last month
-//   // console.log("dashboardService::getPreviousTotalSales")
-//   const ordersList = await Orders.List<IOrder>("All", {
-//     filters: {
-//       DateCreated: [
-//         ">" + (year - 1) + "-01-01",
-//         "<" + (year - 1) + "-" + month + "-" + day
-//       ]
-//     }
-//   })
-//   const result = ordersList.Items.reduce((accumulator, obj) => {
-//     return accumulator + obj.Total
-//   }, 0)
-//   return await result
-// }
-
-async function getTotalUsers() {
-  // Total Users todate this month
-  //console.log("dashboardService::getTotalUsers")
-  let result
-
-  if (shouldUseRealDashboardData) {
-    const usersList = await Orders.List<IOrder>("All", {
-      filters: {
-        DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
-      }
-    })
-    result = usersList.Items.length
-  } else {
-    result = mockData.totalusers.totalamount
+function getWeekUniqueUsers(orders: IOrder[]): number {
+  if (!shouldUseRealDashboardData) {
+    return mockData.uniqueusers.totalamount
   }
+  const now = new Date()
+  const startOfWeekIso = startOfWeek(now).toISOString()
+  const endOfWeekIso = endOfWeek(now).toISOString()
 
-  return await result
-}
-async function getPreviousTotalUsers() {
-  // Total Users todate this month
-  //console.log("dashboardService::getTotalUsers")
-  let result
+  const userList = uniq(
+    orders
+      .filter((order) => {
+        return order.DateSubmitted > startOfWeekIso && order.DateSubmitted < endOfWeekIso
+      })
+      .map((order) => order.FromUserID)
+  )
 
-  if (shouldUseRealDashboardData) {
-    const usersList = await Orders.List<IOrder>("All", {
-      filters: {
-        DateCreated: [">" + (year - 1) + "-01-01", "<" + (year - 1) + "-" + month + "-" + day]
-      }
-    })
-    result = usersList.Items.length
-  } else {
-    result = mockData.totalusers.previoustotalamount
-  }
-
-  return await result
+  return userList.length
 }
 
-async function getTotalNewUsers() {
-  // Total Users todate this month
-  //console.log("dashboardService::getTotalUsers")
-  let result
-
-  if (shouldUseRealDashboardData) {
-    const usersList = await Orders.List<IOrder>("All", {
-      filters: {
-        DateCreated: [">" + year + "-01-01", "<" + year + "-" + month + "-" + day]
-      }
-    })
-    result = usersList.Items.length
-  } else {
-    result = mockData.newusers.totalamount
+function getPreviousWeekUniqueUsers(orders: IOrder[]): number {
+  if (!shouldUseRealDashboardData) {
+    return mockData.uniqueusers.previoustotalamount
   }
+  const now = new Date()
+  const previousWeek = subWeeks(now, 1)
+  const startOfPreviousWeekIso = startOfWeek(previousWeek).toISOString()
+  const endOfPreviousWeekIso = endOfWeek(previousWeek).toISOString()
 
-  return await result
+  const userList = uniq(
+    orders
+      .filter((order) => {
+        return order.DateSubmitted > startOfPreviousWeekIso && order.DateSubmitted < endOfPreviousWeekIso
+      })
+      .map((order) => order.FromUserID)
+  )
+
+  return userList.length
 }
-async function getPreviousTotalNewUsers() {
-  // Total Users todate this month
-  //console.log("dashboardService::getTotalUsers")
-  let result
 
-  if (shouldUseRealDashboardData) {
-    const usersList = await Orders.List<IOrder>("All", {
-      filters: {
-        DateCreated: [
-          ">" + previousMonthYear + "-" + previousMonth + "-01",
-          "<" + previousMonthYear + "-" + previousMonth + "-" + day
-        ]
+function getTotalSalesForRange(orders: IOrder[], start: string, end: string): number {
+  const filteredOrders = orders.filter((order) => {
+    return order.DateSubmitted > start && order.DateSubmitted < end
+  })
+  const result = filteredOrders.reduce((accumulator, obj) => {
+    return accumulator + obj.Total
+  }, 0)
+  return result
+}
+
+async function getTotalPromosCount(): Promise<number> {
+  if (!shouldUseRealDashboardData) {
+    return mockData.totalpromos.totalamount
+  }
+  const response = await Promotions.List()
+  return response.Meta.TotalCount
+}
+
+async function getTotalProductsCount(): Promise<number> {
+  if (!shouldUseRealDashboardData) {
+    return mockData.totalproducts.totalamount
+  }
+  const response = await Products.List()
+  return response.Meta.TotalCount
+}
+
+async function listAllOrdersSincePreviousWeek() {
+  if (!shouldUseRealDashboardData) {
+    return {
+      Meta: {
+        TotalCount: 120
       }
-    })
-    result = usersList.Items.length
-  } else {
-    result = mockData.newusers.previoustotalamount
+    }
+  }
+  const now = new Date()
+  const previousWeek = subWeeks(now, 1)
+  const startOfPreviousWeek = startOfWeek(previousWeek).toISOString()
+  const filters = {
+    sortBy: ["DateSubmitted" as "DateSubmitted"],
+    filters: {
+      DateSubmitted: `>${startOfPreviousWeek}`
+    },
+    pageSize: 100
+  }
+  const response1 = await Orders.List<IOrder>("All", filters)
+  if (response1.Meta.TotalPages === 1) {
+    return response1
   }
 
-  return await result
+  // max allowed by Chrome for same domain
+  // consider aggregating totals on server at some interval (daily or hourly) if this is too slow
+  const maxConcurrent = 6
+  const limitToMaxConcurrent = pLimit(maxConcurrent)
+  const requests = new Array(response1.Meta.TotalPages - 1).fill("").map(async (_, i) =>
+    limitToMaxConcurrent(() => {
+      console.timeStamp(`Requesting page ${i + 2} of ${response1.Meta.TotalPages}`)
+      return Orders.List("All", {...filters, page: i + 2})
+    })
+  )
+  const responses = await Promise.all(requests)
+  const allOrders = responses.reduce((accumulator, response) => {
+    return accumulator.concat(response.Items)
+  }, response1.Items)
+
+  return {
+    Meta: {
+      Page: 1,
+      PageSize: allOrders.length,
+      TotalCount: allOrders.length,
+      TotalPages: 1,
+      ItemRange: [0, allOrders.length - 1]
+    },
+    Items: allOrders
+  }
 }

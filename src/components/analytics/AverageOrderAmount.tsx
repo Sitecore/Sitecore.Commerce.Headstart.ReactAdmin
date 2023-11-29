@@ -1,69 +1,18 @@
-import {
-  Flex,
-  Card,
-  Text,
-  Box,
-  useColorModeValue,
-  CardBody,
-  CardHeader,
-  Heading,
-  theme,
-  Icon,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
-  useDisclosure,
-  Collapse,
-  Button,
-  IconButton
-} from "@chakra-ui/react"
-import React, {useEffect, useState} from "react"
+import {Card, Text, useColorModeValue, CardBody, CardHeader, Heading} from "@chakra-ui/react"
+import React from "react"
 import LineChart from "../charts/LineChart"
-import {dashboardService} from "services/dashboard.service"
 import schraTheme from "theme/theme"
-import {
-  TbArrowBackUp,
-  TbCaretUp,
-  TbChevronUp,
-  TbCircleCaretUp,
-  TbSquareChevronUp,
-  TbSquareRoundedChevronUpFilled,
-  TbTriangle,
-  TbTriangleFilled
-} from "react-icons/tb"
-import {ChevronDownIcon, ChevronUpIcon, TriangleUpIcon} from "@chakra-ui/icons"
-import {appSettings} from "config/app-settings"
+import {TriangleUpIcon} from "@chakra-ui/icons"
+const chartData = require("../../mockdata/dashboard_data.json")
+
+// Note: This is a mock component. It is not hooked up to any data.
+// If you want to implement this with real data it is HIGHLY recommended that you
+// aggregate and cache data on some interval (daily) instead of retrieving it client-side every time
 
 export default function AverageOrderAmount() {
   const headingColor = useColorModeValue("boxTextColor.400", "boxTextColor.300")
   const labelColor = useColorModeValue("blackAlpha.400", "whiteAlpha.500")
-  const [totalSales, settotalSales] = useState([Number])
-  const [totalPreviousYearSales, settotalPreviousYearSales] = useState([Number])
-  const graphColor1 = useColorModeValue(schraTheme.colors.primary[500], schraTheme.colors.primary[300])
-  const graphColor2 = useColorModeValue(schraTheme.colors.accent[500], schraTheme.colors.accent[300])
-  //const [chartData, setchartData] = useState()
-  let chartData = require("../../mockdata/dashboard_data.json")
-  useEffect(() => {
-    initData()
-  }, [])
 
-  async function initData() {
-    if (appSettings.useRealDashboardData === "true") {
-      //TODO COMPLETE THIS SECTION
-      //These functions will bring in real data
-      //const totalSales = await dashboardService.getTotalSalesByMonth()
-      //settotalSales(totalSales)
-      //const totalSalesPreviousYear =
-      // await dashboardService.getTotalSalesPreviousYearByMonth()
-      //settotalPreviousYearSales(totalSalesPreviousYear)
-    } else {
-      //This function will bring in mock data
-      //let data = require("../../mockdata/dashboard_data.json")
-      //setchartData(data)
-    }
-  }
   const d = new Date()
   let year = d.getFullYear()
   const options = {

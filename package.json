@@ -42,6 +42,7 @@
     "ordercloud-javascript-sdk": "^5.1.0",
     "overlayscrollbars": "^2.3.0",
     "overlayscrollbars-react": "^0.5.2",
+    "p-limit": "^5.0.0",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
     "react-datepicker": "^4.8.0",

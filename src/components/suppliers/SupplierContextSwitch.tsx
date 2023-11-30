@@ -1,32 +1,22 @@
-import {
-  Avatar,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  Image,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  VStack
-} from "@chakra-ui/react"
+import {Avatar, Button, ButtonGroup, Card, CardBody, Image, MenuItem, Text, VStack} from "@chakra-ui/react"
 import {useEffect, useState} from "react"
-import {ChevronDownIcon} from "@chakra-ui/icons"
-import {Supplier, SupplierAddresses, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
+import {SupplierAddresses, Suppliers, SupplierUserGroups, SupplierUsers} from "ordercloud-javascript-sdk"
 import {useRouter} from "hooks/useRouter"
 import {ISupplier} from "types/ordercloud/ISupplier"
 import {TbUser} from "react-icons/tb"
 import {appPermissions} from "config/app-permissions.config"
 import useHasAccess from "hooks/useHasAccess"
 import ProtectedContent from "../auth/ProtectedContent"
-import Link from "next/link"
+import {AsyncSelect} from "chakra-react-select"
+import {ReactSelectOption} from "types/form/ReactSelectOption"
 
 export default function SupplierContextSwitch({...props}) {
-  const [currentSupplier, setCurrentSupplier] = useState({} as Supplier)
-  const [suppliers, setSuppliers] = useState([] as Supplier[])
-  const [suppliersMeta, setSuppliersMeta] = useState({})
+  const [currentSupplier, setCurrentSupplier] = useState({} as ISupplier)
+  const [suppliersMeta, setSuppliersMeta] = useState({
+    UserCount: null,
+    UserGroupCount: null,
+    AddressCount: null
+  })
   const router = useRouter()
   const supplierid = router.query.supplierid.toString()
   const canViewSupplierUsers = useHasAccess([appPermissions.SupplierUserViewer, appPermissions.SupplierUserManager])
@@ -40,19 +30,42 @@ export default function SupplierContextSwitch({...props}) {
   ])
 
   useEffect(() => {
-    async function initSuppliersData() {
-      const suppliersList = await Suppliers.List<ISupplier>()
-      setSuppliers(suppliersList.Items)
-    }
-    initSuppliersData()
-  }, [])
-
-  useEffect(() => {
-    if (suppliers.length > 0 && supplierid) {
-      const _currentSupplier = suppliers.find((supplier) => supplier.ID === supplierid)
+    const fetchCurrentSupplier = async () => {
+      const _currentSupplier = await Suppliers.Get(supplierid)
       setCurrentSupplier(_currentSupplier)
     }
-  }, [supplierid, suppliers])
+    if (supplierid) {
+      fetchCurrentSupplier()
+    }
+  }, [supplierid])
+
+  const loadSuppliers = async (inputValue: string) => {
+    if (!currentSupplier) return
+    const supplierList = await Suppliers.List<ISupplier>({
+      search: inputValue,
+      pageSize: 10,
+      filters: {ID: `!${currentSupplier.ID}`}
+    })
+    return supplierList.Items.map((supplier) => ({
+      label: (
+        <MenuItem key={supplier.ID} minH="40px">
+          <Image
+            boxSize="2rem"
+            borderRadius="full"
+            src={`https://robohash.org/${supplier.ID}.png`}
+            alt={supplier.Name}
+            mr="12px"
+          />
+          <span>{supplier.Name}</span>
+        </MenuItem>
+      ),
+      value: supplier.ID
+    }))
+  }
+
+  const handleSupplierChange = (option: ReactSelectOption) => {
+    router.push({query: {supplierid: option.value}})
+  }
 
   useEffect(() => {
     const getCurrentSupplierMeta = async (supplierId: string) => {
@@ -103,49 +116,35 @@ export default function SupplierContextSwitch({...props}) {
             </Text>
           </VStack>
 
-          {suppliers.filter((s) => s.ID !== currentSupplier.ID).length > 1 && (
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />} size="lg" ml="30px">
-                {currentSupplier?.Name}
-              </MenuButton>
-              <MenuList>
-                {suppliers
-                  .filter((s) => s.ID !== currentSupplier.ID)
-                  .map((supplier, index) => (
-                    <MenuItem
-                      key={supplier.ID}
-                      minH="40px"
-                      onClick={() => router.push({query: {supplierid: supplier.ID}})}
-                    >
-                      <Image
-                        boxSize="2rem"
-                        borderRadius="full"
-                        src={`https://robohash.org/${supplier.ID}.png`}
-                        alt={supplier.Name}
-                        mr="12px"
-                      />
-                      <span>{supplier.Name}</span>
-                    </MenuItem>
-                  ))}
-              </MenuList>
-            </Menu>
-          )}
+          <AsyncSelect<ReactSelectOption, false>
+            value={{value: currentSupplier.ID, label: currentSupplier.Name}}
+            loadOptions={loadSuppliers}
+            defaultOptions
+            isMulti={false}
+            colorScheme="accent"
+            placeholder="Select supplier..."
+            onChange={handleSupplierChange}
+            hideSelectedOptions={true}
+            chakraStyles={{
+              container: (baseStyles) => ({...baseStyles, minWidth: 250})
+            }}
+          />
           <ButtonGroup ml="auto" flexWrap="wrap" gap={2}>
             <ProtectedContent hasAccess={[appPermissions.SupplierUserViewer, appPermissions.SupplierUserManager]}>
               <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/users`)} variant="outline">
-                Users ({suppliersMeta["UserCount"] || "-"})
+                Users ({suppliersMeta.UserCount ?? "-"})
               </Button>
             </ProtectedContent>
             <ProtectedContent
               hasAccess={[appPermissions.SupplierUserGroupViewer, appPermissions.SupplierUserGroupManager]}
             >
               <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/usergroups`)} variant="outline">
-                User Groups ({suppliersMeta["UserGroupCount"] || "-"})
+                User Groups ({suppliersMeta.UserGroupCount ?? "-"})
               </Button>
             </ProtectedContent>
             <ProtectedContent hasAccess={[appPermissions.SupplierAddressViewer, appPermissions.SupplierAddressManager]}>
               <Button onClick={() => router.push(`/suppliers/${router.query.supplierid}/addresses`)} variant="outline">
-                Addresses ({suppliersMeta["AddressCount"] || "-"})
+                Addresses ({suppliersMeta.AddressCount ?? "-"})
               </Button>
             </ProtectedContent>
           </ButtonGroup>

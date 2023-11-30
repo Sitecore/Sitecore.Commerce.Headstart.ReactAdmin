@@ -1,31 +1,22 @@
-import {
-  Avatar,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  Image,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  VStack
-} from "@chakra-ui/react"
+import {Avatar, Button, ButtonGroup, Card, CardBody, Image, MenuItem, Text, VStack} from "@chakra-ui/react"
 import {Buyer, Buyers, Catalogs, UserGroups, Users} from "ordercloud-javascript-sdk"
 import {useEffect, useState} from "react"
-import {ChevronDownIcon} from "@chakra-ui/icons"
-import {IBuyer} from "types/ordercloud/IBuyer"
 import {useRouter} from "hooks/useRouter"
 import {TbUser} from "react-icons/tb"
 import useHasAccess from "hooks/useHasAccess"
 import {appPermissions} from "config/app-permissions.config"
 import ProtectedContent from "../auth/ProtectedContent"
+import {AsyncSelect} from "chakra-react-select"
+import {ReactSelectOption} from "types/form/ReactSelectOption"
+import {IBuyer} from "types/ordercloud/IBuyer"
 
 export default function BuyerContextSwitch({...props}) {
   const [currentBuyer, setCurrentBuyer] = useState({} as Buyer)
-  const [buyers, setBuyers] = useState([] as Buyer[])
-  const [buyersMeta, setBuyersMeta] = useState({})
+  const [buyersMeta, setBuyersMeta] = useState({
+    UserCount: null,
+    UserGroupCount: null,
+    CatalogCount: null
+  })
   const router = useRouter()
   const buyerid = router.query.buyerid.toString()
   const canViewBuyerUsers = useHasAccess([appPermissions.BuyerUserViewer, appPermissions.BuyerUserManager])
@@ -36,19 +27,42 @@ export default function BuyerContextSwitch({...props}) {
   const canViewBuyerCatalogs = useHasAccess([appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager])
 
   useEffect(() => {
-    async function initBuyersData() {
-      const buyersList = await Buyers.List<IBuyer>()
-      setBuyers(buyersList.Items)
-    }
-    initBuyersData()
-  }, [])
-
-  useEffect(() => {
-    if (buyers.length > 0 && buyerid) {
-      const _currentBuyer = buyers.find((buyer) => buyer.ID === buyerid)
+    const fetchCurrentBuyer = async () => {
+      const _currentBuyer = await Buyers.Get(buyerid)
       setCurrentBuyer(_currentBuyer)
     }
-  }, [buyerid, buyers])
+    if (buyerid) {
+      fetchCurrentBuyer()
+    }
+  }, [buyerid])
+
+  const loadBuyers = async (inputValue: string) => {
+    if (!currentBuyer) return
+    const buyerList = await Buyers.List<IBuyer>({
+      search: inputValue,
+      pageSize: 10,
+      filters: {ID: `!${currentBuyer.ID}`}
+    })
+    return buyerList.Items.map((buyer) => ({
+      label: (
+        <MenuItem key={buyer.ID} minH="40px">
+          <Image
+            boxSize="2rem"
+            borderRadius="full"
+            src={`https://robohash.org/${buyer.ID}.png`}
+            alt={buyer.Name}
+            mr="12px"
+          />
+          <span>{buyer.Name}</span>
+        </MenuItem>
+      ),
+      value: buyer.ID
+    }))
+  }
+
+  const handleBuyerChange = (option: ReactSelectOption) => {
+    router.push({query: {buyerid: option.value}})
+  }
 
   useEffect(() => {
     const getCurrentBuyerMeta = async (buyerId: string) => {
@@ -98,31 +112,21 @@ export default function BuyerContextSwitch({...props}) {
           </Text>
         </VStack>
 
-        {typeof router.query.userid == "undefined" &&
-          typeof router.query.usergroupid == "undefined" &&
-          buyers.filter((b) => b.ID !== currentBuyer.ID).length > 1 && (
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                {currentBuyer?.Name}
-              </MenuButton>
-              <MenuList>
-                {buyers
-                  .filter((b) => b.ID !== currentBuyer.ID)
-                  .map((buyer) => (
-                    <MenuItem key={buyer.ID} minH="40px" onClick={() => router.push({query: {buyerid: buyer.ID}})}>
-                      <Image
-                        boxSize="2rem"
-                        borderRadius="full"
-                        src={`https://robohash.org/${buyer.ID}.png`}
-                        alt={buyer.Name}
-                        mr="12px"
-                      />
-                      <span>{buyer.Name}</span>
-                    </MenuItem>
-                  ))}
-              </MenuList>
-            </Menu>
-          )}
+        {typeof router.query.userid == "undefined" && typeof router.query.usergroupid == "undefined" && (
+          <AsyncSelect<ReactSelectOption, false>
+            value={{value: currentBuyer.ID, label: currentBuyer.Name}}
+            loadOptions={loadBuyers}
+            defaultOptions
+            isMulti={false}
+            colorScheme="accent"
+            placeholder="Select buyer..."
+            onChange={handleBuyerChange}
+            hideSelectedOptions={true}
+            chakraStyles={{
+              container: (baseStyles) => ({...baseStyles, minWidth: 250})
+            }}
+          />
+        )}
         <ButtonGroup ml="auto" flexWrap="wrap" gap={2}>
           <ProtectedContent hasAccess={[appPermissions.BuyerUserViewer, appPermissions.BuyerUserManager]}>
             <Button
@@ -130,7 +134,7 @@ export default function BuyerContextSwitch({...props}) {
               variant="outline"
               style={{margin: 0}}
             >
-              Users ({buyersMeta["UserGroupCount"] || "-"})
+              Users ({buyersMeta.UserCount ?? "-"})
             </Button>
           </ProtectedContent>
           <ProtectedContent hasAccess={[appPermissions.BuyerUserGroupViewer, appPermissions.BuyerUserGroupManager]}>
@@ -139,7 +143,7 @@ export default function BuyerContextSwitch({...props}) {
               variant="outline"
               style={{margin: 0}}
             >
-              User Groups ({buyersMeta["UserCount"] || "-"})
+              User Groups ({buyersMeta.UserGroupCount ?? "-"})
             </Button>
           </ProtectedContent>
           <ProtectedContent hasAccess={[appPermissions.BuyerCatalogViewer, appPermissions.BuyerCatalogManager]}>
@@ -148,7 +152,7 @@ export default function BuyerContextSwitch({...props}) {
               variant="outline"
               style={{margin: 0}}
             >
-              Catalogs ({buyersMeta["CatalogCount"] || "-"})
+              Catalogs ({buyersMeta.CatalogCount ?? "-"})
             </Button>
           </ProtectedContent>
         </ButtonGroup>

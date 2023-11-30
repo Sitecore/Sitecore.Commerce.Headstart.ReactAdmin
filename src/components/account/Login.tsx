@@ -14,7 +14,7 @@ import {
   useColorModeValue,
   VStack
 } from "@chakra-ui/react"
-import {ChangeEvent, FormEvent, FunctionComponent, useCallback, useState} from "react"
+import {ChangeEvent, FormEvent, FunctionComponent, useCallback, useMemo, useState} from "react"
 
 import {useAuth} from "hooks/useAuth"
 import schraTheme from "theme/theme"
@@ -33,6 +33,12 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({title = "Sign into yo
     password: "",
     remember: false
   })
+
+  const backgroundImage = useMemo(() => {
+    const backgroundImages = new Array(10).fill("").map((_, i) => `/raster/login-background/${i}.jpg`)
+    const randomIndex = Math.floor(Math.random() * 10)
+    return backgroundImages[randomIndex]
+  }, [])
 
   const loginHeaderColor = useColorModeValue("blackAlpha.400", "whiteAlpha.600")
 
@@ -63,7 +69,7 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({title = "Sign into yo
       <Grid gridTemplateColumns={["auto", "auto 50vw"]} h={"100%"} w={"100%"} overflowX={"hidden"}>
         <Hide below="lg">
           <Box
-            bgImg={"url(https://source.unsplash.com/random/?commerce)"}
+            bgImg={`url(${backgroundImage})`}
             bgSize={"cover"}
             bgRepeat={"no-repeat"}
             bgColor={"blackAlpha.700"}

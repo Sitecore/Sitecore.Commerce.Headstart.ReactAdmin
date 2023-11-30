@@ -1,36 +1,32 @@
 import {TableContainer, Table, Thead, Tr, Th, Tbody, Td, Text} from "@chakra-ui/react"
 import {Catalogs, ProductCatalogAssignment} from "ordercloud-javascript-sdk"
-import {Control, UseFieldArrayReturn, useWatch} from "react-hook-form"
 import {useEffect, useState} from "react"
 import {ICatalog} from "types/ordercloud/ICatalog"
 import {CatalogActionMenu} from "./CatalogActionMenu"
-import {ProductDetailFormFields} from "../form-meta"
 import ProtectedContent from "@/components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 
 interface CatalogsTableProps {
-  control: Control<ProductDetailFormFields>
-  fieldArray: UseFieldArrayReturn<ProductDetailFormFields, "CatalogAssignments", "id">
+  catalogAssignments: ProductCatalogAssignment[]
+  onRemove: (index: number) => void
 }
 
-export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
-  const {remove} = fieldArray
+export function CatalogsTable({onRemove, catalogAssignments}: CatalogsTableProps) {
   const [catalogs, setCatalogs] = useState<ICatalog[]>([])
-  const watchedFields = useWatch({control, name: "CatalogAssignments"}) as ProductCatalogAssignment[]
 
   useEffect(() => {
     async function buildCatalogs() {
-      const allCatalogIds = watchedFields.map((assignment) => assignment.CatalogID)
+      const allCatalogIds = catalogAssignments.map((assignment) => assignment.CatalogID)
       const allCatalogs = allCatalogIds.length
         ? (await Catalogs.List({filters: {ID: allCatalogIds.join("|")}})).Items
         : []
       setCatalogs(
-        watchedFields.map((catalogAssignment) => allCatalogs.find((c) => c.ID === catalogAssignment.CatalogID))
+        catalogAssignments.map((catalogAssignment) => allCatalogs.find((c) => c.ID === catalogAssignment.CatalogID))
       )
     }
 
     buildCatalogs()
-  }, [watchedFields])
+  }, [catalogAssignments])
 
   return (
     <TableContainer
@@ -66,7 +62,7 @@ export function CatalogsTable({control, fieldArray}: CatalogsTableProps) {
                 <Td role="cell">{catalog.CategoryCount}</Td>
                 <Td role="cell">
                   <ProtectedContent hasAccess={appPermissions.ProductManager}>
-                    <CatalogActionMenu onDeleteAssignment={() => remove(index)} />
+                    <CatalogActionMenu onDeleteAssignment={() => onRemove(index)} />
                   </ProtectedContent>
                 </Td>
               </Tr>

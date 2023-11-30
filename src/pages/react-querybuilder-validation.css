@@ -1,0 +1,22 @@
+/* Invalid groups */
+/* .queryBuilder .ruleGroup.queryBuilder-invalid {
+  border: 1px solid red;
+} */
+
+/* Invalid rules */
+.queryBuilder .rule.queryBuilder-invalid {
+  border: 1px solid red;
+}
+* .queryBuilder .ruleGroup .rule {
+  align-items: flex-end;
+  padding: 10px;
+}
+
+.ruleGroup .ruleGroup-header,
+.ruleGroup .rule {
+  align-items: flex-end;
+}
+
+.ruleGroup {
+  background-color: rgba(51, 55, 204, 0.05); /* default primary color, with alpha */
+}

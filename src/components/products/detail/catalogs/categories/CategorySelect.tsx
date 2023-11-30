@@ -89,7 +89,7 @@ export function CategorySelect({onUpdate, existingAssignments}: CategorySelectPr
         isClearable={false}
         colorScheme="accent"
         chakraStyles={{
-          container: (baseStyles) => ({...baseStyles, minWidth: "200px"})
+          container: (baseStyles) => ({...baseStyles, minWidth: 400})
         }}
       />
       <Button variant="outline" colorScheme="accent" onClick={handleAdd} isDisabled={!categorySelections.length}>
@@ -119,7 +119,7 @@ function CatalogSelect({onUpdate}: CatalogSelectProps) {
       colorScheme="accent"
       onChange={(option) => onUpdate({ID: option.value, Name: option.label})}
       chakraStyles={{
-        container: (baseStyles) => ({...baseStyles, minWidth: "200px"})
+        container: (baseStyles) => ({...baseStyles, minWidth: 400})
       }}
     />
   )

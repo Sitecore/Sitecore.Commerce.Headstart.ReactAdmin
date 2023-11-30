@@ -116,7 +116,7 @@ export function UserForm({user, userType, parentId, securityProfileAssignments =
   })
 
   const {handleSubmit, control, reset, setFocus} = useForm<FormFieldValues>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as any,
     defaultValues: user?.ID ? {User: user, SecurityProfileAssignments: securityProfileAssignments} : defaultValues,
     mode: "onBlur"
   })

@@ -10,7 +10,7 @@ export type TextareaControlProps = BaseProps & {
 }
 
 export const TextareaControl: FC<TextareaControlProps> = (props: TextareaControlProps) => {
-  const {name, control, label, textareaProps, validationSchema, ...rest} = props
+  const {name, control, label, textareaProps = {}, validationSchema, ...rest} = props
   const {
     field,
     formState: {isSubmitting}
@@ -19,7 +19,6 @@ export const TextareaControl: FC<TextareaControlProps> = (props: TextareaControl
     control
   })
   const isRequired = isRequiredField(props.validationSchema, field.name)
-
   return (
     <FormControl
       name={name}
@@ -29,7 +28,13 @@ export const TextareaControl: FC<TextareaControlProps> = (props: TextareaControl
       validationSchema={validationSchema}
       {...rest}
     >
-      <Textarea {...field} id={name} isDisabled={isSubmitting || props.isDisabled} {...textareaProps} />
+      <Textarea
+        {...field}
+        {...textareaProps}
+        id={name}
+        isDisabled={isSubmitting || props.isDisabled}
+        value={field.value ?? ""}
+      />
     </FormControl>
   )
 }

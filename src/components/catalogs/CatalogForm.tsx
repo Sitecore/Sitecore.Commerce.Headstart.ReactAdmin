@@ -41,7 +41,7 @@ export function CatalogForm({catalog}: CatalogFormProps) {
   })
 
   const {handleSubmit, control, reset} = useForm<ICatalog>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as any,
     defaultValues: catalog || defaultValues,
     mode: "onBlur"
   })

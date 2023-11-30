@@ -38,7 +38,7 @@ export function ShipmentDetailsModalContent({
 
   const {handleSubmit, control, reset} = useForm<IShipment>({
     mode: "onBlur",
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as any,
     defaultValues: shipment || defaultValues
   })
 

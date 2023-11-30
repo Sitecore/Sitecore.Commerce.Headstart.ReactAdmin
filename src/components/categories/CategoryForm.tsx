@@ -44,7 +44,7 @@ export function CategoryForm({category, headerComponent, parentId, onSuccess}: C
   })
 
   const {handleSubmit, control, reset} = useForm<ICategory>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as any,
     defaultValues: category || defaultValues,
     mode: "onBlur"
   })

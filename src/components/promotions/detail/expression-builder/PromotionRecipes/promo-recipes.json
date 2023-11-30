@@ -1,0 +1,480 @@
+[
+  {
+    "group": "Product",
+    "label": "X% off product Y",
+    "isLineItemLevel": true,
+    "variables": [
+      {
+        "label": "Percent Discount",
+        "ordercloudProperty": "LineItem.LineSubtotal",
+        "token": "PERCENT_DISCOUNT",
+        "transformFunctionName": "divideBy100",
+        "value": ""
+      },
+      {
+        "label": "Product",
+        "ordercloudProperty": "LineItem.Product.ID",
+        "token": "PRODUCT",
+        "transformFunctionName": "",
+        "value": ""
+      }
+    ],
+    "eligibleExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "field": "LineItem.Product.ID",
+          "operator": "=",
+          "valueSource": "value",
+          "value": "PRODUCT",
+          "modelPath": "LineItem.Product",
+          "modelName": "Product"
+        }
+      ],
+      "id": "2",
+      "operator": ""
+    },
+    "valueExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "field": "LineItem.LineSubtotal",
+          "operator": "*",
+          "valueSource": "value",
+          "value": "PERCENT_DISCOUNT",
+          "modelPath": "LineItem",
+          "modelName": "Line Item"
+        }
+      ],
+      "id": "2"
+    }
+  },
+  {
+    "group": "Product",
+    "label": "$X off product Y",
+    "variables": [
+      {
+        "label": "Discount Amount",
+        "ordercloudProperty": "LineItem.LineSubtotal",
+        "token": "DISCOUNT_AMOUNT",
+        "transformFunctionName": "",
+        "value": ""
+      },
+      {
+        "label": "Product",
+        "ordercloudProperty": "LineItem.Product.ID",
+        "token": "PRODUCT",
+        "transformFunctionName": "",
+        "value": ""
+      }
+    ],
+    "isLineItemLevel": true,
+    "eligibleExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "field": "LineItem.Product.ID",
+          "operator": "=",
+          "valueSource": "value",
+          "value": "PRODUCT",
+          "modelPath": "LineItem.Product",
+          "modelName": "Product"
+        }
+      ],
+      "id": "2",
+      "operator": ""
+    },
+    "valueExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "field": ".number",
+          "operator": "=",
+          "valueSource": "value",
+          "value": "DISCOUNT_AMOUNT",
+          "modelPath": "",
+          "modelName": "Value"
+        }
+      ],
+      "id": "2"
+    }
+  },
+  {
+    "group": "Category",
+    "label": "X% off products in category Y",
+    "isLineItemLevel": true,
+    "variables": [
+      {
+        "label": "Percent Discount",
+        "ordercloudProperty": "LineItem.LineSubtotal",
+        "token": "PERCENT_DISCOUNT",
+        "transformFunctionName": "divideBy100",
+        "value": ""
+      },
+      {
+        "label": "Category",
+        "ordercloudProperty": "LineItem.Product.Category",
+        "token": "CATEGORY",
+        "transformFunctionName": "",
+        "value": ""
+      }
+    ],
+    "eligibleExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "field": "LineItem.Product.Category",
+          "operator": "=",
+          "valueSource": "value",
+          "value": "CATEGORY",
+          "modelPath": "LineItem.Product",
+          "modelName": "Product"
+        }
+      ]
+    },
+    "valueExpressionQuery": {
+      "rules": [
+        {
+          "id": "2",
+          "field": "LineItem.LineSubtotal",
+          "operator": "*",
+          "valueSource": "value",
+          "value": "PERCENT_DISCOUNT",
+          "modelPath": "LineItem",
+          "modelName": "Line Item"
+        }
+      ],
+      "id": "4"
+    }
+  },
+  {
+    "group": "Category",
+    "label": "$X off products in category Y",
+    "isLineItemLevel": true,
+    "variables": [
+      {
+        "label": "Discount Amount",
+        "ordercloudProperty": "LineItem.LineSubtotal",
+        "token": "DISCOUNT_AMOUNT",
+        "transformFunctionName": "",
+        "value": ""
+      },
+      {
+        "label": "Category",
+        "ordercloudProperty": "LineItem.Product.Category",
+        "token": "CATEGORY",
+        "transformFunctionName": "",
+        "value": ""
+      }
+    ],
+    "eligibleExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "field": "LineItem.Product.Category",
+          "operator": "=",
+          "valueSource": "value",
+          "value": "CATEGORY",
+          "modelPath": "LineItem.Product",
+          "modelName": "Product"
+        }
+      ]
+    },
+    "valueExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "field": ".number",
+          "operator": "=",
+          "valueSource": "value",
+          "value": "DISCOUNT_AMOUNT",
+          "modelPath": "",
+          "modelName": "Value"
+        }
+      ],
+      "id": "2"
+    }
+  },
+  {
+    "group": "Shipping",
+    "label": "Free shipping on orders over $X",
+    "isLineItemLevel": false,
+    "variables": [
+      {
+        "label": "Free shipping order minimum",
+        "ordercloudProperty": "Order.Total",
+        "token": "FREE_SHIPPING_ORDER_MINIMUM",
+        "transformFunctionName": "",
+        "value": ""
+      }
+    ],
+    "eligibleExpressionQuery": {
+      "rules": [
+        {
+          "id": "e11ed31b-a05c-48a8-b506-5b15db7b7f37",
+          "field": "Order.Subtotal",
+          "operator": ">",
+          "valueSource": "value",
+          "value": "FREE_SHIPPING_ORDER_MINIMUM",
+          "modelPath": "Order",
+          "modelName": "Order"
+        }
+      ]
+    },
+    "valueExpressionQuery": {
+      "rules": [
+        {
+          "id": "2",
+          "field": "Order.ShippingCost",
+          "operator": "value",
+          "valueSource": "value",
+          "value": "",
+          "modelPath": "Order",
+          "modelName": "Order"
+        }
+      ]
+    }
+  },
+  {
+    "group": "BOGO",
+    "label": "BOGO - limit to 1 free item",
+    "isLineItemLevel": false,
+    "variables": [
+      {
+        "label": "Product",
+        "ordercloudProperty": "LineItem.Product.ID",
+        "token": "PRODUCT",
+        "transformFunctionName": "",
+        "value": ""
+      }
+    ],
+    "eligibleExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "rules": [
+            {
+              "id": "2",
+              "field": "LineItem.Product.ID",
+              "operator": "=",
+              "valueSource": "value",
+              "value": "PRODUCT",
+              "modelPath": "LineItem.Product",
+              "modelName": "Product"
+            }
+          ],
+          "not": false,
+          "operator": "items.quantity"
+        },
+        ">",
+        {
+          "id": "3",
+          "field": ".number",
+          "operator": "=",
+          "valueSource": "value",
+          "value": 1,
+          "modelPath": "",
+          "modelName": "Value"
+        }
+      ],
+      "operator": ""
+    },
+    "valueExpressionQuery": {
+      "rules": [
+        {
+          "id": "4",
+          "rules": [
+            {
+              "id": "5",
+              "field": "LineItem.Product.ID",
+              "operator": "=",
+              "valueSource": "value",
+              "value": "PRODUCT",
+              "modelPath": "LineItem.Product",
+              "modelName": "Product"
+            }
+          ],
+          "not": false,
+          "operator": "items.total"
+        },
+        "/",
+        {
+          "id": "6",
+          "rules": [
+            {
+              "id": "7",
+              "field": "LineItem.Product.ID",
+              "operator": "=",
+              "valueSource": "value",
+              "value": "PRODUCT",
+              "modelPath": "LineItem.Product",
+              "modelName": "Product"
+            }
+          ],
+          "not": false,
+          "operator": "items.quantity"
+        }
+      ],
+      "id": "8",
+      "operator": ""
+    }
+  },
+  {
+    "group": "BOGO",
+    "label": "BOGO - scale with quantity",
+    "isLineItemLevel": false,
+    "eligibleExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "rules": [
+            {
+              "id": "2",
+              "field": "LineItem.Product.ID",
+              "operator": "=",
+              "valueSource": "value",
+              "value": "PRODUCT",
+              "modelPath": "LineItem.Product",
+              "modelName": "Product"
+            }
+          ],
+          "not": false,
+          "operator": "items.quantity"
+        },
+        ">",
+        {
+          "id": "3",
+          "field": ".number",
+          "operator": "=",
+          "valueSource": "value",
+          "value": 1,
+          "modelPath": "",
+          "modelName": "Value"
+        }
+      ],
+      "operator": ""
+    },
+    "valueExpressionQuery": {
+      "rules": [
+        {
+          "id": "1",
+          "rules": [
+            {
+              "id": "2",
+              "rules": [
+                {
+                  "id": "3",
+                  "field": "LineItem.Product.ID",
+                  "operator": "=",
+                  "valueSource": "value",
+                  "value": "PRODUCT",
+                  "modelPath": "LineItem.Product",
+                  "modelName": "Product"
+                }
+              ],
+              "not": false,
+              "operator": "items.quantity"
+            },
+            "/",
+            {
+              "id": "4",
+              "field": ".number",
+              "operator": "=",
+              "valueSource": "value",
+              "value": 2,
+              "modelPath": "",
+              "modelName": "Value"
+            }
+          ],
+          "not": false,
+          "operator": ""
+        },
+        "-",
+        {
+          "id": "5",
+          "rules": [
+            {
+              "id": "6",
+              "rules": [
+                {
+                  "id": "7",
+                  "field": "LineItem.Product.ID",
+                  "operator": "=",
+                  "valueSource": "value",
+                  "value": "PRODUCT",
+                  "modelPath": "LineItem.Product",
+                  "modelName": "Product"
+                }
+              ],
+              "not": false,
+              "operator": "items.quantity"
+            },
+            "%",
+            {
+              "id": "8",
+              "field": ".number",
+              "operator": "=",
+              "valueSource": "value",
+              "value": 2,
+              "modelPath": "",
+              "modelName": "Value"
+            },
+            "*",
+            {
+              "id": "9",
+              "field": ".number",
+              "operator": "=",
+              "valueSource": "value",
+              "value": 0.5,
+              "modelPath": "",
+              "modelName": "Value"
+            }
+          ],
+          "not": false
+        },
+        "*",
+        {
+          "id": "10",
+          "rules": [
+            {
+              "id": "11",
+              "rules": [
+                {
+                  "id": "12",
+                  "field": "LineItem.Product.ID",
+                  "operator": "=",
+                  "valueSource": "value",
+                  "value": "PRODUCT",
+                  "modelPath": "LineItem.Product",
+                  "modelName": "Product"
+                }
+              ],
+              "not": false,
+              "operator": "items.total"
+            },
+            "/",
+            {
+              "id": "13",
+              "rules": [
+                {
+                  "id": "14",
+                  "field": "LineItem.Product.ID",
+                  "operator": "=",
+                  "valueSource": "value",
+                  "value": "PRODUCT",
+                  "modelPath": "LineItem.Product",
+                  "modelName": "Product"
+                }
+              ],
+              "not": false,
+              "operator": "items.quantity"
+            }
+          ],
+          "not": false
+        }
+      ],
+      "id": "15",
+      "operator": ""
+    }
+  }
+]

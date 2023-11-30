@@ -1,0 +1,5053 @@
+Objects:
+  SecurityProfiles:
+    - ID: SuperAdmin
+      Name: Super Admin
+      Roles:
+        - FullAccess
+    - ID: BuyerUser
+      Name: Buyer User
+      Roles:
+        - MeAddressAdmin
+        - MeAdmin
+        - MeCreditCardAdmin
+        - MeXpAdmin
+        - PasswordReset
+        - Shopper
+  ImpersonationConfigs:
+    - ID: buyer1
+      BuyerID: buyer1
+      SecurityProfileID: BuyerUser
+      ClientID: BUYER_CLIENT_ID
+  OpenIdConnects: []
+  AdminUsers:
+    - ID: middleware-user
+      Username: middleware-user
+      Password: null
+      FirstName: Middleware
+      LastName: Integrations
+      Email: fake@email.com
+      Phone: null
+      Active: true
+    - ID: initial-admin-user
+      Username: InitialAdminUser
+      Password: Testingsetup123!
+      FirstName: Initial
+      LastName: Admin
+      Email: fake@email.com
+      Phone: null
+      Active: true
+  AdminUserGroups: []
+  AdminAddresses: []
+  MessageSenders: []
+  ApiClients:
+    - ID: MIDDLEWARE_CLIENT_ID
+      ClientSecret: <Redacted. Leave unchanged.>
+      AccessTokenDuration: 600
+      Active: true
+      AppName: Middleware
+      RefreshTokenDuration: 5760
+      DefaultContextUserName: middleware-user
+      AllowSeller: true
+    - ID: ADMIN_CLIENT_ID
+      AccessTokenDuration: 600
+      Active: true
+      AppName: Admin Application
+      RefreshTokenDuration: 5760
+      DefaultContextUserName: null
+      xp: null
+      AllowAnySupplier: true
+      AllowSeller: true
+    - ID: BUYER_CLIENT_ID
+      AccessTokenDuration: 600
+      Active: true
+      AppName: Buyer Application
+      RefreshTokenDuration: 5760
+      DefaultContextUserName: anonymous-shopper
+      AllowAnyBuyer: true
+  Incrementors: []
+  Webhooks: []
+  IntegrationEvents:
+    - ElevatedRoles:
+        - FullAccess
+      ID: OrderCheckout
+      ConfigData: null
+      EventType: OrderCheckout
+      CustomImplementationUrl: REPLACE_WITH_HOSTED_BUYER_URL/api/order-checkout
+      Name: Order Checkout
+      HashKey: <Redacted. Leave unchanged.>
+  XpIndices: []
+  Buyers:
+    - ID: buyer1
+      Name: Buyer 1
+      DefaultCatalogID: PlayShopPublic
+      Active: true
+  Users:
+    - ID: anonymous-shopper
+      Username: anonymous-shopper
+      Password: null
+      FirstName: anonymous
+      LastName: shopper
+      Email: fake@email.com
+      Phone: null
+      TermsAccepted: null
+      Active: true
+      AvailableRoles:
+        - MeAddressAdmin
+        - MeAdmin
+        - MeCreditCardAdmin
+        - MeXpAdmin
+        - PasswordReset
+        - Shopper
+      BuyerID: buyer1
+  UserGroups: []
+  Addresses: []
+  CostCenters: []
+  CreditCards: []
+  SpendingAccounts: []
+  ApprovalRules: []
+  Catalogs:
+    - ID: PlayShopPublic
+      OwnerID: <MarketplaceID placeholder>
+      Name: "Play Shop Public Catalog "
+      Description: ""
+      Active: true
+  Categories:
+    - ID: PSC0
+      Name: Clothing
+      Description: null
+      ListOrder: 31
+      Active: true
+      ParentID: null
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSA0
+      Name: Activities
+      Description: null
+      ListOrder: 36
+      Active: true
+      ParentID: null
+      ChildCount: 7
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSSM0
+      Name: Subscriptions and Memberships
+      Description: null
+      ListOrder: 39
+      Active: true
+      ParentID: null
+      ChildCount: 5
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSEW0
+      Name: Electronics and Wearables
+      Description: null
+      ListOrder: 40
+      Active: true
+      ParentID: null
+      ChildCount: 3
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSEWH
+      Name: Health and Wellness
+      Description: null
+      ListOrder: 31
+      Active: true
+      ParentID: PSEW0
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSEWA
+      Name: Activity Trackers
+      Description: null
+      ListOrder: 31
+      Active: true
+      ParentID: PSEW0
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAH
+      Name: Hiking
+      Description: null
+      ListOrder: 31
+      Active: true
+      ParentID: PSA0
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAY
+      Name: Yoga
+      Description: null
+      ListOrder: 34
+      Active: true
+      ParentID: PSA0
+      ChildCount: 3
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAF
+      Name: Fitness
+      Description: null
+      ListOrder: 35
+      Active: true
+      ParentID: PSA0
+      ChildCount: 5
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSSMY
+      Name: Yoga
+      Description: null
+      ListOrder: 36
+      Active: true
+      ParentID: PSSM0
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSEWS
+      Name: Specialty
+      Description: null
+      ListOrder: 37
+      Active: true
+      ParentID: PSEW0
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAR
+      Name: Running
+      Description: null
+      ListOrder: 37
+      Active: true
+      ParentID: PSA0
+      ChildCount: 3
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSSMSS
+      Name: Ski and snowboarding
+      Description: null
+      ListOrder: 38
+      Active: true
+      ParentID: PSSM0
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSSMG
+      Name: Golf
+      Description: null
+      ListOrder: 38
+      Active: true
+      ParentID: PSSM0
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAS
+      Name: Ski and snowboarding
+      Description: null
+      ListOrder: 44
+      Active: true
+      ParentID: PSA0
+      ChildCount: 3
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAC
+      Name: Cycling
+      Description: null
+      ListOrder: 45
+      Active: true
+      ParentID: PSA0
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAG
+      Name: Golf
+      Description: null
+      ListOrder: 45
+      Active: true
+      ParentID: PSA0
+      ChildCount: 5
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSSMC
+      Name: Cycling
+      Description: null
+      ListOrder: 45
+      Active: true
+      ParentID: PSSM0
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSSMF
+      Name: Fitness
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSSM0
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCW
+      Name: Women
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSC0
+      ChildCount: 5
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCM
+      Name: Men
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSC0
+      ChildCount: 5
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSARE
+      Name: Electronics
+      Description: null
+      ListOrder: 28
+      Active: true
+      ParentID: PSAR
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAGA
+      Name: Accessories
+      Description: null
+      ListOrder: 29
+      Active: true
+      ParentID: PSAG
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAGE
+      Name: Electronics
+      Description: null
+      ListOrder: 29
+      Active: true
+      ParentID: PSAG
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFC
+      Name: Clothing
+      Description: null
+      ListOrder: 29
+      Active: true
+      ParentID: PSAF
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAHC
+      Name: Clothing
+      Description: null
+      ListOrder: 30
+      Active: true
+      ParentID: PSAH
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCMB
+      Name: Bottoms
+      Description: null
+      ListOrder: 31
+      Active: true
+      ParentID: PSCM
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCWT
+      Name: Tops
+      Description: null
+      ListOrder: 31
+      Active: true
+      ParentID: PSCW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCWO
+      Name: Outerwear
+      Description: null
+      ListOrder: 32
+      Active: true
+      ParentID: PSCW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCWA
+      Name: Accessories
+      Description: null
+      ListOrder: 32
+      Active: true
+      ParentID: PSCW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFM
+      Name: Memberships and Lessons
+      Description: null
+      ListOrder: 33
+      Active: true
+      ParentID: PSAF
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAYA
+      Name: Accessories
+      Description: null
+      ListOrder: 33
+      Active: true
+      ParentID: PSAY
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAYC
+      Name: Clothing
+      Description: null
+      ListOrder: 33
+      Active: true
+      ParentID: PSAY
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAYM
+      Name: Memberships and Lessons
+      Description: null
+      ListOrder: 35
+      Active: true
+      ParentID: PSAY
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFE
+      Name: Equipment
+      Description: null
+      ListOrder: 35
+      Active: true
+      ParentID: PSAF
+      ChildCount: 3
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSARC
+      Name: Clothing
+      Description: null
+      ListOrder: 35
+      Active: true
+      ParentID: PSAR
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSASC
+      Name: Clothing
+      Description: null
+      ListOrder: 35
+      Active: true
+      ParentID: PSAS
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSASE
+      Name: Equipment
+      Description: null
+      ListOrder: 37
+      Active: true
+      ParentID: PSAS
+      ChildCount: 3
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAGC
+      Name: Clothing
+      Description: null
+      ListOrder: 40
+      Active: true
+      ParentID: PSAG
+      ChildCount: 2
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFH
+      Name: Health Supplements
+      Description: null
+      ListOrder: 40
+      Active: true
+      ParentID: PSAF
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCWF
+      Name: Footwear
+      Description: null
+      ListOrder: 40
+      Active: true
+      ParentID: PSCW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCMT
+      Name: Tops
+      Description: null
+      ListOrder: 41
+      Active: true
+      ParentID: PSCM
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSARA
+      Name: Accessories
+      Description: null
+      ListOrder: 41
+      Active: true
+      ParentID: PSAR
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSACE
+      Name: Equipment
+      Description: null
+      ListOrder: 42
+      Active: true
+      ParentID: PSAC
+      ChildCount: 3
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSACC
+      Name: Clothing and Accessories
+      Description: null
+      ListOrder: 42
+      Active: true
+      ParentID: PSAC
+      ChildCount: 3
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAGM
+      Name: Memberships and Lessons
+      Description: null
+      ListOrder: 42
+      Active: true
+      ParentID: PSAG
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCMO
+      Name: Outerwear
+      Description: null
+      ListOrder: 43
+      Active: true
+      ParentID: PSCM
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFA
+      Name: Accessories
+      Description: null
+      ListOrder: 43
+      Active: true
+      ParentID: PSAF
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCMA
+      Name: Accessories
+      Description: null
+      ListOrder: 45
+      Active: true
+      ParentID: PSCM
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAGG
+      Name: Golf clubs and sets
+      Description: null
+      ListOrder: 45
+      Active: true
+      ParentID: PSAG
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSASM
+      Name: Memberships and Lessons
+      Description: null
+      ListOrder: 45
+      Active: true
+      ParentID: PSAS
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCMF
+      Name: Footwear
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSCM
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAHE
+      Name: Equipment
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSAH
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSCWB
+      Name: Bottoms
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSCW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSARCW
+      Name: Women
+      Description: null
+      ListOrder: 28
+      Active: true
+      ParentID: PSARC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAGCW
+      Name: Women
+      Description: null
+      ListOrder: 32
+      Active: true
+      ParentID: PSAGC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAYAB
+      Name: Bags
+      Description: null
+      ListOrder: 33
+      Active: true
+      ParentID: PSAYA
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSACEM
+      Name: Maintenance
+      Description: null
+      ListOrder: 33
+      Active: true
+      ParentID: PSACE
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSACES
+      Name: Safety
+      Description: null
+      ListOrder: 34
+      Active: true
+      ParentID: PSACE
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSASESB
+      Name: Snowboards
+      Description: null
+      ListOrder: 34
+      Active: true
+      ParentID: PSASE
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSASEP
+      Name: Parts and accessories
+      Description: null
+      ListOrder: 34
+      Active: true
+      ParentID: PSASE
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSASESSK
+      Name: Skis
+      Description: null
+      ListOrder: 34
+      Active: true
+      ParentID: PSASE
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSACEE
+      Name: Electronics
+      Description: null
+      ListOrder: 35
+      Active: true
+      ParentID: PSACE
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAHCM
+      Name: Men
+      Description: null
+      ListOrder: 40
+      Active: true
+      ParentID: PSAHC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSARCM
+      Name: Men
+      Description: null
+      ListOrder: 40
+      Active: true
+      ParentID: PSARC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAGCM
+      Name: Men
+      Description: null
+      ListOrder: 40
+      Active: true
+      ParentID: PSAGC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAHCW
+      Name: Women
+      Description: null
+      ListOrder: 41
+      Active: true
+      ParentID: PSAHC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFCW
+      Name: Women
+      Description: null
+      ListOrder: 41
+      Active: true
+      ParentID: PSAFC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFCM
+      Name: Men
+      Description: null
+      ListOrder: 42
+      Active: true
+      ParentID: PSAFC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAYAM
+      Name: Mats
+      Description: null
+      ListOrder: 42
+      Active: true
+      ParentID: PSAYA
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSACCM
+      Name: Men
+      Description: null
+      ListOrder: 42
+      Active: true
+      ParentID: PSACC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSACCW
+      Name: Women
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSACC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSACCH
+      Name: Helmets
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSACC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSASCW
+      Name: Women
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSASC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSASCM
+      Name: Men
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSASC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAYCM
+      Name: Men
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSAYC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFER
+      Name: Resistance Training
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSAFE
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFEM
+      Name: Machines
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSAFE
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFEW
+      Name: Weights
+      Description: null
+      ListOrder: 47
+      Active: true
+      ParentID: PSAFE
+      ChildCount: 4
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAYCW
+      Name: Women
+      Description: null
+      ListOrder: 48
+      Active: true
+      ParentID: PSAYC
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFEWW
+      Name: Wearables
+      Description: null
+      ListOrder: 29
+      Active: true
+      ParentID: PSAFEW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFEWK
+      Name: Kettlebells
+      Description: null
+      ListOrder: 30
+      Active: true
+      ParentID: PSAFEW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFEWD
+      Name: Dumbells
+      Description: null
+      ListOrder: 40
+      Active: true
+      ParentID: PSAFEW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+    - ID: PSAFEWB
+      Name: Barbells
+      Description: null
+      ListOrder: 46
+      Active: true
+      ParentID: PSAFEW
+      ChildCount: 0
+      xp: null
+      CatalogID: PlayShopPublic
+  Suppliers: []
+  Products:
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPOTG10CSWSB
+      AutoForward: false
+      ID: PSPOTG10CSWSB
+      Name: 10-Club Set With a Stand Bag
+      Description: >-
+        The complete golf club set is the perfect solution for beginners and
+        casual players, with everything you need to start playing right away.
+
+
+        The set is comprised of a lightweight, five compartment stand bag and 10
+        golf clubs: driver, 3 wood, 5 hybrids (replaces the 5 iron), 6, 7, 8,
+        and 9 irons, pitching wedge, sand wedge, and putter. It is available in
+        five models: standard right hand, standard left hand, extended length,
+        graphite, and extended length graphite.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: OTG
+        UnitOfMeasure: Per
+        CCID: PSAGG
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/clubs-with-bag-1-product?v=378c7541
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/clubs-with-bag-2-product?v=6b7923fc
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/clubs-with-bag-3-product?v=158fbae6"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPOTG10CSWSB/otg-10-club-set-with-a-stand-bag
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCBB
+      AutoForward: false
+      ID: PSPCCBB
+      Name: Bike Bell
+      Description: >-
+        In order to ensure your safety, we developed this bell. Aluminum dome
+        produces a powerful, clear sound. Only compatible with 22.2 mm
+        handlebars (one of the most common). Quick and easy assembly and
+        disassembly with a screwdriver.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACES
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-bell-product?v=294eec3d
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCBB/centercycle-bike-bell
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSBC
+      AutoForward: false
+      ID: PSPSBC
+      Name: Bike Cover
+      Description: >-
+        The Striva Bike cover is the ultimate protection for your bicycle
+        against all the elements.
+
+
+        Whether you store your bicycle inside a garage or in the yard, you want
+        it to stay dry, without dust or scratches and protected against sunlight
+        - that&#39;s what this high-quality 190T Nylon waterproof cover will do
+        for you.<br />
+
+
+        -190T Nylon with PU coating, extremely durable
+
+        -Security eyelets at the front, enabling the cover to be locked securely
+        through the bikes front wheel, deterring theft (lock not included).
+
+        -Storm strap at the middle, which keeps the cover in place on windy
+        days.
+
+        -Elastic hems at the front middle and rear to allow for a nice snug fit
+        under both wheels.
+
+        -High-quality drawstring pouch for easy and convenient storage.
+
+        -Reflective loops to allow for easy location at night.
+
+
+        Dimensions
+
+        Non-stretched size : L 200cm H 100cm W 80cmNote: Please measure your
+        bike prior to purchase to ensure your cover fits
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-cover-product?v=1a005210
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-cover-2-product?v=dd7b8bb0
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSBC/striva-bike-cover
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSBGPS
+      AutoForward: false
+      ID: PSPSBGPS
+      Name: Bike GPS
+      Description: >-
+        Striva is a GPS bike computer that helps cyclists to train, compete and
+        navigate. The product consists of two parts: Striva Bike Mount and
+        Striva App. The Striva Bike Mount is a device which allows the user to
+        track his performance on the field. It has its own battery, so it can be
+        used even when there is no internet connection or the phone is not
+        nearby. The data collected by Striva are sent to the mobile app to allow
+        users to track and analyze their performance.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSEWS
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-gps-product?v=39d10443
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-gps-2-product?v=7395d8c5
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSBGPS/striva-bike-gps
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCBHB
+      AutoForward: false
+      ID: PSPCCBHB
+      Name: Bike Handlebar Bag
+      Description: >-
+        With this handlebar bag, you need not worry about leaving your things
+        behind while riding. The bag has a capacity of 2.5 L. It can hold a
+        pump, tools and other personal items. It can easily be attached to many
+        types of handlebars using rip-tabs.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-handlebar-bag-product?v=e7369e5e
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-handlebar-bag-white-background-product?v=f694c62c
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/bike-handlebar-bag-2-product?v=8218571a"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCBHB/centercycle-bike-handlebar-bag
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPOBITPRK
+      AutoForward: false
+      ID: PSPOBITPRK
+      Name: Bike Inner Tire Patch Repair Kit
+      Description: >-
+        When you get a flat tyre, it can be an extremely frustrating situation.
+        A puncture in your tube can leave you stranded and force you to waste
+        valuable time fixing the problem so that you can continue with your
+        ride. Our patch kit is small enough to fit into a jersey pocket, or even
+        a saddle bag, so that it's always available when you need it most.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Outrace
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/rapair-kit-product?v=f88b01a2
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPOBITPRK/outrace-bike-inner-tire-patch-repair-kit
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPOBLS
+      AutoForward: false
+      ID: PSPOBLS
+      Name: Bike Light Set
+      Description: >-
+        The USB rechargeable bicycle lights are one of the most popular and
+        convenient ways to illuminate your path in low visibility conditions.
+        These bike lights provide you with safety while riding at night or in
+        the dark. The LED light is extremely bright, so it can be used for other
+        nighttime activities like walking, running, jogging and camping etc.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Outrace
+        UnitOfMeasure: Per
+        CCID: PSACES
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-lights-set-product?v=885c59f3
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-lights-product?v=01d88eac
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/bike-lights-2-product?v=ab10c54d"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPOBLS/outrace-bike-light-set
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCBLSFRBPLED
+      AutoForward: false
+      ID: PSPCCBLSFRBPLED
+      Name: Bike Light Set Front/Rear Battery-Powered LED
+      Description: >-
+        This bike light set is made by a French company, and it has been
+        certified for road safety. It provides 25 lux of illumination (enough to
+        see at a gentle pace) from the front, and 15 lux from the rear. The rear
+        light has a range of visibility of 220°, which will allow vehicles
+        coming from any angle to see you. Front light has three modes:
+        High/low/flash (33 hours). Rear light has one mode: Constant RED (102
+        hours) both are easy to install and use. They're waterproof and made of
+        durable materials that will last many years.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACES
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-lights-product?v=01d88eac
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-lights-2-product?v=ab10c54d
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: >-
+          /shop/products/PSPCCBLSFRBPLED/centercycle-bike-light-set-frontrear-battery-powered-led
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSBPH
+      AutoForward: false
+      ID: PSPSBPH
+      Name: Bike Phone Holder
+      Description: >-
+        Universal bicycle phone holder is compatible with 4.7-6.8 inches GPS
+        devices, such as Apple iPhone 13 Mini, iPhone 13, iPhone 13 Pro, iPhone
+        13 Pro Max, iPhone 12 Mini, 12, 12 Pro, 12 Pro Max, iPhone 11, 11 Pro,
+        11 Pro Max, Xs, Xs Max, XR, X, 8, 7, 7 Plus, Huawei P30 Pro 10 Pro P20
+        P10, Samsung Galaxy S10 + S10 S9 + S9 S8 S8 + S7 S6, Note 9 8 7 6, LG,
+        HTC, Sony, Nokia, Nexus, other smart phones. Note: Please make sure that
+        the thickness of your device is less than 15 mm.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/phone-holder-product?v=0eda742b
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSBPH/striva-bike-phone-holder
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSBABW
+      AutoForward: false
+      ID: PSPSBABW
+      Name: Black and Alloy Bicycle Wheel
+      Description: "<ul>\n\t<li>Raleigh Tru-build Wheels rear wheel;</li>\n\t<li>Suitable replacement for most 26-inch wheeled bikes;</li>\n\t<li>Made of alloy;</li>\n\t<li>Available in silver color;</li>\n\t<li>Measures 26-inch diameter by 1.75-inch width;</li>\n</ul>\n"
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/wheel-product?v=ee28f5d1
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSBABW/striva-black-and-alloy-bicycle-wheel
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSBBC
+      AutoForward: false
+      ID: PSPSBBC
+      Name: Black Bicycle Cassette
+      Description: >
+        <p><strong>Features</strong><br />
+
+        - Color: Black.<br />
+
+        - Material: Steel.<br />
+
+        - Package Size: 7.87x7.87x2.75inch.<br />
+
+        - Number of teeth: 11-13-16-20-24-28-32-36-40T<br />
+
+        The silver surface of the bicycle flywheel has not changed color. The
+        silver black surface looks exquisite and gives you a luxurious
+        feeling.<br />
+
+        <br />
+
+        <strong>Package Including</strong><br />
+
+        1 * Bicycle cassette</p>
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/black-bicycle-cassette-product?v=97c83532
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSBBC/striva-black-bicycle-cassette
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSCBS
+      AutoForward: false
+      ID: PSPSCBS
+      Name: Body Scale
+      Description: >-
+        Powered by 3x AAA batteries
+
+        Supports kg and lb readouts
+
+        Measurement range between 100g (3.52 oz) and 150kg (23.6 stone)
+
+        Reinforced wipe-clean glass finish with floating display
+
+        High-precision BIA measurement chip
+
+        30cm long, 30cm wide, 2.5cm thick weighing 1.7kg
+
+        Smartphone and app required
+
+        Naturally the smart scale is for anyone wanting to weigh themselves,
+        however there are plenty of other use cases:
+
+
+        Families wanting to track kids weight
+
+        Athletes monitoring looking to monitor trends of muscle mass and
+        hydration
+
+        Those looking for a tool to aid them in losing weight through monitoring
+
+        Parcel measuring for items over 100g
+
+        Weight loss groups/classes of up to 16 people
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Sydney Cummings
+        UnitOfMeasure: Per
+        CCID: PSEWH
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smartscalelead-product?v=f3fa0813
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSCBS/sydney-cummings-body-scale
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSBL
+      AutoForward: false
+      ID: PSPSBL
+      Name: Break Levers
+      Description: >-
+        Striva Brake Levers are designed to be the ultimate performance upgrade
+        for your bike. With a simple, clean, and ergonomic design, the Striva
+        Brake Lever will help any rider get more out of their ride. They are
+        compatible with most standard brake levers on the market today and are
+        easy to install.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/break-lever-product?v=2ee9ada3
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSBL/striva-break-levers
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPRRTCB
+      AutoForward: false
+      ID: PSPRRTCB
+      Name: Camel Back
+      Description: >-
+        Specs
+
+        Capacity: 300 cu. in., 5 L.
+
+        Weight: 8 oz.
+
+        Hydration capacity: 70 oz.
+
+        Fits torso: 15&quot;-21&quot;.
+
+
+
+        Construction
+
+        Made from lightweight and durable materials.
+
+        Air Support&trade; light back panel is designed with body mapping
+        technology for ventilation and comfort.
+
+        Lightweight, breathable ventilated harness helps keep you cool.
+
+        Integrated tool organization .
+
+        Adjustable sternum strap for a custom fit.
+
+        BPA-, BPS- and BPF-free.
+
+
+        Additional Features
+
+        Secure, zippered pocket to store your keys and phone.
+
+        Stretch overflow pocket keeps an extra layer handy.
+
+        Reflectivity for low light safety.
+
+        Includes helmet carry and light loop.
+
+        70 oz. Crux reservoir with Quicklink&trade; disconnect.
+
+        Tube trap management keeps your drinking&nbsp;tube secure and accessible
+        when you need it.
+
+        <li>Elastic pump loop.</li>
+
+        <li>Imported.</li>
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Run Right Through
+        UnitOfMeasure: Per
+        CCID: PSARA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/camel-back-product?v=6ec69bb2
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPRRTCB/run-right-through-camel-back
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCCCBC
+      AutoForward: false
+      ID: PSPCCCCBC
+      Name: Carbon Cycling Bottle Cage
+      Description: >-
+        It securely holds the cycling water bottle thanks to a carbon-fiber
+        contruction. Lightweight (0.9 oz.) and very sturdy. Compatible with
+        bicycles with bottle cage screws. Very sturdy carbon-fiber contruction.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/carbon-cycling-bottle-cage-product?v=312458fb
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCCCBC/centercycle-carbon-cycling-bottle-cage
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSCBP
+      AutoForward: false
+      ID: PSPSCBP
+      Name: Classic Bike Paddles
+      Description: >-
+        Specifications:
+
+        Material: aluminum alloy
+
+        Weight: 185g (one pedal)
+
+        Size: 4.61 * 3.94 * 0.8 inches, Axle: 9/16 
+
+        Pin: 16 pins each
+
+        Construction: bicycle pedals
+
+        Application: BMX, MTB, road bike, city bike, etc.
+
+        Color: Black
+
+
+        Installation Tips:
+
+        Caution during installation: Right and left pedal signs with
+        &quot;L&quot; and &quot;R&quot; on top of the shaft!
+
+        1. Distinguish the left and right pedals during installation. Left pedal
+        counterclockwise, otherwise clockwise rotation of the right pedal.
+
+        2. First, sight the mounting holes of the crank after tightening them
+        with your hands. Then use the re-tightening tools.
+
+        3. If the left and right pedals are installed incorrectly, or if you
+        mount them with tools
+
+        when you are not aiming at the mounting holes, you can install it
+        temporarily, but after a few days it can easily fall or fall.
+
+
+        Delivery: 1 pair of bicycle pedals
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-paddles-product?v=c0fd12e4
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSCBP/striva-classic-bike-paddles
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSCHF
+      AutoForward: false
+      ID: PSPSCHF
+      Name: Classic Hardtail Frame
+      Description: >-
+        Feature:
+
+        1. The bike front fork frame is made of ultralight carbon fiber
+        material.
+
+        2. Has a good sense of use and long life. Sturdy and durable.
+
+        3. It has excellent hardness, no deformation, and corrosion resistance.
+
+        4. Professional manufacturing, can replace your old or broken bike
+        frame.
+
+        5. Comes with seat post clip, tube shaft, and tail hook. A wonderful
+        accessory for every mountain bike.
+
+
+        Specification:
+
+        Item Type: Bike Front Fork Frame
+
+        Material: Carbon&nbsp;Fiber
+
+        Color: As Pictures Shown
+
+        Weight: Approx. 3600g/127oz
+
+        Taper&nbsp;top&nbsp;pipe size: Approx. 41.8(42mm)/1.7in(top),
+        52mm/2in(down)Seat Tube Adaptation: Approx. 27.2mm/1.1in seat tube
+
+        Bottom Bracket:&nbsp;PF30, 73mm/2.9in
+
+        Rear Fork: 148x12mm/5.8x0.5in
+
+        29ER: Can be matched with 27.5, 29ER wheelset
+
+        Frame distribution: seatpost&nbsp;clip,&nbsp;tube&nbsp;shaft, and
+        tailhook
+
+        (has been installed on the bike frame)
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/frame-product?v=db4c59d2
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSCHF/striva-classic-hardtail-frame
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCCBL
+      AutoForward: false
+      ID: PSPCCCBL
+      Name: Combination Bike Lock
+      Description: >-
+        This bike lock is a patented, simple and quick to use bike storage
+        system that secures the wheels, saddle and other components of your bike
+        during short stops. It is made from a high-strength polymer and can be
+        used with wider saddles. It weighs 1.3 pounds and comes in at 59.1
+        inches long.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACES
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/combination-bike-lock-product?v=b355531d
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCCBL/centercycle-combination-bike-lock
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCCHVA
+      AutoForward: false
+      ID: PSPCCCHVA
+      Name: Connection Hose and Valve Adapters
+      Description: >-
+        The Connection Hose and Valve Adapters kit has all the adapters you need
+        to make your pump work with a wide variety of valves. The kit includes:
+
+        - A universal adapter that fits Schrader, Presta, Dunlop, Woods and most
+        other types of valves
+
+        - A tough vinyl hose that's long enough for many pumps
+
+        - An extension hose for those hard-to-reach valves
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/connection-hose-and-valve-adapters-product?v=20d7e176
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: >-
+          /shop/products/PSPCCCHVA/centercycle-connection-hose-and-valve-adapters
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSDP
+      AutoForward: false
+      ID: PSPSDP
+      Name: Dropper Post
+      Description: >-
+        Striva Dropper Seat Post is an innovative remote dropper seat post with
+        a maximum travel of 100mm. It allows you to adjust the seat height
+        effortlessly, by using a paddle that is attached to the handlebar.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/dropper-post-product?v=16c93dea
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/dropper-post-3-product?v=6dea4cdf
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSDP/striva-dropper-post
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPRRTEKS
+      AutoForward: false
+      ID: PSPRRTEKS
+      Name: Elastic Knee Support
+      Description: >-
+        Specifically designed with a seamless circular knit it provides
+        compressive support to the knee, helping to relieve symptoms of
+        arthritis, bursitis, and tendinitis. Made from thinner material than
+        neoprene, whilst still providing a high level of support this Ultimate
+        Compression Knee support is ideal for anyone who doesn&rsquo;t want the
+        bulk or heat generation of neoprene. It is also perfect if you have an
+        allergy to neoprene or latex. (Contains natural rubber latex: may cause
+        an allergic reaction in some users)
+
+
+        The compressive four-way stretch of the material
+        offers&nbsp;support&nbsp;to the areas that need it the most, mimicking
+        the support and action planes of key ligaments and tendons to reinforce
+        them. The compression technology also stimulates blood flow, preventing
+        the build-up of lactic acid which reduces the risk of cramps and
+        stiffness whilst also working to improve recovery and rehabilitation.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Run Right Through
+        UnitOfMeasure: Per
+        CCID: PSARA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/knee-band-product?v=680e7ee0
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPRRTEKS/run-right-through-elastic-knee-support
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSEBS
+      AutoForward: false
+      ID: PSPSEBS
+      Name: Ergonomic Bike Seat
+      Description: "<table id=\"productDetails_techSpec_section_1\" role=\"presentation\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th>Color</th>\n\t\t\t<td>&lrm;Black</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Size</th>\n\t\t\t<td>&lrm;One Size</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Material type</th>\n\t\t\t<td>&lrm;Leather</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Batteries included?</th>\n\t\t\t<td>&lrm;No</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Product Dimensions</th>\n\t\t\t<td>&lrm;35.56 x 17.78 x 7.62 cm; 453.59 Grams</td>\n\t\t</tr>\n\t</tbody>\n</table>\n"
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/ergonomic-bike-seat-product?v=5aba1ca3
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/ergonomic-bike-seat-2-product?v=e367b7a7
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/ergonomic-bike-seat-3-product?v=a60f3a41"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSEBS/striva-ergonomic-bike-seat
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCFP
+      AutoForward: false
+      ID: PSPCCFP
+      Name: Foot Pump
+      Description: >-
+        The new generation of BTP-1 Bike Pump is the perfect choice to inflate
+        tires on bicycles, hybrid bikes, city bikes or even baby strollers and
+        wheelchairs. The BTP-1 Bike Pump is equipped with a pressure indicator
+        in bars and PSI (needle pressure gauge). It's designed for mountain bike
+        tires with maximum pressure 8 bars / 116 PSI. Clip connection.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-foot-pump-product?v=cbcee1dc
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCFP/centercycle-foot-pump
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCFLEDBBL
+      AutoForward: false
+      ID: PSPCCFLEDBBL
+      Name: Front LED Battery Bike Light
+      Description: >-
+        We have designed a battery powered bike light to be seen from the front.
+        It has an elastic fastening system that is easy to use. In continuous
+        mode, it will last 32 hours and in flashing mode it will last 44 hours.
+        2 CR2032 batteries are included.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACES
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/front-led-battery-bike-light-product?v=5f40a0d1
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCFLEDBBL/centercycle-front-led-battery-bike-light
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSGS
+      AutoForward: false
+      ID: PSPSGS
+      Name: Gift Set
+      Description: >
+        Our perfect holiday gift set for your bike&nbsp;friends and relatives
+        contains:
+
+        pump
+
+        bottle
+
+        locking chain
+
+        3 bike lights
+
+        metal pedals
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/gift-set-product?v=4b1dce7a
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSGS/striva-gift-set
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPOTGGBR
+      AutoForward: false
+      ID: PSPOTGGBR
+      Name: Golf Ball Retriever
+      Description: >-
+        It is especially irritating when the ball gets stuck in a water hole or
+        sand trap. It is also difficult to see golf balls that are in the water.
+        You can waste a lot of time trying to chase the golf balls by hand. Not
+        every person has the luxury of hiring a personal caddy to chase their
+        runaway golf balls.
+
+        Quality golf balls are not cheap; plus, a lot of people go through the
+        extra expensive of having them monogrammed for easy identification on
+        the course. Losing golf balls on the course is like throwing money away.
+        Since some golf courses may charge by the hour, you can also waste
+        valuable time searching for a lost golf ball. If you are tired of
+        bending over and wearing your back out, it is high time to pick this
+        item!
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: OTG
+        UnitOfMeasure: Per
+        CCID: PSAGA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/golf-ball-retriever-product?v=0aea9b50
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPOTGGBR/otg-golf-ball-retriever
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPPSGCS
+      AutoForward: false
+      ID: PSPPSGCS
+      Name: Golf Clubs Set
+      Description: >-
+        The new "Pro Staff Golf Iron Clubs Set" is packed with distance and
+        forgiveness technology to help you hit more accurate shots more easily.
+        This set has you covered from tee to green with the confidence you need
+        to make every shot from the driver, fairway wood, and hybrid on through
+        the irons, wedges, and mallet-shaped putter. It all comes packed in a
+        convenient stand bag so you can carry it down the fairways with ease.
+
+
+        Features:
+
+        The lightweight 460cc driver features a larger sweet spot, more
+        forgiveness, and a graphite shaft for longer shots off the tee
+
+        Fairway wood with a stainless steel clubhead and graphite shaft promotes
+        faster swing speeds and longer shots
+
+        Confidence-inspiring hybrid is a great alternative to long irons for
+        more confidence and versatility in the long game
+
+        Irons and wedges with perimeter weighting and progressive sole widths
+        provide improved control
+
+        Mallet style putter with alignment aids for more accuracy and stability
+        rolling putts
+
+        Lightweight, durable stand bag features five pockets, an additional
+        cooler pocket, backpack-style straps for easy carrying, and a convenient
+        rain hood
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Pro Staff
+        UnitOfMeasure: Per
+        CCID: PSAGG
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/golf-set-1-product?v=3b5d1507
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/golf-set-2-product?v=87653ac6
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/golf-set-3-product?v=dde21e9a"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPPSGCS/pro-staff-golf-clubs-set
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPRRTGWB
+      AutoForward: false
+      ID: PSPRRTGWB
+      Name: Grip Water Bottles
+      Description: >-
+        Hydration on the Move - Ergonomic and designed to be easy to drink from
+        whilst you are running or moving.
+
+        Non-toxic BPA free plastic - Food grade material with no nasties - also
+        dishwasher Safe for easy cleaning (top shelf only) and convenience.
+
+        Ergonomic sports grip - Easy to hold when jogging, hiking, working out
+        in the gym, at home, or absolutely anywhere to stay hydrated.
+
+        Compact and lightweight - Each bottle holds 350ml of liquid, is slimline
+        in design so easy to store and easy to carry.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Run Right Through
+        UnitOfMeasure: Per
+        CCID: PSARA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/water-bottles-product?v=be45cf13
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/water-bottle-2-product?v=3a3c58cd
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPRRTGWB/run-right-through-grip-water-bottles
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPGG
+      AutoForward: false
+      ID: PSPGG
+      Name: Gym bag
+      Description: >-
+        It comes with 9 compartments: 4 internal compartments and 5 external
+        pockets. The main internal compartment has enough space to keep your
+        shorts, T-shirts, and other belongings, 3 other internal pockets: for
+        storing phone, wallet, keys; The 5 external pockets store shoes,
+        drinking glass, headset, other belongings. The fitness bag is easily put
+        into the gym locker and the luggage of the aircraft.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Gameday
+        UnitOfMeasure: Per
+        CCID: PSAFA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/gym-bag-product?v=e36117ea
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/gym-bag-2-product?v=c39a11da
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/gym-bag-3-product?v=e5195aa1"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPGG/gameday-gym-bag
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCHP
+      AutoForward: false
+      ID: PSPCCHP
+      Name: Hand Pump
+      Description: >-
+        A universal hand pump that works with the three most popular valves:
+        Schrader, Presta and Dunlop. With its simple design it's easy to use
+        anywhere and anytime. Super compact, making it easy to carry in your bag
+        so you can always inflate tires on the go. The ultra-lightweight pump
+        fits easily into any bicycle or sports equipment bag and comes with an
+        attachment clip allowing you to take it with you anywhere you go.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-hand-pump-product?v=4e0023e4
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCHP/centercycle-hand-pump
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPAMMWSSRCJ
+      AutoForward: false
+      ID: PSPAMMWSSRCJ
+      Name: Male Moisture-Wicking Short Sleeved Road Cycling Jersey
+      Description: >-
+        Our road cycling jersey is designed to make a great introduction to road
+        cycling in warm weather. The jersey has a single zip pocket so you can
+        carry items safely. Perspiration is wicked to the outside and the jersey
+        dries quickly thanks to the 100% recycled polyester thread.  Relaxed
+        cut: suitable for all body types.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 2
+      VariantCount: 6
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Alba
+        UnitOfMeasure: Per
+        CCID: PSCMT
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-2-product?v=536dc7a1
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: >-
+          /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCMBDL
+      AutoForward: false
+      ID: PSPCCMBDL
+      Name: Mini Bike D-Lock
+      Description: >-
+        We have developed this bike lock that offers an excellent level of
+        security to keep your bike safe from thieves. This lock is lightweight,
+        easy to carry and lets you secure your bike to a fixed point in an urban
+        environment. A high-security lock with a rating of 8/10, it secures the
+        frame to a fixed object by using the 6-inch shackle.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACES
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/mini-bike-d-lock-product?v=5f40a0d1
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCMBDL/centercycle-mini-bike-d-lock
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSCMEKGM
+      AutoForward: false
+      ID: PSPSCMEKGM
+      Name: Mobile EKG Monitor
+      Description: >-
+        The power is in your hands when it comes to your heart health thanks to
+        the Sydney Cummings Mobile EKG Monitor. This innovative device pairs
+        with just about any smartphone to give you almost instant EKG results.
+
+        Personal digital EKG device
+
+
+        Using your fingertips to capture medical-grade EKG in 30 seconds
+
+        Track EKG recordings and interpretations between doctor visits
+
+        Track multiple risk factors (EKG, blood pressure, activity, weight) in a
+        single platform
+
+        Create a personal heart profile with artificial intelligence technology
+
+        Capture heart rate and symptoms such as irregular heartbeat, Atrial
+        fibrillation, and more
+
+        Mobile EKG and algorithms with 98% sensitivity and 97% specificity for
+        instant detection of AF
+
+        Single-lead rhythm strip comparable to Lead 1 of standard EKG machines,
+        and is the most clinically-validated mobile EKG solution available
+
+        State and record symptoms while taking EKG;
+
+        Store your most recent EKG recording and analysis
+
+        Share results with your doctor
+
+        AliveCor is HIPAA compliant
+
+        1 Year Warranty
+
+        3V CR2016 coin cell battery
+
+        Basic app service included
+
+        Phone not included
+
+        Compatible with iOs iPhones: 5 through 12, plus iPod Touch 7th Gen, iPad
+        Air, Pro, and Mini; Andriod Devices: Samsung Galaxy S5-S10, Samsung
+        notebooks 5-10, LG Nexus 5, HTC One, Google Pixel and Pixel XL 1-5
+
+        Unlock comprehensive control over your heart health with a 30-day trial
+        to our Premium service which gives you access to:
+
+
+        Unlimited EKG cloud storage and history
+
+        Monthly printed summary report of all the EKG&rsquo;s taken in a 30 day
+        period
+
+        Blood Pressure Monitoring
+
+        Weight tracking and medication information
+
+        Heart Health Journal that integrates with Google Fit or Apple Health
+        Apps
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Sydney Cummings
+        UnitOfMeasure: Per
+        CCID: PSEWH
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/ekg-monitor-product?v=5298fe31
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/ekg-monitor-2-product?v=da5267d2
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSCMEKGM/sydney-cummings-mobile-ekg-monitor
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCM
+      AutoForward: false
+      ID: PSPCCM
+      Name: Multitool
+      Description: >-
+        A compact, lightweight 11 function folding tool that can easily handle
+        most repairs. This tool features a chain breaker that allows you to
+        remove chains with ease and it also doubles as a spoke wrench. The Bike
+        Multitool also includes an adjustable wrench, screwdrivers, hex wrenches
+        and more!
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/multitool-product?v=d4ae8061
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCM/centercycle-multitool
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSCN
+      AutoForward: false
+      ID: PSPSCN
+      Name: Nutridis
+      Description: >-
+        A machine, that is an automated dispenser for nutrient supplements.
+        Nutridis&nbsp;provides exactly the amount of supplement required thereby
+        eliminating the excess. It takes in multiple dietary supplements and
+        keeps them in the internal compartments. Basis the user, the machine
+        will dispense just the amount of solid and semi-solid supplements
+        required at a designated time.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Sydney Cummings
+        UnitOfMeasure: Per
+        CCID: PSEWH
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/nutridis-product?v=173865b1
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/nutridis-2-product?v=b05d3b08
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSCN/sydney-cummings-nutridis
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSCP
+      AutoForward: false
+      ID: PSPSCP
+      Name: Pillowbot
+      Description: >-
+        The Sleep Robot has sensors that detect your breathing rate. Through
+        these measurements, the Pillowbot can adapt itself to your breathing and
+        gently slow it down. Quiet breathing has been proven to reduce stress
+        and calm your mind.
+
+
+        The Pillowbot can play soothing music, nature sounds, or white/pink
+        noise. These sounds help you relax and can enhance the Pillowbot&rsquo;s
+        calming effect.
+
+
+        With the Pillowbot Mobile App, you can easily adjust the settings of
+        your Pillowbot to your personal preferences. In the app, you can change
+        your breathing program or choose your favorite soothing sounds and
+        music.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Sydney Cummings
+        UnitOfMeasure: Per
+        CCID: PSEWH
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/pillow-product?v=9455bc35
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSCP/sydney-cummings-pillowbot
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCPGS
+      AutoForward: false
+      ID: PSPCCPGS
+      Name: Protective Gear Set
+      Description: >-
+        The shells are made of ABS material with foam reinforcement but also
+        feature a flexible and full-coverage fabric construction with additional
+        ventilated mesh. An elasticized rip-tab system allows for easy sizing.
+        The elbows and knees have stretch sleeves for a perfect fit.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACC
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/protective-gear-set-product?v=b3bef02c
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCPGS/centercycle-protective-gear-set
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCR
+      AutoForward: false
+      ID: PSPCCR
+      Name: Ratchet kit
+      Description: >-
+        Features a fine tooth ratchet mechanism with reverse lever and thumb
+        wheel for quick rotation and control in tight spots and includes
+        hardened steel tools in 2, 2.5, 3, 4, 5, 6, and 8 mm hex, T10, T15, T25
+        Torx&reg; and #2 Phillips bits, CrMo steel chain tool, two engineering
+        grade polymer tire levers and magnetic bit, holder. * The chain tool is
+        compatible with single and multi-speed chains up to 12 speeds, NOT
+        including hollow pin chains.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/ratchet-kit-3-product?v=e899159b
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCR/centercycle-ratchet-kit
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCRBLEDBL
+      AutoForward: false
+      ID: PSPCCRBLEDBL
+      Name: Rear Battery LED Bike Light
+      Description: >-
+        We have designed a battery powered bike light to be seen from the back.
+        It has an elastic fastening system that is easy to use. In continuous
+        mode, it will last 32 hours and in flashing mode it will last 44 hours.
+        2 CR2032 batteries are included.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACES
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/rear-battery-led-bike-light-product?v=0d1331b7
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCRBLEDBL/centercycle-rear-battery-led-bike-light
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSRG
+      AutoForward: false
+      ID: PSPSRG
+      Name: Rear Gearshift
+      Description: "<table id=\"productDetails_techSpec_section_1\" role=\"presentation\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th>Color</th>\n\t\t\t<td>&lrm;Black</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Style</th>\n\t\t\t<td>&lrm;Direct Mount Rear Derailleur</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Number of speeds</th>\n\t\t\t<td>&lrm;7</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Usage</th>\n\t\t\t<td>&lrm;Cycling, Mountain, Road, Youth</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Batteries included?</th>\n\t\t\t<td>&lrm;No</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Item model number</th>\n\t\t\t<td>&lrm;RDA070D</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th>Package Dimensions</th>\n\t\t\t<td>&lrm;13.9 x 13.5 x 8.2 cm; 380 Grams</td>\n\t\t</tr>\n\t</tbody>\n</table>"
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/rear-gearshift-product?v=e7c18fde
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSRG/striva-rear-gearshift
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPPRBSWPP
+      AutoForward: false
+      ID: PSPPRBSWPP
+      Name: Running Belt Sport Waist Pack-Pouch
+      Description: >-
+        The Running Belt Sport Waist Pack-Pouch is a simple, lightweight and
+        comfortable belt that can hold your phone, keys, money while running.
+        The belt is made of a stretchy material that allows it to hug the body
+        tightly. A velcro strap keeps the pouch in place.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Plus
+        UnitOfMeasure: Per
+        CCID: PSARA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/running-belt-sport-waist-pack-pouch-1-product?v=47e6d962
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPPRBSWPP/plus-running-belt-sport-waist-pack-pouch
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCSB
+      AutoForward: false
+      ID: PSPCCSB
+      Name: Saddle Bag
+      Description: >-
+        The bike saddle bag is designed for transporting small personal items
+        and bike repair supplies when cycling. It is designed to be secured to
+        the top tube of a bicycle frame via Velcro straps, and features a
+        waterproof main compartment with drawstring closure, as well as three
+        additional pockets.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/saddle-bag-product?v=05847bc3
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCSB/centercycle-saddle-bag
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCSBPC
+      AutoForward: false
+      ID: PSPCCSBPC
+      Name: Single Bike Protective Cover
+      Description: >-
+        A practical, compact, plain bike cover, easy to put over your bike
+        (elastic bands along the hem). Compatible with all bikes (without a
+        child seat). Keeps your bike clean from dust and light rain. Made of
+        durable material.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/single-bike-protective-cover-product?v=07b579da
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCSBPC/centercycle-single-bike-protective-cover
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSSAB
+      AutoForward: false
+      ID: PSPSSAB
+      Name: Smart Audio Band
+      Description: >-
+        Striva Smart audio band provides real-time audio coaching for running,
+        cycling, cardio boxing, bodyweight workouts.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSEWS
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smart-audio-band-product?v=29a9d6f2
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSSAB/striva-smart-audio-band
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSSB
+      AutoForward: false
+      ID: PSPSSB
+      Name: Smart Band
+      Description: |
+        Metrics:
+        - Blood Oxygenation
+        - Body Temperature
+        - Heart Rate
+        - Sleep
+        - Activity (Pedometer and sport modes)
+
+        Features:
+        - Bluetooth connectivity</p>
+        - Efficient power usage (5-7 days of usage)
+        - Dedicated companion app (Android and iOS)
+        - IP67 splash proof capability
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSEWA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smart-band-1-product?v=844936af
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smart-band-2-product?v=6abe8b29
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/smart-band-3-product?v=467983f2"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSSB/striva-smart-band
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSSFT
+      AutoForward: false
+      ID: PSPSSFT
+      Name: Smart Fitness Tracker
+      Description: >-
+        Striva Smart Fitness Tracker is a wearable device that tracks your body
+        vitals, movement and workout intensity. The tracker syncs with the
+        Striva mobile app to provide users with real-time data on their health.
+        The smart technology in Striva automatically adjusts the intensity of
+        your workout based on your heart rate and makes sure you get the most
+        out of every session!
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSEWA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/fitness-tracker-product?v=021dc6dd
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSSFT/striva-smart-fitness-tracker
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSSS
+      AutoForward: false
+      ID: PSPSSS
+      Name: Smart Sleeve
+      Description: >
+        The smart sleeve digitally reads and records your bioindicators. You can
+        sync the information via blutooth to your iOS or android device.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Striva
+        UnitOfMeasure: Per
+        CCID: PSEWA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smart-sleeve-product?v=7482700a
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smart-sleeve-2-product?v=f0cf33c1
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/smart-sleeve-3-product?v=7f9005b8"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSSS/striva-smart-sleeve
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPOUS
+      AutoForward: false
+      ID: PSPOUS
+      Name: Smartwatch
+      Description: >-
+        Tough and durable
+
+        Tested to the extreme, waterproof 100 m. The highest grade of materials:
+        sapphire glass and grade 5 titanium in selected models.
+
+
+        Built to last
+
+        Battery life 25 hours with best GPS, up to 170 hours in Tour mode.
+
+
+        Passionate about sports
+
+        Sport expertise and support for over 80 sports (running, cycling,
+        swimming, hiking, and many more).
+
+
+        Designed for adventure
+
+        Barometric altitude, route navigation on the watch, and sport-specific
+        heatmaps on OverUnder app.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: OverUnder
+        UnitOfMeasure: Per
+        CCID: PSEWA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smartwatch-product?v=11095651
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPOUS/overunder-smartwatch
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPGSB
+      AutoForward: false
+      ID: PSPGSB
+      Name: Sports Bottle
+      Description: >-
+        Made from the toughest and safest non-toxic BPA-free TRITAN plastic, lid
+        made of food-grade PP material. Contribute to the protection of the
+        environment and save money with the recyclable materials.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Gameday
+        UnitOfMeasure: Per
+        CCID: PSAFA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/water-bottle-product?v=096ba4ad
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPGSB/gameday-sports-bottle
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPRFSAW
+      AutoForward: false
+      ID: PSPRFSAW
+      Name: Strengthening Ab Wheel
+      Description: >-
+        An ab wheel makes it easy for you to target your arms, back, and core
+        comfortably with a large wheel width for extra stability and beveled
+        edges for smooth directional transitions. The wheel also has a raised,
+        non-slip handle texture that provides you with a superior grip so you
+        can focus on your body and movement. Each ab wheel comes with an
+        exercise guide to help you get started &mdash; or continue on &mdash;
+        your journey to feeling and being your best self.
+
+
+        When families come together to discover the joy of staying active. From
+        running errands to running intervals, the collection AIMs to propel you
+        forward with thoughtfully designed pieces that fit and feel great
+        &mdash; movement is the core of this performance line, with a 100%
+        satisfaction guarantee.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Robin Fitness
+        UnitOfMeasure: Per
+        CCID: PSAFE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/abb-wheel-1-product?v=9dbb093f
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/abb-wheel-2-product?v=43b7ce08
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/abb-wheel-3-product?v=c8c422a5"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPRFSAW/robin-fitness-strengthening-ab-wheel
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPOUSC
+      AutoForward: false
+      ID: PSPOUSC
+      Name: Studio Cycle
+      Description: >-
+        If you love a real studio ride, the new ICR50 makes it easy to take on a
+        virtually limitless variety of cycling workouts in the comfort of your
+        own home. Advanced ergonomics and precision design deliver performance
+        every bit as intense as your favorite class.
+
+
+        Bluetooth connects with leading training apps
+
+        Precision resistance lever quickly changes intensity
+
+        Protected, rear-mounted flywheel shields critical components
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: OverUnder
+        UnitOfMeasure: Per
+        CCID: PSAFEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/studio-cycle-product?v=a92478f6
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/studio-cycle-2-product?v=40fa6e56
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/studio-cycle-3-product?v=113cdfc5"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPOUSC/overunder-studio-cycle
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPPSSGB
+      AutoForward: false
+      ID: PSPPSSGB
+      Name: Sunday Golf Bag
+      Description: >-
+        Carry/Sunday bags are the most compact of all golf bags.
+
+
+        They are structure-less and easy to carry.
+
+        They can be folded up for easy storage, and on the course, their main
+        function is to carry the bare essentials.
+
+
+        There is a hookup for a golf towel, a single large pocket, and a ball
+        pocket, but that’s about it.
+
+
+        Their lightweight design make the "Pro Staff Sunday Golf Bag" great for
+        sneaking in a fast round in the morning before work or if you want to
+        bring your sticks on the road but are tight on storage.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Pro Staff
+        UnitOfMeasure: Per
+        CCID: PSAGA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/sunday-golf-bag-product?v=23b29a0c
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPPSSGB/pro-staff-sunday-golf-bag
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCTP
+      AutoForward: false
+      ID: PSPCCTP
+      Name: Travel Pump
+      Description: >-
+        This pump fills both large volume fat bike tires and higher pressure MTB
+        tires, as well as gravel bike tires with ease. Its technology uses both
+        strokes to compress air to deliver high pressure output and saves time
+        and effort. Integrated dust cap keeps pump head clean and thumb lock
+        lever ensures air-tight seal.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/telescopic-bike-pump-product?v=e3799b74
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/telescopic-bike-pump-2-product?v=93a28d03
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/telescopic-bike-pump-3-product?v=230e40ce"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCTP/centercycle-travel-pump
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPOUT
+      AutoForward: false
+      ID: PSPOUT
+      Name: Treadmill
+      Description: >-
+        Experience a natural, powerful run with the industry's most advanced
+        frame and deck combination. Our treadmill includes a folding design.
+
+
+
+        20 x 55 running surface
+
+        0.5 - 12.5 mph speed range
+
+        0 - 15% incline range
+
+        Near-90 degree folding
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: OverUnder
+        UnitOfMeasure: Per
+        CCID: PSAFEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/treadmill-product?v=dd24f34f
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/treadmill-2-product?v=fd52c4b8
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/treadmill-3-product?v=96a41f57 "
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/treadmill-5-product?v=193558f6"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPOUT/overunder-treadmill
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCT
+      AutoForward: false
+      ID: PSPCCT
+      Name: Tubyhead
+      Description: >-
+        CenterCycle Tubyhead&rsquo;s transparent body allows you to see the
+        Presta valve core being removed, and after inflation, reinstalled with
+        no loss of pressure. With the valve core removed, larger air volume is
+        rapidly delivered by a standard floor pump to quickly seat and inflate
+        tubeless tires or other large volume tires.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/tubyhead-1-product?v=f79a46dd
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/tubyhead-2-product?v=32ecb2eb
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCT/centercycle-tubyhead
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPSCW
+      AutoForward: false
+      ID: PSPSCW
+      Name: Watch
+      Description: >-
+        A rugged, water-resistant wristwatch that includes features such as an
+        alarm, stopwatch, compass, heart rate monitor, tachymeter (rotating
+        bezel for calculating speed), thermometer, and tide indicator (for
+        divers).
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Sydney Cummings
+        UnitOfMeasure: Per
+        CCID: PSEWA
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smart-watch-product?v=869a341f
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/smart-watch-2-product?v=27dd8ea1
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPSCW/sydney-cummings-watch
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCWSH
+      AutoForward: false
+      ID: PSPCCWSH
+      Name: Waterproof Smartphone Holder
+      Description: >-
+        The case provides waterproof protection for your smartphone while riding
+        your bike. It is easy to mount on either the stem or handlebar. The case
+        measures from 2 to 3.5 inches and the maximum phone measurements are
+        5.5" x 2.7" x 0.3".
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/waterproof-smartphone-holder-product?v=df66ff4b
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCWSH/centercycle-waterproof-smartphone-holder
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCWBBC
+      AutoForward: false
+      ID: PSPCCWBBC
+      Name: Wire Bike Bottle Cage
+      Description: >-
+        This bike bottle cage is a water bottle holder designed to attach to the
+        bike frame. It has rubber parts that prevent slipping and can be easily
+        adjusted to fit different diameter of bottles.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/bike-bottle-cage-product?v=1a4424b0
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCWBBC/centercycle-wire-bike-bottle-cage
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCWC
+      AutoForward: false
+      ID: PSPCCWC
+      Name: Wireless Cyclometer
+      Description: >-
+        Our engineers have designed the cyclometer for cyclists looking for a
+        simple, reliable cyclometer that can measure their speed, distance,
+        time, temperature, and route. It mounts easily to your wheel hub, and
+        the magnet-free sensor is easy to install. There are three easy-to-use
+        buttons and a simple, intuitive user interface. Backlit figures and the
+        case is water-resistant, so it's easy to see, even in the dark. A sensor
+        can be attached to the back wheel to use it with a turbo trainer.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEE
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/wireless-cyclometer-product?v=ef0ea54e
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCWC/centercycle-wireless-cyclometer
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPCCW
+      AutoForward: false
+      ID: PSPCCW
+      Name: Work stand
+      Description: >-
+        This holder accepts bikes with quick-release fork or 12 x 100 mm, 15 x
+        100 / 110 mm, 20 x 110 mm thru-axle forks. The holder height is
+        adjustable between 85 cm - 145 cm. It is foldable thanks to the three QR
+        clamps.The base is made of HD folding 6061-T6 aluminium tubes. The
+        maximum load is 18kg. With a weight of less than 5kg and a compact size
+        when folded it offers great function without taking up too much space.
+        An additinal tool tray and carry bag can be purchased.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: CenterCycle
+        UnitOfMeasure: Per
+        CCID: PSACEM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/work-stand-product?v=10f37c88
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/work-stand-2-product?v=b1ece29e
+          - ThumbnailUrl: ""
+            Url: " https://ch.sitecoredemo.com/api/public/content/work-stand-3-product?v=3580a79f"
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPCCW/centercycle-work-stand
+    - OwnerID: <MarketplaceID placeholder>
+      DefaultPriceScheduleID: PSPOYFM
+      AutoForward: false
+      ID: PSPOYFM
+      Name: Yoga and Fitness Mat
+      Description: >-
+        Thanks to its thickness of 0.6 cm, it is particularly gentle for the
+        joints. It offers maximum comfort for the knees, elbows, and hips. As
+        safe support, it is perfect for most yoga styles as well as aerobics,
+        Pilates, gymnastics, back, abdominal, gymnastics for pregnancy,
+        exercise, bodybuilding, and gymnastics for children. It is also ideal
+        for ballet schools and clinics.
+
+
+        The yoga mat is non-toxic, PVC-free, metal-free, non-irritating, and
+        heavy metals. The material is thermoplastic elastomer- TPE. This
+        material is environmental and user-friendly, hypoallergenic, and
+        skin-friendly. And there is still a natural oxidation benefit, can be
+        recycled, avoid pollution, good elasticity, strong resistance. Do not
+        worry about using our yoga mats.
+      QuantityMultiplier: 1
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Active: true
+      SpecCount: 0
+      VariantCount: 0
+      ShipFromAddressID: null
+      Inventory: null
+      DefaultSupplierID: null
+      AllSuppliersCanSell: false
+      Returnable: false
+      xp:
+        Status: Draft
+        Brand: Outrace
+        UnitOfMeasure: Per
+        CCID: PSAYAM
+        Images:
+          - ThumbnailUrl: ""
+            Url: >-
+              https://ch.sitecoredemo.com/api/public/content/fitness-mat-product?v=6e8d20d6
+        Currency: USD
+        ProductType: Standard
+        ProductUrl: /shop/products/PSPOYFM/outrace-yoga-and-fitness-mat
+  Variants:
+    - ID: PSPAMMWSSRCJ-BK-L
+      Name: null
+      Description: null
+      Active: true
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Inventory: null
+      Specs:
+        - SpecID: PSPAMMWSSRCJ-Color
+          Name: Color
+          OptionID: PSPAMMWSSRCJ-Color-black
+          Value: black
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+        - SpecID: PSPAMMWSSRCJ-Size
+          Name: Size
+          OptionID: PSPAMMWSSRCJ-Size-L
+          Value: L
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+      xp:
+        Images:
+          - Url: >-
+              https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-1-product?v=68cd7e0f
+            ThumbnailUrl: ""
+        SkuUrl: >-
+          /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BK-L
+      ProductID: PSPAMMWSSRCJ
+    - ID: PSPAMMWSSRCJ-BK-M
+      Name: null
+      Description: null
+      Active: true
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Inventory: null
+      Specs:
+        - SpecID: PSPAMMWSSRCJ-Color
+          Name: Color
+          OptionID: PSPAMMWSSRCJ-Color-black
+          Value: black
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+        - SpecID: PSPAMMWSSRCJ-Size
+          Name: Size
+          OptionID: PSPAMMWSSRCJ-Size-M
+          Value: M
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+      xp:
+        Images:
+          - Url: >-
+              https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-1-product?v=68cd7e0f
+            ThumbnailUrl: ""
+        SkuUrl: >-
+          /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BK-M
+      ProductID: PSPAMMWSSRCJ
+    - ID: PSPAMMWSSRCJ-BK-S
+      Name: null
+      Description: null
+      Active: true
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Inventory: null
+      Specs:
+        - SpecID: PSPAMMWSSRCJ-Color
+          Name: Color
+          OptionID: PSPAMMWSSRCJ-Color-black
+          Value: black
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+        - SpecID: PSPAMMWSSRCJ-Size
+          Name: Size
+          OptionID: PSPAMMWSSRCJ-Size-S
+          Value: S
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+      xp:
+        Images:
+          - Url: >-
+              https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-1-product?v=68cd7e0f
+            ThumbnailUrl: ""
+        SkuUrl: >-
+          /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BK-S
+      ProductID: PSPAMMWSSRCJ
+    - ID: PSPAMMWSSRCJ-BL-L
+      Name: null
+      Description: null
+      Active: true
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Inventory: null
+      Specs:
+        - SpecID: PSPAMMWSSRCJ-Color
+          Name: Color
+          OptionID: PSPAMMWSSRCJ-Color-blue
+          Value: blue
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+        - SpecID: PSPAMMWSSRCJ-Size
+          Name: Size
+          OptionID: PSPAMMWSSRCJ-Size-L
+          Value: L
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+      xp:
+        Images:
+          - Url: >-
+              https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-2-product?v=536dc7a1
+            ThumbnailUrl: ""
+        SkuUrl: >-
+          /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BL-L
+      ProductID: PSPAMMWSSRCJ
+    - ID: PSPAMMWSSRCJ-BL-M
+      Name: null
+      Description: null
+      Active: true
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Inventory: null
+      Specs:
+        - SpecID: PSPAMMWSSRCJ-Color
+          Name: Color
+          OptionID: PSPAMMWSSRCJ-Color-blue
+          Value: blue
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+        - SpecID: PSPAMMWSSRCJ-Size
+          Name: Size
+          OptionID: PSPAMMWSSRCJ-Size-M
+          Value: M
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+      xp:
+        Images:
+          - Url: >-
+              https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-2-product?v=536dc7a1
+            ThumbnailUrl: ""
+        SkuUrl: >-
+          /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BL-M
+      ProductID: PSPAMMWSSRCJ
+    - ID: PSPAMMWSSRCJ-BL-S
+      Name: null
+      Description: null
+      Active: true
+      ShipWeight: null
+      ShipHeight: null
+      ShipWidth: null
+      ShipLength: null
+      Inventory: null
+      Specs:
+        - SpecID: PSPAMMWSSRCJ-Color
+          Name: Color
+          OptionID: PSPAMMWSSRCJ-Color-blue
+          Value: blue
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+        - SpecID: PSPAMMWSSRCJ-Size
+          Name: Size
+          OptionID: PSPAMMWSSRCJ-Size-S
+          Value: S
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+      xp:
+        Images:
+          - Url: >-
+              https://ch.sitecoredemo.com/api/public/content/male-moisture-wicking-short-sleeved-road-cycling-jersey-2-product?v=536dc7a1
+            ThumbnailUrl: ""
+        SkuUrl: >-
+          /shop/products/PSPAMMWSSRCJ/alba-male-moisture-wicking-short-sleeved-road-cycling-jersey/PSPAMMWSSRCJ-BL-S
+      ProductID: PSPAMMWSSRCJ
+  PriceSchedules:
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPOTG10CSWSB
+      Name: 10-Club Set With a Stand Bag
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 299.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCBB
+      Name: Bike Bell
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 5.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSBC
+      Name: Bike Cover
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 15.95
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSBGPS
+      Name: Bike GPS
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 256.95
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCBHB
+      Name: Bike Handlebar Bag
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 19.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPOBITPRK
+      Name: Bike Inner Tire Patch Repair Kit
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 35
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPOBLS
+      Name: Bike Light Set
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 25.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCBLSFRBPLED
+      Name: Bike Light Set Front/Rear Battery-Powered LED
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 24.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSBPH
+      Name: Bike Phone Holder
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 24.95
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSBABW
+      Name: Black and Alloy Bicycle Wheel
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 60
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSBBC
+      Name: Black Bicycle Cassette
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 50
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSCBS
+      Name: Body Scale
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 250
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSBL
+      Name: Break Levers
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 89.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPRRTCB
+      Name: Camel Back
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 50
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCCCBC
+      Name: Carbon Cycling Bottle Cage
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 34.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSCBP
+      Name: Classic Bike Paddles
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 50
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSCHF
+      Name: Classic Hardtail Frame
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 250
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCCBL
+      Name: Combination Bike Lock
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 14.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCCHVA
+      Name: Connection Hose and Valve Adapters
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 6.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSDP
+      Name: Dropper Post
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 145.49
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPRRTEKS
+      Name: Elastic Knee Support
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 150
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSEBS
+      Name: Ergonomic Bike Seat
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 119.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCFP
+      Name: Foot Pump
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 24.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCFLEDBBL
+      Name: Front LED Battery Bike Light
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 6.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSGS
+      Name: Gift Set
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 60
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPOTGGBR
+      Name: Golf Ball Retriever
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 20
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPPSGCS
+      Name: Golf Clubs Set
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 985
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPRRTGWB
+      Name: Grip Water Bottles
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 25
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPGG
+      Name: Gym bag
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 50
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCHP
+      Name: Hand Pump
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 6.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPAMMWSSRCJ
+      Name: Male Moisture-Wicking Short Sleeved Road Cycling Jersey
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 12.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCMBDL
+      Name: Mini Bike D-Lock
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 34.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSCMEKGM
+      Name: Mobile EKG Monitor
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 50
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCM
+      Name: Multitool
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 25
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSCN
+      Name: Nutridis
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 750
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSCP
+      Name: Pillowbot
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 650
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCPGS
+      Name: Protective Gear Set
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 24.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCR
+      Name: Ratchet kit
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 52.95
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCRBLEDBL
+      Name: Rear Battery LED Bike Light
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 6.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSRG
+      Name: Rear Gearshift
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 119.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPPRBSWPP
+      Name: Running Belt Sport Waist Pack-Pouch
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 20
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCSB
+      Name: Saddle Bag
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 14.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCSBPC
+      Name: Single Bike Protective Cover
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 34.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSSAB
+      Name: Smart Audio Band
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 150
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSSB
+      Name: Smart Band
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 45
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSSFT
+      Name: Smart Fitness Tracker
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 19.95
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSSS
+      Name: Smart Sleeve
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 150
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPOUS
+      Name: Smartwatch
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 100
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPGSB
+      Name: Sports Bottle
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 5
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPRFSAW
+      Name: Strengthening Ab Wheel
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 15
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPOUSC
+      Name: Studio Cycle
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 2200
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPPSSGB
+      Name: Sunday Golf Bag
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 1000
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCTP
+      Name: Travel Pump
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 40
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPOUT
+      Name: Treadmill
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 1920
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCT
+      Name: Tubyhead
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 45.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPSCW
+      Name: Watch
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 450
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCWSH
+      Name: Waterproof Smartphone Holder
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 29.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCWBBC
+      Name: Wire Bike Bottle Cage
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 6.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCWC
+      Name: Wireless Cyclometer
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 39.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPCCW
+      Name: Work stand
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 269.99
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPOYFM
+      Name: Yoga and Fitness Mat
+      ApplyTax: false
+      ApplyShipping: false
+      MinQuantity: 1
+      MaxQuantity: null
+      UseCumulativeQuantity: false
+      RestrictedQuantity: false
+      PriceBreaks:
+        - Quantity: 1
+          Price: 25
+          SalePrice: null
+      Currency: null
+      SaleStart: null
+      SaleEnd: null
+      IsOnSale: false
+      xp: null
+  Specs:
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPAMMWSSRCJ-Color
+      ListOrder: 1
+      Name: Color
+      DefaultValue: null
+      Required: true
+      AllowOpenText: false
+      DefaultOptionID: null
+      DefinesVariant: true
+      xp: null
+      OptionCount: 2
+      Options:
+        - ID: PSPAMMWSSRCJ-Color-blue
+          Value: blue
+          ListOrder: 1
+          IsOpenText: false
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+          xp: null
+        - ID: PSPAMMWSSRCJ-Color-black
+          Value: black
+          ListOrder: 2
+          IsOpenText: false
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+          xp: null
+    - OwnerID: <MarketplaceID placeholder>
+      ID: PSPAMMWSSRCJ-Size
+      ListOrder: 2
+      Name: Size
+      DefaultValue: null
+      Required: true
+      AllowOpenText: false
+      DefaultOptionID: null
+      DefinesVariant: true
+      xp: null
+      OptionCount: 3
+      Options:
+        - ID: PSPAMMWSSRCJ-Size-S
+          Value: S
+          ListOrder: 1
+          IsOpenText: false
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+          xp: null
+        - ID: PSPAMMWSSRCJ-Size-M
+          Value: M
+          ListOrder: 2
+          IsOpenText: false
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+          xp: null
+        - ID: PSPAMMWSSRCJ-Size-L
+          Value: L
+          ListOrder: 3
+          IsOpenText: false
+          PriceMarkupType: NoMarkup
+          PriceMarkup: null
+          xp: null
+  SpecOptions:
+    - ID: PSPAMMWSSRCJ-Color-blue
+      Value: blue
+      ListOrder: 1
+      IsOpenText: false
+      PriceMarkupType: NoMarkup
+      PriceMarkup: null
+      xp: null
+      SpecID: PSPAMMWSSRCJ-Color
+    - ID: PSPAMMWSSRCJ-Color-black
+      Value: black
+      ListOrder: 2
+      IsOpenText: false
+      PriceMarkupType: NoMarkup
+      PriceMarkup: null
+      xp: null
+      SpecID: PSPAMMWSSRCJ-Color
+    - ID: PSPAMMWSSRCJ-Size-S
+      Value: S
+      ListOrder: 1
+      IsOpenText: false
+      PriceMarkupType: NoMarkup
+      PriceMarkup: null
+      xp: null
+      SpecID: PSPAMMWSSRCJ-Size
+    - ID: PSPAMMWSSRCJ-Size-M
+      Value: M
+      ListOrder: 2
+      IsOpenText: false
+      PriceMarkupType: NoMarkup
+      PriceMarkup: null
+      xp: null
+      SpecID: PSPAMMWSSRCJ-Size
+    - ID: PSPAMMWSSRCJ-Size-L
+      Value: L
+      ListOrder: 3
+      IsOpenText: false
+      PriceMarkupType: NoMarkup
+      PriceMarkup: null
+      xp: null
+      SpecID: PSPAMMWSSRCJ-Size
+  ProductFacets: []
+  Promotions: []
+Assignments:
+  UserGroupAssignments: []
+  SpendingAccountAssignments: []
+  AddressAssignments: []
+  CostCenterAssignments: []
+  CreditCardAssignments: []
+  CategoryAssignments: []
+  CategoryProductAssignments: []
+  SecurityProfileAssignments:
+    - SecurityProfileID: BuyerUser
+      BuyerID: buyer1
+      SupplierID: null
+      UserID: null
+      UserGroupID: null
+    - SecurityProfileID: SuperAdmin
+      BuyerID: null
+      SupplierID: null
+      UserID: middleware-user
+      UserGroupID: null
+    - SecurityProfileID: SuperAdmin
+      BuyerID: null
+      SupplierID: null
+      UserID: initial-admin-user
+      UserGroupID: null
+  AdminUserGroupAssignments: []
+  ApiClientAssignments: []
+  ProductAssignments: []
+  CatalogAssignments:
+    - CatalogID: PlayShopPublic
+      BuyerID: buyer1
+      ViewAllCategories: true
+      ViewAllProducts: true
+  ProductCatalogAssignment:
+    - CatalogID: PlayShopPublic
+      ProductID: PSPAMMWSSRCJ
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCBB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCBHB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCBLSFRBPLED
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCCBL
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCCCBC
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCCHVA
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCFLEDBBL
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCFP
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCHP
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCM
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCMBDL
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCPGS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCR
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCRBLEDBL
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCSB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCSBPC
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCT
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCTP
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCW
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCWBBC
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCWC
+    - CatalogID: PlayShopPublic
+      ProductID: PSPCCWSH
+    - CatalogID: PlayShopPublic
+      ProductID: PSPGG
+    - CatalogID: PlayShopPublic
+      ProductID: PSPGSB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPOBITPRK
+    - CatalogID: PlayShopPublic
+      ProductID: PSPOBLS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPOTG10CSWSB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPOTGGBR
+    - CatalogID: PlayShopPublic
+      ProductID: PSPOUS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPOUSC
+    - CatalogID: PlayShopPublic
+      ProductID: PSPOUT
+    - CatalogID: PlayShopPublic
+      ProductID: PSPOYFM
+    - CatalogID: PlayShopPublic
+      ProductID: PSPPRBSWPP
+    - CatalogID: PlayShopPublic
+      ProductID: PSPPSGCS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPPSSGB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPRFSAW
+    - CatalogID: PlayShopPublic
+      ProductID: PSPRRTCB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPRRTEKS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPRRTGWB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSBABW
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSBBC
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSBC
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSBGPS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSBL
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSBPH
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSCBP
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSCBS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSCHF
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSCMEKGM
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSCN
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSCP
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSCW
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSDP
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSEBS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSGS
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSRG
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSSAB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSSB
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSSFT
+    - CatalogID: PlayShopPublic
+      ProductID: PSPSSS
+  SpecProductAssignments:
+    - SpecID: PSPAMMWSSRCJ-Color
+      ProductID: PSPAMMWSSRCJ
+      DefaultValue: null
+      DefaultOptionID: null
+    - SpecID: PSPAMMWSSRCJ-Size
+      ProductID: PSPAMMWSSRCJ
+      DefaultValue: null
+      DefaultOptionID: null
+  PromotionAssignment: []

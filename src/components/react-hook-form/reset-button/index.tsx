@@ -20,7 +20,7 @@ export const ResetButton: FC<ResetButtonProps> = (props: ResetButtonProps) => {
   return (
     <>
       <Hide below="md">
-        <Button variant="outline" onClick={() => reset()} isDisabled={isSubmitting || !isDirty}>
+        <Button variant="outline" minW="unset" onClick={() => reset()} isDisabled={isSubmitting || !isDirty}>
           {children}
         </Button>
       </Hide>

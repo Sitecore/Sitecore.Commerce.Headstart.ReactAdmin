@@ -48,7 +48,7 @@ export function SecurityProfileDetail({securityProfile, isAssignedToAllAdmins}: 
   })
 
   const {handleSubmit, control, reset} = useForm<SecurityProfileForm>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as any,
     defaultValues: securityProfile?.ID
       ? {SecurityProfile: securityProfile, IsAssignedToAllAdmins: isAssignedToAllAdmins}
       : defaultValues,

@@ -15,24 +15,26 @@
       }
     }
   },
+  "uniqueusers": {
+    "totalamount": 53,
+    "previoustotalamount": 40
+  },
   "todaysmoney": {
-    "title": "Todays Money",
     "totalamount": 2500,
     "previoustotalamount": 1100
   },
-  "totalsales": {
-    "title": "Total Sales",
+  "weeksales": {
     "totalamount": 5500,
     "previoustotalamount": 1400
   },
   "newusers": {
-    "title": "New Users",
-    "totalamount": 231,
+    "totalamount": 24,
     "previoustotalamount": 170
   },
-  "totalusers": {
-    "title": "Total Users",
-    "totalamount": 25000,
-    "previoustotalamount": 12000
+  "totalpromos": {
+    "totalamount": 15
+  },
+  "totalproducts": {
+    "totalamount": 7560
   }
 }

@@ -35,7 +35,7 @@ const OcLoginForm: FunctionComponent<OcLoginFormProps> = ({title = "Sign into yo
   })
 
   const backgroundImage = useMemo(() => {
-    const backgroundImages = new Array(10).fill("").map((_, i) => `/raster/login-background/${i}.avif`)
+    const backgroundImages = new Array(10).fill("").map((_, i) => `/raster/login-background/${i}.jpg`)
     const randomIndex = Math.floor(Math.random() * 10)
     return backgroundImages[randomIndex]
   }, [])

@@ -1,33 +1,29 @@
 import {TableContainer, Table, Thead, Tr, Th, Tbody, Td, Heading, Box} from "@chakra-ui/react"
 import {Catalogs, Categories} from "ordercloud-javascript-sdk"
-import {Control, UseFieldArrayReturn, useWatch} from "react-hook-form"
 import {useEffect, useState} from "react"
 import {ICategoryProductAssignment} from "types/ordercloud/ICategoryProductAssignment"
 import {ICatalog} from "types/ordercloud/ICatalog"
 import {ICategory} from "types/ordercloud/ICategoryXp"
 import {Dictionary, groupBy} from "lodash"
 import {CategoryActionMenu} from "./CategoryActionMenu"
-import {ProductDetailFormFields} from "../../form-meta"
 import ProtectedContent from "@/components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 
 interface CategoryTableProps {
-  control: Control<ProductDetailFormFields>
-  fieldArray: UseFieldArrayReturn<ProductDetailFormFields, "CategoryAssignments", "id">
+  onRemove: (index: number) => void
+  categoryAssignments: ICategoryProductAssignment[]
 }
-export function CategoryTable({control, fieldArray}: CategoryTableProps) {
-  const {remove} = fieldArray
+export function CategoryTable({categoryAssignments, onRemove}: CategoryTableProps) {
   const [assignments, setAssignments] = useState<Dictionary<{Catalog: ICatalog; Category: ICategory}[]>>({})
-  const watchedFields = useWatch({control, name: "CategoryAssignments"}) as ICategoryProductAssignment[]
 
   useEffect(() => {
     // build Category and Catalog objects for display purposes
     async function buildDisplayValues() {
-      const allCatalogIds = watchedFields.map((assignment) => assignment.CatalogID)
+      const allCatalogIds = categoryAssignments.map((assignment) => assignment.CatalogID)
       const allCatalogs = allCatalogIds.length
         ? (await Catalogs.List({filters: {ID: allCatalogIds.join("|")}})).Items
         : []
-      const requests = watchedFields.map(async (catalogAssignment) => {
+      const requests = categoryAssignments.map(async (catalogAssignment) => {
         const catalog = allCatalogs.find((c) => c.ID === catalogAssignment.CatalogID)
         const category = await Categories.Get(catalogAssignment.CatalogID, catalogAssignment.CategoryID)
         return {
@@ -41,7 +37,7 @@ export function CategoryTable({control, fieldArray}: CategoryTableProps) {
     }
 
     buildDisplayValues()
-  }, [watchedFields])
+  }, [categoryAssignments])
 
   return (
     <>
@@ -82,7 +78,7 @@ export function CategoryTable({control, fieldArray}: CategoryTableProps) {
                         <Td role="cell">{category.Description}</Td>
                         <Td role="cell">
                           <ProtectedContent hasAccess={appPermissions.ProductManager}>
-                            <CategoryActionMenu onDeleteAssignment={() => remove(index)} />
+                            <CategoryActionMenu onDeleteAssignment={() => onRemove(index)} />
                           </ProtectedContent>
                         </Td>
                       </Tr>

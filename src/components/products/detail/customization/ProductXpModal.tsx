@@ -77,7 +77,7 @@ export const ProductXpModal = ({
   })
 
   const {handleSubmit, control, reset} = useForm<ProductXpFormFields>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as any,
     defaultValues,
     mode: "onBlur"
   })

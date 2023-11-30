@@ -77,8 +77,8 @@ export function AssignPriceModalContent({
 
   const {handleSubmit, control, reset} = useForm<AssignPriceFormModel>({
     mode: "onBlur",
-    resolver: yupResolver(validationSchema),
-    defaultValues: getAsyncDefaultValues as any
+    resolver: yupResolver(validationSchema) as any,
+    defaultValues: getAsyncDefaultValues
   })
 
   const {errors} = useFormState({control})

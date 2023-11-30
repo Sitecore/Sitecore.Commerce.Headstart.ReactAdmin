@@ -5,7 +5,7 @@ import {useErrorToast, useSuccessToast, useToast} from "hooks/useToast"
 import {cloneDeep, invert, merge, zipObject} from "lodash"
 import {Products, ProductCatalogAssignment} from "ordercloud-javascript-sdk"
 import {useState} from "react"
-import {useForm} from "react-hook-form"
+import {Resolver, useForm} from "react-hook-form"
 import {IPriceSchedule} from "types/ordercloud/IPriceSchedule"
 import {IProduct} from "types/ordercloud/IProduct"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
@@ -100,7 +100,7 @@ export default function ProductDetail({
     : merge(defaultValues, {Product: {OwnerID: defaultOwnerId}})
 
   const {handleSubmit, control, reset, trigger} = useForm<ProductDetailFormFields>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as any,
     defaultValues: initialValues,
     mode: "onBlur"
   })

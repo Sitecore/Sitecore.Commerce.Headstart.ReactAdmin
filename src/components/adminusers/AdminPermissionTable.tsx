@@ -1,6 +1,7 @@
 import {TableContainer, Table, Tbody, Tr, Td, Heading, Switch} from "@chakra-ui/react"
 import {appPermissions} from "config/app-permissions.config"
 import useHasAccess from "hooks/useHasAccess"
+import {startCase} from "lodash"
 import {useState} from "react"
 import {textHelper} from "utils"
 
@@ -35,7 +36,7 @@ export function AdminPermissionTable(props: AdminPermissionTableProps) {
           </Tr>
           {allPermissions.map((permission) => (
             <Tr key={permission}>
-              <Td>{textHelper.camelCaseToTitleCase(permission)}</Td>
+              <Td>{startCase(permission)}</Td>
               <Td textAlign="right">
                 <Switch
                   colorScheme={"primary"}

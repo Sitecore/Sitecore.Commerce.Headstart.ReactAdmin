@@ -2,8 +2,7 @@ export const textHelper = {
   stripHTML,
   formatTextTruncate,
   capitalizeFirstLetter,
-  formatStatus,
-  camelCaseToTitleCase
+  formatStatus
 }
 
 /**
@@ -53,11 +52,4 @@ function formatStatus(status: string): string {
     default:
       return "Completed"
   }
-}
-
-// ex: JimBobJoe => Jim Bob Joe
-function camelCaseToTitleCase(text: string): string {
-  const withSpaces = text.replace(/([A-Z])/g, " $1")
-  const capitalized = withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1)
-  return capitalized
 }

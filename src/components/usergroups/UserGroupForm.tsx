@@ -72,7 +72,7 @@ export function UserGroupFormForm({
   })
 
   const {handleSubmit, control, reset} = useForm<FormFieldValues>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as any,
     defaultValues: userGroup?.ID
       ? {UserGroup: userGroup, SecurityProfileAssignments: securityProfileAssignments}
       : defaultValues,

@@ -128,13 +128,13 @@ export const validationSchema = object().shape({
       .max(100, "ID may not exceed 100 characters"),
     Description: string().max(2000),
     Inventory: object()
+      .nullable()
       .shape({
-        Enabled: boolean().transform(nullToFalse),
-        VariantLevelTracking: boolean().transform(nullToFalse),
+        Enabled: boolean().transform(nullToFalse), // if Inventory is null, default to false,
+        VariantLevelTracking: boolean(),
         QuantityAvailable: number().integer().transform(emptyStringToNull).nullable(),
-        OrderCanExceed: boolean().transform(nullToFalse)
-      })
-      .nullable(),
+        OrderCanExceed: boolean()
+      }),
     ShipLength: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
     ShipWidth: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),
     ShipHeight: number().transform(emptyStringToNull).nullable().min(0, "Value can not be negative"),

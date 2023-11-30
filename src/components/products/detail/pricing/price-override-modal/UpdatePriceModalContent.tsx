@@ -22,7 +22,7 @@ export function UpdatePriceModalContent({
   const initialValues = priceSchedule || defaultValues.DefaultPriceSchedule
   const {handleSubmit, control, reset, trigger} = useForm<OverridePriceScheduleFieldValues>({
     mode: "onBlur",
-    resolver: yupResolver(priceScheduleSchema),
+    resolver: yupResolver(priceScheduleSchema) as any,
     defaultValues: initialValues
   })
 

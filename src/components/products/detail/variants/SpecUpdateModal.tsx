@@ -81,7 +81,7 @@ export function SpecUpdateModal({
   const {isOpen, onOpen, onClose} = useDisclosure()
   const {handleSubmit, control, trigger, reset} = useForm<SpecFieldValues>({
     mode: "onBlur",
-    resolver: yupResolver(specFormSchema),
+    resolver: yupResolver(specFormSchema) as any,
     defaultValues: spec || specFormDefaultValues
   })
 

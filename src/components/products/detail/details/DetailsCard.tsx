@@ -2,7 +2,7 @@ import {InputControl, SelectControl, SwitchControl} from "@/components/react-hoo
 import {Card, CardBody, CardHeader, HStack, Heading} from "@chakra-ui/react"
 import {Control} from "react-hook-form"
 import {ProductDetailFormFields} from "../form-meta"
-import {OwnerIdSelect} from "../fulfillment/OwnerIdSelect"
+import {OwnerIdSelect} from "../../../shared/OwnerIdSelect"
 import useHasAccess from "hooks/useHasAccess"
 import {appPermissions} from "config/app-permissions.config"
 
@@ -45,11 +45,13 @@ export function DetailsCard({control, validationSchema, isCreatingNew}: DetailsC
           />
         </HStack>
         <OwnerIdSelect
+          name="Product.OwnerID"
           marginTop={6}
           maxWidth="50%"
           control={control}
           validationSchema={validationSchema}
           isCreatingNew={isCreatingNew}
+          isDisabled={!isProductManager}
         />
       </CardBody>
     </Card>

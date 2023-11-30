@@ -54,7 +54,7 @@ export function BuyerForm({buyer, securityProfileAssignments = [], refresh}: Buy
     )
   })
 
-  const {handleSubmit, control, reset} = useForm<FormFieldValues>({
+  const {handleSubmit, control, reset} = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: buyer?.ID ? {Buyer: buyer, SecurityProfileAssignments: securityProfileAssignments} : defaultValues,
     mode: "onBlur"

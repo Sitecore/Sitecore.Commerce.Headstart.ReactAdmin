@@ -1,0 +1,147 @@
+Objects:
+  SecurityProfiles:
+    - ID: SuperAdmin
+      Name: Super Admin
+      Roles:
+        - FullAccess
+    - ID: BuyerUser
+      Name: Buyer User
+      Roles:
+        - MeAddressAdmin
+        - MeAdmin
+        - MeCreditCardAdmin
+        - MeXpAdmin
+        - PasswordReset
+        - Shopper
+  ImpersonationConfigs:
+    - ID: buyer1
+      BuyerID: buyer1
+      SecurityProfileID: BuyerUser
+      ClientID: BUYER_CLIENT_ID
+  OpenIdConnects: []
+  AdminUsers:
+    - ID: middleware-user
+      Username: middleware-user
+      Password: null
+      FirstName: Middleware
+      LastName: Integrations
+      Email: fake@email.com
+      Phone: null
+      Active: true
+    - ID: initial-admin-user
+      Username: InitialAdminUser
+      Password: Testingsetup123!
+      FirstName: Initial
+      LastName: Admin
+      Email: fake@email.com
+      Phone: null
+      Active: true
+  AdminUserGroups: []
+  AdminAddresses: []
+  MessageSenders: []
+  ApiClients:
+    - ID: MIDDLEWARE_CLIENT_ID
+      ClientSecret: <Redacted. Leave unchanged.>
+      AccessTokenDuration: 600
+      Active: true
+      AppName: Middleware
+      RefreshTokenDuration: 5760
+      DefaultContextUserName: middleware-user
+      AllowSeller: true
+    - ID: ADMIN_CLIENT_ID
+      AccessTokenDuration: 600
+      Active: true
+      AppName: Admin Application
+      RefreshTokenDuration: 5760
+      DefaultContextUserName: null
+      xp: null
+      AllowAnySupplier: true
+      AllowSeller: true
+    - ID: BUYER_CLIENT_ID
+      AccessTokenDuration: 600
+      Active: true
+      AppName: Buyer Application
+      RefreshTokenDuration: 5760
+      DefaultContextUserName: anonymous-shopper
+      AllowAnyBuyer: true
+  Incrementors: []
+  Webhooks: []
+  IntegrationEvents:
+    - ElevatedRoles:
+        - FullAccess
+      ID: OrderCheckout
+      ConfigData: null
+      EventType: OrderCheckout
+      CustomImplementationUrl: REPLACE_WITH_HOSTED_BUYER_URL/api/order-checkout
+      Name: Order Checkout
+      HashKey: <Redacted. Leave unchanged.>
+  XpIndices: []
+  Buyers:
+    - ID: buyer1
+      Name: Buyer 1
+      Active: true
+  Users:
+    - ID: anonymous-shopper
+      Username: anonymous-shopper
+      Password: null
+      FirstName: anonymous
+      LastName: shopper
+      Email: fake@email.com
+      Phone: null
+      TermsAccepted: null
+      Active: true
+      AvailableRoles:
+        - MeAddressAdmin
+        - MeAdmin
+        - MeCreditCardAdmin
+        - MeXpAdmin
+        - PasswordReset
+        - Shopper
+      BuyerID: buyer1
+  UserGroups: []
+  Addresses: []
+  CostCenters: []
+  CreditCards: []
+  SpendingAccounts: []
+  ApprovalRules: []
+  Catalogs: []
+  Categories: []
+  Suppliers: []
+  Products: []
+  Variants: []
+  PriceSchedules: []
+  Specs: []
+  SpecOptions: []
+  ProductFacets: []
+  Promotions: []
+Assignments:
+  UserGroupAssignments: []
+  SpendingAccountAssignments: []
+  AddressAssignments: []
+  CostCenterAssignments: []
+  CreditCardAssignments: []
+  CategoryAssignments: []
+  CategoryProductAssignments: []
+  SecurityProfileAssignments:
+    - SecurityProfileID: BuyerUser
+      BuyerID: buyer1
+      SupplierID: null
+      UserID: null
+      UserGroupID: null
+    - SecurityProfileID: SuperAdmin
+      BuyerID: null
+      SupplierID: null
+      UserID: middleware-user
+      UserGroupID: null
+    - SecurityProfileID: SuperAdmin
+      BuyerID: null
+      SupplierID: null
+      UserID: initial-admin-user
+      UserGroupID: null
+  AdminUserGroupAssignments: []
+  ApiClientAssignments: []
+  ProductAssignments: []
+  CatalogAssignments: []
+  ProductCatalogAssignment: []
+  SpecProductAssignments: []
+  PromotionAssignment: []

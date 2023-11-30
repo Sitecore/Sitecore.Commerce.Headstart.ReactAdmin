@@ -158,7 +158,7 @@ export const validationSchema = object().shape({
   Variants: array().of(
     object().shape({
       ID: string()
-        .matches(/^[\w-]+$/, "ID must be alphanumeric (may also include dashes or underscores)")
+        .matches(orderCloudIDRegex, "ID must be alphanumeric (may also include dashes or underscores)")
         .required("Required"),
       Active: bool()
     })

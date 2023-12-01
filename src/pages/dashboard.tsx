@@ -127,6 +127,14 @@ const Dashboard = () => {
       icon: <Icon as={HiOutlineFolderOpen} />
     },
     {
+      title: "Unique weekly users",
+      label: "Compared to last week (wtd)",
+      currentAmount: data.weekUniqueUsers,
+      previousAmount: data.previousWeekUniqueUsers,
+      icon: <Icon as={HiOutlineUserAdd} />,
+      isMoney: false
+    },
+    {
       title: "Week Sales",
       label: "Compared to last week (wtd)",
       currentAmount: data.weekSales,
@@ -134,12 +142,11 @@ const Dashboard = () => {
       icon: <Icon as={HiOutlineCurrencyDollar} />
     },
     {
-      title: "Unique weekly users",
-      label: "Compared to last week (wtd)",
-      currentAmount: data.weekUniqueUsers,
-      previousAmount: data.previousWeekUniqueUsers,
-      icon: <Icon as={HiOutlineUserAdd} />,
-      isMoney: false
+      title: "Previous Week Sales",
+      label: "",
+      currentAmount: data.previousWeekSales,
+      previousAmount: 0,
+      icon: ""
     }
   ]
 
@@ -162,7 +169,7 @@ const Dashboard = () => {
         top={2}
       />
       <CardHeader py={0}>
-        {item.count ? (
+        {typeof item.count === "number" ? (
           <Text fontWeight={"light"} color={color} fontSize="5xl">
             {item.count}
           </Text>
@@ -196,10 +203,8 @@ const Dashboard = () => {
             <SimpleGrid
               w="100%"
               gap={4}
-              templateRows={above2xl && "1fr 1fr"}
               templateColumns={{
-                md: "1fr 1fr",
-                xl: "repeat(auto-fit, minmax(48%, 1fr))"
+                md: "1fr 1fr"
               }}
             >
               {percentChangeTileData.map((_item, index) => {
@@ -227,10 +232,8 @@ const Dashboard = () => {
           <SimpleGrid
             w="100%"
             gap={4}
-            templateRows={above2xl && "1fr 1fr"}
             templateColumns={{
-              md: "1fr 1fr",
-              xl: "repeat(auto-fit, minmax(48%, 1fr))"
+              md: "1fr 1fr"
             }}
           >
             {percentChangeTileData.map((item) => {

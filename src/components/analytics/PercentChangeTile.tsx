@@ -23,8 +23,32 @@ export default function PercentChangeTile({
   const borderColorPos = useColorModeValue("green.300", "green.700")
   const borderColorNeg = useColorModeValue("red.100", "red.800")
   const percentchange = Math.round(((currentAmount - previousAmount) / previousAmount) * 100)
-  const percentchangetype = percentchange > 0 ? "pos" : "neg"
+  const percentchangetype = percentchange >= 0 ? "pos" : "neg"
 
+  const percentChangeDisplay = (
+    <Text
+      as="span"
+      fontSize="xs"
+      fontWeight="normal"
+      color={labelColor}
+      casing="uppercase"
+      display="inline-flex"
+      alignItems="center"
+      gap={1}
+    >
+      <Text
+        as="span"
+        color={percentchangetype === "pos" ? "green.400" : "red.400"}
+        fontWeight="bold"
+        display="inline-flex"
+        alignItems="center"
+        gap={1}
+      >
+        <TriangleUpIcon /> {percentchange}%
+      </Text>
+      {" " + label}
+    </Text>
+  )
   return (
     <Card w="full" border=".5px solid" borderColor={percentchangetype === "pos" ? borderColorPos : borderColorNeg}>
       <CardBody display="flex" flexFlow="column nowrap" pos={"relative"}>
@@ -41,28 +65,10 @@ export default function PercentChangeTile({
         <Heading fontSize="lg" mb="6px" mt={"auto"}>
           {title}
         </Heading>
-        <Text
-          as="span"
-          fontSize="xs"
-          fontWeight="normal"
-          color={labelColor}
-          casing="uppercase"
-          display="inline-flex"
-          alignItems="center"
-          gap={1}
-        >
-          {percentchangetype === "pos" ? (
-            <Text as="span" color="green.400" fontWeight="bold" display="inline-flex" alignItems="center" gap={1}>
-              <TriangleUpIcon /> {percentchange}%
-            </Text>
-          ) : (
-            <Text as="span" color="red.400" fontWeight="bold" display="inline-flex" alignItems="center" gap={1}>
-              <TriangleDownIcon />
-              {percentchange}%
-            </Text>
-          )}{" "}
-          {label}
-        </Text>
+        {!Number.isNaN(percentchange) &&
+          percentchange !== Number.POSITIVE_INFINITY &&
+          percentchange !== Number.NEGATIVE_INFINITY &&
+          percentChangeDisplay}
       </CardBody>
     </Card>
   )

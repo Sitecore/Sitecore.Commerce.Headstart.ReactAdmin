@@ -4,7 +4,6 @@ import {IOrder} from "types/ordercloud/IOrder"
 import {endOfToday, endOfWeek, endOfYesterday, startOfToday, startOfWeek, startOfYesterday, subWeeks} from "date-fns"
 import {uniq} from "lodash"
 import pLimit from "p-limit"
-const shouldUseRealDashboardData = appSettings.useRealDashboardData === "true"
 const mockData = require("../mockdata/dashboard_data.json")
 
 export const dashboardService = {
@@ -20,7 +19,7 @@ export const dashboardService = {
 }
 
 function getTodaysMoney(orders: IOrder[]): number {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return mockData.todaysmoney.totalamount
   }
   const startOfTodayIso = startOfToday().toISOString()
@@ -30,7 +29,7 @@ function getTodaysMoney(orders: IOrder[]): number {
 }
 
 function getPreviousTodaysMoney(orders: IOrder[]): number {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return mockData.todaysmoney.previoustotalamount
   }
   const startOfYesterdayIso = startOfYesterday().toISOString()
@@ -40,7 +39,7 @@ function getPreviousTodaysMoney(orders: IOrder[]): number {
 }
 
 function getWeeklySales(orders: IOrder[]): number {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return mockData.weeksales.totalamount
   }
   const now = new Date()
@@ -51,7 +50,7 @@ function getWeeklySales(orders: IOrder[]): number {
 }
 
 function getPreviousWeeklySales(orders: IOrder[]): number {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return mockData.weeksales.previoustotalamount
   }
   const now = new Date()
@@ -63,7 +62,7 @@ function getPreviousWeeklySales(orders: IOrder[]): number {
 }
 
 function getWeekUniqueUsers(orders: IOrder[]): number {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return mockData.uniqueusers.totalamount
   }
   const now = new Date()
@@ -82,7 +81,7 @@ function getWeekUniqueUsers(orders: IOrder[]): number {
 }
 
 function getPreviousWeekUniqueUsers(orders: IOrder[]): number {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return mockData.uniqueusers.previoustotalamount
   }
   const now = new Date()
@@ -112,7 +111,7 @@ function getTotalSalesForRange(orders: IOrder[], start: string, end: string): nu
 }
 
 async function getTotalPromosCount(): Promise<number> {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return mockData.totalpromos.totalamount
   }
   const response = await Promotions.List()
@@ -120,7 +119,7 @@ async function getTotalPromosCount(): Promise<number> {
 }
 
 async function getTotalProductsCount(): Promise<number> {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return mockData.totalproducts.totalamount
   }
   const response = await Products.List()
@@ -128,7 +127,7 @@ async function getTotalProductsCount(): Promise<number> {
 }
 
 async function listAllOrdersSincePreviousWeek() {
-  if (!shouldUseRealDashboardData) {
+  if (!appSettings.useRealDashboardData) {
     return {
       Meta: {
         TotalCount: 120
@@ -146,7 +145,7 @@ async function listAllOrdersSincePreviousWeek() {
     pageSize: 100
   }
   const response1 = await Orders.List<IOrder>("All", filters)
-  if (response1.Meta.TotalPages === 1) {
+  if (response1.Meta.TotalPages <= 1) {
     return response1
   }
 

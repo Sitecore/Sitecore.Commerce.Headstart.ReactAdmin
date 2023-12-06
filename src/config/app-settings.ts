@@ -13,7 +13,7 @@ import {AVAILABLE_GOOGLE_FONTS} from "utils"
 
 // We can't use a dynamic key for process.env because it's not supported by NextJS due to how webpack's DefinePlugin works
 // So we must pass along both the name, and the value separately
-const getEnvironmentVariable = (name: string, value?: string, defaultValue?: string, isRequired = true): string => {
+const getEnvironmentVariable = (name: string, value?: string, defaultValue?: any, isRequired = true): any => {
   if (!value && !defaultValue && isRequired) {
     throw new Error(
       `Please provide value for required environment variable: ${name} and then restart the dev server so that the changes can take effect`
@@ -21,6 +21,9 @@ const getEnvironmentVariable = (name: string, value?: string, defaultValue?: str
   } else if (!value) {
     return defaultValue
   } else {
+    if (typeof defaultValue === "boolean") {
+      return value === "true"
+    }
     return value
   }
 }
@@ -61,7 +64,7 @@ export const appSettings = {
   useRealDashboardData: getEnvironmentVariable(
     "NEXT_PUBLIC_USE_REAL_DASHBOARD_DATA",
     process.env.NEXT_PUBLIC_USE_REAL_DASHBOARD_DATA,
-    "false"
+    false
   ),
   themeColorAccent: getEnvironmentVariable(
     "NEXT_PUBLIC_THEME_COLOR_ACCENT",

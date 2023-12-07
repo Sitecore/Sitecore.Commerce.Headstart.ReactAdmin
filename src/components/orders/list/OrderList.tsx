@@ -32,7 +32,9 @@ const OrderQueryMap = {
 }
 
 const OrderFilterMap = {
-  status: "Status"
+  status: "Status",
+  from: "from",
+  to: "to"
 }
 
 const OrderDefaultServiceOptions = {parameters: ["Incoming"]}

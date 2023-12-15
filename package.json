@@ -26,7 +26,7 @@
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@chakra-ui/icons": "^2.1.1",
-    "@chakra-ui/react": "^2.8.1",
+    "@chakra-ui/react": "^2.8.2",
     "@ctrl/tinycolor": "^4.0.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -87,6 +87,6 @@
     "pre-commit": "^1.2.2",
     "prettier": "^2.7.1",
     "standard-version": "^9.5.0",
-    "typescript": "^4.7.4"
+    "typescript": "^5"
   }
 }

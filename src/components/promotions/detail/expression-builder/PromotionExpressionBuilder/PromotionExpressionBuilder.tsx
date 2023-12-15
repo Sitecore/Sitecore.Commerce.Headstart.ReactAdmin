@@ -122,7 +122,6 @@ export function PromotionExpressionBuilder({
         <QueryBuilderChakra>
           <QueryBuilder
             fields={fields}
-            independentCombinators={true}
             combinators={combinators}
             query={query}
             context={{query, setQuery, isLineItemLevelPromo, isDisabled, expressionType}}

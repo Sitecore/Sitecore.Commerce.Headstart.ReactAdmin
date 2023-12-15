@@ -16,7 +16,8 @@ import {
   HStack,
   Button,
   useDisclosure,
-  Tooltip
+  Tooltip,
+  VStack
 } from "@chakra-ui/react"
 import {ValueEditorProps} from "react-querybuilder"
 import {transformFunctions} from "./transformFunctions"
@@ -26,12 +27,13 @@ import {usePromoExpressions} from "hooks/usePromoExpressions"
 import useHasAccess from "hooks/useHasAccess"
 import {appPermissions} from "config/app-permissions.config"
 
-interface PromoRecipeVariables {
+export interface PromoRecipeVariable {
   label: string
   ordercloudProperty: string
   transformFunctionName: string
   token: string
-  value: string
+  value: any
+  captureUserInput: boolean
 }
 
 interface PromotionRecipesSelectProps {
@@ -43,7 +45,7 @@ export function PromotionRecipesSelect({onChange}: PromotionRecipesSelectProps) 
   const {fields} = usePromoExpressions()
   const {isOpen, onOpen, onClose} = useDisclosure()
   const [promoRecipeName, setPromoRecipeName] = useState("")
-  const [promoRecipeVariables, setPromoRecipeVariables] = useState([] as PromoRecipeVariables[])
+  const [promoRecipeVariables, setPromoRecipeVariables] = useState([] as PromoRecipeVariable[])
   const options = groupPromoRecipes()
 
   function groupPromoRecipes() {
@@ -68,17 +70,19 @@ export function PromotionRecipesSelect({onChange}: PromotionRecipesSelectProps) 
     }
   }
 
-  const handleChangeWithVariables = (recipeVariables: PromoRecipeVariables[]) => {
+  const handleChangeWithVariables = (recipeVariables: PromoRecipeVariable[]) => {
     let promoRecipe = promoRecipes.find((p) => p.label === promoRecipeName)
     let promoRecipeStringified = JSON.stringify(promoRecipe)
-    recipeVariables.forEach((variables) => {
-      let updatedValue = variables.value
-      if (variables.transformFunctionName) {
-        updatedValue = transformFunctions[variables.transformFunctionName](variables.value)
+
+    recipeVariables.forEach((variable, index) => {
+      let updatedValue = variable.value
+      if (variable.transformFunctionName) {
+        updatedValue = transformFunctions[variable.transformFunctionName](variable, recipeVariables)
+        recipeVariables[index].value = updatedValue
       }
       promoRecipeStringified = promoRecipeStringified.replace(
-        new RegExp(`"${variables.token}"`, "g"),
-        JSON.stringify(updatedValue)
+        new RegExp(`"${variable.token}"`, "g"),
+        updatedValue?.includes?.("{") ? updatedValue : JSON.stringify(updatedValue)
       )
     })
     promoRecipe = JSON.parse(promoRecipeStringified)
@@ -106,7 +110,7 @@ export function PromotionRecipesSelect({onChange}: PromotionRecipesSelectProps) 
           formatGroupLabel={(groupedOption) => groupedOption.label}
           isDisabled={!isPromotionManager}
           chakraStyles={{
-            container: (baseStyles) => ({...baseStyles, maxWidth: "400px"})
+            container: (baseStyles) => ({...baseStyles, maxWidth: "500px"})
           }}
         />
       </FormControl>
@@ -116,28 +120,40 @@ export function PromotionRecipesSelect({onChange}: PromotionRecipesSelectProps) 
           <ModalHeader>Enter details for recipe</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {promoRecipeVariables.map((variables) => {
-              const fieldData = fields.find((f) => f.name === variables.ordercloudProperty)
-              const valueEditorProps = {
-                operator: "=",
-                field: variables.ordercloudProperty,
-                fieldData,
-                inputType: fieldData?.inputType || "text",
-                valueSource: "value"
-              } as ValueEditorProps
-              return (
-                <FormControl key={variables.label}>
-                  <FormLabel>{variables.label}</FormLabel>
-                  <CustomValueEditor
-                    {...valueEditorProps}
-                    showInModal={true}
-                    handleOnChange={(newVal) => {
-                      variables.value = newVal
-                    }}
-                  />
-                </FormControl>
-              )
-            })}
+            <VStack gap={4}>
+              {promoRecipeVariables
+                .filter((variable) => {
+                  return variable.captureUserInput === undefined || variable.captureUserInput === true
+                })
+                .map((variable) => {
+                  const fieldData = fields.find((f) => f.name === variable.ordercloudProperty)
+                  const valueEditorProps = {
+                    operator: "=",
+                    field: variable.ordercloudProperty,
+                    fieldData,
+                    inputType: fieldData?.inputType || "text",
+                    valueSource: "value"
+                  } as ValueEditorProps
+                  return (
+                    <FormControl key={variable.label}>
+                      <FormLabel>{variable.label}</FormLabel>
+                      <CustomValueEditor
+                        {...valueEditorProps}
+                        showInModal={true}
+                        handleOnChange={(newVal) => {
+                          variable.value = newVal
+                        }}
+                        handleOnParentChange={(newVal) => {
+                          const parentVariable = promoRecipeVariables.find(
+                            (v) => v.token === `${variable.token}__PARENT`
+                          )
+                          parentVariable.value = newVal
+                        }}
+                      />
+                    </FormControl>
+                  )
+                })}
+            </VStack>
           </ModalBody>
           <ModalFooter>
             <HStack width="full">

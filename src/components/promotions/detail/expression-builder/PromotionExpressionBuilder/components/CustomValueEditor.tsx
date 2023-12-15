@@ -7,6 +7,7 @@ import {CreatableInputField} from "./CreatableInputField"
 
 interface CustomValueEditorProps extends ValueEditorProps {
   showInModal?: boolean
+  handleOnParentChange?: (value: string) => void
 }
 export function CustomValueEditor(props: CustomValueEditorProps) {
   if (props.operator === "in") {

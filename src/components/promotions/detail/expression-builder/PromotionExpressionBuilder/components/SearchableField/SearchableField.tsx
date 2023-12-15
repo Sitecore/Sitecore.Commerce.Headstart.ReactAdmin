@@ -1,4 +1,4 @@
-import {ValueEditorProps} from "react-querybuilder"
+import {update, ValueEditorProps} from "react-querybuilder"
 import {SearchableInput} from "./SearchableInput"
 import {IProduct} from "types/ordercloud/IProduct"
 import {useCallback} from "react"
@@ -25,6 +25,7 @@ export const hasSearchableField = (props: ValueEditorProps): boolean => {
 
 interface SearchableFieldProps extends ValueEditorProps {
   showInModal?: boolean
+  handleOnParentChange?: (value: string) => void
 }
 export const SearchableField = (props: SearchableFieldProps) => {
   const modelName = getModelName(props)
@@ -86,13 +87,29 @@ export const SearchableField = (props: SearchableFieldProps) => {
   )
   const formatLineItemOptions = useCallback((lineItem: ILineItem) => ({value: lineItem.ID, label: lineItem.ID}), [])
 
+  const handleChange = (value: string, parentValue: string) => {
+    if (props.showInModal) {
+      props.handleOnChange(value)
+      if (parentValue) {
+        props.handleOnParentChange(parentValue)
+      }
+    } else {
+      props.handleOnChange(value)
+      if (parentValue) {
+        const newQuery = update(props.schema.getQuery()!, "parentValue" as any, parentValue, props.path)
+        props.schema.dispatchQuery(newQuery)
+      }
+    }
+  }
+
   if (props.field === "LineItem.Product.Category") {
     return (
       <SearchableInput
         showInModal={props.showInModal}
         resource="Categories"
-        onUpdate={props.handleOnChange}
+        onUpdate={handleChange}
         value={props.value}
+        parentValue={(props.rule as any)?.parentValue || ""}
         formatResourceOptions={formatCategoryOptions}
         parentResource="Catalogs"
         formatParentResourceOptions={formatCatalogOptions}
@@ -106,8 +123,9 @@ export const SearchableField = (props: SearchableFieldProps) => {
         <SearchableInput
           showInModal={props.showInModal}
           resource="Products"
-          onUpdate={props.handleOnChange}
+          onUpdate={handleChange}
           value={props.value}
+          parentValue={(props.rule as any)?.parentValue || ""}
           formatResourceOptions={formatProductOptions}
           isDisabled={props.context?.isDisabled}
         />
@@ -117,8 +135,9 @@ export const SearchableField = (props: SearchableFieldProps) => {
         <SearchableInput
           showInModal={props.showInModal}
           resource="LineItems"
-          onUpdate={props.handleOnChange}
+          onUpdate={handleChange}
           value={props.value}
+          parentValue={(props.rule as any)?.parentValue || ""}
           formatResourceOptions={formatLineItemOptions}
           params={["All"]}
           parentResource="Orders"
@@ -131,8 +150,9 @@ export const SearchableField = (props: SearchableFieldProps) => {
         <SearchableInput
           showInModal={props.showInModal}
           resource="Users"
-          onUpdate={props.handleOnChange}
+          onUpdate={handleChange}
           value={props.value}
+          parentValue={(props.rule as any)?.parentValue || ""}
           formatResourceOptions={formatUserOptions}
           parentResource="Buyers"
           formatParentResourceOptions={formatBuyerOptions}
@@ -144,8 +164,9 @@ export const SearchableField = (props: SearchableFieldProps) => {
         <SearchableInput
           showInModal={props.showInModal}
           resource="Orders"
-          onUpdate={props.handleOnChange}
+          onUpdate={handleChange}
           value={props.value}
+          parentValue={(props.rule as any)?.parentValue || ""}
           formatResourceOptions={formatOrderOptions}
           params={["All"]}
           isDisabled={props.context?.isDisabled}
@@ -156,8 +177,9 @@ export const SearchableField = (props: SearchableFieldProps) => {
         <SearchableInput
           showInModal={props.showInModal}
           resource="Addresses"
-          onUpdate={props.handleOnChange}
+          onUpdate={handleChange}
           value={props.value}
+          parentValue={(props.rule as any)?.parentValue || ""}
           formatResourceOptions={formatAddressOptions}
           parentResource="Buyers"
           formatParentResourceOptions={formatBuyerOptions}
@@ -169,8 +191,9 @@ export const SearchableField = (props: SearchableFieldProps) => {
         <SearchableInput
           showInModal={props.showInModal}
           resource="Addresses"
-          onUpdate={props.handleOnChange}
+          onUpdate={handleChange}
           value={props.value}
+          parentValue={(props.rule as any)?.parentValue || ""}
           formatResourceOptions={formatAddressOptions}
           parentResource="Buyers"
           formatParentResourceOptions={formatBuyerOptions}

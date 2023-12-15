@@ -20,8 +20,9 @@ import * as OrderCloudSdk from "ordercloud-javascript-sdk"
 interface SearchableInputProps {
   showInModal: boolean
   resource: string
-  onUpdate: (value: string) => void
+  onUpdate: (value: string, parentValue: string) => void
   value: string
+  parentValue: string
   formatResourceOptions: (resource: any) => ReactSelectOption
   params?: string[]
   parentResource?: string
@@ -37,6 +38,7 @@ export const SearchableInput = ({
   formatResourceOptions,
   formatParentResourceOptions,
   value,
+  parentValue,
   isDisabled
 }: SearchableInputProps) => {
   const {isOpen, onOpen, onClose} = useDisclosure()
@@ -48,13 +50,13 @@ export const SearchableInput = ({
   const [resourceLoading, setResourceLoading] = useState(false)
 
   // parent resource state methods
-  const [parentResourceId, setParentResourceId] = useState<string>()
+  const [parentResourceId, setParentResourceId] = useState<string>(parentValue)
   const [parentResourceInputValue, setParentResourceInputValue] = useState("")
   const [parentResourceOptions, setParentResourceOptions] = useState<ReactSelectOption[]>([])
   const [parentResourceLoading, setParentResourceLoading] = useState(false)
 
   const handleAdd = () => {
-    onUpdate(resourceId)
+    onUpdate(resourceId, parentResourceId)
     onClose()
     setResourceId(undefined)
     setParentResourceId(undefined)
@@ -132,8 +134,8 @@ export const SearchableInput = ({
   const handleResourceSelect = (option: ReactSelectOption) => {
     const updatedResourceId = option.value
     setResourceId(updatedResourceId)
-    if (!parentResource) {
-      onUpdate(updatedResourceId)
+    if (!parentResource || showInModal) {
+      onUpdate(updatedResourceId, parentResourceId)
       setResourceId(undefined)
     }
   }
@@ -212,7 +214,7 @@ export const SearchableInput = ({
   return (
     <>
       {parentResource ? (
-        <Input type="text" value={singleResourceValue} onClick={!isDisabled && onOpen} />
+        <Input type="text" value={singleResourceValue} onClick={!isDisabled && onOpen} onChange={() => ""} />
       ) : (
         ResourceSelect
       )}

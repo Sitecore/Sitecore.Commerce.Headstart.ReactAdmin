@@ -1,7 +1,7 @@
 import {Box, Button, Heading, Image, Text, useColorMode, Flex} from "@chakra-ui/react"
 import {NextSeo} from "next-seo"
 import MotionBox from "components/motion/Box"
-import {Link} from "components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 const Page404 = () => {
   const {colorMode} = useColorMode()

@@ -16,7 +16,7 @@ import {
   Divider
 } from "@chakra-ui/react"
 import {ILineItem} from "types/ordercloud/ILineItem"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
 import {OrderReturnItem} from "ordercloud-javascript-sdk"
 import {priceHelper} from "utils"

@@ -13,7 +13,7 @@ import ProductCard from "./ProductCard"
 import ProductListToolbar from "./ProductListToolbar"
 import ProductDefaultImage from "../../shared/ProductDefaultImage"
 import {TbCactus} from "react-icons/tb"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 import ProtectedContent from "@/components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 

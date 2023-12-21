@@ -1,4 +1,4 @@
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 import {
   HStack,
   VStack,

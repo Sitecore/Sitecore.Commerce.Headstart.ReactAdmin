@@ -12,7 +12,7 @@ import {
 } from "react-icons/tb"
 import ProtectedContent from "../auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
-import {Link} from "./Link"
+import {Link} from "@chakra-ui/next-js"
 import schraTheme from "theme/theme"
 import {useRouter} from "next/router"
 import {useAuth} from "hooks/useAuth"

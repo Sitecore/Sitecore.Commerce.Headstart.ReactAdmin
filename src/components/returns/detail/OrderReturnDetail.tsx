@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react"
 import {useOrderReturnDetail} from "hooks/useOrderReturnDetail"
 import {dateHelper, priceHelper} from "utils"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 import {Payment, Payments} from "ordercloud-javascript-sdk"
 import {useState} from "react"
 import ProtectedContent from "@/components/auth/ProtectedContent"

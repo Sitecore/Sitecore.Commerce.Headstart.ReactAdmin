@@ -16,7 +16,7 @@ import {
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {priceHelper} from "utils"
 import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 interface LineItemTableProps {
   lineItems: ILineItem[]

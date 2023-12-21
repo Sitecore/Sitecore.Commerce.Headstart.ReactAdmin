@@ -24,7 +24,7 @@ import {useForm} from "react-hook-form"
 import {array, object, string} from "yup"
 import {SelectControl} from "@/components/react-hook-form"
 import {IProductFacet} from "types/ordercloud/IProductFacet"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 import ProtectedContent from "@/components/auth/ProtectedContent"
 import {appPermissions} from "config/app-permissions.config"
 

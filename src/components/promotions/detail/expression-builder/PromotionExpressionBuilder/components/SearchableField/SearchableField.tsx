@@ -9,7 +9,7 @@ import {Address, User} from "ordercloud-javascript-sdk"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {HStack, Text, VStack} from "@chakra-ui/react"
 
-const getModelName = (props: ValueEditorProps): string => {
+export const getModelName = (props: ValueEditorProps): string => {
   const modelParts = props.field.split(".")
   return modelParts[modelParts.length - 2]
 }

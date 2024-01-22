@@ -1,5 +1,5 @@
 import {IconProps, Image, ImageProps} from "@chakra-ui/react"
-import {Link} from "../navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 import {MyCommerceIcon} from "../icons/Icons"
 import {appSettings} from "config/app-settings"
 

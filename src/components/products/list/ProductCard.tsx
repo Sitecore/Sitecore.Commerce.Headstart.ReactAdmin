@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import {Product} from "ordercloud-javascript-sdk"
 import {textHelper} from "utils/text.utils"
-import {Link} from "../../navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 interface ProductCardProps {
   product: Product

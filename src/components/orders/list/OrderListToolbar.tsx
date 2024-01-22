@@ -1,4 +1,4 @@
-import {Box, Button, Stack} from "@chakra-ui/react"
+import {Button, Input, InputGroup, InputLeftAddon, Stack} from "@chakra-ui/react"
 import Link from "next/link"
 import {FC} from "react"
 import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"
@@ -14,6 +14,24 @@ interface OrderListToolbarProps extends Omit<ListViewChildrenProps, "renderConte
   onBulkEdit: () => void
 }
 
+const OrderFromDateFilter = ({value, onChange}: {value: string; onChange: (value: string) => void}) => {
+  return (
+    <InputGroup maxW={{md: 300}}>
+      <InputLeftAddon>From</InputLeftAddon>
+      <Input type="date" value={value || ""} onChange={(e) => onChange(e.target.value)} />
+    </InputGroup>
+  )
+}
+
+const OrderToDateFilter = ({value, onChange}: {value: string; onChange: (value: string) => void}) => {
+  return (
+    <InputGroup maxW={{md: 300}}>
+      <InputLeftAddon>To</InputLeftAddon>
+      <Input type="date" value={value || ""} onChange={(e) => onChange(e.target.value)} />
+    </InputGroup>
+  )
+}
+
 const OrderListToolbar: FC<OrderListToolbarProps> = ({
   meta,
   viewModeToggle,
@@ -26,29 +44,39 @@ const OrderListToolbar: FC<OrderListToolbarProps> = ({
 }) => {
   return (
     <>
-      <Stack direction="row" mb={5}>
-        <Stack direction={["column", "column", "column", "row"]}>
-          <DebouncedSearchInput label="Search orders" value={queryParams["Search"]} onSearch={updateQuery("s", true)} />
+      <Stack direction="row" mb={5} flexWrap="wrap" gap={10} alignItems="flex-end">
+        <Stack direction="column" flexGrow={1}>
           <Stack direction="row">
-            <OrderDirectionFilter value={routeParams["Direction"]} onChange={updateQuery("d", true)} />
-            <OrderStatusFilter value={filterParams["Status"]} onChange={updateQuery("status", true)} />
-            <OrderListActions />
+            <Stack direction="row" flexWrap="wrap">
+              <DebouncedSearchInput
+                containerProps={{
+                  minW: {base: "100%", lg: 200, xl: 400},
+                  flex: 0
+                }}
+                label="Search orders"
+                value={queryParams["Search"]}
+                onSearch={updateQuery("s", true)}
+              />
+
+              <OrderDirectionFilter value={routeParams["Direction"]} onChange={updateQuery("d", true)} />
+              <OrderStatusFilter value={filterParams["Status"]} onChange={updateQuery("status", true)} />
+              <OrderListActions />
+            </Stack>
+          </Stack>
+          <Stack direction="row" flexWrap={{base: "wrap", md: "nowrap"}}>
+            <OrderFromDateFilter value={filterParams["from"]} onChange={updateQuery("from", true)} />
+            <OrderToDateFilter value={filterParams["to"]} onChange={updateQuery("to", true)} />
           </Stack>
         </Stack>
-        <Box as="span" flexGrow="1"></Box>
-        <Stack direction={["column", "column", "column", "row"]} alignItems="center">
-          <Stack direction="row" order={[1, 1, 1, 0]} alignItems="center">
-            {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
-            <Box as="span" width="2"></Box>
-          </Stack>
+
+        <Stack direction="row" alignItems="center" ml="auto" minW="max-content" flexWrap="nowrap" gap={6}>
+          {meta && <ListViewMetaInfo range={meta.ItemRange} total={meta.TotalCount} />}
           <ProtectedContent hasAccess={appPermissions.OrderManager}>
-            <Box order={[0, 0, 0, 1]} mt={0}>
-              <Link passHref href="/orders/new">
-                <Button variant="solid" colorScheme="primary" as="a">
-                  Create Order
-                </Button>
-              </Link>
-            </Box>
+            <Link passHref href="/orders/new">
+              <Button variant="solid" colorScheme="primary" as="a">
+                Create Order
+              </Button>
+            </Link>
           </ProtectedContent>
         </Stack>
       </Stack>

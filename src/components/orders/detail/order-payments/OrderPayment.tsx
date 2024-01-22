@@ -3,7 +3,7 @@ import {ICreditCard} from "types/ordercloud/ICreditCard"
 import {IPayment} from "types/ordercloud/IPayment"
 import {priceHelper} from "utils"
 import {CreditCardIcon} from "./CreditCardIcon"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 interface OrderPaymentItemProps {
   payment: IPayment

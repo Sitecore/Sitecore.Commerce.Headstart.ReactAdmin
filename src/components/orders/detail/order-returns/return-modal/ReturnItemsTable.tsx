@@ -19,7 +19,7 @@ import {
 import {Control, FieldValues} from "react-hook-form"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 import {getMaxReturnQuantity} from "services/returns.service"
 import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
 

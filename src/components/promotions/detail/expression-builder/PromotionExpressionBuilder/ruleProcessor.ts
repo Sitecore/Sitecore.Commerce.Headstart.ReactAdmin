@@ -33,7 +33,10 @@ export const ruleProcessor: CustomRuleProcessor = (
 
   // Product category function is special case
   if (formattedField === "item.Product.Category") {
-    return `item.Product.incategory(${formattedValue})`
+    return `item.product.incategory(${formattedValue})`
+  }
+  if (formattedField === "Product.Category") {
+    return `product.incategory(${formattedValue})`
   }
 
   // handle raw value, we don't want to show operator or field

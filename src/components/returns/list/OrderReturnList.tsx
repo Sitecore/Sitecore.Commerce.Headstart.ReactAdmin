@@ -9,7 +9,7 @@ import OrderReturnDeleteModal from "../modals/OrderReturnDeleteModal"
 import OrderReturnActionMenu from "./OrderReturnActionMenu"
 import OrderReturnListToolbar from "./OrderReturnListToolbar"
 import {OrderStatus} from "@/components/orders/OrderStatus"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 const OrderReturnQueryMap = {
   s: "Search",

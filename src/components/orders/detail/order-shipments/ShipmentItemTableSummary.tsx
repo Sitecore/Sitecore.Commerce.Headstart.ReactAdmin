@@ -4,7 +4,7 @@ import {ILineItem} from "types/ordercloud/ILineItem"
 import {PropsWithChildren} from "react"
 import {IShipment} from "types/ordercloud/IShipment"
 import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 import {TextLabel} from "@/components/shared/TextLabel"
 import {HeaderItem} from "@/components/shared/HeaderItem"
 

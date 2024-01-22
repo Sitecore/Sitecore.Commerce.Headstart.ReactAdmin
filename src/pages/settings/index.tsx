@@ -5,7 +5,7 @@ import {NextSeo} from "next-seo"
 import ProtectedContent from "components/auth/ProtectedContent"
 import React from "react"
 import {appPermissions} from "config/app-permissions.config"
-import {Link} from "components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 export const settingsPageItems = [
   {

@@ -5,7 +5,11 @@ import {
   InputLeftAddon,
   InputRightAddon,
   InputLeftElement,
-  InputRightElement
+  InputRightElement,
+  InputLeftAddonProps,
+  InputRightAddonProps,
+  InputRightElementProps,
+  InputLeftElementProps
 } from "@chakra-ui/react"
 import React, {FC} from "react"
 import {useController} from "react-hook-form"
@@ -15,9 +19,13 @@ import {BaseProps, FormControl} from "../form-control"
 export type InputControlProps = BaseProps & {
   inputProps?: InputProps
   leftAddon?: React.ReactNode
+  leftAddonProps?: InputLeftAddonProps
   rightAddon?: React.ReactNode
+  rightAddonProps?: InputRightAddonProps
   rightElement?: React.ReactNode
+  rightElementProps?: InputRightElementProps
   leftElement?: React.ReactNode
+  leftElementProps?: InputLeftElementProps
 }
 
 export const InputControl: FC<InputControlProps> = (props: InputControlProps) => {
@@ -27,9 +35,13 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
     label,
     inputProps,
     leftAddon,
+    leftAddonProps,
     rightAddon,
+    rightAddonProps,
     leftElement,
+    leftElementProps,
     rightElement,
+    rightElementProps,
     validationSchema,
     ...rest
   } = props
@@ -40,6 +52,7 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
     name,
     control
   })
+
   const isRequired = isRequiredField(props.validationSchema, field.name)
   return (
     <FormControl
@@ -51,8 +64,8 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
       isRequired={isRequired}
     >
       <InputGroup>
-        {leftAddon && <InputLeftAddon>{leftAddon}</InputLeftAddon>}
-        {leftElement && <InputLeftElement>{leftElement}</InputLeftElement>}
+        {leftAddon && <InputLeftAddon {...leftAddonProps}>{leftAddon}</InputLeftAddon>}
+        {leftElement && <InputLeftElement {...leftElementProps}>{leftElement}</InputLeftElement>}
         <Input
           isRequired={isRequired}
           {...field}
@@ -61,8 +74,8 @@ export const InputControl: FC<InputControlProps> = (props: InputControlProps) =>
           {...inputProps}
           value={field.value ?? ""}
         />
-        {rightElement && <InputRightElement>{rightElement}</InputRightElement>}
-        {rightAddon && <InputRightAddon>{rightAddon}</InputRightAddon>}
+        {rightElement && <InputRightElement {...rightElementProps}>{rightElement}</InputRightElement>}
+        {rightAddon && <InputRightAddon {...rightAddonProps}>{rightAddon}</InputRightAddon>}
       </InputGroup>
     </FormControl>
   )

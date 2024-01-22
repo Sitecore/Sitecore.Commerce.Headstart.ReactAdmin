@@ -1,6 +1,6 @@
 import {SwitchControl, InputControl, TextareaControl} from "@/components/react-hook-form"
-import {VStack} from "@chakra-ui/react"
-import {Control} from "react-hook-form"
+import {Button, VStack} from "@chakra-ui/react"
+import {Control, useController} from "react-hook-form"
 import {PromotionDetailFormFields} from "../PromotionDetail"
 import {OwnerIdSelect} from "@/components/shared/OwnerIdSelect"
 import useHasAccess from "hooks/useHasAccess"
@@ -13,6 +13,15 @@ interface DetailsTabProps {
 }
 export function DetailsTab({control, validationSchema, isCreatingNew}: DetailsTabProps) {
   const isPromotionManager = useHasAccess(appPermissions.PromotionManager)
+  const {
+    field: {onChange: onPromoCodeChange}
+  } = useController({control, name: "Promotion.Code"})
+
+  const generateCode = () => {
+    const code = Math.random().toString(36).slice(2).substring(0, 5).toUpperCase()
+    console.log("code", code)
+    onPromoCodeChange(code)
+  }
   return (
     <VStack gap={3} marginTop={3}>
       <SwitchControl
@@ -35,6 +44,8 @@ export function DetailsTab({control, validationSchema, isCreatingNew}: DetailsTa
         control={control}
         validationSchema={validationSchema}
         isDisabled={!isPromotionManager}
+        rightElement={<Button onClick={() => generateCode()}>Generate code</Button>}
+        rightElementProps={{minWidth: "8rem"}}
       />
       <OwnerIdSelect
         name="Promotion.OwnerID"

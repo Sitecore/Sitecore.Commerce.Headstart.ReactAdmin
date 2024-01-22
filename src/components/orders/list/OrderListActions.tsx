@@ -8,7 +8,7 @@ interface IOrderListActions {}
 const OrderListActions: FC<IOrderListActions> = () => {
   return (
     <Menu>
-      <MenuButton as={Button} variant="outline">
+      <MenuButton as={Button} variant="outline" minW="auto">
         <HStack>
           <Text>Actions</Text>
           <ChevronDownIcon />

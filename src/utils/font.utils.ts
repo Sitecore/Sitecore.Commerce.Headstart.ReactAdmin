@@ -28,6 +28,7 @@ function sanitizeFontName(fontName) {
 }
 
 export function buildFontHref(fontName) {
+  debugger
   return `https://fonts.googleapis.com/css2?family=${sanitizeFontName(fontName)}&display=swap`
 }
 

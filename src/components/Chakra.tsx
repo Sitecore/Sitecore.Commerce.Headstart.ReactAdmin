@@ -69,8 +69,8 @@ export const Chakra = ({children}: ChakraProps) => {
       <ChakraProvider colorModeManager={localStorageManager} theme={currentTheme}>
         {fonts && (
           <Head>
-            <link href={buildFontHref(fonts.heading)} rel="stylesheet" />
-            <link href={buildFontHref(fonts.body)} rel="stylesheet" />
+            {fonts.heading && <link href={buildFontHref(fonts.heading)} rel="stylesheet" />}
+            {fonts.body && <link href={buildFontHref(fonts.body)} rel="stylesheet" />}
           </Head>
         )}
         {children}

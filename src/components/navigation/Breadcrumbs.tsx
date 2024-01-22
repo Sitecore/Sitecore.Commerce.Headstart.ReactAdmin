@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react"
 import {useRouter} from "hooks/useRouter"
 import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, useColorModeValue} from "@chakra-ui/react"
-import NextLink from "next/link"
 import {ChevronRightIcon} from "@chakra-ui/icons"
-import {TbDashboard, TbHome, TbLayout} from "react-icons/tb"
-import Dashboard from "@/pages/dashboard"
-import {Link} from "./Link"
+import {TbLayout} from "react-icons/tb"
+import {Link} from "@chakra-ui/next-js"
 
 export interface Breadcrumb {
   text: string

@@ -1,5 +1,5 @@
 import {Text, useColorMode, useColorModeValue, Button, HStack, Container} from "@chakra-ui/react"
-import {Link} from "../navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 const Footer = () => {
   const {colorMode, toggleColorMode} = useColorMode()

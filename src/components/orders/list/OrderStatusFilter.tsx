@@ -4,23 +4,23 @@ import {FC} from "react"
 import {OrderStatus} from "../OrderStatus"
 
 interface IOrderStatusFilter {
-  value: any
+  value: string
   onChange: (newValue: any) => void
 }
 
-const OrderStatusFilter: FC<IOrderStatusFilter> = ({value, onChange}) => {
+const OrderStatusFilter: FC<IOrderStatusFilter> = ({value = "", onChange}) => {
   return (
     <Menu>
-      <MenuButton as={Button} py={0} variant="outline">
+      <MenuButton as={Button} py={0} variant="outline" minW="auto">
         <HStack alignContent="center" h="100%">
           <Text>Status</Text>
-          <OrderStatus status={value} />
+          <OrderStatus status={value || "Any"} />
           <ChevronDownIcon />
         </HStack>
       </MenuButton>
       <MenuList>
         <MenuOptionGroup defaultValue={value} title="Filter by status" type="radio" onChange={onChange}>
-          <MenuItemOption value={""}>Any</MenuItemOption>
+          <MenuItemOption value="">Any</MenuItemOption>
           <MenuItemOption value="Unsubmitted">Unsubmitted</MenuItemOption>
           <MenuItemOption value="Open">Open</MenuItemOption>
           <MenuItemOption value="Canceled">Canceled</MenuItemOption>

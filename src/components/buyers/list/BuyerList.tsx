@@ -12,7 +12,7 @@ import BuyerActionMenu from "./BuyerActionMenu"
 import BuyerDeleteModal from "../modals/BuyerDeleteModal"
 import useHasAccess from "hooks/useHasAccess"
 import {appPermissions} from "config/app-permissions.config"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 export const BuyerColorSchemeMap = {
   "": "gray",

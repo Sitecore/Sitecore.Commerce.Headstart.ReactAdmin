@@ -1,6 +1,5 @@
 import {Button, Flex, HStack, SimpleGrid} from "@chakra-ui/react"
 import Link from "next/link"
-// import Link from "../../navigation/Link"
 import {FC} from "react"
 import DebouncedSearchInput from "../../shared/DebouncedSearchInput/DebouncedSearchInput"
 import {ListViewChildrenProps} from "../../shared/ListView/ListView"

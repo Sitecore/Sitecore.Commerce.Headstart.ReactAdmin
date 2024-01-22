@@ -5,7 +5,7 @@ import {SelectControl} from "@/components/react-hook-form"
 import {ILineItem} from "types/ordercloud/ILineItem"
 import {IShipmentItem} from "types/ordercloud/IShipmentItem"
 import ProductDefaultImage from "@/components/shared/ProductDefaultImage"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 interface ShipmentItemTableProps {
   lineItems: ILineItem[]

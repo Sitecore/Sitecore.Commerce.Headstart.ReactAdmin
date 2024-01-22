@@ -11,7 +11,7 @@ export function OrderDirectionFilter({value = "Incoming", onChange}: OrderDirect
   if (isSupplier) return null
   return (
     <Menu>
-      <MenuButton as={Button} py={0} variant="outline">
+      <MenuButton as={Button} py={0} variant="outline" minW="auto">
         <HStack alignContent="center" h="100%">
           <Text>Direction</Text>
           <Tag colorScheme="default">{value}</Tag>

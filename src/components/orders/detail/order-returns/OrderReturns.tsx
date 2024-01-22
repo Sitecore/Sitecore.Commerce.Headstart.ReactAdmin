@@ -2,7 +2,7 @@ import {Text, Table, TableContainer, Thead, Th, Tr, Tbody, Td, Button} from "@ch
 import {IOrderReturn} from "types/ordercloud/IOrderReturn"
 import {OrderStatus} from "../../OrderStatus"
 import {priceHelper} from "utils"
-import {Link} from "@/components/navigation/Link"
+import {Link} from "@chakra-ui/next-js"
 
 interface OrderReturnsProps {
   returns: IOrderReturn[]

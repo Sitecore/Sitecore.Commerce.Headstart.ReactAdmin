@@ -7,6 +7,6 @@ describe("Index page", () => {
     render(<Footer />)
     const copyrightText = screen.getByTestId("copyright")
     expect(copyrightText).toBeInTheDocument()
-    expect(copyrightText).toHaveTextContent("Sitecore.com All Rights Reserved.")
+    expect(copyrightText).toHaveTextContent("Sitecore All Rights Reserved.")
   })
 })

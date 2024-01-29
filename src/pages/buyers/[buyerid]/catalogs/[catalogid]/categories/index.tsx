@@ -35,7 +35,7 @@ const CategoriesList = (props) => {
 
   const initCategoriesData = useCallback(
     async (catalogid: string) => {
-      const categoriesList = await Categories.List<ICategory>(catalogid)
+      const categoriesList = await Categories.List<ICategory>(catalogid,{depth:"all"})
       if (selectedNode) {
         const selectedCategoryId = selectedNode.data.ID
         const selectedCategoryExists = categoriesList.Items.find((category) => category.ID === selectedCategoryId)

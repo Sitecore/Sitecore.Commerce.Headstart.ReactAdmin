@@ -46,6 +46,7 @@ export function CategoryForm({category, headerComponent, parentId, onSuccess}: C
   const {handleSubmit, control, reset} = useForm<ICategory>({
     resolver: yupResolver(validationSchema) as any,
     defaultValues: category || defaultValues,
+    values: category,
     mode: "onBlur"
   })
 
@@ -79,10 +80,10 @@ export function CategoryForm({category, headerComponent, parentId, onSuccess}: C
   }
 
   async function onSubmit(fields: ICategory) {
-    if (isCreating) {
-      await createCategory(fields)
-    } else {
+    if (control._defaultValues?.ID) {
       await updateCategory(fields)
+    } else {
+      await createCategory(fields)
     }
   }
 
@@ -129,7 +130,7 @@ export function CategoryForm({category, headerComponent, parentId, onSuccess}: C
                 name="Description"
                 label="Description"
                 control={control}
-                validationSchema={validationSchema}
+                validationSchema={validationSchema} 
               />
               <SwitchControl
                 name="Active"
@@ -138,6 +139,7 @@ export function CategoryForm({category, headerComponent, parentId, onSuccess}: C
                 size="lg"
                 control={control}
                 validationSchema={validationSchema}
+                
               />
               <ButtonGroup>
                 <HStack justifyContent="space-between" w="100%" mb={5}>

@@ -19,7 +19,7 @@ export function getObjectDiff(oldObj = {}, newObj = {}, alwaysIncludeField?: str
   })
   if (alwaysIncludeField) {
     alwaysIncludeField.forEach((keep) => {
-      const value = get(oldObj, keep, null)
+      const value = get(newObj, keep, null)
       set(diff, keep, value)
     })
   }

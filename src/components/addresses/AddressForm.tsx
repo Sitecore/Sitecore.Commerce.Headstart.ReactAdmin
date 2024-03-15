@@ -122,7 +122,7 @@ export function AddressForm({address, addressType, parentId, onCreate, onUpdate,
   }
 
   async function updateAddress(fields: IAdminAddress) {
-    const diff = getObjectDiff(currentAddress, fields)
+    const diff = getObjectDiff(currentAddress, fields, ["ID"])
     const updatedAddress = await updateOrderCloudAddress(diff)
     if (onUpdate) {
       await onUpdate(updatedAddress)

@@ -5,8 +5,9 @@ import {get, isArray, isEqual, isObject, set} from "lodash"
  *
  * @param oldObj The original object to be compared
  * @param newObj The new object with updates
+ * @param alwaysIncludeField An optional Array of field names that always get included even if the values are the same
  */
-export function getObjectDiff(oldObj = {}, newObj = {}) {
+export function getObjectDiff(oldObj = {}, newObj = {}, alwaysIncludeField?: string[]) {
   const diff = {}
   const diffKeys = getObjectDiffKeys(oldObj, newObj)
   if (!diffKeys?.length) {
@@ -16,6 +17,12 @@ export function getObjectDiff(oldObj = {}, newObj = {}) {
     const value = get(newObj, diffKey, null)
     set(diff, diffKey, value)
   })
+  if (alwaysIncludeField) {
+    alwaysIncludeField.forEach((keep) => {
+      const value = get(newObj, keep, null)
+      set(diff, keep, value)
+    })
+  }
   return diff
 }
 

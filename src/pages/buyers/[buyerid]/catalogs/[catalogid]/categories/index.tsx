@@ -35,15 +35,22 @@ const CategoriesList = (props) => {
 
   const initCategoriesData = useCallback(
     async (catalogid: string) => {
-      const categoriesList = await Categories.List<ICategory>(catalogid,{depth:"all"})
+      const categoriesList = await Categories.List<ICategory>(catalogid,{depth:"99", pageSize:100})
+      let cl = categoriesList.Items;
+      let i = 2;
+       while (cl.length < categoriesList.Meta.TotalCount) {
+          const l = (await Categories.List<ICategory>(catalogid,{depth:"99", pageSize:100, page:i}));
+          cl = cl.concat( l.Items);
+          i++;
+       }
       if (selectedNode) {
         const selectedCategoryId = selectedNode.data.ID
-        const selectedCategoryExists = categoriesList.Items.find((category) => category.ID === selectedCategoryId)
+        const selectedCategoryExists = cl.find((category) => category.ID === selectedCategoryId)
         if (!selectedCategoryExists) {
           setSelectedNode(null)
         }
       }
-      setCategoriesTreeView(await buildTreeView(categoriesList.Items))
+      setCategoriesTreeView(await buildTreeView(cl))
     },
     [selectedNode]
   )
@@ -74,7 +81,7 @@ const CategoriesList = (props) => {
 
     return treeViewData
   }
-  const handleSelect = (node: ocNodeModel) => setSelectedNode(node)
+  const handleSelect = (node: ocNodeModel) => { setSelectedNode(node);}
 
   const handleCategoryCreate = (category: Category) => {
     setParentIdToCreate(category?.ID)
@@ -85,6 +92,7 @@ const CategoriesList = (props) => {
     onCloseCategoryCreate()
     await initCategoriesData(router.query.catalogid as string)
   }
+
 
   return (
     <>
@@ -118,7 +126,7 @@ const CategoriesList = (props) => {
                 />
               </GridItem>
               <GridItem pl="2" area={"main"}>
-                {selectedNode ? (
+                {selectedNode?.id ? (
                   <CategoryForm
                     category={selectedNode.data}
                     onSuccess={onCategoryCreateSuccess}
@@ -131,7 +139,7 @@ const CategoriesList = (props) => {
                 ) : (
                   <CategoryForm
                     onSuccess={onCategoryCreateSuccess}
-                    category={{Name: "", Description: "", Active: false, ParentID: ""}}
+                    category={{Name: "", Description: "", Active: true, ParentID: ""}}
                     headerComponent={
                       <Heading as="h5" size="md" marginLeft={10} marginTop={5}>
                         Create root category

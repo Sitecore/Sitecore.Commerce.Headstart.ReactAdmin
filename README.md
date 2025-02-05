@@ -1,3 +1,6 @@
+# ⛔️ DEPRECATED
+This is no longer maintained/supported, please consider using our new [OrderCloud accelerator](https://github.com/ordercloud-api/oc-accelerator) instead.
+
 # Sitecore Headstart React Admin
 
 Welcome to the Sitecore Headstart React Admin, an open-source admin application for Sitecore OrderCloud built with React. Whether you're looking to explore how admin applications are constructed or kickstart your own custom solution, this project provides a valuable resource.
